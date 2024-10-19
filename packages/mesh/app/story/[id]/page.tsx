@@ -16,12 +16,9 @@ import RelatedStories from './_components/related-stories'
 
 export type PublisherPolicy = Awaited<ReturnType<typeof getPublisherPolicy>>
 
-const picksTake = 5
-const commentsTake = 3
-
 export default async function Page({ params }: { params: { id: string } }) {
   const storyId = params.id
-  const storyData = await getStory({ storyId, picksTake, commentsTake })
+  const storyData = await getStory({ storyId })
   let policy: PublisherPolicy = []
   let hasPayed = false
 
@@ -30,8 +27,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
   const relatedStories = await getRelatedStories({
     storyTitle: storyData.story.title,
-    picksTake,
-    commentsTake,
   })
 
   const sourceCustomId = storyData.story.source?.customId ?? ''
