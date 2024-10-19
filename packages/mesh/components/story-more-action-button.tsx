@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import type { ForwardedRef, MouseEventHandler, RefObject } from 'react'
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
 
 import { addBookmark, removeBookmark } from '@/app/actions/bookmark'
@@ -32,14 +33,12 @@ export default function StoryMoreActionButton({
   storyId,
   publisherId,
   canUnFollowPublisher = false,
-  showOnRestrictArea = false,
   nestedScrollContainerRef,
   className,
 }: {
   storyId: string
   publisherId: string
   canUnFollowPublisher?: boolean
-  showOnRestrictArea?: boolean
   nestedScrollContainerRef?: RefObject<HTMLElement>
   className?: string
 }) {
@@ -57,11 +56,9 @@ export default function StoryMoreActionButton({
 
   const openActionSheet: MouseEventHandler<HTMLButtonElement> = (evt) => {
     evt.preventDefault()
-    if (showOnRestrictArea) {
-      const button = evt.target as HTMLButtonElement
-      const { top, left } = button.getBoundingClientRect()
-      setPosition({ top, left })
-    }
+    const button = evt.target as HTMLButtonElement
+    const { top, left } = button.getBoundingClientRect()
+    setPosition({ top, left })
     setShouldShowActionSheet(true)
   }
 
@@ -86,8 +83,7 @@ export default function StoryMoreActionButton({
 
     /**
      * Hide the action sheet when scroll, for scroll event on both window and nested scroll container (if exists).
-     * Avoid complicated logic to set dynamic position when `showOnRestrictArea` is true.
-     * Align the behavior to the other situation.
+     * Avoid complicated logic to set dynamic position.
      */
     if (nestedScrollContainer) {
       nestedScrollContainer.addEventListener('scroll', onScroll)
@@ -290,7 +286,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     ? 'sm:fixed sm:right-[unset] sm:top-[unset]'
     : ''
 
-  return (
+  return createPortal(
     <div
       ref={ref}
       className={twMerge(
@@ -355,7 +351,8 @@ const ActionSheet = forwardRef(function ActionSheet(
           }
         }
       })}
-    </div>
+    </div>,
+    document.body
   )
 })
 
