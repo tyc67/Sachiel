@@ -25,6 +25,7 @@ export type User = {
   wallet: string
   followingMemberIds: Set<string>
   pickStoryIds: Set<string>
+  pickCollectionIds: Set<string>
   bookmarkStoryIds: Set<string>
   followingCategories: FollowingCategories
   followingPublishers: FollowingPublishers
@@ -53,6 +54,7 @@ const guest: User = {
   wallet: '',
   followingMemberIds: new Set(),
   pickStoryIds: new Set(),
+  pickCollectionIds: new Set(),
   bookmarkStoryIds: new Set(),
   followingCategories: [],
   followingPublishers: [],

@@ -10,24 +10,24 @@ import { PickObjective } from '@/types/pick'
 import { debounce } from '@/utils/performance'
 
 export default function StoryPickButton({
-  storyId,
+  collectionId,
   color = 'white',
 }: {
-  storyId: string
+  collectionId: string
   color?: ButtonColor
 }) {
   const router = useRouter()
   const { user } = useUser()
   const { openPickModal } = usePickModal()
   const memberId = user.memberId
-  const isStoryPicked = user.pickStoryIds.has(storyId)
+  const isStoryPicked = user.pickCollectionIds.has(collectionId)
 
   const handleClickPick = debounce(async () => {
     if (!memberId) {
       router.push('/login')
       return
     }
-    openPickModal(PickObjective.Story, storyId, isStoryPicked)
+    openPickModal(PickObjective.Collection, collectionId, isStoryPicked)
   })
 
   return (
