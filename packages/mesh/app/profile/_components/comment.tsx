@@ -57,7 +57,6 @@ const Comment: React.FC<CommentProps> = ({
       try {
         const response = await unlikeComment(likeCommentArgs)
         if (!response) {
-          // TODO: toast
           addToast({ status: 'fail', text: TOAST_MESSAGE.unlikeCommentFailed })
           throw new Error('Failed to unlike comment')
         }
@@ -79,7 +78,6 @@ const Comment: React.FC<CommentProps> = ({
     try {
       const response = await likeComment(likeCommentArgs)
       if (!response) {
-        // TODO: toast
         addToast({ status: 'fail', text: TOAST_MESSAGE.likeCommentFailed })
         throw new Error('Failed to like comment')
       }
