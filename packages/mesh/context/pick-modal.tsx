@@ -1,6 +1,9 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react'
+import { createPortal } from 'react-dom'
+
+import StoryPickModal from '@/components/story-card/story-pick-modal'
 
 type ModalType = {
   storyId: string
@@ -30,6 +33,7 @@ export function PickModalProvider({ children }: { children: React.ReactNode }) {
     <ModalContext.Provider
       value={{ isModalOpen, storyId, isPicked, openPickModal, closePickModal }}
     >
+      {isModalOpen && createPortal(<StoryPickModal />, document.body)}
       {children}
     </ModalContext.Provider>
   )
