@@ -46,7 +46,7 @@ export default function FeaturedCard({
 
         <div className="grow">
           <div className="mb-1 flex justify-between">
-            <NextLink href={`/profile/member/${customId}`}>
+            <NextLink href={`/profile/publisher/${customId}`}>
               <p className="footnote lg:body-3 text-primary-500 hover-or-active:text-primary-700">
                 {publisher}
               </p>
