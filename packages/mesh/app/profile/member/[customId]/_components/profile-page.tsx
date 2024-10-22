@@ -12,7 +12,9 @@ import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
 import ErrorPage from '@/components/status/error-page'
+import TOAST_MESSAGE from '@/constants/toast'
 import { useEditProfile } from '@/context/edit-profile'
+import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import {
   type Bookmarks,
@@ -32,6 +34,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const { user, setUser } = useUser()
   const { visitorProfile, isProfileError, isProfileLoading } = useEditProfile()
   const router = useRouter()
+  const { addToast } = useToast()
   const pathName = usePathname()
   const currentUrl = pathName
 
@@ -92,31 +95,49 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const followList = user.followingMemberIds
   const isFollowing = followList.has(profileData.memberId)
 
-  const handleFollowOnClick = debounce(() => {
+  const handleFollowOnClick = debounce(async () => {
     const followMemberArgs = {
       memberId: user.memberId,
       targetId: profileData.memberId,
     }
-    if (!isFollowing) {
-      setUser((prev) => {
-        return {
+
+    try {
+      if (!isFollowing) {
+        const response = await addFollowMember(followMemberArgs)
+        if (!response) {
+          addToast({
+            status: 'fail',
+            text: TOAST_MESSAGE.followMemberFailed,
+          })
+          return
+        }
+
+        setUser((prev) => ({
           ...prev,
           followingMemberIds: prev.followingMemberIds.add(profileData.memberId),
+        }))
+      } else {
+        const response = await removeFollowMember(followMemberArgs)
+        if (!response) {
+          addToast({
+            status: 'fail',
+            text: TOAST_MESSAGE.unfollowMemberFailed,
+          })
+          return
         }
-      })
-      return addFollowMember(followMemberArgs)
-    }
-    setUser((prev) => {
-      return {
-        ...prev,
-        followingMemberIds: new Set(
-          Array.from(prev.followingMemberIds).filter(
-            (id) => id !== profileData.memberId
-          )
-        ),
+
+        setUser((prev) => ({
+          ...prev,
+          followingMemberIds: new Set(
+            Array.from(prev.followingMemberIds).filter(
+              (id) => id !== profileData.memberId
+            )
+          ),
+        }))
       }
-    })
-    return removeFollowMember(followMemberArgs)
+    } catch (error) {
+      console.error(isFollowing ? '取消追蹤失敗' : '追蹤失敗', error)
+    }
   })
 
   const buttonList = isMember

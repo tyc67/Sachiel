@@ -6,6 +6,7 @@ import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import {
   type CommentType,
   type PickListItem,
@@ -63,9 +64,9 @@ const ArticleCard = ({
       <Link href={`/story/${storyData?.id}`}>
         <section className="hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
           <ImageWithFallback
-            src={storyData?.og_image || '/images/default-story-image.webP'}
+            fallbackCategory={ImageCategory.STORY}
+            src={storyData?.og_image ?? ''}
             alt={`${storyData?.title}'s story cover image`}
-            fallbackSrc="/images/default-story-image.webP"
             width={96}
             height={48}
             className="size-full object-cover"
@@ -103,9 +104,9 @@ const ArticleCard = ({
             </div>
             <div className="relative ml-3 aspect-[2/1] min-w-24 overflow-hidden rounded border-[0.5px] border-primary-200 sm:w-40 sm:min-w-40 md:hidden">
               <ImageWithFallback
-                src={storyData?.og_image || '/images/default-story-image.webP'}
+                fallbackCategory={ImageCategory.STORY}
+                src={storyData?.og_image ?? ''}
                 alt={`${storyData?.title}'s story cover image`}
-                fallbackSrc="/images/default-story-image.webP"
                 fill
                 className="object-cover"
               />

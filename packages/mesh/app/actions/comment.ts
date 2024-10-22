@@ -9,14 +9,14 @@ import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 import { sleep } from '@/utils/sleep'
 
-const ItemIdSchema = z.string().regex(/^\d+$/).min(1)
+const ItemIdSchema = z.string().regex(/^\d+$/)
 const ContentSchema = z.string().min(1)
 
 const AddCommentSchema = z.object({
   memberId: ItemIdSchema,
   storyId: ItemIdSchema,
   content: ContentSchema,
-  latestCommentId: ItemIdSchema,
+  latestCommentId: z.string(),
 })
 
 const EditCommentSchema = z.object({
@@ -41,19 +41,32 @@ const getLatestAddComment = async (
   input: z.infer<typeof GetLatestAddCommentSchema>
 ) => {
   const globalLogFields = getLogTraceObjectFromHeaders()
-  const { memberId, storyId } = GetLatestAddCommentSchema.parse(input)
-  const data = await fetchGraphQL(
-    GetLatestAddedCommentDocument,
-    {
-      memberId,
-      storyId,
-    },
-    globalLogFields,
-    'Failed to get latest comment ID'
-  )
-  const comments = data?.comments
-  if (!comments?.length) return
-  return comments[0].id
+  const result = GetLatestAddCommentSchema.safeParse(input)
+
+  if (!result.success) {
+    console.error('invalid input:', result.error)
+    return null
+  }
+
+  const { memberId, storyId } = result.data
+
+  try {
+    const data = await fetchGraphQL(
+      GetLatestAddedCommentDocument,
+      {
+        memberId,
+        storyId,
+      },
+      globalLogFields,
+      'getLatestAddComment failed'
+    )
+    const comments = data?.comments
+    if (!comments?.length) return null
+    return comments[0].id
+  } catch (error) {
+    console.error('Unexpected error in GetLatestAddedComment:', error)
+    return null
+  }
 }
 
 export async function addComment(
@@ -61,8 +74,15 @@ export async function addComment(
 ): Promise<string | null> {
   const sleepTime = 500
   const retryTimes = 3
-  const { memberId, storyId, content, latestCommentId } =
-    AddCommentSchema.parse(input)
+
+  const result = AddCommentSchema.safeParse(input)
+  if (!result.success) {
+    console.error('Invalid input for addComment:', result.error)
+    return null
+  }
+
+  const { memberId, storyId, content, latestCommentId } = result.data
+
   const payload = {
     action: 'add_comment',
     memberId,
@@ -102,13 +122,21 @@ export async function addComment(
 }
 
 export async function editComment(input: z.infer<typeof EditCommentSchema>) {
-  const { memberId, commentId, content } = EditCommentSchema.parse(input)
+  const result = EditCommentSchema.safeParse(input)
+  if (!result.success) {
+    console.error('Invalid input for editComment:', result.error)
+    throw result.error
+  }
+
+  const { memberId, commentId, content } = result.data
+
   const payload = {
     action: 'edit_comment',
     memberId,
     commentId,
     content,
   }
+
   return await fetchRestfulPost(
     RESTFUL_ENDPOINTS.pubsub,
     payload,
@@ -120,7 +148,12 @@ export async function editComment(input: z.infer<typeof EditCommentSchema>) {
 export async function deleteComment(
   input: z.infer<typeof DeleteCommentSchema>
 ) {
-  const { memberId, commentId } = DeleteCommentSchema.parse(input)
+  const result = DeleteCommentSchema.safeParse(input)
+  if (!result.success) {
+    console.error('Invalid input for deleteComment:', result.error)
+    throw result.error
+  }
+  const { memberId, commentId } = result.data
   const payload = {
     action: 'remove_comment',
     memberId,
@@ -135,26 +168,43 @@ export async function deleteComment(
 }
 
 export async function likeComment(input: z.infer<typeof LikeCommentSchema>) {
-  const { memberId, commentId } = LikeCommentSchema.parse(input)
+  const result = LikeCommentSchema.safeParse(input)
+  if (!result.success) {
+    console.error('Unexpected unlikeComment input:', result.error)
+    throw result.error
+  }
+  const { memberId, commentId } = result.data
+
   const payload = {
     action: 'add_like',
     memberId,
     commentId,
   }
+
   return await fetchRestfulPost(
-    RESTFUL_ENDPOINTS.pubsub,
+    RESTFUL_ENDPOINTS.pubsub + 'ss',
     payload,
     { cache: 'no-cache' },
     'Failed to like comment via pub/sub'
   )
 }
+
 export async function unlikeComment(input: z.infer<typeof LikeCommentSchema>) {
-  const { memberId, commentId } = LikeCommentSchema.parse(input)
+  const result = LikeCommentSchema.safeParse(input)
+
+  if (!result.success) {
+    console.error('Unexpected unlikeComment input:', result.error)
+    throw result.error
+  }
+
+  const { memberId, commentId } = result.data
+
   const payload = {
     action: 'remove_like',
     memberId,
     commentId,
   }
+
   return await fetchRestfulPost(
     RESTFUL_ENDPOINTS.pubsub,
     payload,
