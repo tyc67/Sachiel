@@ -121,6 +121,7 @@ export const rawMostSponsoredPublisherStoryByCategorySchema = z.object({
 })
 
 export const MongoDBResponseSchema = z.object({
+  timestamp: z.number(),
   members: z.array(
     z.object({
       id: z.string(),
@@ -214,6 +215,8 @@ export const publisherProfileSchema = z.object({
     logo: z.string().url(),
     description: z.string(),
     followerCount: z.number().int().nonnegative(),
+    sponsoredCount: z.number().int().nonnegative(),
+    picksCount: z.number().int().nonnegative(),
   }),
   stories: z.array(
     z.object({
