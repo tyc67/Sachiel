@@ -35,7 +35,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const [tabData, setTabData] = useState<PickList | Bookmarks>([])
 
   const profileData = isMember ? user : visitorProfile
-  const { handelClickFollow, isFollowing } = useFollow(
+  const { handleClickFollow, isFollowing } = useFollow(
     String(profileData.memberId)
   )
 
@@ -100,7 +100,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     : [
         {
           text: { default: '追蹤', isActive: '追蹤中' },
-          clickFn: handelClickFollow,
+          clickFn: handleClickFollow,
           isActive: isFollowing,
         },
       ]
