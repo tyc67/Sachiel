@@ -2,27 +2,21 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import {
-  addFollowMember,
-  removeFollowMember,
-} from '@/app/actions/follow-member'
 import ArticleCardList from '@/app/profile/_components/article-card-list'
 import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
 import ErrorPage from '@/components/status/error-page'
-import TOAST_MESSAGE from '@/constants/toast'
 import { useEditProfile } from '@/context/edit-profile'
-import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
+import { useFollow } from '@/hooks/use-follow'
 import {
   type Bookmarks,
   type PickList,
   TabCategory,
   TabKey,
 } from '@/types/profile'
-import { debounce } from '@/utils/performance'
 
 import Loading from './loading'
 
@@ -31,10 +25,9 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
-  const { user, setUser } = useUser()
+  const { user } = useUser()
   const { visitorProfile, isProfileError, isProfileLoading } = useEditProfile()
   const router = useRouter()
-  const { addToast } = useToast()
   const pathName = usePathname()
   const currentUrl = pathName
 
@@ -42,6 +35,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const [tabData, setTabData] = useState<PickList | Bookmarks>([])
 
   const profileData = isMember ? user : visitorProfile
+  const { handelClickFollow, isFollowing } = useFollow(
+    String(profileData.memberId)
+  )
 
   useEffect(() => {
     if (isMember) {
@@ -92,53 +88,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
       redirectLink: `${customId}/following`,
     },
   ]
-  const followList = user.followingMemberIds
-  const isFollowing = followList.has(profileData.memberId)
-
-  const handleFollowOnClick = debounce(async () => {
-    const followMemberArgs = {
-      memberId: user.memberId,
-      targetId: profileData.memberId,
-    }
-
-    try {
-      if (!isFollowing) {
-        const response = await addFollowMember(followMemberArgs)
-        if (!response) {
-          addToast({
-            status: 'fail',
-            text: TOAST_MESSAGE.followMemberFailed,
-          })
-          return
-        }
-
-        setUser((prev) => ({
-          ...prev,
-          followingMemberIds: prev.followingMemberIds.add(profileData.memberId),
-        }))
-      } else {
-        const response = await removeFollowMember(followMemberArgs)
-        if (!response) {
-          addToast({
-            status: 'fail',
-            text: TOAST_MESSAGE.unfollowMemberFailed,
-          })
-          return
-        }
-
-        setUser((prev) => ({
-          ...prev,
-          followingMemberIds: new Set(
-            Array.from(prev.followingMemberIds).filter(
-              (id) => id !== profileData.memberId
-            )
-          ),
-        }))
-      }
-    } catch (error) {
-      console.error(isFollowing ? '取消追蹤失敗' : '追蹤失敗', error)
-    }
-  })
 
   const buttonList = isMember
     ? [
@@ -151,7 +100,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     : [
         {
           text: { default: '追蹤', isActive: '追蹤中' },
-          clickFn: handleFollowOnClick,
+          clickFn: handelClickFollow,
           isActive: isFollowing,
         },
       ]
