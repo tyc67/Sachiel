@@ -1,7 +1,11 @@
 'use server'
 
 import { RESTFUL_ENDPOINTS } from '@/constants/config'
-import { GetLatestAddedCommentDocument } from '@/graphql/__generated__/graphql'
+import {
+  GetCollectionLatestAddedCommentDocument,
+  GetStoryLatestAddedCommentDocument,
+} from '@/graphql/__generated__/graphql'
+import { CommentObjective } from '@/types/objective'
 import fetchGraphQL from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
@@ -9,34 +13,64 @@ import { sleep } from '@/utils/sleep'
 
 const getLatestAddComment = async ({
   memberId,
-  storyId,
+  targetId,
+  commentObjective,
 }: {
   memberId: string
-  storyId: string
+  targetId: string
+  commentObjective: CommentObjective
 }) => {
   const globalLogFields = getLogTraceObjectFromHeaders()
-  const data = await fetchGraphQL(
-    GetLatestAddedCommentDocument,
-    {
-      memberId,
-      storyId,
-    },
-    globalLogFields,
-    'Failed to get latest comment ID'
-  )
-  const comments = data?.comments
-  if (!comments?.length) return
-  return comments[0].id
+
+  let commentId: string = ''
+  switch (commentObjective) {
+    case CommentObjective.Story: {
+      const data = await fetchGraphQL(
+        GetStoryLatestAddedCommentDocument,
+        {
+          memberId,
+          storyId: targetId,
+        },
+        globalLogFields,
+        `Failed to get latest story comment's ID`
+      )
+      const comments = data?.comments
+      commentId = comments?.[0].id ?? ''
+      break
+    }
+
+    case CommentObjective.Collection: {
+      const data = await fetchGraphQL(
+        GetCollectionLatestAddedCommentDocument,
+        {
+          memberId,
+          collectionId: targetId,
+        },
+        globalLogFields,
+        `Failed to get latest collection comment's ID`
+      )
+      const comments = data?.comments
+      commentId = comments?.[0].id ?? ''
+      break
+    }
+
+    default:
+      break
+  }
+
+  return commentId
 }
 
 export async function addComment({
   memberId,
-  storyId,
+  targetId,
+  commentObjective,
   content,
   latestCommentId,
 }: {
   memberId: string
-  storyId: string
+  targetId: string
+  commentObjective: CommentObjective
   content: string
   latestCommentId: string
 }): Promise<string | null> {
@@ -46,8 +80,8 @@ export async function addComment({
   const payload = {
     action: 'add_comment',
     memberId,
-    objective: 'story',
-    targetId: storyId,
+    objective: commentObjective,
+    targetId,
     state: 'public',
     content,
   }
@@ -68,7 +102,11 @@ export async function addComment({
 
   // 嘗試獲取新評論ID，最多重試3次
   for (let i = 0; i < retryTimes; i++) {
-    const newCommentId = await getLatestAddComment({ memberId, storyId })
+    const newCommentId = await getLatestAddComment({
+      memberId,
+      targetId,
+      commentObjective,
+    })
 
     if (newCommentId && latestCommentId !== newCommentId) {
       return newCommentId

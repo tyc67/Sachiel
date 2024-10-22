@@ -14,7 +14,7 @@ import {
   SignUpMemberDocument,
   UpdateWalletAddressDocument,
 } from '@/graphql/__generated__/graphql'
-import { PickObjective } from '@/types/pick'
+import { PickObjective } from '@/types/objective'
 import { mutateGraphQL } from '@/utils/fetch-graphql'
 import queryGraphQL from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'

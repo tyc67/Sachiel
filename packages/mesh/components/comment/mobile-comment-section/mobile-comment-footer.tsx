@@ -3,15 +3,15 @@ import React, { useEffect, useRef } from 'react'
 
 import Dots from '@/components/dots'
 import Avatar from '@/components/story-card/avatar'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import { createAdjustTextareaHeight } from '@/utils/adjust-textarea-height'
 
-const MobileStoryCommentFooter = ({
-  storyId = '',
+const MobileCommentFooter = ({
+  targetId = '',
   comment,
 }: {
-  storyId?: string
+  targetId?: string
   comment: string
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -48,7 +48,7 @@ const MobileStoryCommentFooter = ({
         <div className="flex h-11 items-center self-end">
           <button
             className="body-2 text-custom-blue transition-colors hover:bg-blue-600"
-            onClick={() => handleCommentPublish({ user, storyId })}
+            onClick={() => handleCommentPublish({ user, targetId })}
           >
             {state.isAddingComment ? <Dots /> : '發布'}
           </button>
@@ -58,4 +58,4 @@ const MobileStoryCommentFooter = ({
   )
 }
 
-export default MobileStoryCommentFooter
+export default MobileCommentFooter

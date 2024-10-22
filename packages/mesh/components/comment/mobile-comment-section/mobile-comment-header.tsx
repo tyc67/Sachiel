@@ -1,5 +1,5 @@
 import Icon from '@/components/icon'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 
 const MobileStoryCommentHeader = () => {
   const { state, dispatch } = useComment()

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Button from '@/components/button'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 
 const CommentEditor = () => {

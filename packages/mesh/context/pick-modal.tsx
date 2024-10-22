@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import PickModal from '@/components/pick-modal'
-import { PickObjective } from '@/types/pick'
+import { PickObjective } from '@/types/objective'
 
 type ModalType = {
   pickObjective: PickObjective

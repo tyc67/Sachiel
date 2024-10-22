@@ -3,7 +3,7 @@ import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryCommentCount from '@/components/story-card/story-comment-count'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickCount from '@/components/story-card/story-pick-count'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
 
 export enum BottomActionBarType {

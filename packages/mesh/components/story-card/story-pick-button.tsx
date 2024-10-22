@@ -6,7 +6,7 @@ import type { ButtonColor } from '@/components/button'
 import Button from '@/components/button'
 import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
-import { PickObjective } from '@/types/pick'
+import { PickObjective } from '@/types/objective'
 import { debounce } from '@/utils/performance'
 
 export default function StoryPickButton({

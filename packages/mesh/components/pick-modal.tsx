@@ -10,7 +10,7 @@ import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
 import usePicker from '@/hooks/use-picker'
 import useWindowDimensions from '@/hooks/use-window-dimension'
-import { PickObjective } from '@/types/pick'
+import { PickObjective } from '@/types/objective'
 
 import Button from './button'
 import Icon from './icon'

@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 
 import type { User } from '@/context/user'
-import { PickObjective } from '@/types/pick'
+import { PickObjective } from '@/types/objective'
 
 function getTargetIdsKey(objective: PickObjective) {
   switch (objective) {

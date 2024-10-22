@@ -10,7 +10,7 @@ import { getPickComment } from '@/app/actions/pick'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
-import type { PickObjective } from '@/types/pick'
+import type { PickObjective } from '@/types/objective'
 import { addPickToUser, removePickFromUser } from '@/utils/mutate-user-pick-ids'
 
 export default function usePicker() {
