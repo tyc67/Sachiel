@@ -70,6 +70,7 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
         <DefaultLayout
           mobileNavigation={props.mobileNavigation}
           nonMobileNavigation={props.nonMobileNavigation}
+          mobileActionBar={props.mobileActionBar}
           customStyle={customStyle}
         >
           {childrenJsx}

@@ -1,7 +1,7 @@
 const TOAST_MESSAGE = {
   followCategoryFailed: '新增類別失敗，請重新嘗試',
   unfollowCategoryFailed: '刪除類別失敗，請重新嘗試',
-  storyMoreActionError: '有點怪怪的，請稍後再試',
+  moreActionError: '有點怪怪的，請稍後再試',
   addCommentFailed: '發布留言失敗，請重新嘗試',
   editCommentFailed: '編輯留言失敗，請重新嘗試',
   deleteCommentFailed: '刪除留言失敗，請重新嘗試',

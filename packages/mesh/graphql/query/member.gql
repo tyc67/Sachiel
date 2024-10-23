@@ -99,6 +99,10 @@ query GetCurrentUserMemberId($uid: String!) {
         AND: [{ kind: { equals: "bookmark" } }, { is_active: { equals: true } }]
       }
     ) {
+      objective
+      collection {
+        id
+      }
       story {
         id
       }

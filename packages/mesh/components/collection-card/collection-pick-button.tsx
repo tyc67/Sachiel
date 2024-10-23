@@ -9,7 +9,7 @@ import { useUser } from '@/context/user'
 import { PickObjective } from '@/types/objective'
 import { debounce } from '@/utils/performance'
 
-export default function StoryPickButton({
+export default function CollectionPickButton({
   collectionId,
   color = 'white',
 }: {

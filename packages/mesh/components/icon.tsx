@@ -58,7 +58,6 @@ export type IconName =
   | 'icon-profile-lg-on'
   | 'icon-bookmark'
   | 'icon-bookmark-hover'
-  | 'icon-bookmark-on'
   | 'icon-bookmark-lg'
   | 'icon-bookmark-lg-hover'
   | 'icon-bookmark-lg-on'
@@ -131,6 +130,12 @@ export type IconName =
   | 'icon-check-circle-lg'
   | 'icon-toast-success'
   | 'icon-toast-fail'
+  | 'icon-deleted-collection'
+  | 'icon-collection-folder'
+  | 'icon-collection-delete'
+  | 'icon-collection-edit-stories'
+  | 'icon-collection-edit'
+  | 'icon-collection-report'
 
 export type IconProps = {
   size: Size

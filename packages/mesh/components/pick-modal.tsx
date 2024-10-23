@@ -204,8 +204,8 @@ const RemovePickModal = () => {
     }
   }, [])
 
-  const handleRemoveStoryPick = () => {
-    removePick(objectId, PickObjective.Story)
+  const handleRemovePick = async () => {
+    removePick(objectId, pickObjective)
     removeDialogRef.current?.close()
     closePickModal()
   }
@@ -230,7 +230,7 @@ const RemovePickModal = () => {
             size="sm"
             color="transparent-blue"
             text="移除"
-            onClick={handleRemoveStoryPick}
+            onClick={handleRemovePick}
           />
           <Button
             size="sm"

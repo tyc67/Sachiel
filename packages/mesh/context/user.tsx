@@ -27,6 +27,7 @@ export type User = {
   pickStoryIds: Set<string>
   pickCollectionIds: Set<string>
   bookmarkStoryIds: Set<string>
+  bookmarkCollectionIds: Set<string>
   followingCategories: FollowingCategories
   followingPublishers: FollowingPublishers
   intro: string
@@ -56,6 +57,7 @@ const guest: User = {
   pickStoryIds: new Set(),
   pickCollectionIds: new Set(),
   bookmarkStoryIds: new Set(),
+  bookmarkCollectionIds: new Set(),
   followingCategories: [],
   followingPublishers: [],
   intro: '',

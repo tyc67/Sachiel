@@ -14,7 +14,7 @@ import {
   SignUpMemberDocument,
   UpdateWalletAddressDocument,
 } from '@/graphql/__generated__/graphql'
-import { PickObjective } from '@/types/objective'
+import { BookmarkObjective, PickObjective } from '@/types/objective'
 import { mutateGraphQL } from '@/utils/fetch-graphql'
 import queryGraphQL from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
@@ -133,8 +133,18 @@ export async function getCurrentUser() {
             .map((pick) => pick.collection?.id ?? '') ?? []
         ),
         bookmarkStoryIds: new Set(
-          data.member.bookmarks?.map((bookmark) => bookmark.story?.id ?? '') ??
-            []
+          data.member.bookmarks
+            ?.filter(
+              (bookmark) => bookmark.objective === BookmarkObjective.Story
+            )
+            .map((bookmark) => bookmark.story?.id ?? '') ?? []
+        ),
+        bookmarkCollectionIds: new Set(
+          data.member.bookmarks
+            ?.filter(
+              (bookmark) => bookmark.objective === BookmarkObjective.Collection
+            )
+            .map((bookmark) => bookmark.collection?.id ?? '') ?? []
         ),
         followingCategories: data.member.followingCategories ?? [],
         followingPublishers: data.member.followingPublishers ?? [],

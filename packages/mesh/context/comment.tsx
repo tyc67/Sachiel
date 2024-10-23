@@ -97,8 +97,6 @@ const initialState: State = {
 function commentReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'TOGGLE_MOBILE_COMMENT_MODAL':
-      console.log('TOGGLE_MOBILE_COMMENT_MODAL', action.payload)
-
       return {
         ...state,
         isMobileCommentModalOpen: action.payload.isOpen,

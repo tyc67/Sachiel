@@ -108,7 +108,7 @@ export async function getPickComment({
         "Failed to get pick story's comment"
       )
 
-      pickCommentId = data?.members?.[0].pick?.[0].pick_comment?.[0]?.id ?? ''
+      pickCommentId = data?.members?.[0].pick?.[0]?.pick_comment?.[0]?.id ?? ''
       break
     }
     case PickObjective.Collection: {
@@ -119,7 +119,7 @@ export async function getPickComment({
         "Failed to get pick collection's comment"
       )
 
-      pickCommentId = data?.members?.[0].pick?.[0].pick_comment?.[0]?.id ?? ''
+      pickCommentId = data?.members?.[0].pick?.[0]?.pick_comment?.[0]?.id ?? ''
       break
     }
 
