@@ -23,7 +23,6 @@ type ArticleCardProps = {
 const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
   const commentList = story?.comments || []
   const creatorComment = commentList[0]
-  console.log('story?.source?.id', story?.source?.id, story?.title)
   return (
     <Link href={`/story/${story?.id}`}>
       <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">

@@ -9,6 +9,7 @@ import type { GetCollectionQuery } from '@/graphql/__generated__/graphql'
 import { getCollectionUrl } from '@/utils/get-url'
 
 import CollectionMoreActionButton from './collection-more-action-button'
+import Loading from './loading'
 // import { BookmarkObjective } from '@/types/objective'
 
 type Collection = NonNullable<GetCollectionQuery['collections']>[number]
@@ -58,6 +59,7 @@ export default function ClientLayout({
           <CollectionPickButton key={0} collectionId={collection.id} />,
         ],
       }}
+      suspenseFallback={<Loading />}
     >
       {children}
     </LayoutTemplate>
