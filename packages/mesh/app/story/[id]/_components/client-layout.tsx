@@ -1,7 +1,6 @@
 'use client'
 
 import LayoutTemplate from '@/components/layout-template'
-import { BottomActionBarType } from '@/components/layout-template/bottom-action-bar'
 import MobileNavigationButton from '@/components/layout-template/navigation/mobile-navigation/mobile-navigation-button'
 import GoBackButton from '@/components/navigation/go-back-button'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
@@ -65,7 +64,17 @@ export default function ClientLayout({
           />,
         ],
       }}
-      actionBar={{ type: BottomActionBarType.Article, story }}
+      mobileActionBar={{
+        commentsCount: story?.commentsCount ?? 0,
+        picksCount: story?.picksCount ?? 0,
+        actions: [
+          <PublisherDonateButton
+            key={0}
+            publisherId={story?.source?.id ?? ''}
+          />,
+          <StoryPickButton key={1} storyId={story?.id ?? ''} />,
+        ],
+      }}
       suspenseFallback={<Loading />}
     >
       {children}
