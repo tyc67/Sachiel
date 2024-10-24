@@ -2434,6 +2434,8 @@ export type Publisher = {
   title?: Maybe<Scalars['String']['output']>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   updatedBy?: Maybe<User>
+  user?: Maybe<Array<User>>
+  userCount?: Maybe<Scalars['Int']['output']>
   wallet?: Maybe<Scalars['String']['output']>
 }
 
@@ -2459,6 +2461,17 @@ export type PublisherSponsoredCountArgs = {
   where?: SponsorshipWhereInput
 }
 
+export type PublisherUserArgs = {
+  orderBy?: Array<UserOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: UserWhereInput
+}
+
+export type PublisherUserCountArgs = {
+  where?: UserWhereInput
+}
+
 export type PublisherCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>
@@ -2478,6 +2491,7 @@ export type PublisherCreateInput = {
   title?: InputMaybe<Scalars['String']['input']>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
   updatedBy?: InputMaybe<UserRelateToOneForCreateInput>
+  user?: InputMaybe<UserRelateToManyForCreateInput>
   wallet?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -2553,6 +2567,7 @@ export type PublisherUpdateInput = {
   title?: InputMaybe<Scalars['String']['input']>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
   updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>
+  user?: InputMaybe<UserRelateToManyForUpdateInput>
   wallet?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -2579,6 +2594,7 @@ export type PublisherWhereInput = {
   title?: InputMaybe<StringFilter>
   updatedAt?: InputMaybe<DateTimeNullableFilter>
   updatedBy?: InputMaybe<UserWhereInput>
+  user?: InputMaybe<UserManyRelationFilter>
   wallet?: InputMaybe<StringFilter>
 }
 
@@ -3541,6 +3557,7 @@ export type User = {
   isProtected?: Maybe<Scalars['Boolean']['output']>
   name?: Maybe<Scalars['String']['output']>
   password?: Maybe<PasswordState>
+  publisher?: Maybe<Publisher>
   role?: Maybe<Scalars['String']['output']>
 }
 
@@ -3564,7 +3581,14 @@ export type UserCreateInput = {
   isProtected?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
   password?: InputMaybe<Scalars['String']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForCreateInput>
   role?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UserManyRelationFilter = {
+  every?: InputMaybe<UserWhereInput>
+  none?: InputMaybe<UserWhereInput>
+  some?: InputMaybe<UserWhereInput>
 }
 
 export type UserOrderByInput = {
@@ -3573,6 +3597,18 @@ export type UserOrderByInput = {
   isProtected?: InputMaybe<OrderDirection>
   name?: InputMaybe<OrderDirection>
   role?: InputMaybe<OrderDirection>
+}
+
+export type UserRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<UserWhereUniqueInput>>
+  create?: InputMaybe<Array<UserCreateInput>>
+}
+
+export type UserRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<UserWhereUniqueInput>>
+  create?: InputMaybe<Array<UserCreateInput>>
+  disconnect?: InputMaybe<Array<UserWhereUniqueInput>>
+  set?: InputMaybe<Array<UserWhereUniqueInput>>
 }
 
 export type UserRelateToOneForCreateInput = {
@@ -3596,6 +3632,7 @@ export type UserUpdateInput = {
   isProtected?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
   password?: InputMaybe<Scalars['String']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForUpdateInput>
   role?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -3607,6 +3644,7 @@ export type UserWhereInput = {
   id?: InputMaybe<IdFilter>
   isProtected?: InputMaybe<BooleanFilter>
   name?: InputMaybe<StringFilter>
+  publisher?: InputMaybe<PublisherWhereInput>
   role?: InputMaybe<StringFilter>
 }
 
@@ -4570,8 +4608,10 @@ export type GetStoryQuery = {
       __typename?: 'Comment'
       id: string
       createdAt?: any | null
+      likeCount?: number | null
       content?: string | null
       state?: string | null
+      like?: Array<{ __typename?: 'Member'; id: string }> | null
       member?: {
         __typename?: 'Member'
         id: string
@@ -10575,6 +10615,23 @@ export const GetStoryDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'likeCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'like' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

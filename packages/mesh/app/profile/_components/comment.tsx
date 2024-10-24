@@ -1,17 +1,12 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
-import { likeComment, unlikeComment } from '@/app/actions/comment'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
-import TOAST_MESSAGE from '@/constants/toast'
-import { useToast } from '@/context/toast'
-import { useUser } from '@/context/user'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
+import { useCommentLike } from '@/hooks/use-comment-like'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { type CommentType } from '@/types/profile'
-import { debounce } from '@/utils/performance'
 import { displayTimeFromNow } from '@/utils/story-display'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
@@ -32,15 +27,14 @@ const Comment: React.FC<CommentProps> = ({
   storyId = '',
 }) => {
   const { width } = useWindowDimensions()
-  const { user } = useUser()
   const router = useRouter()
-  const { addToast } = useToast()
   const { needClamp, commentRef, handleToggleClamp } = useCommentClamp(
     clampLineCount,
     canToggle
   )
-  const [commentData, setCommentData] = useState(data)
-  const isCommentLiked = !!commentData?.isMemberLiked?.length
+  const { commentData, isCommentLiked, handleLikeComment } = useCommentLike({
+    initialComment: data,
+  })
   const handleCommentClick = () => {
     if (width > getTailwindConfigBreakpointNumber('md')) {
       router.push(`/story/${storyId}`)
@@ -48,54 +42,7 @@ const Comment: React.FC<CommentProps> = ({
       handleToggleClamp()
     }
   }
-  const handleLikeComment = debounce(async () => {
-    const likeCommentArgs = {
-      memberId: user.memberId,
-      commentId: commentData.id,
-    }
-    if (isCommentLiked) {
-      try {
-        const response = await unlikeComment(likeCommentArgs)
-        if (!response) {
-          addToast({ status: 'fail', text: TOAST_MESSAGE.unlikeCommentFailed })
-          throw new Error('Failed to unlike comment')
-        }
-        setCommentData((prev) => {
-          const prevLikeCount = Math.max(0, (prev.likeCount ?? 0) - 1)
-          return {
-            ...prev,
-            likeCount: prevLikeCount > 0 ? prevLikeCount - 1 : 0,
-            isMemberLiked: prev.isMemberLiked?.filter(
-              (item) => item.id !== user.memberId
-            ),
-          }
-        })
-      } catch (error) {
-        console.error({ error })
-      }
-      return
-    }
-    try {
-      const response = await likeComment(likeCommentArgs)
-      if (!response) {
-        addToast({ status: 'fail', text: TOAST_MESSAGE.likeCommentFailed })
-        throw new Error('Failed to like comment')
-      }
-      // TODO: user got has list or article has state
-      setCommentData((prev) => {
-        return {
-          ...prev,
-          likeCount: (prev.likeCount ?? 0) + 1,
-          isMemberLiked: [
-            ...(prev.isMemberLiked ?? []),
-            { __typename: 'Member' as const, id: user.memberId },
-          ],
-        }
-      })
-    } catch (error) {
-      console.error({ error })
-    }
-  })
+
   {
     /* mobile has no default comment UI; instead desktop has. */
   }

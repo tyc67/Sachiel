@@ -69,6 +69,14 @@ type Action =
   | { type: 'INSERT_COMMENT'; payload: Comment }
   | { type: 'UPDATE_HIGHLIGHTED_COMMENT'; payload: string }
   | { type: 'TOGGLE_DELETE_COMMENT_MODAL'; payload: { isVisible: boolean } }
+  | {
+      type: 'UPDATE_COMMENT_LIKE_STATUS'
+      payload: {
+        commentId: string
+        memberId: string
+        isLiked: boolean
+      }
+    }
 
 const initialState: State = {
   isMobileCommentModalOpen: false,
@@ -151,6 +159,28 @@ function commentReducer(state: State, action: Action): State {
       return { ...state, commentList: [action.payload, ...state.commentList] }
     case 'UPDATE_HIGHLIGHTED_COMMENT':
       return { ...state, highlightedId: action.payload }
+    case 'UPDATE_COMMENT_LIKE_STATUS':
+      return {
+        ...state,
+        commentList: state.commentList.map((comment) => {
+          if (comment.id !== action.payload.commentId) return comment
+          const currentLikes = comment.like || []
+          return {
+            ...comment,
+            likeCount: action.payload.isLiked
+              ? (comment.likeCount || 0) + 1
+              : Math.max(0, (comment.likeCount || 0) - 1),
+            like: action.payload.isLiked
+              ? [
+                  ...currentLikes,
+                  { __typename: 'Member', id: action.payload.memberId },
+                ]
+              : currentLikes.filter(
+                  (like) => like.id !== action.payload.memberId
+                ),
+          }
+        }),
+      }
     default:
       return state
   }
@@ -171,6 +201,11 @@ interface CommentContextType {
   handleDeleteComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleEditComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleReport: (e: React.MouseEvent<HTMLLIElement>) => void
+  updateCommentLikeStatus: (
+    commentId: string,
+    memberId: string,
+    isLiked: boolean
+  ) => void
 }
 
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
@@ -355,6 +390,16 @@ export function CommentProvider({
     })
   }
 
+  const updateCommentLikeStatus = useCallback(
+    (commentId: string, memberId: string, isLiked: boolean) => {
+      dispatch({
+        type: 'UPDATE_COMMENT_LIKE_STATUS',
+        payload: { commentId, memberId, isLiked },
+      })
+    },
+    []
+  )
+
   const contextValue = {
     state,
     dispatch,
@@ -367,6 +412,7 @@ export function CommentProvider({
     handleDeleteComment,
     handleEditComment,
     handleReport,
+    updateCommentLikeStatus,
   }
 
   return (

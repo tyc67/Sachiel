@@ -217,7 +217,7 @@ export async function likeComment(input: z.infer<typeof LikeCommentSchema>) {
   }
 
   return await fetchRestfulPost(
-    RESTFUL_ENDPOINTS.pubsub + 'ss',
+    RESTFUL_ENDPOINTS.pubsub,
     payload,
     { cache: 'no-cache' },
     'Failed to like comment via pub/sub'
