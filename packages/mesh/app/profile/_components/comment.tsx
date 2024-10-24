@@ -1,11 +1,17 @@
 'use client'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
+import { likeComment, unlikeComment } from '@/app/actions/comment'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
+import TOAST_MESSAGE from '@/constants/toast'
+import { useToast } from '@/context/toast'
+import { useUser } from '@/context/user'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { type CommentType } from '@/types/profile'
+import { debounce } from '@/utils/performance'
 import { displayTimeFromNow } from '@/utils/story-display'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
@@ -26,11 +32,15 @@ const Comment: React.FC<CommentProps> = ({
   storyId = '',
 }) => {
   const { width } = useWindowDimensions()
+  const { user } = useUser()
   const router = useRouter()
+  const { addToast } = useToast()
   const { needClamp, commentRef, handleToggleClamp } = useCommentClamp(
     clampLineCount,
     canToggle
   )
+  const [commentData, setCommentData] = useState(data)
+  const isCommentLiked = !!commentData?.isMemberLiked?.length
   const handleCommentClick = () => {
     if (width > getTailwindConfigBreakpointNumber('md')) {
       router.push(`/story/${storyId}`)
@@ -38,10 +48,58 @@ const Comment: React.FC<CommentProps> = ({
       handleToggleClamp()
     }
   }
+  const handleLikeComment = debounce(async () => {
+    const likeCommentArgs = {
+      memberId: user.memberId,
+      commentId: commentData.id,
+    }
+    if (isCommentLiked) {
+      try {
+        const response = await unlikeComment(likeCommentArgs)
+        if (!response) {
+          addToast({ status: 'fail', text: TOAST_MESSAGE.unlikeCommentFailed })
+          throw new Error('Failed to unlike comment')
+        }
+        setCommentData((prev) => {
+          const prevLikeCount = Math.max(0, (prev.likeCount ?? 0) - 1)
+          return {
+            ...prev,
+            likeCount: prevLikeCount > 0 ? prevLikeCount - 1 : 0,
+            isMemberLiked: prev.isMemberLiked?.filter(
+              (item) => item.id !== user.memberId
+            ),
+          }
+        })
+      } catch (error) {
+        console.error({ error })
+      }
+      return
+    }
+    try {
+      const response = await likeComment(likeCommentArgs)
+      if (!response) {
+        addToast({ status: 'fail', text: TOAST_MESSAGE.likeCommentFailed })
+        throw new Error('Failed to like comment')
+      }
+      // TODO: user got has list or article has state
+      setCommentData((prev) => {
+        return {
+          ...prev,
+          likeCount: (prev.likeCount ?? 0) + 1,
+          isMemberLiked: [
+            ...(prev.isMemberLiked ?? []),
+            { __typename: 'Member' as const, id: user.memberId },
+          ],
+        }
+      })
+    } catch (error) {
+      console.error({ error })
+    }
+  })
   {
-    /* mobile has not default comment UI; instead desktop has. */
+    /* mobile has no default comment UI; instead desktop has. */
   }
-  if (width < getTailwindConfigBreakpointNumber('md') && !data.content)
+  if (width < getTailwindConfigBreakpointNumber('md') && !commentData.content)
     return <></>
   return (
     <section className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3">
@@ -53,16 +111,19 @@ const Comment: React.FC<CommentProps> = ({
             extra="mr-2 min-w-[28px] min-h-[28px]"
           />
           <p className="caption-1 text-primary-500">
-            {displayTimeFromNow(data.createdAt)}
+            {displayTimeFromNow(commentData.createdAt)}
           </p>
           <Icon iconName="icon-dot" size="s" />
 
           <button className="caption-1 text-primary-500">編輯留言</button>
         </div>
         <div className="flex items-center justify-end">
-          <p className="caption-1 text-primary-600">{data.likeCount}</p>
-          <button>
-            <Icon iconName="icon-heart" size="l" />
+          <p className="caption-1 text-primary-600">{commentData.likeCount}</p>
+          <button onClick={handleLikeComment}>
+            <Icon
+              iconName={isCommentLiked ? 'icon-liked' : 'icon-heart'}
+              size="l"
+            />
           </button>
         </div>
       </div>
@@ -80,11 +141,11 @@ const Comment: React.FC<CommentProps> = ({
         />
         <p
           className={`body-3 line-clamp-3 size-full ${
-            data.content ? 'text-primary-600' : 'text-primary-400'
+            commentData.content ? 'text-primary-600' : 'text-primary-400'
           } sm:line-clamp-1`}
           ref={commentRef}
         >
-          {data.content || '沒有評論'}
+          {commentData.content || '沒有評論'}
         </p>
       </div>
     </section>

@@ -14,7 +14,7 @@ type Props = {
 }
 
 export default function TopCollectorCard({ person, rank }: Props) {
-  const { handelClickFollow, isFollowing } = useFollow(String(person.id))
+  const { handleClickFollow, isFollowing } = useFollow(String(person.id))
   const { user } = useUser()
 
   return (
@@ -63,7 +63,7 @@ export default function TopCollectorCard({ person, rank }: Props) {
                 isActive: isFollowing,
                 activeText: '追蹤中',
               }}
-              onClick={handelClickFollow}
+              onClick={handleClickFollow}
             />
           </div>
           <div className="hidden lg:block lg:w-full">
@@ -75,7 +75,7 @@ export default function TopCollectorCard({ person, rank }: Props) {
                 isActive: isFollowing,
                 activeText: '追蹤中',
               }}
-              onClick={handelClickFollow}
+              onClick={handleClickFollow}
             />
           </div>
         </>
