@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import type { ButtonColor } from '@/components/button'
 import Button from '@/components/button'
@@ -17,6 +17,7 @@ export default function StoryPickButton({
   color?: ButtonColor
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   const { user } = useUser()
   const { openPickModal } = usePickModal()
   const memberId = user.memberId
@@ -24,6 +25,7 @@ export default function StoryPickButton({
 
   const handleClickPick = debounce(async () => {
     if (!memberId) {
+      localStorage.setItem('login-redirect', pathname)
       router.push('/login')
       return
     }
