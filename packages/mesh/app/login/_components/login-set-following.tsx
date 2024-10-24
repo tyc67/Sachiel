@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { signUpMember } from '@/app/actions/auth'
 import getMemberByFollowingCategory from '@/app/actions/get-members-by-category'
+import { invalidateInvitationCode } from '@/app/actions/invitation-code'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
@@ -71,6 +72,7 @@ export default function LoginSetFollowing() {
         ...prev,
         email: response.email || formData.email,
       }))
+      await invalidateInvitationCode(formData.code.id)
       setStep('set-wallet')
     }
 

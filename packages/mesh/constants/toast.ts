@@ -12,6 +12,7 @@ const TOAST_MESSAGE = {
   addBookmarkFailed: '加入書籤失敗，請重新嘗試',
   deleteBookmarkFailed: '刪除書籤失敗，請重新嘗試',
   copyStoryLinkSuccess: '已複製連結',
+  copyInvitationCode: '已複製邀請碼',
   unlockStorySuccess: '已成功解鎖',
   payFailedInsufficient: '讀選點數餘額不足',
   payFailedUnowknown: '支付失敗，請重新嘗試',

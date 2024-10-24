@@ -2434,6 +2434,8 @@ export type Publisher = {
   title?: Maybe<Scalars['String']['output']>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   updatedBy?: Maybe<User>
+  user?: Maybe<Array<User>>
+  userCount?: Maybe<Scalars['Int']['output']>
   wallet?: Maybe<Scalars['String']['output']>
 }
 
@@ -2459,6 +2461,17 @@ export type PublisherSponsoredCountArgs = {
   where?: SponsorshipWhereInput
 }
 
+export type PublisherUserArgs = {
+  orderBy?: Array<UserOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: UserWhereInput
+}
+
+export type PublisherUserCountArgs = {
+  where?: UserWhereInput
+}
+
 export type PublisherCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>
@@ -2478,6 +2491,7 @@ export type PublisherCreateInput = {
   title?: InputMaybe<Scalars['String']['input']>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
   updatedBy?: InputMaybe<UserRelateToOneForCreateInput>
+  user?: InputMaybe<UserRelateToManyForCreateInput>
   wallet?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -2553,6 +2567,7 @@ export type PublisherUpdateInput = {
   title?: InputMaybe<Scalars['String']['input']>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
   updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>
+  user?: InputMaybe<UserRelateToManyForUpdateInput>
   wallet?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -2579,6 +2594,7 @@ export type PublisherWhereInput = {
   title?: InputMaybe<StringFilter>
   updatedAt?: InputMaybe<DateTimeNullableFilter>
   updatedBy?: InputMaybe<UserWhereInput>
+  user?: InputMaybe<UserManyRelationFilter>
   wallet?: InputMaybe<StringFilter>
 }
 
@@ -3541,6 +3557,7 @@ export type User = {
   isProtected?: Maybe<Scalars['Boolean']['output']>
   name?: Maybe<Scalars['String']['output']>
   password?: Maybe<PasswordState>
+  publisher?: Maybe<Publisher>
   role?: Maybe<Scalars['String']['output']>
 }
 
@@ -3564,7 +3581,14 @@ export type UserCreateInput = {
   isProtected?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
   password?: InputMaybe<Scalars['String']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForCreateInput>
   role?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UserManyRelationFilter = {
+  every?: InputMaybe<UserWhereInput>
+  none?: InputMaybe<UserWhereInput>
+  some?: InputMaybe<UserWhereInput>
 }
 
 export type UserOrderByInput = {
@@ -3573,6 +3597,18 @@ export type UserOrderByInput = {
   isProtected?: InputMaybe<OrderDirection>
   name?: InputMaybe<OrderDirection>
   role?: InputMaybe<OrderDirection>
+}
+
+export type UserRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<UserWhereUniqueInput>>
+  create?: InputMaybe<Array<UserCreateInput>>
+}
+
+export type UserRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<UserWhereUniqueInput>>
+  create?: InputMaybe<Array<UserCreateInput>>
+  disconnect?: InputMaybe<Array<UserWhereUniqueInput>>
+  set?: InputMaybe<Array<UserWhereUniqueInput>>
 }
 
 export type UserRelateToOneForCreateInput = {
@@ -3596,6 +3632,7 @@ export type UserUpdateInput = {
   isProtected?: InputMaybe<Scalars['Boolean']['input']>
   name?: InputMaybe<Scalars['String']['input']>
   password?: InputMaybe<Scalars['String']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForUpdateInput>
   role?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -3607,6 +3644,7 @@ export type UserWhereInput = {
   id?: InputMaybe<IdFilter>
   isProtected?: InputMaybe<BooleanFilter>
   name?: InputMaybe<StringFilter>
+  publisher?: InputMaybe<PublisherWhereInput>
   role?: InputMaybe<StringFilter>
 }
 
@@ -3657,6 +3695,20 @@ export type UserActionStoryFragment = {
       avatar?: string | null
     } | null
   }> | null
+}
+
+export type InvalidateInvitationCodeMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type InvalidateInvitationCodeMutation = {
+  __typename?: 'Mutation'
+  updateInvitationCode?: {
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+    expired?: boolean | null
+  } | null
 }
 
 export type SignUpMemberMutationVariables = Exact<{
@@ -3773,6 +3825,51 @@ export type GetLatestAddedCommentQueryVariables = Exact<{
 export type GetLatestAddedCommentQuery = {
   __typename?: 'Query'
   comments?: Array<{ __typename?: 'Comment'; id: string }> | null
+}
+
+export type IsInvitationCodeValidQueryVariables = Exact<{
+  code: Scalars['String']['input']
+}>
+
+export type IsInvitationCodeValidQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+  }> | null
+}
+
+export type GetValidInvitationCodesQueryVariables = Exact<{
+  memberId: Scalars['ID']['input']
+}>
+
+export type GetValidInvitationCodesQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+  }> | null
+}
+
+export type GetSentInvitationCodesQueryVariables = Exact<{
+  memberId: Scalars['ID']['input']
+}>
+
+export type GetSentInvitationCodesQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+    receive?: {
+      __typename?: 'Member'
+      id: string
+      name?: string | null
+      avatar?: string | null
+    } | null
+  }> | null
 }
 
 export type GetMemberFollowingQueryVariables = Exact<{
@@ -4753,6 +4850,76 @@ export const UserActionStoryFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UserActionStoryFragment, unknown>
+export const InvalidateInvitationCodeDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'InvalidateInvitationCode' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateInvitationCode' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'id' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'expired' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  InvalidateInvitationCodeMutation,
+  InvalidateInvitationCodeMutationVariables
+>
 export const SignUpMemberDocument = {
   kind: 'Document',
   definitions: [
@@ -5563,6 +5730,333 @@ export const GetLatestAddedCommentDocument = {
 } as unknown as DocumentNode<
   GetLatestAddedCommentQuery,
   GetLatestAddedCommentQueryVariables
+>
+export const IsInvitationCodeValidDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'isInvitationCodeValid' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'code' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: false },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'code' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'code' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  IsInvitationCodeValidQuery,
+  IsInvitationCodeValidQueryVariables
+>
+export const GetValidInvitationCodesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getValidInvitationCodes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: false },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'send' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetValidInvitationCodesQuery,
+  GetValidInvitationCodesQueryVariables
+>
+export const GetSentInvitationCodesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getSentInvitationCodes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: true },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'send' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'receive' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetSentInvitationCodesQuery,
+  GetSentInvitationCodesQueryVariables
 >
 export const GetMemberFollowingDocument = {
   kind: 'Document',

@@ -1,0 +1,7 @@
+mutation InvalidateInvitationCode($id: ID) {
+  updateInvitationCode(where: { id: $id }, data: { expired: true }) {
+    id
+    code
+    expired
+  }
+}

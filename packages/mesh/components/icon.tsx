@@ -129,6 +129,7 @@ export type IconName =
   | 'icon-check-circle-lg'
   | 'icon-toast-success'
   | 'icon-toast-fail'
+  | 'icon-invitation-code'
 
 export type IconProps = {
   size: Size

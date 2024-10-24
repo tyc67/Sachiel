@@ -1,0 +1,34 @@
+query isInvitationCodeValid($code: String!) {
+  invitationCodes(
+    where: { expired: { equals: false }, code: { equals: $code } }
+    orderBy: { id: desc }
+  ) {
+    id
+    code
+  }
+}
+
+query getValidInvitationCodes($memberId: ID!) {
+  invitationCodes(
+    where: { expired: { equals: false }, send: { id: { equals: $memberId } } }
+    orderBy: { id: desc }
+  ) {
+    id
+    code
+  }
+}
+
+query getSentInvitationCodes($memberId: ID!) {
+  invitationCodes(
+    where: { expired: { equals: true }, send: { id: { equals: $memberId } } }
+    orderBy: { id: desc }
+  ) {
+    id
+    code
+    receive{
+      id
+      name
+      avatar
+    }
+  }
+}
