@@ -6,6 +6,7 @@ import { addComment, deleteComment, editComment } from '@/app/actions/comment'
 import TOAST_MESSAGE from '@/constants/toast'
 import { type User } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import type { PickListItem } from '@/types/profile'
 import { sleep } from '@/utils/sleep'
 
 import { useToast } from './toast'
@@ -164,21 +165,44 @@ function commentReducer(state: State, action: Action): State {
         ...state,
         commentList: state.commentList.map((comment) => {
           if (comment.id !== action.payload.commentId) return comment
-          const currentLikes = comment.like || []
-          return {
-            ...comment,
-            likeCount: action.payload.isLiked
-              ? (comment.likeCount || 0) + 1
-              : Math.max(0, (comment.likeCount || 0) - 1),
-            like: action.payload.isLiked
-              ? [
-                  ...currentLikes,
-                  { __typename: 'Member', id: action.payload.memberId },
-                ]
-              : currentLikes.filter(
-                  (like) => like.id !== action.payload.memberId
-                ),
+
+          // 檢查評論類型並相應更新
+          if ('isMemberLiked' in comment) {
+            const currentLikes =
+              (comment as NonNullable<NonNullable<PickListItem>['comment']>[0])
+                .isMemberLiked || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              isMemberLiked: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
+          } else if ('like' in comment) {
+            const currentLikes = comment.like || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              like: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
           }
+          return comment
         }),
       }
     default:
@@ -215,7 +239,7 @@ export function CommentProvider({
   initialComments,
 }: {
   children: ReactNode
-  initialComments: Comment[]
+  initialComments: Comment[] | NonNullable<NonNullable<PickListItem>['comment']>
 }) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
