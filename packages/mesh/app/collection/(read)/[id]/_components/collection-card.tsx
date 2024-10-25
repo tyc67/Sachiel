@@ -10,7 +10,7 @@ import { useUser } from '@/context/user'
 import useClamp from '@/hooks/use-clamp'
 import { getDisplayPicks } from '@/utils/story-display'
 
-import type { Collection } from '../../_types/collection'
+import type { Collection } from '../../../_types/collection'
 import CollectionMeta from './collection-meta'
 import CollectionPickInfo from './collection-pick-info'
 

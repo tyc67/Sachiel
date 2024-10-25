@@ -1,4 +1,4 @@
-import type { CollectionPick } from '../../_types/collection'
+import type { CollectionPick } from '../../../_types/collection'
 import ArticleCard from './article-card'
 
 interface ArticleCardListProps {
