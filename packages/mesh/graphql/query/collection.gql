@@ -106,3 +106,28 @@ query GetCollectionStories(
     }
   }
 }
+
+query GetCollectionToEdit($id: ID) {
+  collection(where: { id: $id }) {
+    id
+    title
+    summary
+    heroImage {
+      urlOriginal
+    }
+    collectionpicks {
+      story {
+        id
+        title
+        og_image
+        source {
+          id
+          title
+        }
+        published_date
+      }
+      sort_order
+      picked_date
+    }
+  }
+}

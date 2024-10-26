@@ -136,6 +136,8 @@ export type IconName =
   | 'icon-collection-edit'
   | 'icon-collection-report'
   | 'icon-invitation-code'
+  | 'icon-checkbox-on'
+  | 'icon-checkbox-off'
 
 export type IconProps = {
   size: Size

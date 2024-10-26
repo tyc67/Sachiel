@@ -560,3 +560,31 @@ query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
     }
   }
 }
+
+query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
+  member(where: { id: $memberId }) {
+    name
+    picksAndBookmarksCount: pickCount(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    )
+    picksAndBookmarks: pick(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+      orderBy: { picked_date: desc }
+      take: $pickTake
+      skip: $pickSkip
+    ) {
+      id
+      kind
+      story {
+        id
+        title
+        og_image
+        published_date
+        source {
+          id
+          title
+        }
+      }
+    }
+  }
+}

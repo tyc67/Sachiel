@@ -12,7 +12,7 @@ import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
-import type { Collection } from '../../../_types/collection'
+import type { Collection } from '../../_types/collection'
 
 type Position = {
   top: number

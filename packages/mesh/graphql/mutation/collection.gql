@@ -1,0 +1,11 @@
+mutation CreateCollection($data: CollectionCreateInput!) {
+  createCollection(data: $data) {
+    id
+  }
+}
+
+mutation UpdateCollection($id: ID, $data: CollectionUpdateInput!) {
+  updateCollection(where: { id: $id }, data: $data) {
+    title
+  }
+}

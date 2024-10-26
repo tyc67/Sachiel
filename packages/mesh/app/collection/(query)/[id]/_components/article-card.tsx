@@ -7,7 +7,7 @@ import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { type CommentType } from '@/types/profile'
 
-import type { CollectionPick } from '../../../_types/collection'
+import type { CollectionPick } from '../../_types/collection'
 import Comment from './comment'
 
 type CollectionPickStory = NonNullable<CollectionPick>['story']
