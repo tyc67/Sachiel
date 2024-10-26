@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
-import type { CollectionPick } from '@/app/collection/(mutate)/_types/edit-collection'
+import type {
+  CollectionPick,
+  PickOrBookmark,
+} from '@/app/collection/(mutate)/_types/edit-collection'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 
 type EditCollectionContextValue = {
@@ -12,6 +15,8 @@ type EditCollectionContextValue = {
   setSummary: React.Dispatch<React.SetStateAction<string>>
   heroImage: File | string
   setHeroImage: React.Dispatch<React.SetStateAction<File | string>>
+  candidates: PickOrBookmark[]
+  setCandidates: React.Dispatch<React.SetStateAction<PickOrBookmark[]>>
   collectionPicks: CollectionPick[]
   setCollectionPicks: React.Dispatch<React.SetStateAction<CollectionPick[]>>
 }
@@ -25,6 +30,8 @@ const initialValue: EditCollectionContextValue = {
   setSummary: () => {},
   heroImage: '',
   setHeroImage: () => {},
+  candidates: [],
+  setCandidates: () => {},
   collectionPicks: [],
   setCollectionPicks: () => {},
 }
@@ -40,6 +47,7 @@ export default function EditCollectionProvider({
   const [title, setTitle] = useState(initialValue.title)
   const [summary, setSummary] = useState(initialValue.summary)
   const [heroImage, setHeroImage] = useState(initialValue.heroImage)
+  const [candidates, setCandidates] = useState(initialValue.candidates)
   const [collectionPicks, setCollectionPicks] = useState(
     initialValue.collectionPicks
   )
@@ -63,6 +71,8 @@ export default function EditCollectionProvider({
         setSummary,
         heroImage,
         setHeroImage,
+        candidates,
+        setCandidates,
         collectionPicks,
         setCollectionPicks,
       }}

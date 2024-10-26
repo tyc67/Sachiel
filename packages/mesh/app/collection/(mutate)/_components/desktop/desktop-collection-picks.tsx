@@ -2,19 +2,40 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
 import Spinner from '@/components/spinner'
+import { useEditCollection } from '@/context/edit-collection'
 import { useUser } from '@/context/user'
 
-import type { PickOrBookmark } from '../../_types/edit-collection'
 import InfiniteCollectionPicks from '../infinite-collection-picks'
 
 const picksAndBookmarksPageCount = 100
 
 export default function DesktopCollectionPicks() {
+  const { step } = useEditCollection()
+
+  const getStepJsx = (step: number) => {
+    switch (step) {
+      case 0:
+        return <Step1 />
+      case 1:
+        return <Step2 />
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
+      {getStepJsx(step)}
+    </div>
+  )
+}
+
+const Step1 = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [shouldLoadMore, setShouldLoadMore] = useState(true)
-  const [candidates, setCandidates] = useState<PickOrBookmark[]>([])
-  const [, setCandidatesCount] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
+
+  const { candidates, setCandidates } = useEditCollection()
   const { user } = useUser()
 
   const loadMorePicksAndBookmarks = useCallback(async () => {
@@ -28,12 +49,11 @@ export default function DesktopCollectionPicks() {
     const picksAndBookmarksCount = response?.member?.picksAndBookmarksCount ?? 0
     const newCandidates = candidates.concat(picksAndBookmarks)
     setCandidates(newCandidates)
-    setCandidatesCount(picksAndBookmarksCount)
 
     if (newCandidates.length === picksAndBookmarksCount) {
       setShouldLoadMore(false)
     }
-  }, [candidates, user.memberId])
+  }, [candidates, setCandidates, user.memberId])
 
   useEffect(() => {
     const fetchPicksAndBookmarks = async () => {
@@ -47,7 +67,7 @@ export default function DesktopCollectionPicks() {
     setMounted(true)
   }, [loadMorePicksAndBookmarks, mounted])
 
-  const contentJsx = isLoading ? (
+  return isLoading ? (
     <Spinner />
   ) : (
     <InfiniteCollectionPicks
@@ -57,9 +77,8 @@ export default function DesktopCollectionPicks() {
       shouldLoadMore={shouldLoadMore}
     />
   )
-  return (
-    <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
-      {contentJsx}
-    </div>
-  )
+}
+
+const Step2 = () => {
+  return <></>
 }
