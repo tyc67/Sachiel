@@ -49,7 +49,7 @@ export async function getSentInvitationCodes(memberId: string) {
     GetSentInvitationCodesDocument,
     { memberId },
     globalLogFields,
-    'Failed to get sent invitation codes'
+    `Failed to get sent invitation codes for ${memberId}`
   )
 
   if (!response) {
