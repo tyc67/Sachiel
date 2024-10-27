@@ -113,7 +113,10 @@ const STATIC_FILE_ENDPOINTS = {
     `${STATIC_FILE_ORIGIN}/data/${publisherCustomId}_stories.json`,
 }
 
+const ACTION_NAMES = ['封鎖名單', '聯絡我們', '關於', '登出', '刪除帳號']
+
 export {
+  ACTION_NAMES,
   ALCHEMY_ADDRESS,
   ENV,
   FIREBASE_CLIENT_EMAIL,
