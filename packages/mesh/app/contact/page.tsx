@@ -1,4 +1,5 @@
 import Icon from '@/components/icon'
+import { CONTACT_LINKS } from '@/constants/config'
 
 export default function Page() {
   return (
@@ -13,19 +14,22 @@ export default function Page() {
             若有使用上的問題，請將截圖及問題描述寄至客服信箱，或撥打客服電話由專人為您服務（服務時間：星期一～星期五，10:00～18:00）
           </p>
         </div>
-        <div className="border-b-[0.5px] border-b-primary-800 border-opacity-10 px-5 py-4 sm:px-10">
-          <p className="subtitle-2 mb-2 text-primary-500">客服信箱</p>
-          <p className="subtitle-1 text-primary-700">readr@readr.tw</p>
-        </div>
-        <div className="border-b-[0.5px] border-b-primary-800 border-opacity-10 px-5 py-4 sm:px-10">
-          <p className="subtitle-2 mb-2 text-primary-500">客服電話</p>
-          <p className="subtitle-1 text-primary-700">(02) 6633-3890</p>
-        </div>
-        <div className="px-5 py-4 sm:px-10">
-          <p className="subtitle-2 mb-2 text-primary-500">Discord 社群</p>
-          <p className="subtitle-1 text-primary-700">
-            https://discord.gg/ywpth4mZUw
-          </p>
+        <div className="px-5 sm:px-10">
+          {CONTACT_LINKS.map(({ name, href, text }) => (
+            <div
+              className="border-b-[0.5px] border-b-primary-800 border-opacity-10 py-4 last:border-b-0"
+              key={name}
+            >
+              <p className="subtitle-2 mb-2 text-primary-500">{name}</p>
+              <a
+                href={href}
+                target="_blank"
+                className="subtitle-1 text-primary-700"
+              >
+                {text}
+              </a>
+            </div>
+          ))}
         </div>
       </section>
     </main>

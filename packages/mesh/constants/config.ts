@@ -115,9 +115,28 @@ const STATIC_FILE_ENDPOINTS = {
 
 const ACTION_NAMES = ['封鎖名單', '聯絡我們', '關於', '登出', '刪除帳號']
 
+const CONTACT_LINKS = [
+  {
+    name: '客服信箱',
+    href: 'mailto:readr@readr.tw',
+    text: 'readr@readr.tw',
+  },
+  {
+    name: '客服電話',
+    href: 'tel:+886(02)6633-3890',
+    text: '(02) 6633-3890',
+  },
+  {
+    name: 'Discord 社群',
+    href: 'https://discord.gg/ywpth4mZUw',
+    text: 'https://discord.gg/ywpth4mZUw',
+  },
+]
+
 export {
   ACTION_NAMES,
   ALCHEMY_ADDRESS,
+  CONTACT_LINKS,
   ENV,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_CONFIG,
