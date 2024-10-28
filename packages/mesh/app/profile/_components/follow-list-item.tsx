@@ -41,7 +41,7 @@ const FollowListItem = ({
   return (
     <li
       key={followerId}
-      className="flex items-center justify-between border pb-5 pt-[12.5px] first-of-type:pt-[24.5px] lg:px-5"
+      className="flex items-center justify-between pb-5 pt-[12.5px] first-of-type:pt-[24.5px] lg:px-5"
     >
       <Link
         href={`/profile/${type}/${followerCustomId}`}
