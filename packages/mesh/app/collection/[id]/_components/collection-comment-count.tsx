@@ -1,3 +1,4 @@
+// TODO: merge with CollectionPickCount
 export default function CollectionCommentCount({
   commentsCount,
 }: {
