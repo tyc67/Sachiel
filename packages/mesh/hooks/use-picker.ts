@@ -24,7 +24,7 @@ export default function usePicker() {
       if (!memberId) return
       setIsLoading(true)
 
-      const removePickFromUser = addPickToUser(
+      const reverseMutation = addPickToUser(
         pickObjective,
         targetId,
         user,
@@ -38,7 +38,7 @@ export default function usePicker() {
       })
       if (!addPickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
-        removePickFromUser()
+        reverseMutation()
       }
 
       setIsLoading(false)
@@ -46,12 +46,11 @@ export default function usePicker() {
     [memberId, user, setUser, addToast]
   )
 
-  // TODO: simplify the mutation and toast message
   const removePick = useCallback(
     async (targetId: string, pickObjective: PickObjective) => {
       if (!memberId) return
       setIsLoading(true)
-      const addPickToUser = removePickFromUser(
+      const reverseMutation = removePickFromUser(
         pickObjective,
         targetId,
         user,
@@ -76,7 +75,7 @@ export default function usePicker() {
 
       if (!removePickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.deletePickFailed })
-        addPickToUser()
+        reverseMutation()
       }
 
       setIsLoading(false)
@@ -89,7 +88,7 @@ export default function usePicker() {
       if (!memberId || !comment) return
       setIsLoading(true)
 
-      const removePickFromUser = addPickToUser(
+      const reverseMutation = addPickToUser(
         pickObjective,
         targetId,
         user,
@@ -103,7 +102,7 @@ export default function usePicker() {
       })
       if (!addPickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
-        removePickFromUser()
+        reverseMutation()
       }
 
       setIsLoading(false)
