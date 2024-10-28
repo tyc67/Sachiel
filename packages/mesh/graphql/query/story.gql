@@ -84,6 +84,10 @@ query GetStory($storyId: ID, $picksTake: Int, $commentsTake: Int) {
     ) {
       id
       createdAt
+      likeCount
+      like {
+        id
+      }
       member {
         id
         customId

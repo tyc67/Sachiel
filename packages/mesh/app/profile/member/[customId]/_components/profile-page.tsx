@@ -10,6 +10,7 @@ import UserStatusList from '@/app/profile/_components/user-status-list'
 import ErrorPage from '@/components/status/error-page'
 import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
+import { useFollow } from '@/hooks/use-follow'
 import {
   type Bookmarks,
   type PickList,
@@ -34,6 +35,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const [tabData, setTabData] = useState<PickList | Bookmarks>([])
 
   const profileData = isMember ? user : visitorProfile
+  const { handleClickFollow, isFollowing } = useFollow(
+    String(profileData.memberId)
+  )
 
   useEffect(() => {
     if (isMember) {
@@ -88,11 +92,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const buttonList = isMember
     ? [
         {
-          text: '編輯個人檔案',
+          text: { default: '編輯個人檔案', isActive: '' },
           clickFn: () => router.push(`${currentUrl}/edit-profile`),
+          isActive: false,
         },
       ]
-    : [{ text: '追蹤' }]
+    : [
+        {
+          text: { default: '追蹤', isActive: '追蹤中' },
+          clickFn: handleClickFollow,
+          isActive: isFollowing,
+        },
+      ]
 
   const getMessage = (category: TabCategory): string => {
     const messages: { [key: string]: string } = {

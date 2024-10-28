@@ -8,14 +8,15 @@ import {
 
 import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
-import useStoryPicker from '@/hooks/use-story-picker'
+import usePicker from '@/hooks/use-picker'
 import useWindowDimensions from '@/hooks/use-window-dimension'
+import { PickObjective } from '@/types/objective'
 
-import Button from '../button'
-import Icon from '../icon'
-import Avatar from './avatar'
+import Button from './button'
+import Icon from './icon'
+import Avatar from './story-card/avatar'
 
-export default function StoryPickModal() {
+export default function PickModal() {
   const { isPicked } = usePickModal()
   if (isPicked) {
     return <RemovePickModal />
@@ -27,8 +28,9 @@ export default function StoryPickModal() {
 const AddPickModal = () => {
   const { user } = useUser()
   const { width } = useWindowDimensions()
-  const { isModalOpen, storyId, closePickModal } = usePickModal()
-  const { addStoryPick, addStoryPickAndComment } = useStoryPicker()
+  const { isModalOpen, objectId, closePickModal, pickObjective } =
+    usePickModal()
+  const { addPick, addPickAndComment } = usePicker()
   const mobileTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const desktopTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
@@ -60,14 +62,19 @@ const AddPickModal = () => {
     }
   }
 
-  const handleAddStoryPick = () => {
+  const handleAddPick = () => {
     if (value) {
-      addStoryPickAndComment(storyId, value)
+      addPickAndComment(objectId, pickObjective, value)
     } else {
-      addStoryPick(storyId)
+      addPick(objectId, pickObjective)
     }
     closePickModal()
   }
+
+  const textareaPlaceHolder =
+    pickObjective === PickObjective.Story
+      ? '留言分享你為什麼精選這篇文章...'
+      : '留言分享你為什麼精選這則精選...'
 
   return (
     <>
@@ -97,14 +104,14 @@ const AddPickModal = () => {
               ref={mobileTextAreaRef}
               onInput={(e) => handleInput(e, mobileTextAreaRef)}
               value={value}
-              placeholder="留言分享你為什麼精選這篇文章..."
+              placeholder={textareaPlaceHolder}
               className="h-auto w-full resize-none break-words border-none bg-transparent pb-2 focus:outline-none"
               rows={1}
               autoFocus
             />
             <button
               className="body-2 self-end text-custom-blue"
-              onClick={handleAddStoryPick}
+              onClick={handleAddPick}
             >
               {buttonText}
             </button>
@@ -137,7 +144,7 @@ const AddPickModal = () => {
                   ref={desktopTextAreaRef}
                   onInput={(e) => handleInput(e, desktopTextAreaRef)}
                   value={value}
-                  placeholder="留言分享你為什麼精選這篇文章..."
+                  placeholder={textareaPlaceHolder}
                   className="h-auto w-full resize-none break-words border-none bg-transparent pb-5 focus:outline-none"
                   rows={1}
                   autoFocus
@@ -146,7 +153,7 @@ const AddPickModal = () => {
                   size="lg"
                   color="primary"
                   text={buttonText}
-                  onClick={handleAddStoryPick}
+                  onClick={handleAddPick}
                 />
               </div>
             </div>
@@ -183,8 +190,13 @@ const AddPickModal = () => {
 
 const RemovePickModal = () => {
   const removeDialogRef = useRef<HTMLDialogElement | null>(null)
-  const { storyId, closePickModal } = usePickModal()
-  const { removeStoryPick } = useStoryPicker()
+  const { objectId, closePickModal, pickObjective } = usePickModal()
+  const { removePick } = usePicker()
+
+  const description =
+    pickObjective === PickObjective.Story
+      ? '移除精選文章，將會一併移除您的留言'
+      : '移除精選集錦，將會一併移除您的留言'
 
   useEffect(() => {
     if (removeDialogRef.current) {
@@ -192,8 +204,8 @@ const RemovePickModal = () => {
     }
   }, [])
 
-  const handleRemoveStoryPick = () => {
-    removeStoryPick(storyId)
+  const handleRemovePick = async () => {
+    removePick(objectId, pickObjective)
     removeDialogRef.current?.close()
     closePickModal()
   }
@@ -212,13 +224,13 @@ const RemovePickModal = () => {
         className="w-[280px] rounded-lg border px-5 py-4 text-center sm:w-[400px] sm:px-8 sm:py-6"
       >
         <p className="title-2 text-left">確認要移除精選？</p>
-        <p className="body-3 text-left">移除精選文章，將會一併移除您的留言</p>
+        <p className="body-3 text-left">{description}</p>
         <div className="flex flex-row items-center justify-end gap-1 pt-5">
           <Button
             size="sm"
             color="transparent-blue"
             text="移除"
-            onClick={handleRemoveStoryPick}
+            onClick={handleRemovePick}
           />
           <Button
             size="sm"

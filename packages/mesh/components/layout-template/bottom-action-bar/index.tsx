@@ -1,38 +1,19 @@
 import Icon from '@/components/icon'
-import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryCommentCount from '@/components/story-card/story-comment-count'
-import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickCount from '@/components/story-card/story-pick-count'
-import { useComment } from '@/context/comment-context'
-import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useComment } from '@/context/comment'
 
-export enum BottomActionBarType {
-  Article = 'article',
+export type MobileBottomActionBarProps = {
+  picksCount: number
+  commentsCount: number
+  actions: React.ReactNode[]
 }
-
-export type ArticleMobileBottomActionBarProps = {
-  type: BottomActionBarType.Article
-  story: Story
-}
-
-export type MobileBottomActionBarProps = ArticleMobileBottomActionBarProps
 
 export default function MobileBottomActionBar(
   props: MobileBottomActionBarProps
 ) {
-  switch (props.type) {
-    case BottomActionBarType.Article:
-      return <ArticleBottomActionBar story={props.story} />
-
-    default:
-      return null
-  }
-}
-
-type Story = NonNullable<GetStoryQuery>['story']
-const ArticleBottomActionBar = ({ story }: { story: Story }) => {
-  const picksCount = story?.picksCount ?? 0
-  const commentsCount = story?.commentsCount ?? 0
+  const picksCount = props?.picksCount ?? 0
+  const commentsCount = props?.commentsCount ?? 0
   const { dispatch } = useComment()
   const openCommentBlock = () => {
     dispatch({ type: 'TOGGLE_MOBILE_COMMENT_MODAL', payload: { isOpen: true } })
@@ -51,8 +32,7 @@ const ArticleBottomActionBar = ({ story }: { story: Story }) => {
           <StoryPickCount picksCount={picksCount} />
         </div>
         <div className="flex gap-2">
-          <PublisherDonateButton publisherId={story?.source?.id ?? ''} />
-          <StoryPickButton storyId={story?.id ?? ''} />
+          {props.actions.map((action) => action)}
         </div>
       </div>
     </nav>

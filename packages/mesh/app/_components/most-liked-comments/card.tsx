@@ -16,7 +16,7 @@ type Props = {
 }
 
 export default function MostLikedCommentCard({ comment, rank }: Props) {
-  const { handelClickFollow, isFollowing } = useFollow(
+  const { handleClickFollow, isFollowing } = useFollow(
     String(comment.member.id)
   )
   const { user } = useUser()
@@ -62,7 +62,7 @@ export default function MostLikedCommentCard({ comment, rank }: Props) {
                   isActive: isFollowing,
                   activeText: '追蹤中',
                 }}
-                onClick={handelClickFollow}
+                onClick={handleClickFollow}
               />
             </div>
           )}

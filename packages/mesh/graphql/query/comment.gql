@@ -1,8 +1,23 @@
-query GetLatestAddedComment($memberId: ID!, $storyId: ID!) {
+query GetStoryLatestAddedComment($memberId: ID!, $storyId: ID!) {
   comments(
     where: {
       member: { id: { equals: $memberId } }
       story: { id: { equals: $storyId } }
+      is_active: { equals: true }
+    }
+    orderBy: { createdAt: desc }
+    # only need 1st comment
+    take: 1
+  ) {
+    id
+  }
+}
+
+query GetCollectionLatestAddedComment($memberId: ID!, $collectionId: ID!) {
+  comments(
+    where: {
+      member: { id: { equals: $memberId } }
+      collection: { id: { equals: $collectionId } }
       is_active: { equals: true }
     }
     orderBy: { createdAt: desc }

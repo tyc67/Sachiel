@@ -27,6 +27,8 @@ const Page = async ({ params }: PageProps) => {
     const userLogo = userData?.logo || ''
     const userIntro = userData?.description || '使用者介紹'
     const followerCount = userData?.followerCount || 0
+    const publisherId = storiesResponse.source.id
+
     const storyData =
       storiesResponse?.stories?.map((data) => ({
         ...data,
@@ -48,7 +50,8 @@ const Page = async ({ params }: PageProps) => {
           name={userName}
           avatar={userLogo}
           intro={userIntro}
-          publisherId={customId}
+          publisherCustomId={customId}
+          publisherId={publisherId}
           userType={userType}
           storyData={storyData}
         />

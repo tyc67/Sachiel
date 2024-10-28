@@ -22,15 +22,9 @@ type RelatedStory = {
   lastUpdated: string
 }
 
-export async function getStory({
-  storyId,
-  picksTake,
-  commentsTake,
-}: {
-  storyId: string
-  picksTake: number
-  commentsTake: number
-}) {
+export async function getStory({ storyId }: { storyId: string }) {
+  const picksTake = 5
+  const commentsTake = 10
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await queryGraphQL(
@@ -44,13 +38,12 @@ export async function getStory({
 
 export async function getRelatedStories({
   storyTitle,
-  picksTake,
-  commentsTake,
 }: {
   storyTitle: string
-  picksTake: number
-  commentsTake: number
 }) {
+  const picksTake = 5
+  const commentsTake = 3
+
   const globalLogFields = getLogTraceObjectFromHeaders()
   const relatedRawStories =
     (
