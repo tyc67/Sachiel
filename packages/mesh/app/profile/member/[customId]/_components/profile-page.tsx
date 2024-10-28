@@ -7,6 +7,7 @@ import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
+import Button from '@/components/button'
 import ErrorPage from '@/components/status/error-page'
 import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
@@ -31,7 +32,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const pathName = usePathname()
   const currentUrl = pathName
 
-  const [category, setCategory] = useState<TabCategory>(TabCategory.PICK)
+  const [category, setCategory] = useState<TabCategory>(TabCategory.PICKS)
   const [tabData, setTabData] = useState<PickList | Bookmarks>([])
 
   const profileData = isMember ? user : visitorProfile
@@ -42,11 +43,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   useEffect(() => {
     if (isMember) {
       switch (category) {
-        case TabCategory.PICK:
+        case TabCategory.PICKS:
           setTabData(profileData.picksData)
           break
         case TabCategory.BOOKMARKS:
           setTabData(profileData.bookmarks)
+          break
+        case TabCategory.COLLECTIONS:
+          //@ts-expect-error: still in progress
+          // TODO: fix after pull dev
+          setTabData(profileData.collection || [])
           break
         default:
           setTabData(profileData.picksData)
@@ -111,11 +117,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         ? '這裡還空空的\n趕緊將喜愛的新聞加入精選吧'
         : '這個人還沒有精選新聞',
       BOOKMARKS: '沒有已儲存的書籤',
+      COLLECTIONS: `從精選新聞或書籤中\n將數篇新聞打包成集錦`,
     }
     return messages[category] || ''
   }
 
   const shouldShowComment = category !== TabCategory.BOOKMARKS || !isMember
+  const emptyElement = (category: TabCategory): React.ReactNode => {
+    if (category === TabCategory.COLLECTIONS)
+      return (
+        <>
+          <Button size="md" color="transparent" text="立即嘗試" />
+        </>
+      )
+  }
 
   return (
     <>
@@ -141,6 +156,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         items={tabData || []}
         shouldShowComment={shouldShowComment}
         emptyMessage={getMessage(category)}
+        elementForEmpty={emptyElement(category)}
         memberId={memberId}
         avatar={avatar}
         name={name}

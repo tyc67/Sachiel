@@ -10,6 +10,7 @@ import type {
 interface ArticleCardListProps {
   items: StoryData | PickList | Bookmarks
   emptyMessage: string
+  elementForEmpty?: React.ReactNode
   memberId?: string
   avatar?: string
   name?: string
@@ -20,6 +21,7 @@ function ArticleCardList({
   items,
   shouldShowComment,
   emptyMessage,
+  elementForEmpty,
   memberId,
   avatar,
   name,
@@ -27,8 +29,9 @@ function ArticleCardList({
   if (!items?.length) {
     return (
       <div className="flex grow flex-col">
-        <section className="flex h-full max-w-[theme(width.maxMain)] grow items-center justify-center whitespace-pre bg-primary-700-dark text-center text-base text-primary-400 sm:min-h-full">
-          <p className="my-10 w-full">{emptyMessage}</p>
+        <section className="flex h-full max-w-[theme(width.maxMain)] grow flex-col items-center justify-center whitespace-pre bg-primary-700-dark text-center text-base text-primary-400 sm:min-h-full">
+          <p className="mb-4 w-full">{emptyMessage}</p>
+          {elementForEmpty}
         </section>
       </div>
     )

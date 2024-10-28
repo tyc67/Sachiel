@@ -18,9 +18,10 @@ export type TabItem = {
   redirectLink?: string
 }
 export enum TabCategory {
-  PICK = 'PICKS',
+  PICKS = 'PICKS',
   BOOKMARKS = 'BOOKMARKS',
   PUBLISH = 'PUBLISH',
+  COLLECTIONS = 'COLLECTIONS',
 }
 
 export type EditProfileFormTypes = {
