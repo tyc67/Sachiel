@@ -19,7 +19,7 @@ export const useFollow = (followingId: string) => {
   const isFollowing = user.followingMemberIds.has(followingId)
   const { addToast } = useToast()
 
-  const handelClickFollow = debounce(async () => {
+  const handleClickFollow = debounce(async () => {
     if (!memberId) {
       localStorage.setItem('login-redirect', pathname)
       router.push('/login')
@@ -65,5 +65,5 @@ export const useFollow = (followingId: string) => {
     }
   })
 
-  return { handelClickFollow, isFollowing }
+  return { handleClickFollow, isFollowing }
 }

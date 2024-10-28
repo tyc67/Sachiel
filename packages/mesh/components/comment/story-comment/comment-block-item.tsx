@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 
 import Icon from '@/components/icon'
@@ -7,6 +8,7 @@ import { EditDrawerShowType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import type { Comment } from '@/graphql/__generated__/graphql'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
+import { useCommentLike } from '@/hooks/use-comment-like'
 import { displayTimeFromNow } from '@/utils/story-display'
 
 import CommentEditor from './comment-editor'
@@ -21,8 +23,11 @@ const CommentBlockItem = ({
 }) => {
   const { state, dispatch } = useComment()
   const { user } = useUser()
+  const { commentData, isCommentLiked, handleLikeComment } = useCommentLike({
+    initialComment: comment,
+  })
   const sameBlockComment = displayMode === state.commentEditState.displayMode
-  const targetComment = state.commentEditState.commentId === comment.id
+  const targetComment = state.commentEditState.commentId === commentData.id
   const clampLineCount = 2
   const canToggle = true
   const shouldShowDropdownMenu =
@@ -69,14 +74,14 @@ const CommentBlockItem = ({
 
   return (
     <li
-      key={comment.id}
+      key={commentData.id}
       className={`mx-5 flex gap-2 border-b border-b-primary-200 py-5 transition-colors duration-500 first-of-type:pt-0 last-of-type:border-none ${
-        comment.id === state.highlightedId ? 'bg-highlight-red' : ''
+        commentData.id === state.highlightedId ? 'bg-highlight-red' : ''
       }`}
     >
-      <Avatar src={comment.member?.avatar || ''} size="l" />
+      <Avatar src={commentData.member?.avatar || ''} size="l" />
       {state.isEditingComment &&
-      state.commentEditState.commentId === comment.id ? (
+      state.commentEditState.commentId === commentData.id ? (
         <CommentEditor />
       ) : (
         <div className="flex max-w-full grow flex-col">
@@ -85,11 +90,11 @@ const CommentBlockItem = ({
             <div className="flex max-w-full grow items-center justify-between">
               <div className="flex max-w-[calc(100%_-_50px)] flex-wrap">
                 <p className="subtitle-2 max-w-full truncate">
-                  {comment.member?.name || '使用者'}
+                  {commentData.member?.name || '使用者'}
                 </p>
                 <div className="flex items-center">
                   <span className="caption-1 mr-1 text-primary-500">
-                    ·{displayTimeFromNow(comment.createdAt)}
+                    ·{displayTimeFromNow(commentData.createdAt)}
                   </span>
                   {comment.is_edited && (
                     <>
@@ -105,9 +110,9 @@ const CommentBlockItem = ({
                     className="relative"
                     onClick={() => {
                       handleDropdownOnClick({
-                        commentAuthor: comment?.member?.name || '',
-                        commentId: comment.id,
-                        commentContent: comment.content || '',
+                        commentAuthor: commentData?.member?.name || '',
+                        commentId: commentData.id,
+                        commentContent: commentData.content || '',
                       })
                     }}
                   >
@@ -118,10 +123,13 @@ const CommentBlockItem = ({
               </div>
               <div className="flex min-w-fit items-center justify-end">
                 <p className="caption-1 text-primary-600">
-                  {comment.likeCount || 0}
+                  {commentData.likeCount || 0}
                 </p>
-                <button>
-                  <Icon iconName="icon-heart" size="l" />
+                <button onClick={handleLikeComment}>
+                  <Icon
+                    iconName={isCommentLiked ? 'icon-liked' : 'icon-heart'}
+                    size="l"
+                  />
                 </button>
               </div>
             </div>
@@ -133,11 +141,11 @@ const CommentBlockItem = ({
                 onClick={handleToggleClamp}
                 className="body-3 relative max-h-10 overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
               >
-                {comment.content}
+                {commentData.content}
               </p>
             ) : (
               <p className="body-3 whitespace-pre text-wrap break-words text-primary-600">
-                {comment.content}
+                {commentData.content}
               </p>
             )}
           </div>

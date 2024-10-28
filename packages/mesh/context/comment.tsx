@@ -10,6 +10,7 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { type User } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
 import type { CommentObjective } from '@/types/objective'
+import type { PickListItem } from '@/types/profile'
 import { sleep } from '@/utils/sleep'
 
 import { useToast } from './toast'
@@ -73,6 +74,14 @@ type Action =
   | { type: 'INSERT_COMMENT'; payload: Comment }
   | { type: 'UPDATE_HIGHLIGHTED_COMMENT'; payload: string }
   | { type: 'TOGGLE_DELETE_COMMENT_MODAL'; payload: { isVisible: boolean } }
+  | {
+      type: 'UPDATE_COMMENT_LIKE_STATUS'
+      payload: {
+        commentId: string
+        memberId: string
+        isLiked: boolean
+      }
+    }
 
 const initialState: State = {
   isMobileCommentModalOpen: false,
@@ -155,6 +164,51 @@ function commentReducer(state: State, action: Action): State {
       return { ...state, commentList: [action.payload, ...state.commentList] }
     case 'UPDATE_HIGHLIGHTED_COMMENT':
       return { ...state, highlightedId: action.payload }
+    case 'UPDATE_COMMENT_LIKE_STATUS':
+      return {
+        ...state,
+        commentList: state.commentList.map((comment) => {
+          if (comment.id !== action.payload.commentId) return comment
+
+          // 檢查評論類型並相應更新
+          if ('isMemberLiked' in comment) {
+            const currentLikes =
+              (comment as NonNullable<NonNullable<PickListItem>['comment']>[0])
+                .isMemberLiked || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              isMemberLiked: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
+          } else if ('like' in comment) {
+            const currentLikes = comment.like || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              like: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
+          }
+          return comment
+        }),
+      }
     default:
       return state
   }
@@ -175,6 +229,11 @@ interface CommentContextType {
   handleDeleteComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleEditComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleReport: (e: React.MouseEvent<HTMLLIElement>) => void
+  updateCommentLikeStatus: (
+    commentId: string,
+    memberId: string,
+    isLiked: boolean
+  ) => void
 }
 
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
@@ -186,7 +245,7 @@ export function CommentProvider({
   commentObjective,
 }: {
   children: ReactNode
-  initialComments: Comment[]
+  initialComments: Comment[] | NonNullable<NonNullable<PickListItem>['comment']>
   commentObjectiveData: CommentObjectiveData
   commentObjective: CommentObjective
 }) {
@@ -364,6 +423,16 @@ export function CommentProvider({
     })
   }
 
+  const updateCommentLikeStatus = useCallback(
+    (commentId: string, memberId: string, isLiked: boolean) => {
+      dispatch({
+        type: 'UPDATE_COMMENT_LIKE_STATUS',
+        payload: { commentId, memberId, isLiked },
+      })
+    },
+    []
+  )
+
   const contextValue = {
     state,
     dispatch,
@@ -376,6 +445,7 @@ export function CommentProvider({
     handleDeleteComment,
     handleEditComment,
     handleReport,
+    updateCommentLikeStatus,
   }
 
   return (

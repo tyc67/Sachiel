@@ -4187,6 +4187,7 @@ export type GetMemberProfileQuery = {
           content?: string | null
           createdAt?: any | null
           likeCount?: number | null
+          isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
           member?: {
             __typename?: 'Member'
             id: string
@@ -4237,6 +4238,7 @@ export type GetMemberProfileQuery = {
           content?: string | null
           createdAt?: any | null
           likeCount?: number | null
+          isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
           member?: {
             __typename?: 'Member'
             id: string
@@ -4754,8 +4756,10 @@ export type GetStoryQuery = {
       __typename?: 'Comment'
       id: string
       createdAt?: any | null
+      likeCount?: number | null
       content?: string | null
       state?: string | null
+      like?: Array<{ __typename?: 'Member'; id: string }> | null
       member?: {
         __typename?: 'Member'
         id: string
@@ -8236,6 +8240,60 @@ export const GetMemberProfileDocument = {
                                   },
                                   {
                                     kind: 'Field',
+                                    alias: {
+                                      kind: 'Name',
+                                      value: 'isMemberLiked',
+                                    },
+                                    name: { kind: 'Name', value: 'like' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'where' },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'customId',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'equals',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'customId',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'member' },
                                     selectionSet: {
                                       kind: 'SelectionSet',
@@ -8617,6 +8675,60 @@ export const GetMemberProfileDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'likeCount' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    alias: {
+                                      kind: 'Name',
+                                      value: 'isMemberLiked',
+                                    },
+                                    name: { kind: 'Name', value: 'like' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'where' },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'customId',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'equals',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'customId',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
                                   },
                                   {
                                     kind: 'Field',
@@ -11924,6 +12036,23 @@ export const GetStoryDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'likeCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'like' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

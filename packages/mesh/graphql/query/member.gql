@@ -176,6 +176,9 @@ query GetMemberProfile($customId: String, $takes: Int!) {
           content
           createdAt
           likeCount
+          isMemberLiked: like(where: { customId: { equals: $customId } }) {
+            id
+          }
           member {
             id
             name
@@ -234,6 +237,9 @@ query GetMemberProfile($customId: String, $takes: Int!) {
           content
           createdAt
           likeCount
+          isMemberLiked: like(where: { customId: { equals: $customId } }) {
+            id
+          }
           member {
             id
             name
