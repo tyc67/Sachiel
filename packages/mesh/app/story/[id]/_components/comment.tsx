@@ -6,11 +6,11 @@ import CommentBlock from '@/components/comment/story-comment/comment-block'
 import CommentModal from '@/components/comment/story-comment/comment-modal'
 import Dots from '@/components/dots'
 import Avatar from '@/components/story-card/avatar'
-import { EditDrawerBlockType, useComment } from '@/context/comment-context'
+import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import { sortAndFilterComments, sortAuthorComments } from '@/utils/comment'
 
-const Comment = ({ storyId = '' }: { storyId: string }) => {
+const Comment = ({ targetId = '' }: { targetId: string }) => {
   const { user } = useUser()
   const {
     state,
@@ -33,7 +33,7 @@ const Comment = ({ storyId = '' }: { storyId: string }) => {
   )
   const sortedAuthorComments = useMemo(
     () => sortAuthorComments(commentList, user),
-    [commentList, user.customId]
+    [commentList, user]
   )
 
   return (
@@ -59,7 +59,7 @@ const Comment = ({ storyId = '' }: { storyId: string }) => {
             </div>
           ) : (
             <Button
-              onClick={() => handleCommentPublish({ user, storyId })}
+              onClick={() => handleCommentPublish({ user, targetId })}
               size="md"
               color="primary"
               text="發布"

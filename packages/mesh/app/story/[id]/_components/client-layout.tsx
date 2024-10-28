@@ -1,13 +1,15 @@
 'use client'
 
 import LayoutTemplate from '@/components/layout-template'
-import { BottomActionBarType } from '@/components/layout-template/bottom-action-bar'
-import MobileNavigationButton from '@/components/layout-template/navigation/mobile-navigation/mobile-navigation-button'
+import AddBookMarkButton from '@/components/navigation/add-bookmark-button'
 import GoBackButton from '@/components/navigation/go-back-button'
+import ShareButton from '@/components/navigation/share-button'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { BookmarkObjective } from '@/types/objective'
+import { getStoryUrl } from '@/utils/get-url'
 
 import Loading from './loading'
 
@@ -20,13 +22,6 @@ export default function ClientLayout({
   story: Story
   children: React.ReactNode
 }) {
-  const addStoryAsBookmark = () => {
-    // TODO: pick story
-  }
-  const shareStory = () => {
-    // TODO: share story
-  }
-
   return (
     <LayoutTemplate
       type="article"
@@ -34,18 +29,12 @@ export default function ClientLayout({
         leftButtons: [<GoBackButton key={0} />],
         title: '新聞',
         rightButtons: [
-          <MobileNavigationButton
+          <AddBookMarkButton
             key={0}
-            type="icon"
-            icon="icon-bookmark"
-            onClick={addStoryAsBookmark}
+            bookmarkObjective={BookmarkObjective.Story}
+            targetId={story?.id ?? ''}
           />,
-          <MobileNavigationButton
-            key={1}
-            type="icon"
-            icon="icon-share"
-            onClick={shareStory}
-          />,
+          <ShareButton key={1} url={getStoryUrl(story?.id ?? '')} />,
         ],
       }}
       nonMobileNavigation={{
@@ -65,7 +54,17 @@ export default function ClientLayout({
           />,
         ],
       }}
-      actionBar={{ type: BottomActionBarType.Article, story }}
+      mobileActionBar={{
+        commentsCount: story?.commentsCount ?? 0,
+        picksCount: story?.picksCount ?? 0,
+        actions: [
+          <PublisherDonateButton
+            key={0}
+            publisherId={story?.source?.id ?? ''}
+          />,
+          <StoryPickButton key={1} storyId={story?.id ?? ''} />,
+        ],
+      }}
       suspenseFallback={<Loading />}
     >
       {children}

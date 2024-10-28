@@ -2,7 +2,7 @@
 import React, { useRef } from 'react'
 
 import Icon from '@/components/icon'
-import { EditDrawerShowType, useComment } from '@/context/comment-context'
+import { EditDrawerShowType, useComment } from '@/context/comment'
 import useClickOutside from '@/hooks/use-click-outside'
 
 const MobileCommentEditDrawer = () => {

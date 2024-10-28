@@ -7,7 +7,8 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
-import { CommentProvider } from '@/context/comment-context'
+import { CommentProvider } from '@/context/comment'
+import { CommentObjective } from '@/types/objective'
 import {
   type CommentType,
   type PickListItem,
@@ -62,15 +63,18 @@ const ArticleCard = ({
         }
   return (
     <>
-      <CommentProvider initialComments={storyData.comment || []}>
+      <CommentProvider
+        initialComments={storyData.comment || []}
+        commentObjective={CommentObjective.Story}
+        commentObjectiveData={storyData}
+      >
         <Link href={`/story/${storyData?.id}`}>
-          <section className="hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
+          <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
             <ImageWithFallback
               fallbackCategory={ImageCategory.STORY}
               src={storyData?.og_image ?? ''}
               alt={`${storyData?.title}'s story cover image`}
-              width={96}
-              height={48}
+              fill
               className="size-full object-cover"
             />
           </section>

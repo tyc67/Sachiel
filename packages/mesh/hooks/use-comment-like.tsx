@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { likeComment, unlikeComment } from '@/app/actions/comment'
 import TOAST_MESSAGE from '@/constants/toast'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'

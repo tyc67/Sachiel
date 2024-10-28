@@ -3,8 +3,8 @@ import React from 'react'
 
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
-import type { EditDrawerBlockType } from '@/context/comment-context'
-import { EditDrawerShowType, useComment } from '@/context/comment-context'
+import type { EditDrawerBlockType } from '@/context/comment'
+import { EditDrawerShowType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import type { Comment } from '@/graphql/__generated__/graphql'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
@@ -139,7 +139,7 @@ const CommentBlockItem = ({
             {needClamp ? (
               <p
                 onClick={handleToggleClamp}
-                className="body-3 after:body-3 relative max-h-10 overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
+                className="body-3 relative max-h-10 overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
               >
                 {commentData.content}
               </p>

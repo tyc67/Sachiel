@@ -3,7 +3,11 @@
 import { z } from 'zod'
 
 import { RESTFUL_ENDPOINTS } from '@/constants/config'
-import { GetLatestAddedCommentDocument } from '@/graphql/__generated__/graphql'
+import {
+  GetCollectionLatestAddedCommentDocument,
+  GetStoryLatestAddedCommentDocument,
+} from '@/graphql/__generated__/graphql'
+import { CommentObjective } from '@/types/objective'
 import fetchGraphQL from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
@@ -11,10 +15,15 @@ import { sleep } from '@/utils/sleep'
 
 const ItemIdSchema = z.string().regex(/^\d+$/)
 const ContentSchema = z.string().min(1)
+const CommentObjectiveSchema = z.enum([
+  CommentObjective.Story,
+  CommentObjective.Collection,
+])
 
 const AddCommentSchema = z.object({
   memberId: ItemIdSchema,
-  storyId: ItemIdSchema,
+  targetId: ItemIdSchema,
+  commentObjective: CommentObjectiveSchema,
   content: ContentSchema,
   latestCommentId: z.string(),
 })
@@ -34,7 +43,8 @@ const LikeCommentSchema = DeleteCommentSchema
 
 const GetLatestAddCommentSchema = z.object({
   memberId: ItemIdSchema,
-  storyId: ItemIdSchema,
+  targetId: ItemIdSchema,
+  commentObjective: CommentObjectiveSchema,
 })
 
 const getLatestAddComment = async (
@@ -52,29 +62,45 @@ const getLatestAddComment = async (
     return null
   }
 
-  const { memberId, storyId } = result.data
+  const { memberId, targetId, commentObjective } = result.data
 
-  try {
-    const data = await fetchGraphQL(
-      GetLatestAddedCommentDocument,
-      {
-        memberId,
-        storyId,
-      },
-      globalLogFields,
-      'getLatestAddComment failed'
-    )
-    const comments = data?.comments
-    if (!comments?.length) return null
-    return comments[0].id
-  } catch (error) {
-    logServerSideError(
-      error,
-      'Unexpected error in GetLatestAddedComment',
-      globalLogFields
-    )
-    return null
+  let commentId: string = ''
+  switch (commentObjective) {
+    case CommentObjective.Story: {
+      const data = await fetchGraphQL(
+        GetStoryLatestAddedCommentDocument,
+        {
+          memberId,
+          storyId: targetId,
+        },
+        globalLogFields,
+        `Failed to get latest story comment's ID`
+      )
+      const comments = data?.comments
+      commentId = comments?.[0].id ?? ''
+      break
+    }
+
+    case CommentObjective.Collection: {
+      const data = await fetchGraphQL(
+        GetCollectionLatestAddedCommentDocument,
+        {
+          memberId,
+          collectionId: targetId,
+        },
+        globalLogFields,
+        `Failed to get latest collection comment's ID`
+      )
+      const comments = data?.comments
+      commentId = comments?.[0].id ?? ''
+      break
+    }
+
+    default:
+      break
   }
+
+  return commentId
 }
 
 export async function addComment(
@@ -94,13 +120,14 @@ export async function addComment(
     return null
   }
 
-  const { memberId, storyId, content, latestCommentId } = result.data
+  const { memberId, targetId, commentObjective, content, latestCommentId } =
+    result.data
 
   const payload = {
     action: 'add_comment',
     memberId,
-    objective: 'story',
-    targetId: storyId,
+    objective: commentObjective,
+    targetId,
     state: 'public',
     content,
   }
@@ -121,7 +148,11 @@ export async function addComment(
 
   // 嘗試獲取新評論ID，最多重試3次
   for (let i = 0; i < retryTimes; i++) {
-    const newCommentId = await getLatestAddComment({ memberId, storyId })
+    const newCommentId = await getLatestAddComment({
+      memberId,
+      targetId,
+      commentObjective,
+    })
 
     if (newCommentId && latestCommentId !== newCommentId) {
       return newCommentId

@@ -86,6 +86,10 @@ query GetCurrentUserMemberId($uid: String!) {
         AND: [{ kind: { equals: "read" } }, { is_active: { equals: true } }]
       }
     ) {
+      objective
+      collection {
+        id
+      }
       story {
         id
       }
@@ -95,6 +99,10 @@ query GetCurrentUserMemberId($uid: String!) {
         AND: [{ kind: { equals: "bookmark" } }, { is_active: { equals: true } }]
       }
     ) {
+      objective
+      collection {
+        id
+      }
       story {
         id
       }
@@ -519,11 +527,28 @@ query GetMemberSingleTransaction($memberId: ID!, $tid: String) {
   }
 }
 
-query GetMemberPickComment($memberId: ID, $storyId: ID) {
+query GetMemberPickStoryComment($memberId: ID, $storyId: ID) {
   members(where: { id: { equals: $memberId } }) {
     pick(
       where: {
         story: { id: { equals: $storyId } }
+        is_active: { equals: true }
+      }
+    ) {
+      id
+      pick_comment(where: { is_active: { equals: true } }) {
+        id
+        content
+      }
+    }
+  }
+}
+
+query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
+  members(where: { id: { equals: $memberId } }) {
+    pick(
+      where: {
+        collection: { id: { equals: $collectionId } }
         is_active: { equals: true }
       }
     ) {
