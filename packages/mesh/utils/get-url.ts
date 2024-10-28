@@ -3,9 +3,15 @@ export function getShareUrl(urlTemplate: string, url: string) {
 }
 
 export function getStoryUrl(storyId: string) {
-  return `${location.origin}/story/${storyId}`
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/story/${storyId}`
+  }
+  return ''
 }
 
 export function getCollectionUrl(collectionId: string) {
-  return `${location.origin}/collection/${collectionId}`
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/collection/${collectionId}`
+  }
+  return ''
 }
