@@ -25,20 +25,22 @@ const Tab = ({ tabCategory, setCategory, userType }: TabProps) => {
   }
 
   const tabList: TabItem[] = [
-    { tabName: '精選', tabCategory: TabCategory.PICK },
+    { tabName: '精選', tabCategory: TabCategory.PICKS },
+    { tabName: '集錦', tabCategory: TabCategory.COLLECTIONS },
     { tabName: '書籤', tabCategory: TabCategory.BOOKMARKS },
     { tabName: '報導', tabCategory: TabCategory.PUBLISH },
   ]
 
   const tabFilter = (item: TabItem) => {
     if (userType === 'visitor') {
-      return item.tabCategory === TabCategory.PICK
+      return item.tabCategory === TabCategory.PICKS
     }
     if (userType === 'publisher') {
       return item.tabCategory === TabCategory.PUBLISH
     }
     return (
-      item.tabCategory === TabCategory.PICK ||
+      item.tabCategory === TabCategory.PICKS ||
+      item.tabCategory === TabCategory.COLLECTIONS ||
       item.tabCategory === TabCategory.BOOKMARKS
     )
   }
