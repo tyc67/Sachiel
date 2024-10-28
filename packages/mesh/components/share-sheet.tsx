@@ -1,5 +1,7 @@
 import type { MouseEventHandler } from 'react'
 
+import { getShareUrl } from '@/utils/get-url'
+
 import Icon from './icon'
 
 const shareMedia = [
@@ -36,10 +38,6 @@ export default function ShareSheet({
   url: string
   onClose: () => void
 }) {
-  const getShareUrl = (urlTemplate: string) => {
-    return urlTemplate.replace('${url}', url)
-  }
-
   const onBackgroundClicked = () => {
     onClose()
   }
@@ -73,7 +71,7 @@ export default function ShareSheet({
           {shareMedia.map((media) => (
             <a
               key={media.id}
-              href={getShareUrl(media.urlTemplate)}
+              href={getShareUrl(media.urlTemplate, url)}
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full"

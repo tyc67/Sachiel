@@ -24,7 +24,7 @@ export default function usePicker() {
       if (!memberId) return
       setIsLoading(true)
 
-      const reverseMutation = addPickToUser(
+      const removePickFromUser = addPickToUser(
         pickObjective,
         targetId,
         user,
@@ -38,7 +38,7 @@ export default function usePicker() {
       })
       if (!addPickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
-        reverseMutation()
+        removePickFromUser()
       }
 
       setIsLoading(false)
@@ -51,7 +51,7 @@ export default function usePicker() {
     async (targetId: string, pickObjective: PickObjective) => {
       if (!memberId) return
       setIsLoading(true)
-      const reverseMutation = removePickFromUser(
+      const addPickToUser = removePickFromUser(
         pickObjective,
         targetId,
         user,
@@ -76,7 +76,7 @@ export default function usePicker() {
 
       if (!removePickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.deletePickFailed })
-        reverseMutation()
+        addPickToUser()
       }
 
       setIsLoading(false)
@@ -89,7 +89,7 @@ export default function usePicker() {
       if (!memberId || !comment) return
       setIsLoading(true)
 
-      const reverseMutation = addPickToUser(
+      const removePickFromUser = addPickToUser(
         pickObjective,
         targetId,
         user,
@@ -103,7 +103,7 @@ export default function usePicker() {
       })
       if (!addPickResponse) {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
-        reverseMutation()
+        removePickFromUser()
       }
 
       setIsLoading(false)
