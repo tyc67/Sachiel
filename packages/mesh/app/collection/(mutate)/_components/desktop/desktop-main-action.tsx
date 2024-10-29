@@ -18,8 +18,18 @@ export default function DesktopMainAction() {
 }
 
 const Step1 = () => {
-  const { setStep, collectionPicks, title } = useEditCollection()
+  const {
+    collectionPickStories: collectionPicks,
+    title,
+    createCollection,
+  } = useEditCollection()
   const canGoToNextStep = !!collectionPicks.length && !!title
+
+  const onNext = async () => {
+    // TODO: move back to 2 steps
+    // setStep(1)
+    createCollection()
+  }
 
   return (
     <>
@@ -38,9 +48,7 @@ const Step1 = () => {
       </div>
       <div className="px-5 py-3">
         <Button
-          onClick={() => {
-            setStep(1)
-          }}
+          onClick={onNext}
           disabled={!canGoToNextStep}
           size="lg"
           color="blue-500"

@@ -16,3 +16,8 @@ export function generateUniqueTimestamp() {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}_${randomDigits}`
 }
+
+export function getCurrentTimeInISOFormat() {
+  const date = new Date()
+  return date.toISOString()
+}

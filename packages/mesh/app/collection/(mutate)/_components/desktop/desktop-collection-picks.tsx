@@ -17,7 +17,7 @@ export default function DesktopCollectionPicks() {
       case 0:
         return <Step1 />
       case 1:
-        return <Step2 />
+        return null
       default:
         return null
     }
@@ -77,8 +77,4 @@ const Step1 = () => {
       shouldLoadMore={shouldLoadMore}
     />
   )
-}
-
-const Step2 = () => {
-  return <></>
 }

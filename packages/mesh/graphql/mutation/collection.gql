@@ -1,5 +1,30 @@
-mutation CreateCollection($data: CollectionCreateInput!) {
-  createCollection(data: $data) {
+mutation CreateCollection(
+  $title: String
+  $slug: String
+  $summary: String
+  $status: String
+  $public: String
+  $format: String
+  $imageName: String
+  $imageUpload: Upload
+  $collectionpicks: [CollectionPickCreateInput!]
+  $memberId: ID
+) {
+  createCollection(
+    data: {
+      title: $title
+      slug: $slug
+      summary: $summary
+      status: $status
+      public: $public
+      format: $format
+      heroImage: {
+        create: { name: $imageName, file: { upload: $imageUpload } }
+      }
+      collectionpicks: { create: $collectionpicks }
+      creator: { connect: { id: $memberId } }
+    }
+  ) {
     id
   }
 }

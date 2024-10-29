@@ -1,12 +1,12 @@
-import Image from 'next/image'
 import type { ChangeEventHandler } from 'react'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
+import { ImageCategory } from '@/constants/fallback-src'
 import { IMAGE_SIZE_LIMITATION } from '@/constants/profile'
 import { useEditCollection } from '@/context/edit-collection'
 
-const getHeroImageSrc = (image: string | File) => {
-  if (typeof image === 'string') return image
-  if (!image.type.startsWith('image/')) return ''
+const getHeroImageSrc = (image: File | null) => {
+  if (!image || !image.type.startsWith('image/')) return ''
   return URL.createObjectURL(image)
 }
 
@@ -29,11 +29,14 @@ export default function EditHeroImage() {
     <div className="flex flex-col gap-3">
       {/* TODO: replace with <ImageWithFallback /> */}
       <div className="relative aspect-[2/1]">
-        <Image
+        <ImageWithFallback
           className="rounded-md"
-          src={heroImageSrc || '/images/default-story-image.webP'}
+          fallbackCategory={ImageCategory.STORY}
+          src={heroImageSrc}
           alt="集錦封面照片"
-          objectFit="cover"
+          style={{
+            objectFit: 'cover',
+          }}
           fill
         />
       </div>

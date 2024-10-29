@@ -9,4 +9,9 @@ export type CollectionPick = NonNullable<Collection['collectionpicks']>[number]
 export type PickOrBookmark = NonNullable<
   NonNullable<GetMemberPickAndBookmarkQuery['member']>['picksAndBookmarks']
 >[number]
-export type CollectionPickStory = PickOrBookmark['story']
+export type CollectionPickStory = NonNullable<PickOrBookmark['story']>
+
+export enum CollectionFormat {
+  Folder = 'folder',
+  Timeline = 'timeline',
+}

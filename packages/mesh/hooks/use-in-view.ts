@@ -15,7 +15,6 @@ export default function useInView() {
       threshold: 0,
     })
 
-    console.log('targetRef.current', targetRef.current)
     if (targetRef.current) {
       observer.observe(targetRef.current)
     }

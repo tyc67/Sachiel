@@ -3806,7 +3806,18 @@ export type UserActionStoryFragment = {
 }
 
 export type CreateCollectionMutationVariables = Exact<{
-  data: CollectionCreateInput
+  title?: InputMaybe<Scalars['String']['input']>
+  slug?: InputMaybe<Scalars['String']['input']>
+  summary?: InputMaybe<Scalars['String']['input']>
+  status?: InputMaybe<Scalars['String']['input']>
+  public?: InputMaybe<Scalars['String']['input']>
+  format?: InputMaybe<Scalars['String']['input']>
+  imageName?: InputMaybe<Scalars['String']['input']>
+  imageUpload?: InputMaybe<Scalars['Upload']['input']>
+  collectionpicks?: InputMaybe<
+    Array<CollectionPickCreateInput> | CollectionPickCreateInput
+  >
+  memberId?: InputMaybe<Scalars['ID']['input']>
 }>
 
 export type CreateCollectionMutation = {
@@ -3981,7 +3992,13 @@ export type GetCollectionQuery = {
     format?: string | null
     picksCount?: number | null
     commentsCount?: number | null
-    heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
+    heroImage?: {
+      __typename?: 'Photo'
+      resized?: {
+        __typename?: 'ResizedImages'
+        original?: string | null
+      } | null
+    } | null
     creator?: {
       __typename?: 'Member'
       id: string
@@ -5222,14 +5239,89 @@ export const CreateCollectionDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'title' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'summary' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'status' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'public' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'format' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'imageName' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'imageUpload' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Upload' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'collectionpicks' },
+          },
           type: {
-            kind: 'NonNullType',
+            kind: 'ListType',
             type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CollectionCreateInput' },
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'CollectionPickCreateInput' },
+              },
             },
           },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
         },
       ],
       selectionSet: {
@@ -5243,8 +5335,146 @@ export const CreateCollectionDocument = {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'data' },
                 value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'title' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'title' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'slug' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'slug' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'summary' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'summary' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'status' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'public' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'public' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'format' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'format' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'heroImage' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'create' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'name' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'imageName' },
+                                  },
+                                },
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'file' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: 'upload' },
+                                        value: {
+                                          kind: 'Variable',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'imageUpload',
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'collectionpicks' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'create' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'collectionpicks' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'creator' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'connect' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -6297,7 +6527,16 @@ export const GetCollectionDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'urlOriginal' },
+                        name: { kind: 'Name', value: 'resized' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'original' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

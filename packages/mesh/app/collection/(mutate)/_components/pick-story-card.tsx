@@ -1,7 +1,8 @@
-import Image from 'next/image'
 import { forwardRef } from 'react'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Icon from '@/components/icon'
+import { ImageCategory } from '@/constants/fallback-src'
 import { displayTimeFromNow } from '@/utils/story-display'
 
 import type { CollectionPickStory } from '../_types/edit-collection'
@@ -51,10 +52,14 @@ export default forwardRef(function PickStoryCard(
             </div>
           </div>
           <div className="relative aspect-[2/1] w-24 shrink-0 overflow-hidden rounded-[4px] sm:w-[160px]">
-            <Image
-              src={story?.og_image ?? '/images/default-story-image.webP'}
+            <ImageWithFallback
+              src={story?.og_image ?? ''}
+              fallbackCategory={ImageCategory.STORY}
               alt={story?.title ?? ''}
               fill
+              style={{
+                objectFit: 'cover',
+              }}
             />
           </div>
         </div>

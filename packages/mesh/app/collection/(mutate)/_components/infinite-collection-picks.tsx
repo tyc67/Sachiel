@@ -3,7 +3,10 @@ import { useEffect, useMemo } from 'react'
 import { useEditCollection } from '@/context/edit-collection'
 import useInView from '@/hooks/use-in-view'
 
-import type { PickOrBookmark } from '../_types/edit-collection'
+import type {
+  CollectionPickStory,
+  PickOrBookmark,
+} from '../_types/edit-collection'
 import PickStoryCard from './pick-story-card'
 
 export default function InfiniteCollectionPicks({
@@ -15,38 +18,33 @@ export default function InfiniteCollectionPicks({
   loadMore: () => Promise<void>
   shouldLoadMore: boolean
 }) {
-  const { collectionPicks, setCollectionPicks } = useEditCollection()
+  const { collectionPickStories, setCollectionPickStories } =
+    useEditCollection()
   const { targetRef: triggerLoadmoreRef, isIntersecting: shouldStartLoadMore } =
     useInView()
 
   const collectionPickStoryIds = useMemo(() => {
-    return collectionPicks.reduce((ids, collectionPick) => {
-      const storyId = collectionPick.story?.id
+    return collectionPickStories.reduce((ids, collectionPickStory) => {
+      const storyId = collectionPickStory.id
       if (storyId) {
         ids.add(storyId)
       }
       return ids
     }, new Set<string>())
-  }, [collectionPicks])
+  }, [collectionPickStories])
 
   const onPickStoryClicked = (
-    candidate: PickOrBookmark,
+    candidateStory: CollectionPickStory,
     isStoryPicked: boolean
   ) => {
     if (isStoryPicked) {
-      setCollectionPicks([
-        ...collectionPicks.filter(
-          (collectionPick) => collectionPick.story?.id !== candidate.story?.id
+      setCollectionPickStories([
+        ...collectionPickStories.filter(
+          (collectionPick) => collectionPick.id !== candidateStory?.id
         ),
       ])
     } else {
-      setCollectionPicks([
-        ...collectionPicks,
-        {
-          sort_order: collectionPicks.length,
-          story: candidate.story,
-        },
-      ])
+      setCollectionPickStories([...collectionPickStories, candidateStory])
     }
   }
 
@@ -59,15 +57,20 @@ export default function InfiniteCollectionPicks({
   return (
     <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
       {candidates.map((candidate, i) => {
+        if (!candidate.story) return null
         const isStoryPicked = collectionPickStoryIds.has(
           candidate.story?.id ?? ''
         )
         return (
           <PickStoryCard
-            key={candidate.story?.id}
+            key={candidate.story.id}
             isPicked={isStoryPicked}
             story={candidate.story}
-            onClick={onPickStoryClicked.bind(null, candidate, isStoryPicked)}
+            onClick={onPickStoryClicked.bind(
+              null,
+              candidate.story,
+              isStoryPicked
+            )}
             ref={i === candidates.length - 1 ? triggerLoadmoreRef : undefined}
           />
         )
