@@ -1,11 +1,16 @@
 'use client'
 import type { ReactNode } from 'react'
 import { createContext, useCallback, useContext, useReducer } from 'react'
+import { createPortal } from 'react-dom'
 
 import { addComment, deleteComment, editComment } from '@/app/actions/comment'
+import type { CommentObjectiveData } from '@/components/comment/mobile-comment-section/mobile-comment-modal-content'
+import { MobileCommentModalContent } from '@/components/comment/mobile-comment-section/mobile-comment-modal-content'
 import TOAST_MESSAGE from '@/constants/toast'
 import { type User } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import type { CommentObjective } from '@/types/objective'
+import type { PickListItem } from '@/types/profile'
 import { sleep } from '@/utils/sleep'
 
 import { useToast } from './toast'
@@ -69,6 +74,14 @@ type Action =
   | { type: 'INSERT_COMMENT'; payload: Comment }
   | { type: 'UPDATE_HIGHLIGHTED_COMMENT'; payload: string }
   | { type: 'TOGGLE_DELETE_COMMENT_MODAL'; payload: { isVisible: boolean } }
+  | {
+      type: 'UPDATE_COMMENT_LIKE_STATUS'
+      payload: {
+        commentId: string
+        memberId: string
+        isLiked: boolean
+      }
+    }
 
 const initialState: State = {
   isMobileCommentModalOpen: false,
@@ -151,6 +164,51 @@ function commentReducer(state: State, action: Action): State {
       return { ...state, commentList: [action.payload, ...state.commentList] }
     case 'UPDATE_HIGHLIGHTED_COMMENT':
       return { ...state, highlightedId: action.payload }
+    case 'UPDATE_COMMENT_LIKE_STATUS':
+      return {
+        ...state,
+        commentList: state.commentList.map((comment) => {
+          if (comment.id !== action.payload.commentId) return comment
+
+          // 檢查評論類型並相應更新
+          if ('isMemberLiked' in comment) {
+            const currentLikes =
+              (comment as NonNullable<NonNullable<PickListItem>['comment']>[0])
+                .isMemberLiked || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              isMemberLiked: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
+          } else if ('like' in comment) {
+            const currentLikes = comment.like || []
+            return {
+              ...comment,
+              likeCount: action.payload.isLiked
+                ? (comment.likeCount || 0) + 1
+                : Math.max(0, (comment.likeCount || 0) - 1),
+              like: action.payload.isLiked
+                ? [
+                    ...currentLikes,
+                    { __typename: 'Member', id: action.payload.memberId },
+                  ]
+                : currentLikes.filter(
+                    (like) => like.id !== action.payload.memberId
+                  ),
+            }
+          }
+          return comment
+        }),
+      }
     default:
       return state
   }
@@ -166,11 +224,16 @@ interface CommentContextType {
   handleCommentEdit: (user: User) => void
   handleCommentPublish: (params: {
     user: User
-    storyId: string
+    targetId: string
   }) => Promise<void>
   handleDeleteComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleEditComment: (e: React.MouseEvent<HTMLLIElement>) => void
   handleReport: (e: React.MouseEvent<HTMLLIElement>) => void
+  updateCommentLikeStatus: (
+    commentId: string,
+    memberId: string,
+    isLiked: boolean
+  ) => void
 }
 
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
@@ -178,9 +241,13 @@ const CommentContext = createContext<CommentContextType | undefined>(undefined)
 export function CommentProvider({
   children,
   initialComments,
+  commentObjectiveData,
+  commentObjective,
 }: {
   children: ReactNode
-  initialComments: Comment[]
+  initialComments: Comment[] | NonNullable<NonNullable<PickListItem>['comment']>
+  commentObjectiveData: CommentObjectiveData
+  commentObjective: CommentObjective
 }) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
@@ -208,7 +275,7 @@ export function CommentProvider({
         addToast({ status: 'fail', text: TOAST_MESSAGE.deleteCommentFailed })
       }
     },
-    [state.commentEditState]
+    [addToast, state.commentEditState]
   )
 
   const handleDeleteCommentModalOnCancel = useCallback(() => {
@@ -224,9 +291,9 @@ export function CommentProvider({
   }, [state.commentEditState])
 
   const handleCommentPublish = useCallback(
-    async ({ user, storyId }: { user: User; storyId: string }) => {
+    async ({ user, targetId }: { user: User; targetId: string }) => {
       if (!user?.memberId) throw new Error('no user id')
-      if (!storyId) throw new Error('no story id')
+      if (!targetId) throw new Error('no story id')
 
       dispatch({
         type: 'TOGGLE_IS_ADDING_COMMENT',
@@ -242,8 +309,9 @@ export function CommentProvider({
 
         const addedCommentId = await addComment({
           content: state.comment,
-          storyId,
+          targetId,
           memberId: user.memberId,
+          commentObjective,
           latestCommentId,
         })
 
@@ -282,7 +350,7 @@ export function CommentProvider({
         })
       }
     },
-    [state.comment, state.commentList]
+    [addToast, commentObjective, state.comment, state.commentList]
   )
 
   const handleTextChange = useCallback(
@@ -318,7 +386,7 @@ export function CommentProvider({
         addToast({ status: 'fail', text: TOAST_MESSAGE.editCommentFailed })
       }
     },
-    [state.commentEditState]
+    [addToast, state.commentEditState.commentId, state.commentEditState.content]
   )
   const handleDeleteComment = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
@@ -355,6 +423,16 @@ export function CommentProvider({
     })
   }
 
+  const updateCommentLikeStatus = useCallback(
+    (commentId: string, memberId: string, isLiked: boolean) => {
+      dispatch({
+        type: 'UPDATE_COMMENT_LIKE_STATUS',
+        payload: { commentId, memberId, isLiked },
+      })
+    },
+    []
+  )
+
   const contextValue = {
     state,
     dispatch,
@@ -367,10 +445,16 @@ export function CommentProvider({
     handleDeleteComment,
     handleEditComment,
     handleReport,
+    updateCommentLikeStatus,
   }
 
   return (
     <CommentContext.Provider value={contextValue}>
+      {state.isMobileCommentModalOpen &&
+        createPortal(
+          <MobileCommentModalContent data={commentObjectiveData} />,
+          document.body
+        )}
       {children}
     </CommentContext.Provider>
   )

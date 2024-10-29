@@ -1,8 +1,10 @@
+'use client'
 import ArticleCardList from '@/app/profile/_components/article-card-list'
 import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
+import useFollowPublisher from '@/hooks/use-publisher-follow'
 import {
   type StoryData,
   type UserType,
@@ -17,6 +19,7 @@ type PublisherPageProps = {
   userType: UserType
   storyData: StoryData
   publisherId: string
+  publisherCustomId: string
   followerCount: string
   sponsoredCount: string
   pickedCount: number
@@ -32,19 +35,33 @@ const PublisherPage: React.FC<PublisherPageProps> = ({
   sponsoredCount,
   pickedCount,
   publisherId,
+  publisherCustomId,
 }) => {
+  const { isFollowing, handleFollowOnClick } = useFollowPublisher({
+    publisherId,
+    publisherName: name,
+  })
+
   const userStatusList = [
     { tabName: TabKey.SPONSORED, count: `${sponsoredCount}次` },
     {
       tabName: TabKey.FOLLOWER,
       count: followerCount,
-      redirectLink: `${publisherId}/follower`,
+      redirectLink: `${publisherCustomId}/follower`,
     },
   ]
 
   const buttonList = [
-    { text: '追蹤' },
-    { text: '贊助/訂閱媒體', primary: true },
+    {
+      text: { default: '追蹤', isActive: '追蹤中' },
+      isActive: isFollowing,
+      clickFn: handleFollowOnClick,
+    },
+    {
+      text: { default: '贊助/訂閱媒體', isActive: '' },
+      primary: true,
+      isActive: false,
+    },
   ]
 
   return (

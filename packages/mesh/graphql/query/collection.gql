@@ -1,0 +1,108 @@
+query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
+  collections(where: { id: { equals: $collectionId } }) {
+    id
+    title
+    heroImage {
+      urlOriginal
+    }
+    updatedAt
+    summary
+    status
+    format
+    creator {
+      id
+      customId
+      avatar
+    }
+    picksCount(where: { kind: { equals: "read" }, is_active: { equals: true } })
+    picks(
+      where: { kind: { equals: "read" }, is_active: { equals: true } }
+      take: $picksTake
+    ) {
+      id
+      createdAt
+      kind
+      member {
+        id
+        customId
+        name
+        avatar
+      }
+    }
+    commentsCount: commentCount(
+      where: { state: { equals: "public" }, is_active: { equals: true } }
+    )
+    comments: comment(
+      where: { state: { equals: "public" }, is_active: { equals: true } }
+      take: $commentsTake
+    ) {
+      id
+      createdAt
+      member {
+        id
+        customId
+        name
+        avatar
+      }
+      content
+      state
+    }
+  }
+}
+
+query GetCollectionStories(
+  $collectionId: ID
+  $creatorCustomId: String
+  $picksTake: Int
+) {
+  collections(where: { id: { equals: $collectionId } }) {
+    collectionpicks(orderBy: { sort_order: asc }) {
+      story {
+        id
+        title
+        og_image
+        source {
+          id
+          title
+        }
+        published_date
+        paywall
+        full_screen_ad
+        picksCount: pickCount(
+          where: { kind: { equals: "read" }, is_active: { equals: true } }
+        )
+        picks: pick(
+          where: { kind: { equals: "read" }, is_active: { equals: true } }
+          take: $picksTake
+        ) {
+          id
+          createdAt
+          kind
+          member {
+            id
+            customId
+            name
+            avatar
+          }
+        }
+        commentsCount: commentCount(
+          where: { state: { equals: "public" }, is_active: { equals: true } }
+        )
+        comments: comment(
+          orderBy: { createdAt: desc }
+          where: { member: { customId: { equals: $creatorCustomId } } }
+        ) {
+          id
+          content
+          createdAt
+          likeCount
+          member {
+            id
+            name
+            avatar
+          }
+        }
+      }
+    }
+  }
+}

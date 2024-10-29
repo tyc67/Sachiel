@@ -36,7 +36,6 @@ export default function SwiperComponent({ stories }: Props) {
               <StoryMoreActionButton
                 storyId={story.id}
                 publisherId={story.source.id}
-                showOnRestrictArea={true}
                 nestedScrollContainerRef={scrollContainerRef}
               />
             </div>

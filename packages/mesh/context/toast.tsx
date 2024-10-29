@@ -105,9 +105,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
   const currentToast = toasts[0]
 
-  const addToast = (newToast: Toast) => {
+  const addToast = useCallback((newToast: Toast) => {
     setToasts((oldToasts) => [...oldToasts, newToast])
-  }
+  }, [])
 
   const onToastEnded = useCallback(() => {
     setToasts(toasts.slice(1))
