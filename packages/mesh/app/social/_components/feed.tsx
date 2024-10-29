@@ -92,7 +92,7 @@ export type LatestAction = ReturnType<typeof processStoryActions>
 function processStoryActions(storyAction: StoryActions) {
   const latestAction = storyAction[0]
   const latestActionType = storyAction[0].kind
-  const picksNum = storyAction.filter((action) => action.kind === 'read').length
+  let picksNum = storyAction.filter((action) => action.kind === 'read').length
   const commentsNum = storyAction.filter(
     (action) => action.kind === 'comment'
   ).length
@@ -112,6 +112,7 @@ function processStoryActions(storyAction: StoryActions) {
 
   if (latestActionType === 'comment') {
     picksData = isPickAndComment ? filterActions('read', isPickAndComment) : []
+    picksNum = isPickAndComment ? picksNum : 0
     commentsData = filterActions('comment')
   } else {
     picksData = filterActions('read')
