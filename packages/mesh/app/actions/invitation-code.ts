@@ -88,7 +88,7 @@ export async function invalidateInvitationCode(
   } catch (error) {
     logServerSideError(
       error,
-      `Failed to invalidate invitation code: ${codeId}`,
+      `Failed to invalidate invitation code ${codeId} and link data to member ${memberId}`,
       globalLogFields
     )
     return null
