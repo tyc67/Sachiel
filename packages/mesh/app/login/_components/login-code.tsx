@@ -10,12 +10,12 @@ import {
 import { isInvitationCodeValid } from '@/app/actions/invitation-code'
 import Button from '@/components/button'
 import Spinner from '@/components/spinner'
-import { useLogin } from '@/context/login'
+import { LoginState, useLogin } from '@/context/login'
 
 export default function LoginCode() {
   const codeDigits = 6
   const { setFormData, setStep } = useLogin()
-  const [values, setValues] = useState(Array(codeDigits).fill(''))
+  const [values, setValues] = useState<string[]>(Array(codeDigits).fill(''))
   const [activeIndex, setActiveIndex] = useState(0)
   const [isValidationError, setIsValidationError] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -87,7 +87,7 @@ export default function LoginCode() {
         },
       }))
       setIsSubmitting(false)
-      setStep('set-name')
+      setStep(LoginState.SetName)
     }
   }
 

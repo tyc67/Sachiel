@@ -42,7 +42,7 @@ export default function LoginSteps() {
         const response = await handleSignIn()
         if (!response) return
         if (response.result === 'sign-up') {
-          setStep('code')
+          setStep(LoginState.Code)
         } else if (response.result === 'logged-in') {
           const redirectRoute = localStorage.getItem('login-redirect') ?? '/'
           setIsLoggedIn(true)

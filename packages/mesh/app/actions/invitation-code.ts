@@ -5,6 +5,7 @@ import {
   GetValidInvitationCodesDocument,
   InvalidateInvitationCodeDocument,
   IsInvitationCodeValidDocument,
+  UpdateMemberInvitedByDocument,
 } from '@/graphql/__generated__/graphql'
 import fetchGraphQL, { mutateGraphQL } from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
@@ -32,7 +33,7 @@ export async function getValidInvitationCodes(memberId: string) {
     GetValidInvitationCodesDocument,
     { memberId },
     globalLogFields,
-    'Failed to get valid invitation codes'
+    `Failed to get ${memberId} valid invitation codes`
   )
 
   if (!response) {
@@ -59,17 +60,35 @@ export async function getSentInvitationCodes(memberId: string) {
   return response.invitationCodes ?? []
 }
 
-export async function invalidateInvitationCode(codeId: string) {
+export async function invalidateInvitationCode(
+  codeId: string,
+  memberId: string
+) {
   const globalLogFields = getLogTraceObjectFromHeaders()
   try {
-    const response = await mutateGraphQL(InvalidateInvitationCodeDocument, {
-      id: codeId,
-    })
-    return response?.updateInvitationCode
+    const invalidateInvitationCodeResponse = await mutateGraphQL(
+      InvalidateInvitationCodeDocument,
+      {
+        codeId,
+        memberId,
+      }
+    )
+    const updateMemberInviteByResponse = await mutateGraphQL(
+      UpdateMemberInvitedByDocument,
+      {
+        codeId,
+        memberId,
+      }
+    )
+
+    return {
+      invitationCode: invalidateInvitationCodeResponse?.updateInvitationCode,
+      memberInviteBy: updateMemberInviteByResponse?.updateMember,
+    }
   } catch (error) {
     logServerSideError(
       error,
-      'Failed to invalidate invitation code',
+      `Failed to invalidate invitation code: ${codeId}`,
       globalLogFields
     )
     return null

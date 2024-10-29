@@ -20,6 +20,7 @@ import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
 import getAllPublishers from './get-all-publishers'
+import { invalidateInvitationCode } from './invitation-code'
 
 export async function validateIdToken(
   token: string
@@ -185,6 +186,9 @@ export async function signUpMember(
     if (!data?.createMember) return undefined
 
     const { createMember } = data
+
+    await invalidateInvitationCode(formData.code.id, createMember.id)
+
     // 更新 backend db 用戶資訊
     const pubSubResponse = await fetchRestfulPost(
       RESTFUL_ENDPOINTS.pubsub,

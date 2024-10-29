@@ -823,6 +823,60 @@ export type IntNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
+export type InvalidName = {
+  __typename?: 'InvalidName'
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  createdBy?: Maybe<User>
+  id: Scalars['ID']['output']
+  name?: Maybe<Scalars['String']['output']>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  updatedBy?: Maybe<User>
+}
+
+export type InvalidNameCreateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForCreateInput>
+  name?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForCreateInput>
+}
+
+export type InvalidNameOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>
+  id?: InputMaybe<OrderDirection>
+  name?: InputMaybe<OrderDirection>
+  updatedAt?: InputMaybe<OrderDirection>
+}
+
+export type InvalidNameUpdateArgs = {
+  data: InvalidNameUpdateInput
+  where: InvalidNameWhereUniqueInput
+}
+
+export type InvalidNameUpdateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
+  name?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>
+}
+
+export type InvalidNameWhereInput = {
+  AND?: InputMaybe<Array<InvalidNameWhereInput>>
+  NOT?: InputMaybe<Array<InvalidNameWhereInput>>
+  OR?: InputMaybe<Array<InvalidNameWhereInput>>
+  createdAt?: InputMaybe<DateTimeNullableFilter>
+  createdBy?: InputMaybe<UserWhereInput>
+  id?: InputMaybe<IdFilter>
+  name?: InputMaybe<StringFilter>
+  updatedAt?: InputMaybe<DateTimeNullableFilter>
+  updatedBy?: InputMaybe<UserWhereInput>
+}
+
+export type InvalidNameWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type InvitationCode = {
   __typename?: 'InvitationCode'
   code?: Maybe<Scalars['String']['output']>
@@ -1423,6 +1477,8 @@ export type Mutation = {
   createComment?: Maybe<Comment>
   createComments?: Maybe<Array<Maybe<Comment>>>
   createInitialUser: UserAuthenticationWithPasswordSuccess
+  createInvalidName?: Maybe<InvalidName>
+  createInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   createInvitationCode?: Maybe<InvitationCode>
   createInvitationCodes?: Maybe<Array<Maybe<InvitationCode>>>
   createMember?: Maybe<Member>
@@ -1459,6 +1515,8 @@ export type Mutation = {
   deleteCollections?: Maybe<Array<Maybe<Collection>>>
   deleteComment?: Maybe<Comment>
   deleteComments?: Maybe<Array<Maybe<Comment>>>
+  deleteInvalidName?: Maybe<InvalidName>
+  deleteInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   deleteInvitationCode?: Maybe<InvitationCode>
   deleteInvitationCodes?: Maybe<Array<Maybe<InvitationCode>>>
   deleteMember?: Maybe<Member>
@@ -1496,6 +1554,8 @@ export type Mutation = {
   updateCollections?: Maybe<Array<Maybe<Collection>>>
   updateComment?: Maybe<Comment>
   updateComments?: Maybe<Array<Maybe<Comment>>>
+  updateInvalidName?: Maybe<InvalidName>
+  updateInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   updateInvitationCode?: Maybe<InvitationCode>
   updateInvitationCodes?: Maybe<Array<Maybe<InvitationCode>>>
   updateMember?: Maybe<Member>
@@ -1577,6 +1637,14 @@ export type MutationCreateCommentsArgs = {
 
 export type MutationCreateInitialUserArgs = {
   data: CreateInitialUserInput
+}
+
+export type MutationCreateInvalidNameArgs = {
+  data: InvalidNameCreateInput
+}
+
+export type MutationCreateInvalidNamesArgs = {
+  data: Array<InvalidNameCreateInput>
 }
 
 export type MutationCreateInvitationCodeArgs = {
@@ -1721,6 +1789,14 @@ export type MutationDeleteCommentArgs = {
 
 export type MutationDeleteCommentsArgs = {
   where: Array<CommentWhereUniqueInput>
+}
+
+export type MutationDeleteInvalidNameArgs = {
+  where: InvalidNameWhereUniqueInput
+}
+
+export type MutationDeleteInvalidNamesArgs = {
+  where: Array<InvalidNameWhereUniqueInput>
 }
 
 export type MutationDeleteInvitationCodeArgs = {
@@ -1871,6 +1947,15 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateCommentsArgs = {
   data: Array<CommentUpdateArgs>
+}
+
+export type MutationUpdateInvalidNameArgs = {
+  data: InvalidNameUpdateInput
+  where: InvalidNameWhereUniqueInput
+}
+
+export type MutationUpdateInvalidNamesArgs = {
+  data: Array<InvalidNameUpdateArgs>
 }
 
 export type MutationUpdateInvitationCodeArgs = {
@@ -2422,6 +2507,7 @@ export type Publisher = {
   full_content?: Maybe<Scalars['Boolean']['output']>
   full_screen_ad?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
+  is_active?: Maybe<Scalars['Boolean']['output']>
   lang?: Maybe<Scalars['String']['output']>
   logo?: Maybe<Scalars['String']['output']>
   official_site?: Maybe<Scalars['String']['output']>
@@ -2480,6 +2566,7 @@ export type PublisherCreateInput = {
   follower?: InputMaybe<MemberRelateToManyForCreateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
+  is_active?: InputMaybe<Scalars['Boolean']['input']>
   lang?: InputMaybe<Scalars['String']['input']>
   logo?: InputMaybe<Scalars['String']['input']>
   official_site?: InputMaybe<Scalars['String']['input']>
@@ -2508,6 +2595,7 @@ export type PublisherOrderByInput = {
   full_content?: InputMaybe<OrderDirection>
   full_screen_ad?: InputMaybe<OrderDirection>
   id?: InputMaybe<OrderDirection>
+  is_active?: InputMaybe<OrderDirection>
   lang?: InputMaybe<OrderDirection>
   logo?: InputMaybe<OrderDirection>
   official_site?: InputMaybe<OrderDirection>
@@ -2556,6 +2644,7 @@ export type PublisherUpdateInput = {
   follower?: InputMaybe<MemberRelateToManyForUpdateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
+  is_active?: InputMaybe<Scalars['Boolean']['input']>
   lang?: InputMaybe<Scalars['String']['input']>
   logo?: InputMaybe<Scalars['String']['input']>
   official_site?: InputMaybe<Scalars['String']['input']>
@@ -2583,6 +2672,7 @@ export type PublisherWhereInput = {
   full_content?: InputMaybe<BooleanFilter>
   full_screen_ad?: InputMaybe<StringNullableFilter>
   id?: InputMaybe<IdFilter>
+  is_active?: InputMaybe<BooleanFilter>
   lang?: InputMaybe<StringNullableFilter>
   logo?: InputMaybe<StringFilter>
   official_site?: InputMaybe<StringFilter>
@@ -2623,6 +2713,9 @@ export type Query = {
   comment?: Maybe<Comment>
   comments?: Maybe<Array<Comment>>
   commentsCount?: Maybe<Scalars['Int']['output']>
+  invalidName?: Maybe<InvalidName>
+  invalidNames?: Maybe<Array<InvalidName>>
+  invalidNamesCount?: Maybe<Scalars['Int']['output']>
   invitationCode?: Maybe<InvitationCode>
   invitationCodes?: Maybe<Array<InvitationCode>>
   invitationCodesCount?: Maybe<Scalars['Int']['output']>
@@ -2750,6 +2843,21 @@ export type QueryCommentsArgs = {
 
 export type QueryCommentsCountArgs = {
   where?: CommentWhereInput
+}
+
+export type QueryInvalidNameArgs = {
+  where: InvalidNameWhereUniqueInput
+}
+
+export type QueryInvalidNamesArgs = {
+  orderBy?: Array<InvalidNameOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: InvalidNameWhereInput
+}
+
+export type QueryInvalidNamesCountArgs = {
+  where?: InvalidNameWhereInput
 }
 
 export type QueryInvitationCodeArgs = {
@@ -3698,7 +3806,8 @@ export type UserActionStoryFragment = {
 }
 
 export type InvalidateInvitationCodeMutationVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']['input']>
+  codeId?: InputMaybe<Scalars['ID']['input']>
+  memberId?: InputMaybe<Scalars['ID']['input']>
 }>
 
 export type InvalidateInvitationCodeMutation = {
@@ -3722,6 +3831,24 @@ export type SignUpMemberMutation = {
     id: string
     firebaseId?: string | null
     email?: string | null
+  } | null
+}
+
+export type UpdateMemberInvitedByMutationVariables = Exact<{
+  codeId?: InputMaybe<Scalars['ID']['input']>
+  memberId?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type UpdateMemberInvitedByMutation = {
+  __typename?: 'Mutation'
+  updateMember?: {
+    __typename?: 'Member'
+    id: string
+    invited_by?: {
+      __typename?: 'InvitationCode'
+      id: string
+      code?: string | null
+    } | null
   } | null
 }
 
@@ -4860,7 +4987,18 @@ export const InvalidateInvitationCodeDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'codeId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
         },
       ],
@@ -4882,7 +5020,7 @@ export const InvalidateInvitationCodeDocument = {
                       name: { kind: 'Name', value: 'id' },
                       value: {
                         kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
+                        name: { kind: 'Name', value: 'codeId' },
                       },
                     },
                   ],
@@ -4898,6 +5036,32 @@ export const InvalidateInvitationCodeDocument = {
                       kind: 'ObjectField',
                       name: { kind: 'Name', value: 'expired' },
                       value: { kind: 'BooleanValue', value: true },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'connect' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
                     },
                   ],
                 },
@@ -4975,6 +5139,117 @@ export const SignUpMemberDocument = {
 } as unknown as DocumentNode<
   SignUpMemberMutation,
   SignUpMemberMutationVariables
+>
+export const UpdateMemberInvitedByDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateMemberInvitedBy' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'codeId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateMember' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'memberId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'invited_by' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'connect' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'codeId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'invited_by' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateMemberInvitedByMutation,
+  UpdateMemberInvitedByMutationVariables
 >
 export const UpdateMemberProfileDocument = {
   kind: 'Document',
@@ -5795,6 +6070,46 @@ export const IsInvitationCodeValidDocument = {
                         ],
                       },
                     },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'NOT' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'id' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: { kind: 'Name', value: 'gt' },
+                                            value: {
+                                              kind: 'IntValue',
+                                              value: '0',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
                   ],
                 },
               },
@@ -5895,6 +6210,46 @@ export const GetValidInvitationCodesDocument = {
                                     kind: 'Variable',
                                     name: { kind: 'Name', value: 'memberId' },
                                   },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'NOT' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'id' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: { kind: 'Name', value: 'gt' },
+                                            value: {
+                                              kind: 'IntValue',
+                                              value: '0',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
                                 },
                               ],
                             },
