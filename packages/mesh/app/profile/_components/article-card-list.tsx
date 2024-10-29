@@ -36,15 +36,24 @@ function ArticleCardList({
       </div>
     )
   }
+  const isCollection = items[0].__typename === 'Collection'
   return (
     <div className="bg-multi-layer-light">
-      <ul className="max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3">
+      <ul
+        className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3 ${
+          isCollection
+            ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
+            : ''
+        }`}
+      >
         {items.map((item, index) => {
           const isLast = index === items.length - 1
+          if (!item) return
+          if ('story' in item && !item.story) return
           return (
             <li
               key={index}
-              className="relative w-full bg-white md:h-full md:rounded-md md:drop-shadow"
+              className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
             >
               {'story' in item ? (
                 <ArticleCard
