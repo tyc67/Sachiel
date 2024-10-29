@@ -67,6 +67,8 @@ const ArticleCard = ({
             avatar,
           },
         }
+  const isCollection = storyData.__typename === 'Collection'
+  const shouldShowSource = !isCollection
 
   const getOgImage = (data: StoryDataTypes) => {
     if (data.__typename === 'Story') return data.og_image ?? ''
@@ -74,7 +76,7 @@ const ArticleCard = ({
       return data.heroImage?.urlOriginal ?? ''
     return ''
   }
-  const shouldShowSource = storyData.__typename !== 'Collection'
+
   const getSource = (data: StoryDataTypes) => {
     if (data.__typename === 'Story') return data.source?.title ?? '預設媒體'
     return ''
@@ -129,24 +131,31 @@ const ArticleCard = ({
           }`}
         >
           <Link href={`/story/${storyData?.id}`}>
-            <section className="mb-1 flex items-center justify-end">
+            <section className="mb-1 flex items-center justify-between">
               {shouldShowSource && (
-                <p className="caption-1 flex grow text-primary-500">
-                  {getSource(storyData)}
-                </p>
+                <>
+                  <p className="caption-1 text-primary-500">
+                    {getSource(storyData)}
+                  </p>
+                  <StoryMoreActionButton
+                    storyId={storyData?.id ?? ''}
+                    publisherId={getSourceId(storyData)}
+                  />
+                </>
               )}
-              {/**TODO: fix when is collection */}
-              <StoryMoreActionButton
-                storyId={storyData?.id ?? ''}
-                publisherId={getSourceId(storyData)}
-              />
             </section>
-            <section className="mb-2 flex items-start justify-between sm:gap-10">
-              <div className="flex h-full flex-col justify-between">
+            <section
+              className={` ${
+                isCollection
+                  ? 'flex w-full grow flex-col-reverse rounded border border-b-0 border-primary-200'
+                  : 'mb-2 flex items-start justify-between sm:gap-10'
+              }`}
+            >
+              <div className="flex h-full flex-col justify-between px-3">
                 <p className="body-2 mb-2 w-full sm:mb-1 sm:line-clamp-2 lg:line-clamp-3 lg:min-h-[72px]">
                   {storyData?.title || '預設標題'}
                 </p>
-                <span className=" *:caption-1 *:text-primary-500">
+                <span className="*:caption-1 *:text-primary-500">
                   <StoryMeta
                     commentCount={storyData?.commentCount || 0}
                     publishDate={getPublishedDate(storyData)}
@@ -155,7 +164,13 @@ const ArticleCard = ({
                   />
                 </span>
               </div>
-              <div className="relative ml-3 aspect-[2/1] min-w-24 overflow-hidden rounded border-[0.5px] border-primary-200 sm:w-40 sm:min-w-40 md:hidden">
+              <div
+                className={`${
+                  isCollection
+                    ? 'relative mb-3 aspect-[2/1] min-w-24 overflow-hidden rounded-t sm:w-40 sm:min-w-40 md:hidden'
+                    : 'relative ml-3 aspect-[2/1] min-w-24 overflow-hidden rounded border-[0.5px] border-primary-200 sm:w-40 sm:min-w-40 md:hidden'
+                }`}
+              >
                 <ImageWithFallback
                   fallbackCategory={ImageCategory.STORY}
                   src={getOgImage(storyData)}
@@ -165,7 +180,13 @@ const ArticleCard = ({
                 />
               </div>
             </section>
-            <section className="mt-4 flex justify-between">
+            <section
+              className={
+                isCollection
+                  ? 'flex justify-between rounded border border-t-0 border-primary-200 px-3 py-4'
+                  : 'flex justify-between pt-4'
+              }
+            >
               <StoryPickInfo
                 displayPicks={storyData?.pick}
                 pickCount={getPickCount(storyData)}

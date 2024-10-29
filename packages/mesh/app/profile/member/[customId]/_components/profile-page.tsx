@@ -121,7 +121,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     return messages[category] || ''
   }
 
-  const shouldShowComment = category !== TabCategory.BOOKMARKS || !isMember
+  const shouldShowComment = category === TabCategory.PICKS || !isMember
   const emptyElement = (category: TabCategory): React.ReactNode => {
     if (category === TabCategory.COLLECTIONS)
       return (
