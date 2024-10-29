@@ -5,19 +5,15 @@ import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
 import useFollowPublisher from '@/hooks/use-publisher-follow'
-import {
-  type StoryData,
-  type UserType,
-  TabCategory,
-  TabKey,
-} from '@/types/profile'
+import { type UserType, TabCategory, TabKey } from '@/types/profile'
+import type { PublisherProfile } from '@/utils/data-schema'
 
 type PublisherPageProps = {
   name: string
   avatar: string
   intro: string
   userType: UserType
-  storyData: StoryData
+  storyData: PublisherProfile['stories']
   publisherId: string
   publisherCustomId: string
   followerCount: string

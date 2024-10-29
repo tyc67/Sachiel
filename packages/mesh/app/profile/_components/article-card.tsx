@@ -10,13 +10,19 @@ import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
 import { CommentObjective } from '@/types/objective'
 import {
+  type BookmarkItem,
+  type CollectionItem,
   type CommentType,
   type PickListItem,
-  type StoryDataItem,
 } from '@/types/profile'
 
+type StoryDataTypes =
+  | NonNullable<PickListItem>
+  | NonNullable<BookmarkItem>
+  | CollectionItem
+
 type ArticleCardProps = {
-  storyData: NonNullable<PickListItem> | StoryDataItem
+  storyData: StoryDataTypes
   isLast: boolean
   memberId?: string
   avatar?: string
@@ -24,7 +30,7 @@ type ArticleCardProps = {
   shouldShowComment: boolean
 }
 function hasComment(
-  storyData: NonNullable<PickListItem> | StoryDataItem
+  storyData: StoryDataTypes
 ): storyData is NonNullable<PickListItem> {
   if (!storyData) return false
   return 'comment' in storyData
@@ -61,18 +67,56 @@ const ArticleCard = ({
             avatar,
           },
         }
+
+  const getOgImage = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.og_image ?? ''
+    if (data.__typename === 'Collection')
+      return data.heroImage?.urlOriginal ?? ''
+    return ''
+  }
+  const shouldShowSource = storyData.__typename !== 'Collection'
+  const getSource = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.source?.title ?? '預設媒體'
+    return ''
+  }
+  const getSourceId = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.source?.id ?? ''
+    return ''
+  }
+
+  const getPublishedDate = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data?.published_date || ''
+    if (data.__typename === 'Collection')
+      return (data?.updatedAt || data?.createdAt) ?? ''
+    return ''
+  }
+
+  const getPayWall = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.paywall ?? false
+    return false
+  }
+  const getFullScreenAd = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.full_screen_ad ?? ''
+    return ''
+  }
+  const getPickCount = (data: StoryDataTypes) => {
+    if (data.__typename === 'Story') return data.pickCount ?? 0
+    if (data.__typename === 'Collection') return data.picksCount ?? 0
+    return 0
+  }
   return (
     <>
       <CommentProvider
         initialComments={storyData.comment || []}
         commentObjective={CommentObjective.Story}
+        // TODO: check what it use
         commentObjectiveData={storyData}
       >
         <Link href={`/story/${storyData?.id}`}>
           <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
             <ImageWithFallback
               fallbackCategory={ImageCategory.STORY}
-              src={storyData?.og_image ?? ''}
+              src={getOgImage(storyData)}
               alt={`${storyData?.title}'s story cover image`}
               fill
               className="size-full object-cover"
@@ -85,13 +129,16 @@ const ArticleCard = ({
           }`}
         >
           <Link href={`/story/${storyData?.id}`}>
-            <section className="mb-1 flex items-center justify-between">
-              <p className="caption-1 text-primary-500">
-                {(storyData?.source && storyData?.source.title) ?? '預設媒體'}
-              </p>
+            <section className="mb-1 flex items-center justify-end">
+              {shouldShowSource && (
+                <p className="caption-1 flex grow text-primary-500">
+                  {getSource(storyData)}
+                </p>
+              )}
+              {/**TODO: fix when is collection */}
               <StoryMoreActionButton
                 storyId={storyData?.id ?? ''}
-                publisherId={storyData?.source?.id ?? ''}
+                publisherId={getSourceId(storyData)}
               />
             </section>
             <section className="mb-2 flex items-start justify-between sm:gap-10">
@@ -102,16 +149,16 @@ const ArticleCard = ({
                 <span className=" *:caption-1 *:text-primary-500">
                   <StoryMeta
                     commentCount={storyData?.commentCount || 0}
-                    publishDate={storyData?.published_date || ''}
-                    paywall={storyData?.paywall || false}
-                    fullScreenAd={storyData?.full_screen_ad || ''}
+                    publishDate={getPublishedDate(storyData)}
+                    paywall={getPayWall(storyData)}
+                    fullScreenAd={getFullScreenAd(storyData)}
                   />
                 </span>
               </div>
               <div className="relative ml-3 aspect-[2/1] min-w-24 overflow-hidden rounded border-[0.5px] border-primary-200 sm:w-40 sm:min-w-40 md:hidden">
                 <ImageWithFallback
                   fallbackCategory={ImageCategory.STORY}
-                  src={storyData?.og_image ?? ''}
+                  src={getOgImage(storyData)}
                   alt={`${storyData?.title}'s story cover image`}
                   fill
                   className="object-cover"
@@ -121,7 +168,7 @@ const ArticleCard = ({
             <section className="mt-4 flex justify-between">
               <StoryPickInfo
                 displayPicks={storyData?.pick}
-                pickCount={storyData?.pickCount || 0}
+                pickCount={getPickCount(storyData)}
                 maxCount={4}
               />
               <StoryPickButton storyId={storyData?.id} />

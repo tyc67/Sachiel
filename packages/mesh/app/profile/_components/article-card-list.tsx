@@ -1,14 +1,14 @@
 import ArticleCard from '@/app/profile/_components/article-card'
 import type {
+  BookmarkItem,
   Bookmarks,
+  Collections,
   PickList,
   PickListItem,
-  StoryData,
-  StoryDataItem,
 } from '@/types/profile'
 
 interface ArticleCardListProps {
-  items: StoryData | PickList | Bookmarks
+  items: PickList | Bookmarks | Collections
   emptyMessage: string
   elementForEmpty?: React.ReactNode
   memberId?: string
@@ -36,7 +36,6 @@ function ArticleCardList({
       </div>
     )
   }
-
   return (
     <div className="bg-multi-layer-light">
       <ul className="max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3">
@@ -58,7 +57,7 @@ function ArticleCardList({
                 />
               ) : (
                 <ArticleCard
-                  storyData={item as StoryDataItem}
+                  storyData={item as NonNullable<BookmarkItem>}
                   isLast={isLast}
                   shouldShowComment={shouldShowComment}
                 />
