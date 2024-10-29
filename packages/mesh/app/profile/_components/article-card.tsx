@@ -136,6 +136,7 @@ const ArticleCard = ({
       <CommentProvider
         initialComments={storyData.comment || []}
         commentObjective={CommentObjective.Story}
+        // TODO: check what it use
         commentObjectiveData={storyData}
       >
         <Link className="md:flex md:w-full" href={`/story/${storyData?.id}`}>
