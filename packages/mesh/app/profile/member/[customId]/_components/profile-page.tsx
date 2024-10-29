@@ -12,6 +12,7 @@ import ErrorPage from '@/components/status/error-page'
 import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
+import type { Collections } from '@/types/profile'
 import {
   type Bookmarks,
   type PickList,
@@ -33,7 +34,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const currentUrl = pathName
 
   const [category, setCategory] = useState<TabCategory>(TabCategory.PICKS)
-  const [tabData, setTabData] = useState<PickList | Bookmarks>([])
+  const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile
   const { handleClickFollow, isFollowing } = useFollow(
@@ -50,9 +51,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
           setTabData(profileData.bookmarks)
           break
         case TabCategory.COLLECTIONS:
-          //@ts-expect-error: still in progress
-          // TODO: fix after pull dev
-          setTabData(profileData.collection || [])
+          setTabData(profileData.collections || [])
           break
         default:
           setTabData(profileData.picksData)

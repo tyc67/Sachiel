@@ -42,14 +42,18 @@ export type ProfileTypes = {
   bookmarks?: Bookmarks
   customId: string
   memberId: string
+  collections: Collections
 }
 
 export type Member = GetMemberProfileQuery['member']
+export type Collections = GetMemberProfileQuery['collections']
 export type PickList = NonNullable<Member>['picks']
 export type Bookmarks = NonNullable<GetMemberProfileQuery['member']>['books']
 export type StoryData = Story[]
 export type StoryDataItem = NonNullable<NonNullable<StoryData>[number]>
 export type PickListItem = NonNullable<PickList>[number]['story']
+export type BookmarkItem = NonNullable<PickList>[number]['story']
+export type CollectionItem = NonNullable<Collections>[0]
 export type UserType = 'member' | 'visitor' | 'publisher'
 export type CommentList = NonNullable<PickListItem>['comment']
 export type CommentType = NonNullable<CommentList>[number]
