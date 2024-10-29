@@ -33,7 +33,10 @@ const Tab = ({ tabCategory, setCategory, userType }: TabProps) => {
 
   const tabFilter = (item: TabItem) => {
     if (userType === 'visitor') {
-      return item.tabCategory === TabCategory.PICKS
+      return (
+        item.tabCategory === TabCategory.PICKS ||
+        item.tabCategory === TabCategory.COLLECTIONS
+      )
     }
     if (userType === 'publisher') {
       return item.tabCategory === TabCategory.PUBLISH

@@ -67,7 +67,8 @@ const ArticleCard = ({
             avatar,
           },
         }
-  const isCollection = storyData.__typename === 'Collection'
+  if (!storyData) return <></>
+  const isCollection = storyData?.__typename === 'Collection'
   const shouldShowSource = !isCollection
 
   const getOgImage = (data: StoryDataTypes) => {
@@ -128,7 +129,7 @@ const ArticleCard = ({
         <div
           className={`flex flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:pt-[12px] md:after:hidden ${
             isLast && 'after:hidden'
-          }`}
+          } ${isCollection && 'py-[10px] after:hidden'}`}
         >
           <Link href={`/story/${storyData?.id}`}>
             <section className="mb-1 flex items-center justify-between">

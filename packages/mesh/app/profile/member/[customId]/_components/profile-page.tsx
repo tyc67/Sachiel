@@ -42,22 +42,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   )
 
   useEffect(() => {
-    if (isMember) {
-      switch (category) {
-        case TabCategory.PICKS:
-          setTabData(profileData.picksData)
-          break
-        case TabCategory.BOOKMARKS:
-          setTabData(profileData.bookmarks)
-          break
-        case TabCategory.COLLECTIONS:
-          setTabData(profileData.collections || [])
-          break
-        default:
-          setTabData(profileData.picksData)
-      }
-    } else {
-      setTabData(profileData.picksData)
+    switch (category) {
+      case TabCategory.PICKS:
+        setTabData(profileData.picksData)
+        break
+      case TabCategory.BOOKMARKS:
+        setTabData(profileData.bookmarks)
+        break
+      case TabCategory.COLLECTIONS:
+        setTabData(profileData.collections || [])
+        break
+      default:
+        setTabData(profileData.picksData)
     }
   }, [category, isMember, profileData])
 
@@ -121,7 +117,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     return messages[category] || ''
   }
 
-  const shouldShowComment = category === TabCategory.PICKS || !isMember
+  const shouldShowComment = category === TabCategory.PICKS
   const emptyElement = (category: TabCategory): React.ReactNode => {
     if (category === TabCategory.COLLECTIONS)
       return (

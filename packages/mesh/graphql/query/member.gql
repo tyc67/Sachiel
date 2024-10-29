@@ -404,6 +404,47 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
       kind
     }
   }
+  collections(
+    where: {
+      creator: { customId: { equals: $customId }, is_active: { equals: true } }
+    }
+  ) {
+    id
+    title
+    heroImage {
+      urlOriginal
+    }
+    pick: picks {
+      createdAt
+      member {
+        id
+        name
+        avatar
+      }
+    }
+    picksCount
+    commentCount
+    comment(
+      orderBy: { createdAt: desc }
+      where: { member: { customId: { equals: $customId } } }
+      take: 1
+    ) {
+      id
+      content
+      createdAt
+      likeCount
+      isMemberLiked: like(where: { customId: { equals: $customId } }) {
+        id
+      }
+      member {
+        id
+        name
+        avatar
+      }
+    }
+    updatedAt
+    createdAt
+  }
 }
 
 query GetMemberFollowingList($customId: String, $take: Int!) {
