@@ -9,7 +9,7 @@ export default async function CategoryStorySection() {
   const data = await fetchAllCategory()
   const categories = data?.categories ?? []
 
-  const initialSlug = categories?.[0].slug
+  const initialSlug = categories?.[0]?.slug
   const categoryStories = await fetchCategoryStory(initialSlug)
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect } from 'react'
 
-import { EditDrawerBlockType, useComment } from '@/context/comment-context'
+import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { type Story } from '@/graphql/__generated__/graphql'
 
 import CommentBlockItem from './comment-block-item'

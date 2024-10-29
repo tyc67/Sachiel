@@ -2,11 +2,11 @@
 import React, { useRef } from 'react'
 
 import Avatar from '@/components/story-card/avatar'
-import { useComment } from '@/context/comment-context'
+import { useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
 
-const MobileStoryCommentEditor = () => {
+const MobileCommentEditor = () => {
   const { state, dispatch, handleCommentEdit } = useComment()
   const { isEditingComment } = state
   const { user } = useUser()
@@ -47,4 +47,4 @@ const MobileStoryCommentEditor = () => {
   )
 }
 
-export default MobileStoryCommentEditor
+export default MobileCommentEditor

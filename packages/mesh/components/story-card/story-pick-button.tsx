@@ -6,6 +6,7 @@ import type { ButtonColor } from '@/components/button'
 import Button from '@/components/button'
 import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
+import { PickObjective } from '@/types/objective'
 import { debounce } from '@/utils/performance'
 
 export default function StoryPickButton({
@@ -28,7 +29,7 @@ export default function StoryPickButton({
       router.push('/login')
       return
     }
-    openPickModal(storyId, isStoryPicked)
+    openPickModal(PickObjective.Story, storyId, isStoryPicked)
   })
 
   return (

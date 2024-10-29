@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
+import { useCommentLike } from '@/hooks/use-comment-like'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { type CommentType } from '@/types/profile'
 import { displayTimeFromNow } from '@/utils/story-display'
@@ -31,6 +32,9 @@ const Comment: React.FC<CommentProps> = ({
     clampLineCount,
     canToggle
   )
+  const { commentData, isCommentLiked, handleLikeComment } = useCommentLike({
+    initialComment: data,
+  })
   const handleCommentClick = () => {
     if (width > getTailwindConfigBreakpointNumber('md')) {
       router.push(`/story/${storyId}`)
@@ -38,10 +42,11 @@ const Comment: React.FC<CommentProps> = ({
       handleToggleClamp()
     }
   }
+
   {
-    /* mobile has not default comment UI; instead desktop has. */
+    /* mobile has no default comment UI; instead desktop has. */
   }
-  if (width < getTailwindConfigBreakpointNumber('md') && !data.content)
+  if (width < getTailwindConfigBreakpointNumber('md') && !commentData.content)
     return <></>
   return (
     <section className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3">
@@ -53,16 +58,19 @@ const Comment: React.FC<CommentProps> = ({
             extra="mr-2 min-w-[28px] min-h-[28px]"
           />
           <p className="caption-1 text-primary-500">
-            {displayTimeFromNow(data.createdAt)}
+            {displayTimeFromNow(commentData.createdAt)}
           </p>
           <Icon iconName="icon-dot" size="s" />
 
           <button className="caption-1 text-primary-500">編輯留言</button>
         </div>
         <div className="flex items-center justify-end">
-          <p className="caption-1 text-primary-600">{data.likeCount}</p>
-          <button>
-            <Icon iconName="icon-heart" size="l" />
+          <p className="caption-1 text-primary-600">{commentData.likeCount}</p>
+          <button onClick={handleLikeComment}>
+            <Icon
+              iconName={isCommentLiked ? 'icon-liked' : 'icon-heart'}
+              size="l"
+            />
           </button>
         </div>
       </div>
@@ -80,11 +88,11 @@ const Comment: React.FC<CommentProps> = ({
         />
         <p
           className={`body-3 line-clamp-3 size-full ${
-            data.content ? 'text-primary-600' : 'text-primary-400'
+            commentData.content ? 'text-primary-600' : 'text-primary-400'
           } sm:line-clamp-1`}
           ref={commentRef}
         >
-          {data.content || '沒有評論'}
+          {commentData.content || '沒有評論'}
         </p>
       </div>
     </section>

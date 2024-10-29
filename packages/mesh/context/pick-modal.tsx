@@ -1,35 +1,60 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react'
+import { createPortal } from 'react-dom'
+
+import PickModal from '@/components/pick-modal'
+import { PickObjective } from '@/types/objective'
 
 type ModalType = {
-  storyId: string
+  pickObjective: PickObjective
+  objectId: string
   isModalOpen: boolean
   isPicked: boolean
 
-  openPickModal: (storyId: string, isPicked: boolean) => void
+  openPickModal: (
+    pickObjective: PickObjective,
+    objectId: string,
+    isPicked: boolean
+  ) => void
   closePickModal: () => void
 }
 
 const ModalContext = createContext<ModalType | undefined>(undefined)
 
 export function PickModalProvider({ children }: { children: React.ReactNode }) {
+  const [pickObjective, setPickObjective] = useState<PickObjective>(
+    PickObjective.Story
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isPicked, setIsPicked] = useState(false)
-  const [storyId, setStoryId] = useState('')
+  const [objectId, setObjectId] = useState('')
 
-  const openPickModal = (storyId: string, isPicked: boolean) => {
-    setStoryId(storyId)
+  const openPickModal = (
+    pickObjective: PickObjective,
+    objectId: string,
+    isPicked: boolean
+  ) => {
+    setObjectId(objectId)
     setIsPicked(isPicked)
     setIsModalOpen(true)
+    setPickObjective(pickObjective)
   }
 
   const closePickModal = () => setIsModalOpen(false)
 
   return (
     <ModalContext.Provider
-      value={{ isModalOpen, storyId, isPicked, openPickModal, closePickModal }}
+      value={{
+        isModalOpen,
+        pickObjective,
+        objectId,
+        isPicked,
+        openPickModal,
+        closePickModal,
+      }}
     >
+      {isModalOpen && createPortal(<PickModal />, document.body)}
       {children}
     </ModalContext.Provider>
   )
