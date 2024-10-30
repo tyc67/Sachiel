@@ -131,6 +131,10 @@ const ArticleCard = ({
         }
 
   const shouldShowSource = !isCollection
+  const redirectLink = () => {
+    if (isCollection(storyData)) return `/collection/${storyData.id}`
+    return `/story/${storyData?.id}`
+  }
   return (
     <>
       <CommentProvider
@@ -139,7 +143,7 @@ const ArticleCard = ({
         // TODO: check what it use
         commentObjectiveData={storyData}
       >
-        <Link className="md:flex md:w-full" href={`/story/${storyData?.id}`}>
+        <Link className="md:flex md:w-full" href={redirectLink()}>
           <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
             <ImageWithFallback
               fallbackCategory={ImageCategory.STORY}
@@ -158,10 +162,7 @@ const ArticleCard = ({
             'py-[10px] after:hidden sm:p-0 md:justify-between'
           }`}
         >
-          <Link
-            className="flex h-full grow flex-col"
-            href={`/story/${storyData?.id}`}
-          >
+          <Link className="flex grow flex-col" href={redirectLink()}>
             {shouldShowSource && (
               <section className="mb-1 flex items-center justify-between">
                 <>
