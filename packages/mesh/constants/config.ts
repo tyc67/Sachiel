@@ -79,7 +79,7 @@ switch (ENV) {
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_CHAIN = optimism
-    FIREBASE_DOMAIN = 'readr-dev-38eec.firebaseapp.com'
+    FIREBASE_DOMAIN = 'https://mesh-app.readr.tw'
     FIREBASE_CONFIG = {
       API_KEY: 'AIzaSyDna248DTK4AtPNIx6TRNjn0qtIsYX7utY',
       AUTH_DOMAIN: 'www.mmesh.news',
