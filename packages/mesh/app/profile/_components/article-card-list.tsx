@@ -47,9 +47,11 @@ function ArticleCardList({
       {followingCollection && (
         <CollectionsCarousel followingCollection={followingCollection} />
       )}
-      <p className="list-title bg-white px-5 pt-4 text-primary-700">精選文章</p>
+      <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+        精選文章
+      </p>
       <ul
-        className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3 ${
+        className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
           isCollection
             ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
             : ''

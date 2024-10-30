@@ -13,7 +13,7 @@ const CollectionsCarouselElement = ({
 }: CollectionsCarouselElementProps) => {
   const { heroImage, title, creator, picksCount } = data
   return (
-    <div className="h-full w-[150px] max-w-[150px] rounded border bg-white">
+    <div className="flex h-full w-[150px] flex-col rounded border bg-white md:w-full">
       <div className="relative aspect-[2] w-full">
         <ImageWithFallback
           alt={`${title}'s cover image`}
@@ -23,9 +23,11 @@ const CollectionsCarouselElement = ({
           fill
         />
       </div>
-      <section className="px-3 py-2">
-        <p className="caption-1 text-primary-500">@{creator?.customId}</p>
-        <p className="subtitle-2 pb-3 text-primary-700">{title}</p>
+      <section className="flex h-auto grow flex-col px-3 py-2">
+        <div className="h-full flex-col justify-between">
+          <p className="caption-1 text-primary-500">@{creator?.customId}</p>
+          <p className="subtitle-2 pb-3 text-primary-700">{title}</p>
+        </div>
         <p className="footnote pb-2 text-primary-600">
           <span className="font-medium text-primary-700">{picksCount}</span>精選
         </p>

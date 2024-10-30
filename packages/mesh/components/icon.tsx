@@ -140,6 +140,7 @@ export type IconName =
   | 'icon-collection-edit-stories'
   | 'icon-collection-edit'
   | 'icon-collection-report'
+  | 'icon-left-arrow'
 
 export type IconProps = {
   size: Size
