@@ -22,6 +22,7 @@ const initialProfileState: ProfileTypes = {
   memberId: '',
   customId: '',
   collections: [],
+  followingCollection: [],
 }
 
 export default function useProfileState({
@@ -62,6 +63,8 @@ export default function useProfileState({
       picksData: visitorProfileData.picks,
       bookmarks: [], // Assuming visitor doesn't have access to bookmarks
       collections: visitorProfileResult.collections,
+      followingCollection:
+        visitorProfileResult.member.following_collection ?? [],
     })
   }, [memberId, takesCount])
 

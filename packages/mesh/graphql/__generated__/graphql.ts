@@ -4231,6 +4231,14 @@ export type GetCurrentUserMemberIdQuery = {
       id: string
       title?: string | null
     }> | null
+    following_collection?: Array<{
+      __typename?: 'Collection'
+      id: string
+      title?: string | null
+      picksCount?: number | null
+      heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
+      creator?: { __typename?: 'Member'; customId?: string | null } | null
+    }> | null
   } | null
   collections?: Array<{
     __typename?: 'Collection'
@@ -4390,6 +4398,14 @@ export type GetMemberProfileQuery = {
         }> | null
       } | null
     }> | null
+    following_collection?: Array<{
+      __typename?: 'Collection'
+      id: string
+      title?: string | null
+      picksCount?: number | null
+      heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
+      creator?: { __typename?: 'Member'; customId?: string | null } | null
+    }> | null
   } | null
   collections?: Array<{
     __typename?: 'Collection'
@@ -4495,6 +4511,14 @@ export type GetVisitorProfileQuery = {
           } | null
         }> | null
       } | null
+    }> | null
+    following_collection?: Array<{
+      __typename?: 'Collection'
+      id: string
+      title?: string | null
+      picksCount?: number | null
+      heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
+      creator?: { __typename?: 'Member'; customId?: string | null } | null
     }> | null
   } | null
   collections?: Array<{
@@ -8022,6 +8046,47 @@ export const GetCurrentUserMemberIdDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'following_collection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'picksCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'heroImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'urlOriginal' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'customId' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -9232,6 +9297,47 @@ export const GetMemberProfileDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'following_collection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'picksCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'heroImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'urlOriginal' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'customId' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -9961,6 +10067,47 @@ export const GetVisitorProfileDocument = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'following_collection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'picksCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'heroImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'urlOriginal' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'customId' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

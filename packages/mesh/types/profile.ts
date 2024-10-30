@@ -43,10 +43,12 @@ export type ProfileTypes = {
   customId: string
   memberId: string
   collections: Collections
+  followingCollection: FollowingCollection
 }
 
 export type Member = GetMemberProfileQuery['member']
 export type Collections = GetMemberProfileQuery['collections']
+export type FollowingCollection = NonNullable<Member>['following_collection']
 export type PickList = NonNullable<Member>['picks']
 export type Bookmarks = NonNullable<GetMemberProfileQuery['member']>['books']
 export type StoryData = Story[]

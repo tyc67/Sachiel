@@ -116,6 +116,17 @@ query GetCurrentUserMemberId($uid: String!) {
       id
       title
     }
+    following_collection {
+      id
+      title
+      picksCount
+      heroImage {
+        urlOriginal
+      }
+      creator {
+        customId
+      }
+    }
   }
   collections(
     where: {
@@ -290,6 +301,17 @@ query GetMemberProfile($customId: String, $takes: Int!) {
       }
       kind
     }
+    following_collection {
+      id
+      title
+      picksCount
+      heroImage {
+        urlOriginal
+      }
+      creator {
+        customId
+      }
+    }
   }
   collections(
     where: {
@@ -402,6 +424,17 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
         }
       }
       kind
+    }
+    following_collection {
+      id
+      title
+      picksCount
+      heroImage {
+        urlOriginal
+      }
+      creator {
+        customId
+      }
     }
   }
   collections(

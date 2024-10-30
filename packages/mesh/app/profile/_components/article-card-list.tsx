@@ -3,9 +3,12 @@ import type {
   BookmarkItem,
   Bookmarks,
   Collections,
+  FollowingCollection,
   PickList,
   PickListItem,
 } from '@/types/profile'
+
+import CollectionsCarousel from './collections-carousel'
 
 interface ArticleCardListProps {
   items: PickList | Bookmarks | Collections
@@ -15,6 +18,7 @@ interface ArticleCardListProps {
   avatar?: string
   name?: string
   shouldShowComment: boolean
+  followingCollection?: FollowingCollection
 }
 
 function ArticleCardList({
@@ -25,6 +29,7 @@ function ArticleCardList({
   memberId,
   avatar,
   name,
+  followingCollection,
 }: ArticleCardListProps) {
   if (!items?.length) {
     return (
@@ -39,6 +44,10 @@ function ArticleCardList({
   const isCollection = items[0].__typename === 'Collection'
   return (
     <div className="bg-multi-layer-light">
+      {followingCollection && (
+        <CollectionsCarousel followingCollection={followingCollection} />
+      )}
+      <p className="list-title bg-white px-5 pt-4 text-primary-700">精選文章</p>
       <ul
         className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3 ${
           isCollection
