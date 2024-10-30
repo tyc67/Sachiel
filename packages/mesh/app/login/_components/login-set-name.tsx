@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+
+import { getInvalidNameList } from '@/app/actions/get-invalid-names'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import { useLogin } from '@/context/login'
@@ -9,31 +12,20 @@ const validationMessages = [
   '沒有跟媒體名稱重複',
 ]
 
-//TODO: replace with whitelist in GCS
-const invalidNames = new Set([
-  'CNN',
-  'BBC',
-  'WSJ',
-  'READr',
-  'Mirror Media',
-  'Mirror News',
-  'The Reporter',
-  'SET News',
-  'PTS',
-  'Public Television Service',
-  '鏡週刊',
-  '鏡新聞',
-  '鏡文學',
-  '鏡報',
-  '報導者',
-  '中央社',
-  '公視',
-  '三立新聞',
-])
-
 export default function LoginSetName() {
   const { formData, setFormData, setStep } = useLogin()
   const { name } = formData
+  const [invalidNames, setInvalidNames] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchInvalidNames = async () => {
+      const data = await getInvalidNameList()
+      if (data) {
+        setInvalidNames(data)
+      }
+    }
+    fetchInvalidNames()
+  }, [])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -41,7 +33,7 @@ export default function LoginSetName() {
     }
   }
 
-  const { validCondition, isValid } = isValidName(name)
+  const { validCondition, isValid } = isValidName(invalidNames, name)
 
   const handleSubmit = () => {
     if (isValid) {
@@ -106,12 +98,27 @@ export default function LoginSetName() {
   )
 }
 
-function isValidName(name: string) {
+function isValidName(invalidNames: string[], name: string) {
   const nameRegex = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/
   const validCondition: number[] = []
+  if (!invalidNames.length || !name) return { validCondition, isValid: false }
 
-  if (name === '') return { validCondition, isValid: false }
-  if (!invalidNames.has(name)) {
+  let isMatchInvalidNames = false
+  const lowerCaseName = name.toLowerCase()
+
+  for (const str of invalidNames) {
+    const lowerCaseStr = str.toLowerCase()
+    if (
+      lowerCaseName.startsWith(lowerCaseStr) ||
+      lowerCaseName.endsWith(lowerCaseStr) ||
+      lowerCaseName.includes(lowerCaseStr)
+    ) {
+      isMatchInvalidNames = true
+      break
+    }
+  }
+
+  if (!isMatchInvalidNames) {
     validCondition.push(2)
   }
   if (nameRegex.test(name)) {

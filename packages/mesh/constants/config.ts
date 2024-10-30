@@ -111,6 +111,7 @@ const STATIC_FILE_ENDPOINTS = {
   contract: `${STATIC_FILE_ORIGIN}/contracts/MeshPoint.json`,
   publisherStoriesFn: (publisherCustomId: string) =>
     `${STATIC_FILE_ORIGIN}/data/${publisherCustomId}_stories.json`,
+  invalidNameList: `${STATIC_FILE_ORIGIN}/data/invalid_names.json`,
 }
 
 export {
