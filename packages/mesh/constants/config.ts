@@ -75,7 +75,24 @@ switch (ENV) {
     break
 
   case 'prod':
+    API_ORIGIN = 'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
+    STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
+    PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_CHAIN = optimism
+    FIREBASE_DOMAIN = 'readr-dev-38eec.firebaseapp.com'
+    FIREBASE_CONFIG = {
+      API_KEY: 'AIzaSyDna248DTK4AtPNIx6TRNjn0qtIsYX7utY',
+      AUTH_DOMAIN: 'www.mmesh.news',
+      PROJECT_ID: 'readr-prod',
+      STORAGE_BUCKET: 'readr-prod.appspot.com',
+      MESSAGING_SENDER_ID: '593370764604',
+      APP_ID: '1:593370764604:web:3e90810bc5e6345ef37a39',
+    }
+    ALCHEMY_ADDRESS = {
+      policyId: '12056106-f884-42d2-9d43-5a8b3aca7a4e',
+      meshPoint: '0xe00473f0236D2a23796C71b3678833a821bFab95',
+      paymaster: '0xA75a88cdBa15725EcD1134A73d1Dda02186493De',
+    }
     break
 
   default:
