@@ -1,5 +1,11 @@
 import { useRouter } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import type { CreateCollectionParams } from '@/app/actions/mutate-collection'
 import { createCollection as sendCreateCollection } from '@/app/actions/mutate-collection'
@@ -32,42 +38,60 @@ type EditCollectionContextValue = {
     React.SetStateAction<CollectionPickStory[]>
   >
   createCollection: () => void
+  checkMobileStepFullfilled: () => boolean
+  mobileTitle: string
 }
 
-const initialValue: EditCollectionContextValue = {
-  step: 0,
-  setStep: () => {},
-  title: '',
-  setTitle: () => {},
-  summary: '',
-  setSummary: () => {},
-  heroImage: null,
-  setHeroImage: () => {},
-  candidates: [],
-  setCandidates: () => {},
-  collectionPickStories: [],
-  setCollectionPickStories: () => {},
-  createCollection: () => {},
-}
-
-const EditCollectionContext = createContext(initialValue)
+const EditCollectionContext = createContext<
+  EditCollectionContextValue | undefined
+>(undefined)
 
 export default function EditCollectionProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const [step, setStep] = useState(initialValue.step)
-  const [title, setTitle] = useState(initialValue.title)
-  const [summary, setSummary] = useState(initialValue.summary)
-  const [heroImage, setHeroImage] = useState(initialValue.heroImage)
-  const [candidates, setCandidates] = useState(initialValue.candidates)
-  const [collectionPickStories, setCollectionPickStories] = useState(
-    initialValue.collectionPickStories
-  )
+  const [step, setStep] = useState(0)
+  const [title, setTitle] = useState('')
+  const [summary, setSummary] = useState('')
+  const [heroImage, setHeroImage] = useState<File | null>(null)
+  const [candidates, setCandidates] = useState<PickOrBookmark[]>([])
+  const [collectionPickStories, setCollectionPickStories] = useState<
+    CollectionPickStory[]
+  >([])
   const router = useRouter()
   const { user } = useUser()
   const { width } = useWindowDimensions()
+
+  const checkMobileStepFullfilled = () => {
+    switch (step) {
+      case 0:
+        return Boolean(collectionPickStories.length)
+      case 1:
+        return Boolean(heroImage) && Boolean(title)
+      case 2:
+        // optional filed
+        return true
+      default:
+        return false
+    }
+  }
+
+  const getMobileTitle = useCallback(() => {
+    switch (step) {
+      case 0: {
+        const pickedStoryCount = collectionPickStories.length
+        return pickedStoryCount ? `已選${pickedStoryCount}篇` : '選擇文章'
+      }
+      case 1:
+        return '標題'
+      case 2:
+        return '敘述'
+      default:
+        return '建立集錦'
+    }
+  }, [collectionPickStories.length, step])
+  const mobileTitle = getMobileTitle()
 
   const createCollection = async () => {
     const formData = new FormData()
@@ -109,7 +133,7 @@ export default function EditCollectionProvider({
   // reset steps when window width change
   useEffect(() => {
     if (width) {
-      setStep(initialValue.step)
+      setStep(0)
     }
   }, [width])
 
@@ -129,6 +153,8 @@ export default function EditCollectionProvider({
         collectionPickStories,
         setCollectionPickStories,
         createCollection,
+        checkMobileStepFullfilled,
+        mobileTitle,
       }}
     >
       {children}
@@ -137,5 +163,11 @@ export default function EditCollectionProvider({
 }
 
 export const useEditCollection = () => {
-  return useContext(EditCollectionContext)
+  const context = useContext(EditCollectionContext)
+  if (!context) {
+    throw new Error(
+      'useEditCollection must be used within a EditCollectionProvider'
+    )
+  }
+  return context
 }

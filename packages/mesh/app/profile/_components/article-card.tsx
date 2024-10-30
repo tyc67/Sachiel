@@ -65,7 +65,7 @@ const ArticleCard = ({
   return (
     <>
       <CommentProvider
-        initialComments={storyData.comment || []}
+        initialComments={storyData?.comment || []}
         commentObjective={CommentObjective.Story}
         commentObjectiveData={storyData}
       >

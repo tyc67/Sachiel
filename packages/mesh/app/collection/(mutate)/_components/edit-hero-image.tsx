@@ -26,11 +26,11 @@ export default function EditHeroImage() {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 sm:px-5 md:px-[70px] lg:px-0">
       {/* TODO: replace with <ImageWithFallback /> */}
       <div className="relative aspect-[2/1]">
         <ImageWithFallback
-          className="rounded-md"
+          className="sm:rounded-md"
           fallbackCategory={ImageCategory.STORY}
           src={heroImageSrc}
           alt="集錦封面照片"

@@ -6,9 +6,14 @@ import { useEditCollection } from '@/context/edit-collection'
 import { useUser } from '@/context/user'
 
 import { picksAndBookmarksPageCount } from '../../_const/edit-collection'
+import EditHeroImage from '../edit-hero-image'
+import EditSummary from '../edit-summary'
+import EditTitle from '../edit-title'
 import InfiniteCollectionPicks from '../infinite-collection-picks'
+import TabletGoNextButton from '../tablet/tablet-go-next-button'
+import TabletNavigation from '../tablet/tablet-navigation'
 
-export default function DesktopCollectionPicks() {
+export default function MobileNewCollection() {
   const { step } = useEditCollection()
 
   const getStepJsx = (step: number) => {
@@ -16,14 +21,17 @@ export default function DesktopCollectionPicks() {
       case 0:
         return <Step1 />
       case 1:
-        return null
+        return <Step2 />
+      case 2:
+        return <Step3 />
       default:
         return null
     }
   }
 
   return (
-    <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
+    <div className="flex w-full grow flex-col sm:mx-auto sm:max-w-screen-sm md:max-w-[740px] lg:hidden">
+      <TabletNavigation />
       {getStepJsx(step)}
     </div>
   )
@@ -69,11 +77,47 @@ const Step1 = () => {
   return isLoading ? (
     <Spinner />
   ) : (
-    <InfiniteCollectionPicks
-      key={candidates.length}
-      candidates={candidates}
-      loadMore={loadMorePicksAndBookmarks}
-      shouldLoadMore={shouldLoadMore}
-    />
+    <>
+      <div className="mb-[72px] flex grow flex-col">
+        <InfiniteCollectionPicks
+          key={candidates.length}
+          candidates={candidates}
+          loadMore={loadMorePicksAndBookmarks}
+          shouldLoadMore={shouldLoadMore}
+        />
+      </div>
+      <div className="fixed inset-x-0 bottom-0 hidden items-center justify-center bg-white py-4 sm:flex lg:hidden">
+        <div className="w-[335px]">
+          <TabletGoNextButton />
+        </div>
+      </div>
+    </>
+  )
+}
+
+const Step2 = () => {
+  return (
+    <div className="flex flex-col gap-8">
+      <EditHeroImage />
+      <EditTitle />
+      <div className="flex items-center justify-center pt-6">
+        <div className="w-[295px]">
+          <TabletGoNextButton />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Step3 = () => {
+  return (
+    <div className="flex grow flex-col">
+      <EditSummary />
+      <div className="flex items-center justify-center pt-6">
+        <div className="w-[295px]">
+          <TabletGoNextButton />
+        </div>
+      </div>
+    </div>
   )
 }

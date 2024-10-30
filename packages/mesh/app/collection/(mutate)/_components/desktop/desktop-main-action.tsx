@@ -5,6 +5,8 @@ import { useEditCollection } from '@/context/edit-collection'
 import EditHeroImage from '../edit-hero-image'
 import EditSummary from '../edit-summary'
 import EditTitle from '../edit-title'
+import DesktopGoNextButton from './desktop-go-next-button'
+import DesktopNavigation from './desktop-navigtaion'
 
 export default function DesktopMainAction() {
   const { step } = useEditCollection()
@@ -18,42 +20,16 @@ export default function DesktopMainAction() {
 }
 
 const Step1 = () => {
-  const {
-    collectionPickStories: collectionPicks,
-    title,
-    createCollection,
-  } = useEditCollection()
-  const canGoToNextStep = !!collectionPicks.length && !!title
-
-  const onNext = async () => {
-    // TODO: move back to 2 steps
-    // setStep(1)
-    createCollection()
-  }
-
   return (
     <>
-      <div className="flex gap-5 px-5 py-3">
-        <GoBackButton
-          customAction={() => {
-            // show confirm alert then goback
-          }}
-        />
-        <h1>建議集錦</h1>
-      </div>
+      <DesktopNavigation />
       <div className="flex h-full flex-col gap-6 px-5">
         <EditHeroImage />
         <EditTitle />
         <EditSummary />
       </div>
       <div className="px-5 py-3">
-        <Button
-          onClick={onNext}
-          disabled={!canGoToNextStep}
-          size="lg"
-          color="blue-500"
-          text="建立集錦"
-        />
+        <DesktopGoNextButton />
       </div>
     </>
   )
