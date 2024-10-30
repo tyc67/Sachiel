@@ -22,6 +22,7 @@ export default function LoginEntry() {
         </p>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3">
+        {/* 因第三方因素，暫時停用 facebook login 機制 */}
         {loginOptions
           .filter((option) => option.method !== 'facebook')
           .map((option) => (

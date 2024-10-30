@@ -14,7 +14,7 @@ export async function getInvalidNameList() {
   } catch (error) {
     logServerSideError(
       error,
-      'Error on validate most_recommend_sponsors.json',
+      'Error: Fail to get invalid name lists',
       globalLogFields
     )
     return null

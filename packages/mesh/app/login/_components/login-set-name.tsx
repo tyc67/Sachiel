@@ -6,12 +6,6 @@ import Icon from '@/components/icon'
 import { useLogin } from '@/context/login'
 import { debounce } from '@/utils/performance'
 
-const validationMessages = [
-  '姓名在 2-32 字間',
-  '不包含特殊符號',
-  '沒有跟媒體名稱重複',
-]
-
 export default function LoginSetName() {
   const { formData, setFormData, setStep } = useLogin()
   const { name } = formData
@@ -33,7 +27,8 @@ export default function LoginSetName() {
     }
   }
 
-  const { validCondition, isValid } = isValidName(invalidNames, name)
+  const validationResults = validateName(invalidNames, name)
+  const isValid = validationResults.every((result) => result.isValid)
 
   const handleSubmit = () => {
     if (isValid) {
@@ -60,24 +55,22 @@ export default function LoginSetName() {
           required
         ></input>
         <div className="pt-2">
-          {validationMessages.map((message, idx) => (
+          {validationResults.map((result, idx) => (
             <div
               key={idx}
               className={`flex h-6 flex-row items-center gap-1 ${
-                validCondition.includes(idx)
-                  ? 'text-custom-blue'
-                  : 'text-primary-500'
+                result.isValid ? 'text-custom-blue' : 'text-primary-500'
               }`}
             >
               <Icon
                 iconName={
-                  validCondition.includes(idx)
+                  result.isValid
                     ? 'icon-check-circle-blue'
                     : 'icon-check-circle-gray'
                 }
                 size="m"
               />
-              <p className="body-3">{message}</p>
+              <p className="body-3">{result.message}</p>
             </div>
           ))}
         </div>
@@ -98,36 +91,35 @@ export default function LoginSetName() {
   )
 }
 
-function isValidName(invalidNames: string[], name: string) {
-  const nameRegex = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/
-  const validCondition: number[] = []
-  if (!invalidNames.length || !name) return { validCondition, isValid: false }
+const validationRules = [
+  {
+    message: '姓名在 2-32 字間',
+    check: (invalidNames: string[], name: string) =>
+      name.length >= 2 && name.length <= 32,
+  },
+  {
+    message: '不包含特殊符號',
+    check: (invalidNames: string[], name: string) =>
+      /^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(name),
+  },
+  {
+    message: '沒有跟媒體名稱重複',
+    check: (invalidNames: string[], name: string) =>
+      !invalidNames.some((invalidName) =>
+        name.toLowerCase().includes(invalidName.toLowerCase())
+      ),
+  },
+]
 
-  let isMatchInvalidNames = false
-  const lowerCaseName = name.toLowerCase()
-
-  for (const str of invalidNames) {
-    const lowerCaseStr = str.toLowerCase()
-    if (
-      lowerCaseName.startsWith(lowerCaseStr) ||
-      lowerCaseName.endsWith(lowerCaseStr) ||
-      lowerCaseName.includes(lowerCaseStr)
-    ) {
-      isMatchInvalidNames = true
-      break
-    }
+const validateName = (invalidNames: string[], name: string) => {
+  if (!name || !invalidNames.length) {
+    return validationRules.map((rule) => ({
+      message: rule.message,
+      isValid: false,
+    }))
   }
-
-  if (!isMatchInvalidNames) {
-    validCondition.push(2)
-  }
-  if (nameRegex.test(name)) {
-    validCondition.push(1)
-  }
-  if (2 <= name.length && name.length <= 32) {
-    validCondition.push(0)
-  }
-  const isValid = validCondition.length === 3
-
-  return { validCondition, isValid }
+  return validationRules.map((rule) => ({
+    message: rule.message,
+    isValid: rule.check(invalidNames, name),
+  }))
 }
