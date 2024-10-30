@@ -13,7 +13,6 @@ import { FreeMode } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types'
 
 import Icon from '@/components/icon'
-import useWindowDimensions from '@/hooks/use-window-dimension'
 
 const CollectionsCarousel = ({
   followingCollection,
@@ -21,8 +20,6 @@ const CollectionsCarousel = ({
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
-  const { width: screenWidth } = useWindowDimensions()
-  console.log({ screenWidth }, screenWidth >= 960)
   const updateNavigationState = () => {
     if (swiperInstance) {
       setIsBeginning(swiperInstance.isBeginning)
@@ -84,7 +81,7 @@ const CollectionsCarousel = ({
           {followingCollection?.map((data, index) => (
             <SwiperSlide
               key={index}
-              className="!h-auto !w-auto md:!w-[23%] md:!max-w-[150px] md:drop-shadow lg:!w-1/5 lg:!max-w-[164px]" // This is important for proper sizing
+              className="!h-auto !w-auto md:!w-1/5 md:!max-w-[150px] md:drop-shadow lg:!w-1/5 lg:!max-w-[164px]" // This is important for proper sizing
             >
               <CollectionsCarouselElement data={data} />
             </SwiperSlide>
