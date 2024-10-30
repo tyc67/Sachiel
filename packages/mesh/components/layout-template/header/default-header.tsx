@@ -8,11 +8,11 @@ import { twMerge } from 'tailwind-merge'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import SearchBar from '@/components/search-bar'
+import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
-import { logout } from '@/utils/logout'
 
 export default function DefaultHeader() {
-  // temporarily use hardcode value for state
+  // TODO: implement notification system
   const [showNotification, setShowNotification] = useState(false)
   const router = useRouter()
   const { user } = useUser()
@@ -25,10 +25,19 @@ export default function DefaultHeader() {
       <div className="mx-auto flex h-full max-w-[theme(width.maxContent)] justify-between p-2 sm:px-10 sm:py-3">
         {/* left side block */}
         <div className="flex gap-10">
-          <Link href="/">
+          <Link
+            href={LOGO_ICONS.mobile.href}
+            className="flex items-center justify-center"
+          >
             <Icon
-              size={{ width: 100, height: 44 }}
-              iconName="icon-readr-logo"
+              size={LOGO_ICONS.mobile.size}
+              iconName={LOGO_ICONS.mobile.icon}
+              className="sm:hidden"
+            />
+            <Icon
+              size={LOGO_ICONS.nonMobile.size}
+              iconName={LOGO_ICONS.nonMobile.icon}
+              className="hidden sm:block"
             />
           </Link>
           <SearchBar className="hidden sm:flex" />
@@ -44,19 +53,20 @@ export default function DefaultHeader() {
           {isLoggedIn ? (
             newNotification ? (
               // TODO: replace with correct path
-              <HeaderIconWrapper
-                onClick={async () => {
-                  // TODO: show notification panel
-                  // Temporary Logout button
-                  await logout()
-                  setShowNotification(!showNotification)
-                }}
-                className={
-                  showNotification ? 'rounded-[50%] bg-primary-100' : ''
-                }
-              >
-                <Icon size="2xl" iconName="icon-notifications-new" />
-              </HeaderIconWrapper>
+              <div>
+                {/* TODO: uncomment the code after notification has been implemented  */}
+                {/* <HeaderIconWrapper
+                  onClick={async () => {
+                    // TODO: show notification panel
+                    setShowNotification(!showNotification)
+                  }}
+                  className={
+                    showNotification ? 'rounded-[50%] bg-primary-100' : ''
+                  }
+                >
+                  <Icon size="2xl" iconName="icon-notifications-new" />
+                </HeaderIconWrapper> */}
+              </div>
             ) : (
               // TODO: replace with correct path
               <HeaderIconWrapper

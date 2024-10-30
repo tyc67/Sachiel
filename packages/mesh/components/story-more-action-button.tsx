@@ -3,15 +3,21 @@
 import { useRouter } from 'next/navigation'
 import type { ForwardedRef, MouseEventHandler, RefObject } from 'react'
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
 
 import { addBookmark, removeBookmark } from '@/app/actions/bookmark'
 import { removeFollowPublisher } from '@/app/actions/follow-publisher'
+import TOAST_MESSAGE from '@/constants/toast'
+import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
 import { PaymentType } from '@/types/payment'
+import { getStoryUrl } from '@/utils/get-url'
+import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 import Icon from './icon'
+import ShareSheet from './share-sheet'
 
 type Position = {
   top: number
@@ -22,22 +28,16 @@ const isPositionValid = (position: Position) => {
   return Number.isFinite(position.top) && Number.isFinite(position.left)
 }
 
-const getStoryUrl = (storyId: string) => {
-  return `${location.origin}/story/${storyId}`
-}
-
 export default function StoryMoreActionButton({
   storyId,
   publisherId,
   canUnFollowPublisher = false,
-  showOnRestrictArea = false,
   nestedScrollContainerRef,
   className,
 }: {
   storyId: string
   publisherId: string
   canUnFollowPublisher?: boolean
-  showOnRestrictArea?: boolean
   nestedScrollContainerRef?: RefObject<HTMLElement>
   className?: string
 }) {
@@ -55,10 +55,12 @@ export default function StoryMoreActionButton({
 
   const openActionSheet: MouseEventHandler<HTMLButtonElement> = (evt) => {
     evt.preventDefault()
-    if (showOnRestrictArea) {
+    if (window.innerWidth >= getTailwindConfigBreakpointNumber('sm')) {
       const button = evt.target as HTMLButtonElement
       const { top, left } = button.getBoundingClientRect()
       setPosition({ top, left })
+    } else {
+      setPosition({ top: Infinity, left: Infinity })
     }
     setShouldShowActionSheet(true)
   }
@@ -84,8 +86,7 @@ export default function StoryMoreActionButton({
 
     /**
      * Hide the action sheet when scroll, for scroll event on both window and nested scroll container (if exists).
-     * Avoid complicated logic to set dynamic position when `showOnRestrictArea` is true.
-     * Align the behavior to the other situation.
+     * Avoid complicated logic to set dynamic position.
      */
     if (nestedScrollContainer) {
       nestedScrollContainer.addEventListener('scroll', onScroll)
@@ -104,9 +105,18 @@ export default function StoryMoreActionButton({
     <div className="relative">
       <button
         onClick={openActionSheet}
-        className={twMerge('flex items-center justify-center', className)}
+        className={twMerge('group flex items-center justify-center', className)}
       >
-        <Icon iconName="icon-more-horiz" size="l" />
+        <Icon
+          iconName="icon-more-horiz"
+          size="l"
+          className="group-hover:hidden"
+        />
+        <Icon
+          iconName="icon-more-horiz-hover"
+          size="l"
+          className="hidden group-hover:block"
+        />
       </button>
       {shouldShowActionSheet && (
         <ActionSheet
@@ -120,7 +130,7 @@ export default function StoryMoreActionButton({
         />
       )}
       {shouldShowShareSheet && (
-        <ShareSheet onClose={closeShareSheet} storyId={storyId} />
+        <ShareSheet onClose={closeShareSheet} url={getStoryUrl(storyId)} />
       )}
     </div>
   )
@@ -172,16 +182,28 @@ const ActionSheet = forwardRef(function ActionSheet(
 ) {
   const router = useRouter()
   const { user, setUser } = useUser()
+
   const isStoryAddedBookmark = user.bookmarkStoryIds.has(storyId)
   const hasPosition = isPositionValid(position)
+  const { addToast } = useToast()
 
   const onAction = async (type: ActionType) => {
-    if (!storyId || !publisherId) {
-      // TODO: show toast to hint error
+    if (!storyId) {
+      addToast({ status: 'fail', text: TOAST_MESSAGE.moreActionError })
+      console.error(
+        `more action on story error, storyId: ${storyId}, publisherId: ${publisherId}`
+      )
       return
     }
     switch (type) {
       case ActionType.Sponsor: {
+        if (!publisherId) {
+          addToast({ status: 'fail', text: TOAST_MESSAGE.moreActionError })
+          console.error(
+            `more action on story error, storyId: ${storyId}, publisherId: ${publisherId}`
+          )
+          return
+        }
         router.push(`/payment/${PaymentType.Sponsor}/${publisherId}`)
         break
       }
@@ -204,8 +226,12 @@ const ActionSheet = forwardRef(function ActionSheet(
                 )
               ),
             }))
+          } else {
+            addToast({
+              status: 'fail',
+              text: TOAST_MESSAGE.deleteBookmarkFailed,
+            })
           }
-          // TODO: show error toase?
           onClose()
         } else {
           const addBookmarkResponse = await addBookmark({
@@ -217,8 +243,12 @@ const ActionSheet = forwardRef(function ActionSheet(
               ...oldUser,
               bookmarkStoryIds: new Set([...oldUser.bookmarkStoryIds, storyId]),
             }))
+          } else {
+            addToast({
+              status: 'fail',
+              text: TOAST_MESSAGE.addBookmarkFailed,
+            })
           }
-          // TODO: show error toase?
           onClose()
         }
         break
@@ -244,7 +274,10 @@ const ActionSheet = forwardRef(function ActionSheet(
         navigator.clipboard
           .writeText(storyUrl)
           .then(() => {
-            // TODO: show toast for url copied successfully
+            addToast({
+              status: 'success',
+              text: TOAST_MESSAGE.copyStoryLinkSuccess,
+            })
             onClose()
           })
           .catch((error) => {
@@ -264,11 +297,11 @@ const ActionSheet = forwardRef(function ActionSheet(
     ? 'sm:fixed sm:right-[unset] sm:top-[unset]'
     : ''
 
-  return (
+  return createPortal(
     <div
       ref={ref}
       className={twMerge(
-        'fixed bottom-0 left-0 z-modal flex w-full flex-col bg-white py-2 shadow-[0px_0px_8px_0px_rgba(0,0,0,0.1),0px_-8px_20px_0px_rgba(0,0,0,0.1)] sm:absolute sm:bottom-[unset] sm:left-[unset] sm:right-0 sm:top-0 sm:w-[unset] sm:min-w-[180px] sm:rounded-md sm:px-0 sm:shadow-light-box',
+        'fixed bottom-0 left-0 z-modal flex w-full flex-col bg-white py-2 shadow-[0px_0px_8px_0px_rgba(0,0,0,0.1),0px_-8px_20px_0px_rgba(0,0,0,0.1)] sm:absolute sm:bottom-[unset] sm:left-[unset] sm:top-0 sm:w-[unset] sm:min-w-[180px] sm:rounded-md sm:px-0 sm:shadow-light-box',
         alternativeClasses
       )}
       style={
@@ -279,6 +312,9 @@ const ActionSheet = forwardRef(function ActionSheet(
             }
           : undefined
       }
+      onClick={(evt) => {
+        evt.stopPropagation()
+      }}
     >
       {actions.map((action) => {
         switch (action.type) {
@@ -329,88 +365,7 @@ const ActionSheet = forwardRef(function ActionSheet(
           }
         }
       })}
-    </div>
+    </div>,
+    document.body
   )
 })
-
-const shareMedia = [
-  {
-    id: 'facebook',
-    icon: 'icon-share-facebook',
-    text: 'Facebook',
-    urlTemplate: 'https://www.facebook.com/share.php?u=${storyUrl}',
-  },
-  {
-    id: 'line',
-    icon: 'icon-share-line',
-    text: 'LINE',
-    urlTemplate: 'https://social-plugins.line.me/lineit/share?url=${storyUrl}',
-  },
-  {
-    id: 'threads',
-    icon: 'icon-share-threads',
-    text: 'Threads',
-    urlTemplate: 'https://www.threads.net/intent/post?text=${storyUrl}',
-  },
-  {
-    id: 'x',
-    icon: 'icon-share-x',
-    text: 'x',
-    urlTemplate: 'https://twitter.com/intent/tweet?url=${storyUrl}',
-  },
-] as const
-
-const ShareSheet = ({
-  storyId,
-  onClose,
-}: {
-  storyId: string
-  onClose: () => void
-}) => {
-  const getShareUrl = (urlTemplate: string) => {
-    const storyUrl = getStoryUrl(storyId)
-    return urlTemplate.replace('${storyUrl}', storyUrl)
-  }
-
-  const onBackgroundClicked = () => {
-    onClose()
-  }
-
-  return (
-    <div
-      className="fixed inset-0 z-modal flex  items-center justify-center  bg-lightbox-light"
-      onClick={onBackgroundClicked}
-    >
-      <div className="w-[335px] rounded-xl bg-white shadow-light-box sm:w-[480px]">
-        <div className="flex h-15 items-center justify-between border-b border-[rgba(0,9,40,0.1)] px-2">
-          <div />
-          <div className="list-title text-primary-800">分享</div>
-          <button
-            className="flex size-11 items-center justify-center"
-            onClick={onClose}
-          >
-            <Icon iconName="icon-close" size="l" />
-          </button>
-        </div>
-        <div className="grid grid-cols-2 gap-y-10 p-5 sm:flex sm:gap-0">
-          {shareMedia.map((media) => (
-            <a
-              key={media.id}
-              href={getShareUrl(media.urlTemplate)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full"
-            >
-              <div className="flex flex-col items-center gap-2 sm:flex-1">
-                <Icon iconName={media.icon} size={{ width: 40, height: 40 }} />
-                <span className="subtitle-2 text-primary-500">
-                  {media.text}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}

@@ -1,8 +1,13 @@
+/* eslint-disable-next-line @typescript-eslint/no-var-requires */
+const plugin = require('tailwindcss/plugin')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './context/**/*.{js,ts,jsx,tsx,mdx}',
+    './hooks/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     screens: {
@@ -48,6 +53,7 @@ module.exports = {
         nav: {
           default: '64px',
         },
+        toast: '32px',
       },
       minHeight: {
         screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
@@ -103,6 +109,10 @@ module.exports = {
           DEFAULT: '#007AFF',
           dark: '#0A84FF',
         },
+        'custom-blue-hover': {
+          DEFAULT: '#0170E9',
+          dark: '#007AFF',
+        },
         'custom-red-text': {
           DEFAULT: '#EE4141',
           dark: '#FF453A',
@@ -154,7 +164,12 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addVariant }) {
+      // apply to both :hover and :active but doesn't work for group-*
+      addVariant('hover-or-active', ['&:hover', '&:active'])
+    }),
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },

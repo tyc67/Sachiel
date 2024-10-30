@@ -12,7 +12,11 @@ import TransactionList from './transaction-list'
 
 export type Transaction = Awaited<ReturnType<typeof getMemberTransactionRecord>>
 
-export default function MeshPoint() {
+export default function MeshPoint({
+  balance,
+}: {
+  balance: number | undefined
+}) {
   const { user } = useUser()
   const [transactionData, setTransactionData] = useState<Transaction | null>(
     null
@@ -40,11 +44,11 @@ export default function MeshPoint() {
   return (
     <div className="bg-white sm:rounded-md sm:drop-shadow">
       <section className="flex h-[190px] flex-col justify-center border-b-[0.5px] border-primary-200 sm:h-[128px] sm:flex-row sm:justify-between sm:px-10 sm:py-8">
-        <MeshPointInfo />
+        <MeshPointInfo balance={balance} />
         <div className="flex flex-row items-center justify-center gap-4 pt-6 sm:gap-5 sm:self-end sm:pt-0">
           <Link href={'/point/sponsorship'}>
-            <div className="flex flex-col items-center gap-1 sm:flex-row">
-              <p className="profile-title-2 text-primary-700">
+            <div className="group flex flex-col items-center gap-1 sm:flex-row">
+              <p className="profile-title-2 text-primary-700 group-hover:text-primary-500 group-active:text-primary-500">
                 {transactionData.totalSponsorCount || 0}次
               </p>
               <p className="profile-subtitle text-primary-500">已贊助次數</p>
@@ -52,8 +56,8 @@ export default function MeshPoint() {
           </Link>
           <div className="h-5 w-0 border-[0.5px] border-primary-200 sm:hidden"></div>
           <Link href={'/point/subscribe-stories'}>
-            <div className="flex flex-col items-center gap-1 sm:flex-row">
-              <p className="profile-title-2 text-center text-primary-700">
+            <div className="group flex flex-col items-center gap-1 sm:flex-row">
+              <p className="profile-title-2 text-center text-primary-700 group-hover:text-primary-500 group-active:text-primary-500">
                 {transactionData?.unlockStoriesCount || 0}篇
               </p>
               <p className="profile-subtitle text-primary-500">訂閱中文章</p>

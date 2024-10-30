@@ -27,7 +27,9 @@ const StoryCard = ({
         )}
 
         <div>
-          <h3 className="subtitle-2 mb-1 text-primary-700">{story.title}</h3>
+          <h3 className="subtitle-2 mb-1 text-primary-700 hover-or-active:underline">
+            {story.title}
+          </h3>
           <div className="caption-1">
             <StoryMeta
               commentCount={story.commentCount}
@@ -52,10 +54,15 @@ export default function PublisherCard({ data }: Props) {
     <div className="flex w-full flex-col rounded-lg border-[0.5px] border-primary-200 bg-primary-100 px-5 pb-2 pt-5 lg:self-start lg:pb-3 lg:pt-6 xl:px-8">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex gap-x-3">
-          {/* TODO: render logo of publisher */}
-          <div>LOGO</div>
+          <div className="relative size-11 overflow-hidden rounded-lg">
+            <NextImage
+              src={data.publisher.logo || '/images/default-publisher-logo.png'}
+              fill
+              alt={data.publisher.title}
+            />
+          </div>
           <div>
-            <p className="subtitle-2 text-primary-700">
+            <p className="subtitle-2 text-primary-700 hover-or-active:underline">
               <NextLink href={`profile/publisher/${data.publisher.customId}`}>
                 {data.publisher.title}
               </NextLink>
