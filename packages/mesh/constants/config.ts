@@ -75,7 +75,19 @@ switch (ENV) {
     break
 
   case 'prod':
+    API_ORIGIN =
+      'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
+    STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
     PAYMENT_CHAIN = optimism
+    FIREBASE_DOMAIN = 'https://mesh-app.readr.tw'
+    FIREBASE_CONFIG = {
+      API_KEY: 'AIzaSyDna248DTK4AtPNIx6TRNjn0qtIsYX7utY',
+      AUTH_DOMAIN: 'https://sachel-mesh-prod-1075249966777.asia-east1.run.app',
+      PROJECT_ID: 'readr-prod',
+      STORAGE_BUCKET: 'readr-prod.appspot.com',
+      MESSAGING_SENDER_ID: '593370764604',
+      APP_ID: '1:593370764604:web:3e90810bc5e6345ef37a39',
+    }
     break
 
   default:
