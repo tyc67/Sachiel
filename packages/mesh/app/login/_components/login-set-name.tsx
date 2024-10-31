@@ -27,7 +27,7 @@ export default function LoginSetName() {
     }
   }
 
-  const validationResults = validateName(invalidNames, name)
+  const validationResults = validateName({ invalidNames, name })
   const isValid = validationResults.every((result) => result.isValid)
 
   const handleSubmit = () => {
@@ -94,24 +94,30 @@ export default function LoginSetName() {
 const validationRules = [
   {
     message: '姓名在 2-32 字間',
-    check: (invalidNames: string[], name: string) =>
+    check: ({ name }: { name: string }) =>
       name.length >= 2 && name.length <= 32,
   },
   {
     message: '不包含特殊符號',
-    check: (invalidNames: string[], name: string) =>
+    check: ({ name }: { name: string }) =>
       /^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(name),
   },
   {
     message: '沒有跟媒體名稱重複',
-    check: (invalidNames: string[], name: string) =>
+    check: ({ invalidNames, name }: { invalidNames: string[]; name: string }) =>
       !invalidNames.some((invalidName) =>
         name.toLowerCase().includes(invalidName.toLowerCase())
       ),
   },
 ]
 
-const validateName = (invalidNames: string[], name: string) => {
+const validateName = ({
+  invalidNames,
+  name,
+}: {
+  invalidNames: string[]
+  name: string
+}) => {
   if (!name || !invalidNames.length) {
     return validationRules.map((rule) => ({
       message: rule.message,
@@ -120,6 +126,6 @@ const validateName = (invalidNames: string[], name: string) => {
   }
   return validationRules.map((rule) => ({
     message: rule.message,
-    isValid: rule.check(invalidNames, name),
+    isValid: rule.check({ invalidNames, name }),
   }))
 }
