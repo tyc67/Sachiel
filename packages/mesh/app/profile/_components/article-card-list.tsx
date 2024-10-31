@@ -1,9 +1,10 @@
 import ArticleCard from '@/app/profile/_components/article-card'
+import { PickObjective } from '@/types/objective'
 import type {
   BookmarkItem,
   Bookmarks,
   Collections,
-  FollowingCollection,
+  PickCollections,
   PickList,
   PickListItem,
 } from '@/types/profile'
@@ -18,7 +19,6 @@ interface ArticleCardListProps {
   avatar?: string
   name?: string
   shouldShowComment: boolean
-  followingCollection?: FollowingCollection
 }
 
 function ArticleCardList({
@@ -29,7 +29,6 @@ function ArticleCardList({
   memberId,
   avatar,
   name,
-  followingCollection,
 }: ArticleCardListProps) {
   if (!items?.length) {
     return (
@@ -42,15 +41,27 @@ function ArticleCardList({
     )
   }
   const isCollection = items[0].__typename === 'Collection'
+  const pickCollections = (): PickCollections => {
+    if (isCollection) return []
+    if (!(items as PickList)?.length) return []
+    return (
+      (items as PickList)?.map(({ objective, collection }) => {
+        if (objective === PickObjective.Story) return
+        return { ...collection, id: '' }
+      }) ?? []
+    )
+  }
   return (
     <div className="bg-multi-layer-light">
-      {followingCollection && (
+      {pickCollections()?.length ? (
         <>
-          <CollectionsCarousel followingCollection={followingCollection} />
+          <CollectionsCarousel pickCollections={pickCollections()} />
           <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
             精選文章
           </p>
         </>
+      ) : (
+        <></>
       )}
       <ul
         className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${

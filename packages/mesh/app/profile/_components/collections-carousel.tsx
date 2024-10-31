@@ -3,20 +3,18 @@ import 'swiper/css'
 import React, { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import type { FollowingCollection } from '@/types/profile'
+import type { PickCollections } from '@/types/profile'
 
 import CollectionsCarouselElement from './collections-carousel-element'
 type CollectionsCarouselProps = {
-  followingCollection: FollowingCollection
+  pickCollections: PickCollections
 }
 import { FreeMode } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types'
 
 import Icon from '@/components/icon'
 
-const CollectionsCarousel = ({
-  followingCollection,
-}: CollectionsCarouselProps) => {
+const CollectionsCarousel = ({ pickCollections }: CollectionsCarouselProps) => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
@@ -93,7 +91,7 @@ const CollectionsCarousel = ({
             },
           }}
         >
-          {followingCollection?.map((data, index) => (
+          {pickCollections?.map((data, index) => (
             <SwiperSlide
               key={index}
               className="!h-auto !w-auto md:!w-1/5 md:!max-w-[150px] md:drop-shadow lg:!w-1/5 lg:!max-w-[164px]" // This is important for proper sizing

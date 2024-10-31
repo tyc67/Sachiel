@@ -74,7 +74,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     customId,
     memberId,
     intro,
-    followingCollection,
   } = profileData
 
   const userStatusList = [
@@ -149,9 +148,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         userType={isMember ? 'member' : 'visitor'}
       />
       <ArticleCardList
-        followingCollection={
-          category === TabCategory.PICKS ? followingCollection : undefined
-        }
         items={tabData || []}
         shouldShowComment={shouldShowComment}
         emptyMessage={getMessage(category)}

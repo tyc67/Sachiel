@@ -4,15 +4,16 @@ import React from 'react'
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
-import type { FollowingCollection } from '@/types/profile'
+import type { PickCollections } from '@/types/profile'
 
 type CollectionsCarouselElementProps = {
-  data: NonNullable<FollowingCollection>[0]
+  data: NonNullable<PickCollections>[number]
 }
 
 const CollectionsCarouselElement = ({
   data,
 }: CollectionsCarouselElementProps) => {
+  if (!data) return <></>
   const { heroImage, title, creator, picksCount, id } = data
   return (
     <Link href={`/collection/${id}`}>
@@ -21,7 +22,7 @@ const CollectionsCarouselElement = ({
           <ImageWithFallback
             alt={`${title}'s cover image`}
             fallbackCategory={ImageCategory.STORY}
-            src={heroImage?.urlOriginal ?? ''}
+            src={heroImage?.resized?.original ?? ''}
             className="inset-0 size-full rounded-t"
             fill
           />

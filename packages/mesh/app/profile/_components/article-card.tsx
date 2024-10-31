@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Comment from '@/app/profile/_components/comment'
+import CollectionPickButton from '@/components/collection-card/collection-pick-button'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
@@ -38,7 +39,7 @@ function hasComment(
 const isStory = (
   data: StoryDataTypes
 ): data is NonNullable<PickListItem> | NonNullable<BookmarkItem> =>
-  data.__typename === 'Story'
+  data.__typename !== 'Collection'
 
 const isCollection = (data: StoryDataTypes): data is CollectionItem =>
   data.__typename === 'Collection'
@@ -212,8 +213,9 @@ const ArticleCard = ({
                 />
               </div>
             </section>
-            <section
-              className={`
+          </Link>
+          <section
+            className={`
                 flex justify-between
                 ${
                   isCollection(storyData)
@@ -221,15 +223,19 @@ const ArticleCard = ({
                     : ` pt-4`
                 }
               `}
-            >
-              <StoryPickInfo
-                displayPicks={storyData?.pick}
-                pickCount={storyGetters.pickCount(storyData)}
-                maxCount={4}
-              />
+          >
+            <StoryPickInfo
+              displayPicks={storyData?.pick}
+              pickCount={storyGetters.pickCount(storyData)}
+              maxCount={4}
+            />
+            {isCollection(storyData) ? (
+              <CollectionPickButton collectionId={storyData.id} />
+            ) : (
               <StoryPickButton storyId={storyData?.id} />
-            </section>
-          </Link>
+            )}
+          </section>
+
           {shouldShowComment && (
             <Comment
               data={authorComment as CommentType}

@@ -116,17 +116,6 @@ query GetCurrentUserMemberId($uid: String!) {
       id
       title
     }
-    following_collection {
-      id
-      title
-      picksCount
-      heroImage {
-        urlOriginal
-      }
-      creator {
-        customId
-      }
-    }
   }
   collections(
     where: {
@@ -241,7 +230,55 @@ query GetMemberProfile($customId: String, $takes: Int!) {
           id
         }
       }
+      collection {
+        id
+        title
+        heroImage {
+          resized {
+            w480
+            w800
+            w1200
+            w1600
+            w2400
+            original
+          }
+        }
+        pick: picks {
+          createdAt
+          member {
+            id
+            name
+            avatar
+          }
+        }
+        picksCount
+        commentCount
+        comment(
+          orderBy: { createdAt: desc }
+          where: { member: { customId: { equals: $customId } } }
+          take: 1
+        ) {
+          id
+          content
+          createdAt
+          likeCount
+          isMemberLiked: like(where: { customId: { equals: $customId } }) {
+            id
+          }
+          member {
+            id
+            name
+            avatar
+          }
+        }
+        updatedAt
+        createdAt
+        creator {
+          customId
+        }
+      }
       kind
+      objective
     }
 
     booksCount: pickCount(
@@ -300,17 +337,7 @@ query GetMemberProfile($customId: String, $takes: Int!) {
         }
       }
       kind
-    }
-    following_collection {
-      id
-      title
-      picksCount
-      heroImage {
-        urlOriginal
-      }
-      creator {
-        customId
-      }
+      objective
     }
   }
   collections(
@@ -378,6 +405,8 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
       orderBy: { createdAt: desc }
       take: $takes
     ) {
+      objective
+      id
       story {
         id
         og_image
@@ -423,18 +452,54 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
           id
         }
       }
+      collection {
+        id
+        title
+        heroImage {
+          resized {
+            w480
+            w800
+            w1200
+            w1600
+            w2400
+            original
+          }
+        }
+        pick: picks {
+          createdAt
+          member {
+            id
+            name
+            avatar
+          }
+        }
+        picksCount
+        commentCount
+        comment(
+          orderBy: { createdAt: desc }
+          where: { member: { customId: { equals: $customId } } }
+          take: 1
+        ) {
+          id
+          content
+          createdAt
+          likeCount
+          isMemberLiked: like(where: { customId: { equals: $customId } }) {
+            id
+          }
+          member {
+            id
+            name
+            avatar
+          }
+        }
+        updatedAt
+        createdAt
+        creator {
+          customId
+        }
+      }
       kind
-    }
-    following_collection {
-      id
-      title
-      picksCount
-      heroImage {
-        urlOriginal
-      }
-      creator {
-        customId
-      }
     }
   }
   collections(

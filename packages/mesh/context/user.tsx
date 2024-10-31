@@ -15,9 +15,6 @@ type Member = NonNullable<NonNullable<GetCurrentUserMemberIdQuery>['member']>
 type Collections = NonNullable<
   NonNullable<GetCurrentUserMemberIdQuery>['collections']
 >
-type FollowingCollections = NonNullable<
-  NonNullable<GetCurrentUserMemberIdQuery>['member']
->['following_collection']
 type FollowingCategories = NonNullable<Member['followingCategories']>
 type FollowingPublishers = NonNullable<Member['followingPublishers']>
 
@@ -43,7 +40,7 @@ export type User = {
   picksData?: ProfileTypes['picksData']
   bookmarks?: ProfileTypes['bookmarks']
   collections?: Collections
-  followingCollection: FollowingCollections
+  pickCollections?: ProfileTypes['picksData']
 }
 
 type UserContextType = {
@@ -74,7 +71,6 @@ const guest: User = {
   followingCount: 0,
   picksData: [],
   bookmarks: [],
-  followingCollection: [],
 }
 
 export function UserProvider({
