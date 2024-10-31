@@ -87,12 +87,19 @@ export const EditProfileProvider: React.FC<{
   const clearFormInput = (key: 'name' | 'customId' | 'intro') => {
     updateField(key, '')
   }
-
+  const trimIfOnlyWhitespace = (str: string): string => {
+    if (/^\s*$/.test(str)) {
+      return ''
+    }
+    return str
+  }
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    updateField(name as 'name' | 'customId' | 'intro', value.trim())
+    const trimmedValue =
+      name === 'customId' ? value.trim() : trimIfOnlyWhitespace(value)
+    updateField(name as 'name' | 'customId' | 'intro', trimmedValue)
   }
 
   const handleDeletePhoto = () => {
@@ -114,7 +121,7 @@ export const EditProfileProvider: React.FC<{
     try {
       if (!formData.get('customId')) return
       setIsSubmitting(true)
-      await updateProfile(formData, user.customId)
+      await updateProfile(formData, user.customId, user.memberId)
 
       setUser((prev) => ({
         ...prev,

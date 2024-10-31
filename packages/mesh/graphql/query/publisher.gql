@@ -1,4 +1,3 @@
-# sync cronjob query [gql_mesh_sponsor_publishers](https://github.com/readr-media/mesh-feed-parser/blob/dev/app/gql.py#L47-L57) to create gql types
 query Publishers {
   publishers {
     id
@@ -7,52 +6,6 @@ query Publishers {
     rss
     official_site
     sponsorCount: followerCount
-  }
-}
-
-query GetPublisherProfile($publisherId: String, $takes: Int!) {
-  #  使用publishers因為query publisher的where沒有提供customId的篩選
-  publishers(where: { customId: { equals: $publisherId } }) {
-    id
-    title
-    logo
-    followerCount
-    description
-  }
-  storiesCount(where: { source: { customId: { equals: $publisherId } } })
-  stories(
-    where: { source: { customId: { equals: $publisherId } } }
-    take: $takes
-  ) {
-    title
-    id
-    og_image
-    source {
-      title
-      official_site
-    }
-    og_title
-    commentCount
-    createdAt
-    tag {
-      id
-      name
-    }
-    pick {
-      createdAt
-      member {
-        id
-        name
-        avatar
-      }
-    }
-    pickCount
-    paywall
-    full_screen_ad
-    published_date
-    source {
-      id
-    }
   }
 }
 

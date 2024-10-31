@@ -11,16 +11,14 @@ import {
 import { type ApiData } from './_components/api-data-renderer/renderer'
 import SideIndex from './_components/api-data-renderer/side-index'
 import Article from './_components/article'
+import Comment from './_components/comment'
 import RelatedStories from './_components/related-stories'
 
 export type PublisherPolicy = Awaited<ReturnType<typeof getPublisherPolicy>>
 
-const picksTake = 5
-const commentsTake = 3
-
 export default async function Page({ params }: { params: { id: string } }) {
   const storyId = params.id
-  const storyData = await getStory({ storyId, picksTake, commentsTake })
+  const storyData = await getStory({ storyId })
   let policy: PublisherPolicy = []
   let hasPayed = false
 
@@ -29,8 +27,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
   const relatedStories = await getRelatedStories({
     storyTitle: storyData.story.title,
-    picksTake,
-    commentsTake,
   })
 
   const sourceCustomId = storyData.story.source?.customId ?? ''
@@ -54,6 +50,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         policy={policy}
       />
       <RelatedStories relatedStories={relatedStories} />
+      <Comment targetId={storyId} />
       <aside className="hidden lg:fixed lg:right-[calc(((100vw-theme(width.articleMain))/2-theme(width.articleAside.lg))/2)] lg:top-[theme(height.header.sm)] lg:flex lg:w-[theme(width.articleAside.lg)] xl:right-[calc((100vw-1440px)/2+((1440px-theme(width.articleMain))/2-theme(width.articleAside.xl))/2)] xl:w-[theme(width.articleAside.xl)]">
         {!isMemberStory && (
           <SideIndex

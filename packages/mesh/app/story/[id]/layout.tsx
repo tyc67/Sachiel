@@ -1,13 +1,10 @@
 import { notFound } from 'next/navigation'
 
-import { GetStoryDocument } from '@/graphql/__generated__/graphql'
-import queryGraphQL from '@/utils/fetch-graphql'
-import { getLogTraceObjectFromHeaders } from '@/utils/log'
+import { getStory } from '@/app/actions/story'
+import { CommentProvider } from '@/context/comment'
+import { CommentObjective } from '@/types/objective'
 
 import ClientLayout from './_components/client-layout'
-
-const picksTake = 5
-const commentsTake = 3
 
 export default async function MediaLayout({
   children,
@@ -17,17 +14,19 @@ export default async function MediaLayout({
   params: { id: string }
 }) {
   const storyId = params.id
-  const globalLogFields = getLogTraceObjectFromHeaders()
+  const storyData = await getStory({ storyId })
 
-  const storyData = await queryGraphQL(
-    GetStoryDocument,
-    { storyId, picksTake, commentsTake },
-    globalLogFields
-  )
-
-  if (!storyData) {
+  if (!storyData || !storyData?.story) {
     notFound()
   }
 
-  return <ClientLayout story={storyData.story}>{children}</ClientLayout>
+  return (
+    <CommentProvider
+      initialComments={storyData.story?.comments || []}
+      commentObjectiveData={storyData.story}
+      commentObjective={CommentObjective.Story}
+    >
+      <ClientLayout story={storyData.story}>{children}</ClientLayout>
+    </CommentProvider>
+  )
 }

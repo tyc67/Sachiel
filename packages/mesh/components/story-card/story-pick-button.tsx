@@ -1,11 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
-import { addPick, removePick } from '@/app/actions/pick'
 import type { ButtonColor } from '@/components/button'
 import Button from '@/components/button'
+import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
+import { PickObjective } from '@/types/objective'
 import { debounce } from '@/utils/performance'
 
 export default function StoryPickButton({
@@ -16,60 +17,19 @@ export default function StoryPickButton({
   color?: ButtonColor
 }) {
   const router = useRouter()
-  const { user, setUser } = useUser()
+  const pathname = usePathname()
+  const { user } = useUser()
+  const { openPickModal } = usePickModal()
   const memberId = user.memberId
   const isStoryPicked = user.pickStoryIds.has(storyId)
 
   const handleClickPick = debounce(async () => {
     if (!memberId) {
+      localStorage.setItem('login-redirect', pathname)
       router.push('/login')
       return
     }
-
-    const newPickStoryIds = new Set(user.pickStoryIds)
-    if (isStoryPicked) {
-      // TODO: simplify the mutation
-      newPickStoryIds.delete(storyId)
-      setUser((user) => {
-        return {
-          ...user,
-          pickStoryIds: newPickStoryIds,
-        }
-      })
-      const removePickResponse = await removePick({ memberId, storyId })
-      if (!removePickResponse) {
-        // TODO: error toast
-        // TODO: simplify the mutation
-        newPickStoryIds.add(storyId)
-        setUser((user) => {
-          return {
-            ...user,
-            pickStoryIds: newPickStoryIds,
-          }
-        })
-      }
-    } else {
-      // TODO: simplify the mutation
-      newPickStoryIds.add(storyId)
-      setUser((user) => {
-        return {
-          ...user,
-          pickStoryIds: newPickStoryIds,
-        }
-      })
-      const addPickResponse = await addPick({ memberId, storyId })
-      if (!addPickResponse) {
-        // TODO: error toast
-        // TODO: simplify the mutation
-        newPickStoryIds.delete(storyId)
-        setUser((user) => {
-          return {
-            ...user,
-            pickStoryIds: newPickStoryIds,
-          }
-        })
-      }
-    }
+    openPickModal(PickObjective.Story, storyId, isStoryPicked)
   })
 
   return (

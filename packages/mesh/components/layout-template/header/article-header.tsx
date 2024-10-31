@@ -8,11 +8,11 @@ import { twMerge } from 'tailwind-merge'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import SearchBar from '@/components/search-bar'
+import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
-import { logout } from '@/utils/logout'
 
 export default function ArticleHeader({ showNav }: { showNav: () => void }) {
-  // temporarily use hardcode value for state
+  // TODO: implement notification system
   const [showNotification, setShowNotification] = useState(false)
   const router = useRouter()
   const { user } = useUser()
@@ -32,10 +32,10 @@ export default function ArticleHeader({ showNav }: { showNav: () => void }) {
             >
               <Icon size="l" iconName="icon-hamburger-menu" />
             </button>
-            <Link href="/">
+            <Link href={LOGO_ICONS.nonMobile.href}>
               <Icon
-                size={{ width: 100, height: 44 }}
-                iconName="icon-readr-logo"
+                size={LOGO_ICONS.nonMobile.size}
+                iconName={LOGO_ICONS.nonMobile.icon}
               />
             </Link>
           </div>
@@ -52,11 +52,11 @@ export default function ArticleHeader({ showNav }: { showNav: () => void }) {
           {isLoggedIn ? (
             newNotification ? (
               // TODO: replace with correct path
-              <HeaderIconWrapper
+              <div>
+                {/* TODO: uncomment the code after notification has been implemented  */}
+                {/* <HeaderIconWrapper
                 onClick={async () => {
                   // TODO: show notification panel
-                  // Temporary Logout button
-                  await logout()
                   setShowNotification(!showNotification)
                 }}
                 className={
@@ -64,7 +64,8 @@ export default function ArticleHeader({ showNav }: { showNav: () => void }) {
                 }
               >
                 <Icon size="2xl" iconName="icon-notifications-new" />
-              </HeaderIconWrapper>
+              </HeaderIconWrapper> */}
+              </div>
             ) : (
               // TODO: replace with correct path
               <HeaderIconWrapper

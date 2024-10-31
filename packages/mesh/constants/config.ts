@@ -61,7 +61,7 @@ switch (ENV) {
     FIREBASE_DOMAIN = 'readr-dev-38eec.firebaseapp.com'
     FIREBASE_CONFIG = {
       API_KEY: 'AIzaSyBO495WVBDY8cGfuHmpThZxKFgiipRlILs',
-      AUTH_DOMAIN: 'sachel-mesh-dev-4g6paft7cq-de.a.run.app',
+      AUTH_DOMAIN: 'dev.mmesh.news',
       PROJECT_ID: 'readr-dev-38eec',
       STORAGE_BUCKET: 'readr-dev-38eec.appspot.com',
       MESSAGING_SENDER_ID: '611179505112',
@@ -75,7 +75,24 @@ switch (ENV) {
     break
 
   case 'prod':
+    API_ORIGIN = 'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
+    STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
+    PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_CHAIN = optimism
+    FIREBASE_DOMAIN = 'https://mesh-app.readr.tw'
+    FIREBASE_CONFIG = {
+      API_KEY: 'AIzaSyDna248DTK4AtPNIx6TRNjn0qtIsYX7utY',
+      AUTH_DOMAIN: 'www.mmesh.news',
+      PROJECT_ID: 'readr-prod',
+      STORAGE_BUCKET: 'readr-prod.appspot.com',
+      MESSAGING_SENDER_ID: '593370764604',
+      APP_ID: '1:593370764604:web:3e90810bc5e6345ef37a39',
+    }
+    ALCHEMY_ADDRESS = {
+      policyId: '12056106-f884-42d2-9d43-5a8b3aca7a4e',
+      meshPoint: '0xe00473f0236D2a23796C71b3678833a821bFab95',
+      paymaster: '0xA75a88cdBa15725EcD1134A73d1Dda02186493De',
+    }
     break
 
   default:
@@ -89,14 +106,14 @@ const RESTFUL_ENDPOINTS = {
   relatedStories: `${API_ORIGIN}/search/`,
   accessToken: `${API_ORIGIN}/accesstoken`,
   paymentBalance: `${PAYMENT_ORIGIN}/balance/`,
-  socialPage: `${API_ORIGIN}/socialpage/`,
+  socialPage: `${API_ORIGIN}/socialpage`,
 }
 
 const STATIC_FILE_ENDPOINTS = {
   mostFollowers: `${STATIC_FILE_ORIGIN}/data/most_followers.json`,
   mostPickStoriesInCategoryFn: (categoryName: string) =>
     `${STATIC_FILE_ORIGIN}/data/most_read_stories_${categoryName}.json`,
-  mostSponsorPublishers: `${STATIC_FILE_ORIGIN}/data/most_sponsor_publishers.json`,
+  mostSponsorPublishers: `${STATIC_FILE_ORIGIN}/data/most_recommend_sponsors.json`,
   mostReadMembers: `${STATIC_FILE_ORIGIN}/data/most_read_members.json`,
   recentReadrStory: `${STATIC_FILE_ORIGIN}/data/recent_readr_stories.json`,
   mostPopularStory: `${STATIC_FILE_ORIGIN}/data/hotpage_most_popular_story.json`,
@@ -109,6 +126,8 @@ const STATIC_FILE_ENDPOINTS = {
   categoryMostSponsoredPublishersfn: (categoryName: string) =>
     `${STATIC_FILE_ORIGIN}/data/${categoryName}_recommend_sponsors.json`,
   contract: `${STATIC_FILE_ORIGIN}/contracts/MeshPoint.json`,
+  publisherStoriesFn: (publisherCustomId: string) =>
+    `${STATIC_FILE_ORIGIN}/data/${publisherCustomId}_stories.json`,
 }
 
 export {

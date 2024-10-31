@@ -4,10 +4,7 @@ import { usePathname } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
 import Spinner from '../spinner'
-import type {
-  ArticleMobileBottomActionBarProps,
-  MobileBottomActionBarProps,
-} from './bottom-action-bar'
+import type { MobileBottomActionBarProps } from './bottom-action-bar'
 import MobileBottomActionBar from './bottom-action-bar'
 import Footer from './footer'
 import Header, { HeaderType } from './header'
@@ -43,13 +40,13 @@ type LayoutTemplateProps = {
       type: 'default'
       mobileNavigation?: MobileNavigationProps
       nonMobileNavigation?: DefaultNavigationProps
-      actionBar?: MobileBottomActionBarProps
+      mobileActionBar?: MobileBottomActionBarProps
     }
   | {
       type: 'article'
       mobileNavigation: MobileNavigationProps
       nonMobileNavigation: ArticleNavigationProps
-      actionBar: ArticleMobileBottomActionBarProps
+      mobileActionBar: MobileBottomActionBarProps
     }
   | {
       type: 'stateless'
@@ -61,8 +58,8 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
   const pathName = usePathname()
 
   const childrenJsx = (
+    // set key for dynamic route to re-render fallback
     <Suspense key={pathName} fallback={suspenseFallback}>
-      {/* set key for dynamic route to re-render fallback */}
       {children}
     </Suspense>
   )
@@ -73,6 +70,7 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
         <DefaultLayout
           mobileNavigation={props.mobileNavigation}
           nonMobileNavigation={props.nonMobileNavigation}
+          mobileActionBar={props.mobileActionBar}
           customStyle={customStyle}
         >
           {childrenJsx}
@@ -89,7 +87,7 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
         <ArticleLayout
           mobileNavigation={props.mobileNavigation}
           nonMobileNavigation={props.nonMobileNavigation}
-          actionBar={props.actionBar}
+          mobileActionBar={props.mobileActionBar}
         >
           {childrenJsx}
         </ArticleLayout>
@@ -103,6 +101,7 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
 const DefaultLayout = ({
   mobileNavigation,
   nonMobileNavigation,
+  mobileActionBar,
   customStyle = {
     background: 'bg-white',
     restrictMainWidth: true,
@@ -111,6 +110,7 @@ const DefaultLayout = ({
 }: {
   mobileNavigation?: MobileNavigationProps
   nonMobileNavigation?: DefaultNavigationProps
+  mobileActionBar?: MobileBottomActionBarProps
   customStyle?: CustomStyle
   children: React.ReactNode
 }) => {
@@ -149,6 +149,8 @@ const DefaultLayout = ({
       <Nav type={NavType.Default} className={customStyle.nav} />
       {/* cover on mobile header if navigation is setup */}
       {mobileNavigation && <MobileNavigation {...mobileNavigation} />}
+      {/* cover on mobile bottom fixed nav if mobileActionBar is setup */}
+      {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
     </body>
   )
 }
@@ -177,12 +179,12 @@ const StatelessLayout = ({
 const ArticleLayout = ({
   mobileNavigation,
   nonMobileNavigation,
-  actionBar,
+  mobileActionBar,
   children,
 }: {
   mobileNavigation: MobileNavigationProps
   nonMobileNavigation: ArticleNavigationProps
-  actionBar: ArticleMobileBottomActionBarProps
+  mobileActionBar: MobileBottomActionBarProps
   children: React.ReactNode
 }) => {
   const [shouldShowNav, setShouldShowNav] = useState(false)
@@ -222,7 +224,7 @@ const ArticleLayout = ({
       {/* cover on mobile header */}
       <MobileNavigation {...mobileNavigation} />
       {/* cover on mobile bottom nav */}
-      <MobileBottomActionBar {...actionBar} />
+      <MobileBottomActionBar {...mobileActionBar} />
     </body>
   )
 }

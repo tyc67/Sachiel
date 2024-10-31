@@ -5,6 +5,7 @@ import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { type MongoDBResponse } from '@/utils/data-schema'
 
 import FeedComment from './feed-comment'
@@ -18,20 +19,10 @@ export default function Feed({
 }: {
   story: MongoDBResponse['stories'][number]
 }) {
-  if (!story) {
-    return null
-  }
+  const storyWithPicks = transformSocialStoryPicks(story)
+  const { displayPicks, displayPicksCount } = useDisplayPicks(storyWithPicks)
   const { following_actions } = story
   const storyActions = processStoryActions(following_actions)
-  const displayPicks = story.following_actions
-    .filter((action) => action.kind === 'read')
-    .map((pick) => ({
-      member: {
-        id: pick.member.id,
-        name: pick.member.name,
-        avatar: pick.member.avatar,
-      },
-    }))
 
   return (
     <div className="flex w-screen min-w-[375px] max-w-[600px] flex-col bg-white drop-shadow sm:rounded-md">
@@ -62,12 +53,12 @@ export default function Feed({
       ) : null}
       <div className="px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-4">
         <Link href={`/publisher/${story.publisher.customId}}`}>
-          <h4 className="body-3 mb-1 text-primary-500">
+          <h4 className="body-3 mb-1 text-primary-500 hover-or-active:text-primary-700">
             {story.publisher.title}
           </h4>
         </Link>
         <Link href={`/story/${story.id}`}>
-          <h2 className="title-1 mb-2 line-clamp-2 break-words">
+          <h2 className="title-1 mb-2 line-clamp-2 break-words hover-or-active:underline">
             {story.og_title}
           </h2>
         </Link>
@@ -83,7 +74,7 @@ export default function Feed({
           <div className="mb-4 flex h-8 justify-between">
             <StoryPickInfo
               displayPicks={displayPicks}
-              pickCount={story.readCount}
+              pickCount={displayPicksCount}
             />
             <StoryPickButton storyId={story.id} />
           </div>
@@ -101,7 +92,7 @@ export type LatestAction = ReturnType<typeof processStoryActions>
 function processStoryActions(storyAction: StoryActions) {
   const latestAction = storyAction[0]
   const latestActionType = storyAction[0].kind
-  const picksNum = storyAction.filter((action) => action.kind === 'read').length
+  let picksNum = storyAction.filter((action) => action.kind === 'read').length
   const commentsNum = storyAction.filter(
     (action) => action.kind === 'comment'
   ).length
@@ -121,6 +112,7 @@ function processStoryActions(storyAction: StoryActions) {
 
   if (latestActionType === 'comment') {
     picksData = isPickAndComment ? filterActions('read', isPickAndComment) : []
+    picksNum = isPickAndComment ? picksNum : 0
     commentsData = filterActions('comment')
   } else {
     picksData = filterActions('read')
@@ -132,5 +124,22 @@ function processStoryActions(storyAction: StoryActions) {
     commentsNum,
     picksData,
     commentsData,
+  }
+}
+
+export type SocialStoryPicks = ReturnType<typeof transformSocialStoryPicks>
+function transformSocialStoryPicks(story: MongoDBResponse['stories'][number]) {
+  return {
+    id: story.id,
+    picks: story.following_actions
+      .filter((action) => action.kind === 'read')
+      .map((pick) => ({
+        member: {
+          id: pick.member.id,
+          name: pick.member.name,
+          avatar: pick.member.avatar,
+        },
+      })),
+    picksCount: story.readCount,
   }
 }

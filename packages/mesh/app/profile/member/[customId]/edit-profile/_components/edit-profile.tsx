@@ -101,7 +101,7 @@ export default function EditProfile() {
             </label>
           </section>
 
-          <div className="flex grow flex-col gap-6 px-5 pt-6 sm:px-0">
+          <div className="flex grow flex-col gap-6 pt-6">
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="name"

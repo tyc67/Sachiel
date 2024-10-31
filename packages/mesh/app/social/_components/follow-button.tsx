@@ -4,7 +4,7 @@ import Button from '@/components/button'
 import { useFollow } from '@/hooks/use-follow'
 
 export default function FollowButton({ followingId }: { followingId: string }) {
-  const { handelClickFollow, isFollowing } = useFollow(followingId)
+  const { handleClickFollow, isFollowing } = useFollow(followingId)
 
   return (
     <Button
@@ -15,7 +15,7 @@ export default function FollowButton({ followingId }: { followingId: string }) {
         isActive: isFollowing,
         activeText: '追蹤中',
       }}
-      onClick={handelClickFollow}
+      onClick={handleClickFollow}
     />
   )
 }
