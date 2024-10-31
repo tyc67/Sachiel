@@ -124,6 +124,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     if (category === TabCategory.COLLECTIONS)
       return (
         <>
+          {/**TODO: add redirect url*/}
           <Button size="md" color="transparent" text="立即嘗試" />
         </>
       )

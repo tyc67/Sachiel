@@ -2,8 +2,10 @@ import Link from 'next/link'
 import React from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
+import CollectionPickButton from '@/components/collection-card/collection-pick-button'
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
+import { useEditProfile } from '@/context/edit-profile'
 import type { PickCollections } from '@/types/profile'
 
 type CollectionsCarouselElementProps = {
@@ -13,11 +15,13 @@ type CollectionsCarouselElementProps = {
 const CollectionsCarouselElement = ({
   data,
 }: CollectionsCarouselElementProps) => {
+  const { visitorProfile } = useEditProfile()
   if (!data) return <></>
   const { heroImage, title, creator, picksCount, id } = data
+  const shouldShowCollectionPickButton = visitorProfile.customId
   return (
-    <Link href={`/collection/${id}`}>
-      <div className="flex h-full w-[150px] flex-col rounded border bg-white md:w-full">
+    <div className="flex h-full w-[150px] flex-col rounded border bg-white md:w-full">
+      <Link href={`/collection/${id}`}>
         <div className="relative aspect-[2] w-full">
           <ImageWithFallback
             alt={`${title}'s cover image`}
@@ -27,11 +31,13 @@ const CollectionsCarouselElement = ({
             fill
           />
           <div className="absolute right-[6px] top-2 flex items-center rounded-md bg-black/50 px-[6px] py-[2.5px]">
-            <Icon iconName="icon-collection-folder" size="xs" />
+            <Icon iconName="icon-collection-folder" size="s" />
             <span className="caption-2 text-white">集錦</span>
           </div>
         </div>
-        <section className="flex h-auto grow flex-col px-3 py-2">
+      </Link>
+      <section className="flex h-auto grow flex-col px-3 py-2">
+        <Link className="flex flex-col" href={`/collection/${id}`}>
           <div className="h-full flex-col justify-between">
             <p className="caption-1 text-primary-500">@{creator?.customId}</p>
             <p className="subtitle-2 pb-3 text-primary-700">{title}</p>
@@ -40,9 +46,14 @@ const CollectionsCarouselElement = ({
             <span className="font-medium text-primary-700">{picksCount}</span>
             精選
           </p>
-        </section>
-      </div>
-    </Link>
+        </Link>
+        {shouldShowCollectionPickButton ? (
+          <CollectionPickButton collectionId={id} />
+        ) : (
+          <></>
+        )}
+      </section>
+    </div>
   )
 }
 
