@@ -1,15 +1,11 @@
 import ArticleCard from '@/app/profile/_components/article-card'
-import { PickObjective } from '@/types/objective'
 import type {
   BookmarkItem,
   Bookmarks,
   Collections,
-  PickCollections,
   PickList,
   PickListItem,
 } from '@/types/profile'
-
-import CollectionsCarousel from './collections-carousel'
 
 interface ArticleCardListProps {
   items: PickList | Bookmarks | Collections
@@ -40,29 +36,22 @@ function ArticleCardList({
       </div>
     )
   }
-  const isCollection = items[0].__typename === 'Collection'
-  const pickCollections = (): PickCollections => {
-    if (isCollection) return []
-    if (!(items as PickList)?.length) return []
-    return (
-      (items as PickList)?.map(({ objective, collection }) => {
-        if (objective === PickObjective.Story) return
-        return { ...collection, id: '' }
-      }) ?? []
-    )
-  }
+  const isCollection = items.some((item) => item.__typename === 'Collection')
+
+  // const pickCollections = (): PickCollections => {
+  //   if (isCollection || !(items as PickList)?.length) {
+  //     return []
+  //   }
+
+  //   return (items as PickList)
+  //     .filter((item) => item?.objective === PickObjective.Collection)
+  //     .map(({ collection }) => ({
+  //       ...collection!,
+  //       id: collection?.id || '',
+  //     })) as PickCollections
+  // }
   return (
     <div className="bg-multi-layer-light">
-      {pickCollections()?.length ? (
-        <>
-          <CollectionsCarousel pickCollections={pickCollections()} />
-          <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
-            精選文章
-          </p>
-        </>
-      ) : (
-        <></>
-      )}
       <ul
         className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
           isCollection

@@ -1,37 +1,48 @@
 import type { ChangeEvent, RefObject } from 'react'
 
-import {
-  type GetMemberProfileQuery,
-  type Story,
+import type {
+  GetMemberProfileQuery,
+  Story,
 } from '@/graphql/__generated__/graphql'
 
-export enum TabKey {
-  PICK = '精選',
-  FOLLOWER = '粉絲',
-  FOLLOWING = '追蹤中',
-  SPONSORED = '本月獲得贊助',
-}
+// Use const assertion for better type inference and immutability
+export const TabKey = {
+  PICK: '精選',
+  FOLLOWER: '粉絲',
+  FOLLOWING: '追蹤中',
+  SPONSORED: '本月獲得贊助',
+} as const
 
-export type TabItem = {
+// Convert to union type for better type safety
+export type TabKey = typeof TabKey[keyof typeof TabKey]
+
+// Use const assertion for enum-like behavior
+export const TabCategory = {
+  PICKS: 'PICKS',
+  BOOKMARKS: 'BOOKMARKS',
+  PUBLISH: 'PUBLISH',
+  COLLECTIONS: 'COLLECTIONS',
+} as const
+
+export type TabCategory = typeof TabCategory[keyof typeof TabCategory]
+
+export interface TabItem {
   tabName: TabKey
   count?: number | string
   redirectLink?: string
 }
-export enum TabCategory {
-  PICKS = 'PICKS',
-  BOOKMARKS = 'BOOKMARKS',
-  PUBLISH = 'PUBLISH',
-  COLLECTIONS = 'COLLECTIONS',
-}
 
-export type EditProfileFormTypes = {
+// Use literal types for form field names to prevent typos
+export type ProfileFormField = 'name' | 'customId' | 'intro' | 'avatar'
+
+export interface EditProfileFormTypes {
   name: string
   customId: string
   intro: string
   avatar: string
 }
 
-export type ProfileTypes = {
+export interface ProfileTypes {
   name: string
   avatar: string
   intro: string
@@ -46,39 +57,46 @@ export type ProfileTypes = {
   pickCollections: PickList
 }
 
-export type Member = GetMemberProfileQuery['member']
-export type Collections = GetMemberProfileQuery['collections']
-export type PickCollections = NonNullable<
-  NonNullable<PickList>[number]
->['collection'][]
-export type PickList = NonNullable<Member>['picks']
-export type Bookmarks = NonNullable<Member>['books']
-export type StoryData = Story[]
-export type StoryDataItem = NonNullable<NonNullable<StoryData>[number]>
-export type PickListItem = NonNullable<PickList>[number]['story']
-export type BookmarkItem = NonNullable<PickList>[number]['story']
-export type CollectionItem = NonNullable<Collections>[0]
-export type UserType = 'member' | 'visitor' | 'publisher'
-export type CommentList = NonNullable<PickListItem>['comment']
-export type CommentType = NonNullable<CommentList>[number]
+// Improve nullable types handling
+export type Member = NonNullable<GetMemberProfileQuery['member']>
+export type Collections = NonNullable<GetMemberProfileQuery['collections']>
+export type PickList = NonNullable<Member['picks']>
 
-export type EditProfileContextType = {
+// Simplify complex type definitions
+export type PickCollections = NonNullable<PickList[number]['collection']>[]
+export type Bookmarks = NonNullable<Member['books']>
+export type StoryData = NonNullable<Story>[]
+export type StoryDataItem = StoryData[number]
+export type PickListItem = NonNullable<PickList[number]['story']>
+export type BookmarkItem = PickListItem
+export type CollectionItem = Collections[number]
+
+// Use union literal type instead of string literals
+export type UserType = 'member' | 'visitor' | 'publisher'
+
+export type CommentList = NonNullable<PickListItem['comment']>
+export type CommentType = CommentList[number]
+
+// Improve error handling types
+export type FormErrors = Partial<Record<ProfileFormField, string>>
+
+// Improve context type with more specific error handling
+export interface EditProfileContextType {
   editProfileForm: EditProfileFormTypes
   visitorProfile: ProfileTypes
   isFormValid: boolean
-  errors: Partial<EditProfileFormTypes>
+  errors: FormErrors
   isProfileLoading: boolean
-  formRef: null | RefObject<HTMLFormElement>
+  formRef: RefObject<HTMLFormElement> | null
   isSubmitting: boolean
-  updateErrors: (
-    key: 'name' | 'customId' | 'intro' | 'avatar',
-    errorMessage: string
-  ) => void
-  updateField: (field: keyof EditProfileFormTypes, value: string) => void
-  handleSubmit: () => void
+
+  // Improve function signatures
+  updateErrors: (field: ProfileFormField, errorMessage: string) => void
+  updateField: (field: ProfileFormField, value: string) => void
+  handleSubmit: () => Promise<void>
   initializeProfileData: () => void
   handleAvatarChange: (e: ChangeEvent<HTMLInputElement>) => void
-  clearFormInput: (key: 'name' | 'customId' | 'intro') => void
+  clearFormInput: (field: Exclude<ProfileFormField, 'avatar'>) => void
   handleDeletePhoto: (avatarImageId?: string) => void
   handleInputChange: (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

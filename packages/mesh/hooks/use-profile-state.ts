@@ -61,9 +61,9 @@ export default function useProfileState({
       pickCount: visitorProfileData.picksCount || 0,
       followingCount: formatFollowCount(visitorProfileData.followingCount || 0),
       followerCount: formatFollowCount(visitorProfileData.followerCount || 0),
-      picksData: visitorProfileData.picks,
+      picksData: visitorProfileData.picks ?? [],
       bookmarks: [], // Assuming visitor doesn't have access to bookmarks
-      collections: visitorProfileResult.collections,
+      collections: visitorProfileResult.collections ?? [],
       pickCollections:
         visitorProfileData.picks?.filter(
           (item) => item.objective === PickObjective.Collection

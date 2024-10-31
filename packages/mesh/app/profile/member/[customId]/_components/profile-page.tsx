@@ -3,6 +3,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
+import CollectionsCarousel from '@/app/profile/_components/collections-carousel'
 import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
@@ -12,7 +13,8 @@ import ErrorPage from '@/components/status/error-page'
 import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
-import type { Collections } from '@/types/profile'
+import { PickObjective } from '@/types/objective'
+import type { Collections, PickCollections } from '@/types/profile'
 import {
   type Bookmarks,
   type PickList,
@@ -44,16 +46,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   useEffect(() => {
     switch (category) {
       case TabCategory.PICKS:
-        setTabData(profileData.picksData)
+        setTabData(profileData.picksData ?? [])
         break
       case TabCategory.BOOKMARKS:
-        setTabData(profileData.bookmarks)
+        setTabData(profileData.bookmarks ?? [])
         break
       case TabCategory.COLLECTIONS:
-        setTabData(profileData.collections || [])
+        setTabData(profileData.collections ?? [])
         break
       default:
-        setTabData(profileData.picksData)
+        setTabData(profileData.picksData ?? [])
     }
   }, [category, isMember, profileData])
 
@@ -126,6 +128,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         </>
       )
   }
+  const isCollection = tabData.some((item) => item.__typename === 'Collection')
+  const pickCollections = (): PickCollections => {
+    if (isCollection || !(tabData as PickList)?.length) {
+      return []
+    }
+
+    return (tabData as PickList)
+      .filter((item) => item?.objective === PickObjective.Collection)
+      .map(({ collection }) => ({
+        ...collection!,
+        id: collection?.id || '',
+      })) as PickCollections
+  }
 
   return (
     <>
@@ -147,6 +162,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         setCategory={setCategory}
         userType={isMember ? 'member' : 'visitor'}
       />
+      {pickCollections()?.length ? (
+        <>
+          <CollectionsCarousel pickCollections={pickCollections()} />
+          <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+            精選文章
+          </p>
+        </>
+      ) : (
+        <></>
+      )}
       <ArticleCardList
         items={tabData || []}
         shouldShowComment={shouldShowComment}
