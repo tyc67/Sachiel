@@ -4912,7 +4912,6 @@ export type GetStoryQuery = {
     url?: string | null
     og_image?: string | null
     published_date?: any | null
-    full_content?: boolean | null
     content?: string | null
     apiData?: any | null
     trimApiData?: any | null
@@ -4924,6 +4923,7 @@ export type GetStoryQuery = {
       id: string
       title?: string | null
       customId?: string | null
+      full_content?: boolean | null
     } | null
     picks?: Array<{
       __typename?: 'Pick'
@@ -12570,6 +12570,10 @@ export const GetStoryDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'customId' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'full_content' },
+                      },
                     ],
                   },
                 },
@@ -12578,10 +12582,6 @@ export const GetStoryDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'published_date' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'full_content' },
                 },
                 {
                   kind: 'Field',

@@ -6,7 +6,7 @@ import { CommentObjective } from '@/types/objective'
 
 import ClientLayout from './_components/client-layout'
 
-export default async function MediaLayout({
+export default async function StoryLayout({
   children,
   params,
 }: {
