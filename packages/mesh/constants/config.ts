@@ -75,11 +75,12 @@ switch (ENV) {
     break
 
   case 'prod':
-    API_ORIGIN = 'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
+    API_ORIGIN =
+      'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_CHAIN = optimism
-    FIREBASE_DOMAIN = 'https://mesh-app.readr.tw'
+    FIREBASE_DOMAIN = 'mesh-app.readr.tw'
     FIREBASE_CONFIG = {
       API_KEY: 'AIzaSyDna248DTK4AtPNIx6TRNjn0qtIsYX7utY',
       AUTH_DOMAIN: 'www.mmesh.news',
