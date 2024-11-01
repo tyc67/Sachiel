@@ -6,6 +6,19 @@ mutation SignUpMember($registrationData: MemberCreateInput!) {
   }
 }
 
+mutation UpdateMemberInvitedBy($codeId: ID, $memberId: ID) {
+  updateMember(
+    where: { id: $memberId }
+    data: { invited_by: { connect: { id: $codeId } } }
+  ) {
+    id
+    invited_by {
+      id
+      code
+    }
+  }
+}
+
 mutation UpdateMemberProfile(
   $customId: String
   $changedCustomId: String

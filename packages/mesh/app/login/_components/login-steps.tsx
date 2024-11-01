@@ -6,6 +6,7 @@ import { type LoginStepsKey, LoginState, useLogin } from '@/context/login'
 import { auth } from '@/firebase/client'
 import useHandleSignIn from '@/hooks/use-handle-sign-in'
 
+import LoginCode from './login-code'
 import LoginEmail from './login-email'
 import LoginEmailConfirmation from './login-email-confirmation'
 import LoginEntry from './login-entry'
@@ -23,6 +24,7 @@ const loginStepComponents: Record<LoginStepsKey, React.FC> = {
   [LoginState.SetCategory]: LoginSetCategory,
   [LoginState.SetFollowing]: LoginSetFollowing,
   [LoginState.SetWallet]: LoginSetWallet,
+  [LoginState.Code]: LoginCode,
 }
 
 export default function LoginSteps() {
@@ -40,7 +42,7 @@ export default function LoginSteps() {
         const response = await handleSignIn()
         if (!response) return
         if (response.result === 'sign-up') {
-          setStep('set-name')
+          setStep(LoginState.Code)
         } else if (response.result === 'logged-in') {
           const redirectRoute = localStorage.getItem('login-redirect') ?? '/'
           setIsLoggedIn(true)
