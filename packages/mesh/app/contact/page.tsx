@@ -24,7 +24,7 @@ export default function Page() {
               <a
                 href={href}
                 target="_blank"
-                className="subtitle-1 text-primary-700"
+                className="subtitle-1 text-primary-700 hover-or-active:text-primary-500"
               >
                 {text}
               </a>
