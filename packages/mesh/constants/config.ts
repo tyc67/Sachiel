@@ -113,7 +113,14 @@ const STATIC_FILE_ENDPOINTS = {
     `${STATIC_FILE_ORIGIN}/data/${publisherCustomId}_stories.json`,
 }
 
-const ACTION_NAMES = ['封鎖名單', '聯絡我們', '關於', '登出', '刪除帳號']
+//TODO: Skip "Block List" and "About" for now
+const ACTION_NAMES = [
+  // { name: '封鎖名單', href: '/' },
+  { name: '聯絡我們', href: '/contact' },
+  // { name: '關於', href: '/' },
+  { name: '登出' },
+  { name: '刪除帳號', href: '/account-deletion' },
+]
 
 const CONTACT_LINKS = [
   {
@@ -128,15 +135,22 @@ const CONTACT_LINKS = [
   },
   {
     name: 'Discord 社群',
-    href: 'https://discord.gg/ywpth4mZUw',
-    text: 'https://discord.gg/ywpth4mZUw',
+    href: 'https://discord.gg/zDTZsGEn',
+    text: 'https://discord.gg/zDTZsGEn',
   },
 ]
+
+const DELETION_STEP = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  FAILURE: 'failure',
+} as const
 
 export {
   ACTION_NAMES,
   ALCHEMY_ADDRESS,
   CONTACT_LINKS,
+  DELETION_STEP,
   ENV,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_CONFIG,
