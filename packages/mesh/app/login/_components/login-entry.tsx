@@ -22,20 +22,23 @@ export default function LoginEntry() {
         </p>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3">
-        {loginOptions.map((option) => (
-          <div
-            className="w-full max-w-[320px]"
-            key={`login-with-${option.method}`}
-          >
-            <Button
-              size="lg"
-              color="white"
-              text={transformedBtnText(option.method)}
-              icon={{ iconName: option.iconName, size: 'm' }}
-              onClick={() => onLoginMethodClick(option.method)}
-            />
-          </div>
-        ))}
+        {/* 因第三方因素，暫時停用 facebook login 機制 */}
+        {loginOptions
+          .filter((option) => option.method !== 'facebook')
+          .map((option) => (
+            <div
+              className="w-full max-w-[320px]"
+              key={`login-with-${option.method}`}
+            >
+              <Button
+                size="lg"
+                color="white"
+                text={transformedBtnText(option.method)}
+                icon={{ iconName: option.iconName, size: 'm' }}
+                onClick={() => onLoginMethodClick(option.method)}
+              />
+            </div>
+          ))}
       </div>
       <p className="footnote text-center text-primary-400">
         繼續使用代表您同意與接受我們的

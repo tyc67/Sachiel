@@ -9,6 +9,7 @@ const chevronMap: Pick<
   | typeof LoginState.EmailConfirmation
   | typeof LoginState.SetCategory
   | typeof LoginState.SetFollowing
+  | typeof LoginState.Code
 > = {
   [LoginState.Email]: { title: 'Email', goToStep: LoginState.Entry },
   [LoginState.EmailConfirmation]: {
@@ -22,6 +23,10 @@ const chevronMap: Pick<
   [LoginState.SetFollowing]: {
     title: '推薦追蹤',
     goToStep: LoginState.SetCategory,
+  },
+  [LoginState.Code]: {
+    title: '邀請碼',
+    goToStep: LoginState.SetName,
   },
 }
 
@@ -56,6 +61,8 @@ export default function LoginStepsTitle() {
     }
     case LoginState.SetName:
       return <h2 className="list-title mx-auto">姓名</h2>
+    case LoginState.Code:
+      return <h2 className="list-title mx-auto">邀請碼</h2>
     case LoginState.SetWallet:
       return (
         <div className="flex w-full px-5">

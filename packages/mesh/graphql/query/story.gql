@@ -52,11 +52,11 @@ query GetStory($storyId: ID, $picksTake: Int, $commentsTake: Int) {
       id
       title
       customId
+      full_content
     }
     url
     og_image
     published_date
-    full_content
     picksCount: pickCount(
       where: { kind: { equals: "read" }, is_active: { equals: true } }
     )

@@ -139,6 +139,7 @@ export type IconName =
   | 'icon-collection-edit'
   | 'icon-collection-report'
   | 'icon-arrow-forward'
+  | 'icon-invitation-code'
 
 export type IconProps = {
   size: Size

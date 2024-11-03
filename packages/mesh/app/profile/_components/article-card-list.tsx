@@ -33,7 +33,6 @@ function ArticleCardList({
       </div>
     )
   }
-
   return (
     <div className="bg-multi-layer-light">
       <ul className="max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3">
@@ -44,7 +43,7 @@ function ArticleCardList({
               key={index}
               className="relative w-full bg-white md:h-full md:rounded-md md:drop-shadow"
             >
-              {'story' in item ? (
+              {'story' in item && item.story ? (
                 <ArticleCard
                   storyData={item.story as NonNullable<PickListItem>}
                   isLast={isLast}

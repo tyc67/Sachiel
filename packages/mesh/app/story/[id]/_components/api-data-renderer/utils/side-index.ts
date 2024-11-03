@@ -1,7 +1,11 @@
 const sideIndexHeaderIdPrefix = 'side-index-header-'
 
-function removeAllWhiteSpces(str: string) {
-  return str.replace(/\s+/g, '')
+function createIdFromText(text: string) {
+  return text
+    .trim() // Remove leading/trailing whitespace
+    .toLowerCase() // Convert to lowercase
+    .replace(/[^\w\s\p{Script=Han}-]/gu, '') // Remove all non-word characters except spaces, hyphens, and Chinese characters
+    .replace(/\s+/g, '') // Replace spaces
 }
 
 export function genReadrSideIndexHeaderId(
@@ -10,7 +14,7 @@ export function genReadrSideIndexHeaderId(
 ) {
   const sideIndexTitle = sideIndexText || h2Text || ''
 
-  const key = removeAllWhiteSpces(sideIndexTitle)
+  const key = createIdFromText(sideIndexTitle)
   return sideIndexHeaderIdPrefix + key
 }
 

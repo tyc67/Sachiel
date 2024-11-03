@@ -3805,6 +3805,21 @@ export type UserActionStoryFragment = {
   }> | null
 }
 
+export type InvalidateInvitationCodeMutationVariables = Exact<{
+  codeId?: InputMaybe<Scalars['ID']['input']>
+  memberId?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type InvalidateInvitationCodeMutation = {
+  __typename?: 'Mutation'
+  updateInvitationCode?: {
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+    expired?: boolean | null
+  } | null
+}
+
 export type SignUpMemberMutationVariables = Exact<{
   registrationData: MemberCreateInput
 }>
@@ -3816,6 +3831,24 @@ export type SignUpMemberMutation = {
     id: string
     firebaseId?: string | null
     email?: string | null
+  } | null
+}
+
+export type UpdateMemberInvitedByMutationVariables = Exact<{
+  codeId?: InputMaybe<Scalars['ID']['input']>
+  memberId?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type UpdateMemberInvitedByMutation = {
+  __typename?: 'Mutation'
+  updateMember?: {
+    __typename?: 'Member'
+    id: string
+    invited_by?: {
+      __typename?: 'InvitationCode'
+      id: string
+      code?: string | null
+    } | null
   } | null
 }
 
@@ -4051,6 +4084,51 @@ export type GetCollectionLatestAddedCommentQueryVariables = Exact<{
 export type GetCollectionLatestAddedCommentQuery = {
   __typename?: 'Query'
   comments?: Array<{ __typename?: 'Comment'; id: string }> | null
+}
+
+export type IsInvitationCodeValidQueryVariables = Exact<{
+  code: Scalars['String']['input']
+}>
+
+export type IsInvitationCodeValidQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+  }> | null
+}
+
+export type GetValidInvitationCodesQueryVariables = Exact<{
+  memberId: Scalars['ID']['input']
+}>
+
+export type GetValidInvitationCodesQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+  }> | null
+}
+
+export type GetSentInvitationCodesQueryVariables = Exact<{
+  memberId: Scalars['ID']['input']
+}>
+
+export type GetSentInvitationCodesQuery = {
+  __typename?: 'Query'
+  invitationCodes?: Array<{
+    __typename?: 'InvitationCode'
+    id: string
+    code?: string | null
+    receive?: {
+      __typename?: 'Member'
+      id: string
+      name?: string | null
+      avatar?: string | null
+    } | null
+  }> | null
 }
 
 export type GetMemberFollowingQueryVariables = Exact<{
@@ -4843,7 +4921,6 @@ export type GetStoryQuery = {
     url?: string | null
     og_image?: string | null
     published_date?: any | null
-    full_content?: boolean | null
     content?: string | null
     apiData?: any | null
     trimApiData?: any | null
@@ -4855,6 +4932,7 @@ export type GetStoryQuery = {
       id: string
       title?: string | null
       customId?: string | null
+      full_content?: boolean | null
     } | null
     picks?: Array<{
       __typename?: 'Pick'
@@ -5060,6 +5138,113 @@ export const UserActionStoryFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UserActionStoryFragment, unknown>
+export const InvalidateInvitationCodeDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'InvalidateInvitationCode' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'codeId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateInvitationCode' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'codeId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: { kind: 'BooleanValue', value: true },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'connect' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'expired' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  InvalidateInvitationCodeMutation,
+  InvalidateInvitationCodeMutationVariables
+>
 export const SignUpMemberDocument = {
   kind: 'Document',
   definitions: [
@@ -5115,6 +5300,117 @@ export const SignUpMemberDocument = {
 } as unknown as DocumentNode<
   SignUpMemberMutation,
   SignUpMemberMutationVariables
+>
+export const UpdateMemberInvitedByDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateMemberInvitedBy' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'codeId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateMember' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'memberId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'invited_by' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'connect' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'codeId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'invited_by' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateMemberInvitedByMutation,
+  UpdateMemberInvitedByMutationVariables
 >
 export const UpdateMemberProfileDocument = {
   kind: 'Document',
@@ -7001,6 +7297,413 @@ export const GetCollectionLatestAddedCommentDocument = {
 } as unknown as DocumentNode<
   GetCollectionLatestAddedCommentQuery,
   GetCollectionLatestAddedCommentQueryVariables
+>
+export const IsInvitationCodeValidDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'isInvitationCodeValid' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'code' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: false },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'code' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'code' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'NOT' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'id' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: { kind: 'Name', value: 'gt' },
+                                            value: {
+                                              kind: 'IntValue',
+                                              value: '0',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  IsInvitationCodeValidQuery,
+  IsInvitationCodeValidQueryVariables
+>
+export const GetValidInvitationCodesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getValidInvitationCodes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: false },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'send' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'receive' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'NOT' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'id' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: { kind: 'Name', value: 'gt' },
+                                            value: {
+                                              kind: 'IntValue',
+                                              value: '0',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetValidInvitationCodesQuery,
+  GetValidInvitationCodesQueryVariables
+>
+export const GetSentInvitationCodesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getSentInvitationCodes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'invitationCodes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'expired' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: true },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'send' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'receive' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetSentInvitationCodesQuery,
+  GetSentInvitationCodesQueryVariables
 >
 export const GetMemberFollowingDocument = {
   kind: 'Document',
@@ -11950,6 +12653,10 @@ export const GetStoryDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'customId' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'full_content' },
+                      },
                     ],
                   },
                 },
@@ -11958,10 +12665,6 @@ export const GetStoryDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'published_date' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'full_content' },
                 },
                 {
                   kind: 'Field',
