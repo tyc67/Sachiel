@@ -78,6 +78,7 @@ export type IconName =
   | 'icon-google'
   | 'icon-email'
   | 'icon-chevron-left'
+  | 'icon-chevron-left-white'
   | 'icon-login-step-1'
   | 'icon-login-step-2'
   | 'icon-login-step-3'
@@ -138,6 +139,7 @@ export type IconName =
   | 'icon-invitation-code'
   | 'icon-checkbox-on'
   | 'icon-checkbox-off'
+  | 'icon-select-image'
 
 export type IconProps = {
   size: Size

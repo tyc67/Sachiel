@@ -3,6 +3,8 @@ import CustomImage from '@readr-media/react-image'
 import Image from 'next/image'
 import { type Dispatch, type SetStateAction, useEffect } from 'react'
 
+import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
+
 import type { SlideshowImage } from '.'
 import Sidebar from './lightbox-sidebar'
 
@@ -19,6 +21,7 @@ export default function Lightbox({
   setFocusImageIndedx,
   setShowLightbox,
 }: LightboxProps) {
+  useBlockBodyScroll()
   const focusImage = images[focusImageIndex]
 
   useEffect(() => {
