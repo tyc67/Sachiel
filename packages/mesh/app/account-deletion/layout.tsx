@@ -1,4 +1,3 @@
-'use client'
 import LayoutTemplate from '@/components/layout-template'
 
 export default function AccountDeletionLayout({
