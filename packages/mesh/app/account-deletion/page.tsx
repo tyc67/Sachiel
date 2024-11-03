@@ -16,7 +16,7 @@ export default function Page() {
   )
 
   return (
-    <main className="flex items-center justify-center sm:size-full">
+    <main className="w-full">
       {deleteStatus === DELETION_STEP.PENDING && (
         <Confirmation setDeleteStatus={setDeleteStatus} />
       )}
