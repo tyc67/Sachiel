@@ -1,6 +1,7 @@
 'use server'
 import type { FirebaseError } from 'firebase-admin/app'
 import jwt from 'jsonwebtoken'
+import { nanoid } from 'nanoid'
 import { cookies } from 'next/headers'
 import { type Hex } from 'viem'
 
@@ -181,7 +182,7 @@ export async function signUpMember(
       name: decodedToken.name || formData.name,
       nickname: formData.name,
       email: decodedToken.email,
-      customId: decodedToken.email?.split('@')[0],
+      customId: nanoid(8),
       avatar: decodedToken.picture,
       following: {
         connect: formData.followings.map((id) => ({ id })),
