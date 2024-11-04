@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
 import CollectionsCarousel from '@/app/profile/_components/collections-carousel'
@@ -63,6 +63,21 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         setTabData(profileData.picksData ?? [])
     }
   }, [category, isMember, profileData])
+
+  const isCollection = tabData.some((item) => item.__typename === 'Collection')
+
+  const pickCollections: PickCollections = useMemo(() => {
+    if (isCollection || !(tabData as PickList)?.length) {
+      return []
+    }
+
+    return (tabData as PickList)
+      .filter((item) => item?.objective === PickObjective.Collection)
+      .map(({ collection }) => ({
+        ...collection!,
+        id: collection?.id || '',
+      })) as PickCollections
+  }, [isCollection, tabData])
 
   if (isProfileLoading) {
     return <Loading />
@@ -133,19 +148,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         </Link>
       )
   }
-  const isCollection = tabData.some((item) => item.__typename === 'Collection')
-  const pickCollections = (): PickCollections => {
-    if (isCollection || !(tabData as PickList)?.length) {
-      return []
-    }
-
-    return (tabData as PickList)
-      .filter((item) => item?.objective === PickObjective.Collection)
-      .map(({ collection }) => ({
-        ...collection!,
-        id: collection?.id || '',
-      })) as PickCollections
-  }
 
   return (
     <>
@@ -167,9 +169,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         setCategory={setCategory}
         userType={isMember ? 'member' : 'visitor'}
       />
-      {pickCollections()?.length ? (
+      {pickCollections?.length ? (
         <>
-          <CollectionsCarousel pickCollections={pickCollections()} />
+          <CollectionsCarousel pickCollections={pickCollections} />
         </>
       ) : (
         <></>
