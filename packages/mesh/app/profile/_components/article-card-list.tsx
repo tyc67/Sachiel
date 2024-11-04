@@ -38,18 +38,6 @@ function ArticleCardList({
   }
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
-  // const pickCollections = (): PickCollections => {
-  //   if (isCollection || !(items as PickList)?.length) {
-  //     return []
-  //   }
-
-  //   return (items as PickList)
-  //     .filter((item) => item?.objective === PickObjective.Collection)
-  //     .map(({ collection }) => ({
-  //       ...collection!,
-  //       id: collection?.id || '',
-  //     })) as PickCollections
-  // }
   return (
     <div className="bg-multi-layer-light">
       <ul
