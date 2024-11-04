@@ -25,11 +25,9 @@ let FIREBASE_CONFIG = {
 let ALCHEMY_ADDRESS: {
   policyId: string
   meshPoint: Hex
-  paymaster: Hex
 } = {
   policyId: '',
   meshPoint: '0x',
-  paymaster: '0x',
 }
 
 switch (ENV) {
@@ -48,9 +46,8 @@ switch (ENV) {
       APP_ID: '1:611179505112:web:91b52854e9136ad4a83ead',
     }
     ALCHEMY_ADDRESS = {
-      policyId: '12056106-f884-42d2-9d43-5a8b3aca7a4e',
+      policyId: '2dd43a81-3e1c-4c74-aa5f-35135f24dfcd',
       meshPoint: '0xe00473f0236D2a23796C71b3678833a821bFab95',
-      paymaster: '0xA75a88cdBa15725EcD1134A73d1Dda02186493De',
     }
     break
   case 'dev':
@@ -68,9 +65,8 @@ switch (ENV) {
       APP_ID: '1:611179505112:web:91b52854e9136ad4a83ead',
     }
     ALCHEMY_ADDRESS = {
-      policyId: '12056106-f884-42d2-9d43-5a8b3aca7a4e',
+      policyId: '2dd43a81-3e1c-4c74-aa5f-35135f24dfcd',
       meshPoint: '0xe00473f0236D2a23796C71b3678833a821bFab95',
-      paymaster: '0xA75a88cdBa15725EcD1134A73d1Dda02186493De',
     }
     break
 
@@ -90,9 +86,8 @@ switch (ENV) {
       APP_ID: '1:593370764604:web:3e90810bc5e6345ef37a39',
     }
     ALCHEMY_ADDRESS = {
-      policyId: '12056106-f884-42d2-9d43-5a8b3aca7a4e',
-      meshPoint: '0xe00473f0236D2a23796C71b3678833a821bFab95',
-      paymaster: '0xA75a88cdBa15725EcD1134A73d1Dda02186493De',
+      policyId: '42006380-ade7-4de4-80cc-5bdb2f87c927',
+      meshPoint: '0x791dd9BcDA32483803c8417Fe38394d9a25eFD20',
     }
     break
 
