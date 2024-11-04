@@ -4,17 +4,33 @@ import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
 import Spinner from '@/components/spinner'
 import { useEditCollection } from '@/context/edit-collection'
 import { useUser } from '@/context/user'
+import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collection'
 
 import { picksAndBookmarksPageCount } from '../../_const/edit-collection'
+import type { CollectionPickStory } from '../../_types/edit-collection'
 import InfiniteCollectionPicks from '../infinite-collection-picks'
+import PickStoryCard from '../pick-story-card'
 
 export default function DesktopCollectionPicks() {
-  const { step } = useEditCollection()
+  const [fixedStory, setFixedStory] = useState<CollectionPickStory | null>(null)
+
+  const { step, collectionPickStories, setCollectionPickStories } =
+    useEditCollection()
+
+  useEffect(() => {
+    if (!collectionPickStories.length) {
+      const story = getCrossPageCollectinPickStory()
+      if (story) {
+        setFixedStory(story)
+        setCollectionPickStories([story])
+      }
+    }
+  }, [collectionPickStories.length, setCollectionPickStories])
 
   const getStepJsx = (step: number) => {
     switch (step) {
       case 0:
-        return <Step1 />
+        return <Step1 fixedStory={fixedStory} />
       case 1:
         return null
       default:
@@ -29,7 +45,15 @@ export default function DesktopCollectionPicks() {
   )
 }
 
-const Step1 = () => {
+const Step1 = ({ fixedStory }: { fixedStory: CollectionPickStory | null }) => {
+  return !fixedStory ? (
+    <Step1PickStories />
+  ) : (
+    <Step1FixedStory fixedStory={fixedStory} />
+  )
+}
+
+const Step1PickStories = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [shouldLoadMore, setShouldLoadMore] = useState(true)
@@ -75,5 +99,23 @@ const Step1 = () => {
       loadMore={loadMorePicksAndBookmarks}
       shouldLoadMore={shouldLoadMore}
     />
+  )
+}
+
+const Step1FixedStory = ({
+  fixedStory,
+}: {
+  fixedStory: CollectionPickStory | null
+}) => {
+  if (!fixedStory) return null
+  return (
+    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+      <PickStoryCard
+        key={fixedStory.id}
+        isPicked={true}
+        onClick={() => {}}
+        story={fixedStory}
+      />
+    </div>
   )
 }

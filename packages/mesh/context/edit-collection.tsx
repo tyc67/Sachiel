@@ -15,6 +15,7 @@ import {
   CollectionFormat,
 } from '@/app/collection/(mutate)/_types/edit-collection'
 import useWindowDimensions from '@/hooks/use-window-dimension'
+import { clearCreateCollectionStoryLS } from '@/utils/cross-page-create-collection'
 import {
   generateUniqueTimestamp,
   getCurrentTimeInISOFormat,
@@ -123,6 +124,8 @@ export default function EditCollectionProvider({
     }
     const response = await sendCreateCollection(newCollectionData)
     if (response) {
+      // clear localstorage data once collection created
+      clearCreateCollectionStoryLS()
       const collectionId = response.createCollection?.id
       router.push(`/collection/${collectionId}`)
     } else {
