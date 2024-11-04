@@ -97,6 +97,13 @@ const storyGetters = {
     collection: (data) => data.picksCount ?? 0,
     default: 0,
   }),
+  pick: createGetter<
+    NonNullable<PickListItem>['pick'] | CollectionItem['picks']
+  >({
+    story: (data) => data.pick ?? [],
+    collection: (data) => data.picks ?? [],
+    default: [],
+  }),
 } as const
 
 const ArticleCard = ({
@@ -225,7 +232,7 @@ const ArticleCard = ({
               `}
           >
             <StoryPickInfo
-              displayPicks={storyData?.pick}
+              displayPicks={storyGetters.pick(storyData)}
               pickCount={storyGetters.pickCount(storyData)}
               maxCount={4}
             />

@@ -4241,8 +4241,9 @@ export type GetCurrentUserMemberIdQuery = {
     updatedAt?: any | null
     createdAt?: any | null
     heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
-    pick?: Array<{
+    picks?: Array<{
       __typename?: 'Pick'
+      id: string
       createdAt?: any | null
       member?: {
         __typename?: 'Member'
@@ -4359,8 +4360,9 @@ export type GetMemberProfileQuery = {
             original?: string | null
           } | null
         } | null
-        pick?: Array<{
+        picks?: Array<{
           __typename?: 'Pick'
+          id: string
           createdAt?: any | null
           member?: {
             __typename?: 'Member'
@@ -4448,8 +4450,9 @@ export type GetMemberProfileQuery = {
     updatedAt?: any | null
     createdAt?: any | null
     heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
-    pick?: Array<{
+    picks?: Array<{
       __typename?: 'Pick'
+      id: string
       createdAt?: any | null
       member?: {
         __typename?: 'Member'
@@ -4565,8 +4568,9 @@ export type GetVisitorProfileQuery = {
             original?: string | null
           } | null
         } | null
-        pick?: Array<{
+        picks?: Array<{
           __typename?: 'Pick'
+          id: string
           createdAt?: any | null
           member?: {
             __typename?: 'Member'
@@ -4602,8 +4606,9 @@ export type GetVisitorProfileQuery = {
     updatedAt?: any | null
     createdAt?: any | null
     heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
-    pick?: Array<{
+    picks?: Array<{
       __typename?: 'Pick'
+      id: string
       createdAt?: any | null
       member?: {
         __typename?: 'Member'
@@ -8195,11 +8200,36 @@ export const GetCurrentUserMemberIdDocument = {
                 },
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'pick' },
                   name: { kind: 'Name', value: 'picks' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
@@ -8969,11 +8999,48 @@ export const GetMemberProfileDocument = {
                             },
                             {
                               kind: 'Field',
-                              alias: { kind: 'Name', value: 'pick' },
                               name: { kind: 'Name', value: 'picks' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'is_active',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'equals',
+                                              },
+                                              value: {
+                                                kind: 'BooleanValue',
+                                                value: true,
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'createdAt' },
@@ -9725,11 +9792,36 @@ export const GetMemberProfileDocument = {
                 },
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'pick' },
                   name: { kind: 'Name', value: 'picks' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
@@ -10451,11 +10543,48 @@ export const GetVisitorProfileDocument = {
                             },
                             {
                               kind: 'Field',
-                              alias: { kind: 'Name', value: 'pick' },
                               name: { kind: 'Name', value: 'picks' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'is_active',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'equals',
+                                              },
+                                              value: {
+                                                kind: 'BooleanValue',
+                                                value: true,
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'createdAt' },
@@ -10774,11 +10903,36 @@ export const GetVisitorProfileDocument = {
                 },
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'pick' },
                   name: { kind: 'Name', value: 'picks' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },

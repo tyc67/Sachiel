@@ -6,9 +6,10 @@ import type {
   PickList,
   PickListItem,
 } from '@/types/profile'
+import type { PublisherProfile } from '@/utils/data-schema'
 
 interface ArticleCardListProps {
-  items: PickList | Bookmarks | Collections
+  items: PickList | Bookmarks | Collections | PublisherProfile['stories']
   emptyMessage: string
   elementForEmpty?: React.ReactNode
   memberId?: string
