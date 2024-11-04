@@ -103,6 +103,7 @@ const RESTFUL_ENDPOINTS = {
   accessToken: `${API_ORIGIN}/accesstoken`,
   paymentBalance: `${PAYMENT_ORIGIN}/balance/`,
   socialPage: `${API_ORIGIN}/socialpage`,
+  invitationCodes: `${API_ORIGIN}/invitation_codes`,
 }
 
 const STATIC_FILE_ENDPOINTS = {
