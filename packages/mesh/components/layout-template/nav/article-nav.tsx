@@ -6,6 +6,7 @@ import Icon, { type IconName } from '@/components/icon'
 import InteractiveIcon from '@/components/interactive-icon'
 import { NON_MOBILE_NAV_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
+import { TabCategory } from '@/types/profile'
 
 type IconInfo = {
   icon: {
@@ -114,6 +115,20 @@ const NonMobileNav = ({
                     iconInfo={{
                       ...iconInfo,
                       href: iconInfo.href + `/member/${userCustomId}`,
+                    }}
+                    avatarUrl={avatarUrl}
+                  />
+                )
+              } else if (iconInfo.text === '書籤') {
+                return (
+                  <NonMobileNavIcon
+                    key={iconInfo.text}
+                    isOn={path.startsWith(iconInfo.href)}
+                    iconInfo={{
+                      ...iconInfo,
+                      href:
+                        iconInfo.href +
+                        `/member/${userCustomId}?tab=${TabCategory.BOOKMARKS}`,
                     }}
                     avatarUrl={avatarUrl}
                   />

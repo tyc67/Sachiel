@@ -8,6 +8,7 @@ import InteractiveIcon from '@/components/interactive-icon'
 import Avatar from '@/components/story-card/avatar'
 import { MOBILE_NAV_ICONS, NON_MOBILE_NAV_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
+import { TabCategory } from '@/types/profile'
 import { matchPath } from '@/utils/nav-button'
 
 type IconInfo = {
@@ -82,6 +83,20 @@ const NonMobileNav = ({
                     iconInfo={{
                       ...iconInfo,
                       href: iconInfo.href + `/member/${userCustomId}`,
+                    }}
+                    avatarUrl={avatarUrl}
+                  />
+                )
+              } else if (iconInfo.text === '書籤') {
+                return (
+                  <NonMobileNavIcon
+                    key={iconInfo.text}
+                    isOn={matchPath(iconInfo.href, path)}
+                    iconInfo={{
+                      ...iconInfo,
+                      href:
+                        iconInfo.href +
+                        `/member/${userCustomId}?tab=${TabCategory.BOOKMARKS}`,
                     }}
                     avatarUrl={avatarUrl}
                   />
