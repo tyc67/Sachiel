@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -123,10 +124,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const emptyElement = (category: TabCategory): React.ReactNode => {
     if (category === TabCategory.COLLECTIONS)
       return (
-        <>
-          {/**TODO: add redirect url*/}
+        <Link href={`/collection/new`}>
           <Button size="md" color="transparent" text="立即嘗試" />
-        </>
+        </Link>
       )
   }
   const isCollection = tabData.some((item) => item.__typename === 'Collection')
