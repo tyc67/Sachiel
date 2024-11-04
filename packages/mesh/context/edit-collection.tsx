@@ -16,6 +16,7 @@ import {
 } from '@/app/collection/(mutate)/_types/edit-collection'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { clearCreateCollectionStoryLS } from '@/utils/cross-page-create-collection'
+import { setCrossPageToast } from '@/utils/cross-page-toast'
 import {
   generateUniqueTimestamp,
   getCurrentTimeInISOFormat,
@@ -129,6 +130,7 @@ export default function EditCollectionProvider({
       const collectionId = response.createCollection?.id
       router.push(`/collection/${collectionId}`)
     } else {
+      setCrossPageToast({ status: 'fail', text: '建立集錦失敗，請重新嘗試' })
       router.push(`/profile/member/${user.customId}`)
     }
   }

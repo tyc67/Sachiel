@@ -13,7 +13,6 @@ export function getCrossPageCollectinPickStory() {
     localStorage.getItem(createCollectionStoryKey) ?? 'null'
   )
   if (!createCollectionStory) return null
-  console.log(Date.now() - createCollectionStory?.ts, 30 * MINUTE)
 
   if (Date.now() - createCollectionStory?.ts > 30 * MINUTE) {
     clearCreateCollectionStoryLS()
