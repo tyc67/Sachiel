@@ -15,7 +15,11 @@ import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
 import { PickObjective } from '@/types/objective'
-import type { Collections, PickCollections } from '@/types/profile'
+import type {
+  Collections,
+  PickCollections,
+  TabCategoryType,
+} from '@/types/profile'
 import {
   type Bookmarks,
   type PickList,
@@ -36,7 +40,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const pathName = usePathname()
   const currentUrl = pathName
 
-  const [category, setCategory] = useState<TabCategory>(TabCategory.PICKS)
+  const [category, setCategory] = useState<TabCategoryType>(TabCategory.PICKS)
   const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile
@@ -109,7 +113,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         },
       ]
 
-  const getMessage = (category: TabCategory): string => {
+  const getMessage = (category: TabCategoryType): string => {
     const messages: { [key: string]: string } = {
       PICKS: isMember
         ? '這裡還空空的\n趕緊將喜愛的新聞加入精選吧'
@@ -121,7 +125,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   }
 
   const shouldShowComment = category === TabCategory.PICKS
-  const emptyElement = (category: TabCategory): React.ReactNode => {
+  const emptyElement = (category: TabCategoryType): React.ReactNode => {
     if (category === TabCategory.COLLECTIONS)
       return (
         <Link href={`/collection/new`}>

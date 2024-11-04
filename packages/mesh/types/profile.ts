@@ -5,7 +5,7 @@ import type {
   Story,
 } from '@/graphql/__generated__/graphql'
 
-// Use const assertion for better type inference and immutability
+// 1. Base constants and their types
 export const TabKey = {
   PICK: '精選',
   FOLLOWER: '粉絲',
@@ -13,10 +13,8 @@ export const TabKey = {
   SPONSORED: '本月獲得贊助',
 } as const
 
-// Convert to union type for better type safety
-export type TabKey = typeof TabKey[keyof typeof TabKey]
+export type TabKeyType = typeof TabKey[keyof typeof TabKey]
 
-// Use const assertion for enum-like behavior
 export const TabCategory = {
   PICKS: 'PICKS',
   BOOKMARKS: 'BOOKMARKS',
@@ -24,16 +22,39 @@ export const TabCategory = {
   COLLECTIONS: 'COLLECTIONS',
 } as const
 
-export type TabCategory = typeof TabCategory[keyof typeof TabCategory]
+export type TabCategoryType = typeof TabCategory[keyof typeof TabCategory]
 
+// 2. Basic literal types
+export type ProfileFormField = 'name' | 'customId' | 'intro' | 'avatar'
+export type UserType = 'member' | 'visitor' | 'publisher'
+
+// 3. Base types from external sources
+export type Member = NonNullable<GetMemberProfileQuery['member']>
+export type Collections = NonNullable<GetMemberProfileQuery['collections']>
+export type PickList = NonNullable<Member['picks']>
+export type Bookmarks = NonNullable<Member['books']>
+
+// 4. Derived types that depend on base types
+export type PickListItem = NonNullable<PickList[number]['story']>
+export type BookmarkItem = PickListItem
+export type CollectionItem = Collections[number]
+export type PickCollections = NonNullable<PickList[number]['collection']>[]
+export type StoryData = NonNullable<Story>[]
+export type StoryDataItem = StoryData[number]
+
+// 5. Types that depend on PickListItem
+export type CommentList = NonNullable<PickListItem['comment']>
+export type CommentType = CommentList[number]
+
+// 6. Form related types
+export type FormErrors = Partial<Record<ProfileFormField, string>>
+
+// 7. Base interfaces without complex dependencies
 export interface TabItem {
-  tabName: TabKey
+  tabName: TabKeyType
   count?: number | string
   redirectLink?: string
 }
-
-// Use literal types for form field names to prevent typos
-export type ProfileFormField = 'name' | 'customId' | 'intro' | 'avatar'
 
 export interface EditProfileFormTypes {
   name: string
@@ -42,6 +63,7 @@ export interface EditProfileFormTypes {
   avatar: string
 }
 
+// 8. Complex interfaces that depend on other types
 export interface ProfileTypes {
   name: string
   avatar: string
@@ -57,30 +79,6 @@ export interface ProfileTypes {
   pickCollections: PickList
 }
 
-// Improve nullable types handling
-export type Member = NonNullable<GetMemberProfileQuery['member']>
-export type Collections = NonNullable<GetMemberProfileQuery['collections']>
-export type PickList = NonNullable<Member['picks']>
-
-// Simplify complex type definitions
-export type PickCollections = NonNullable<PickList[number]['collection']>[]
-export type Bookmarks = NonNullable<Member['books']>
-export type StoryData = NonNullable<Story>[]
-export type StoryDataItem = StoryData[number]
-export type PickListItem = NonNullable<PickList[number]['story']>
-export type BookmarkItem = PickListItem
-export type CollectionItem = Collections[number]
-
-// Use union literal type instead of string literals
-export type UserType = 'member' | 'visitor' | 'publisher'
-
-export type CommentList = NonNullable<PickListItem['comment']>
-export type CommentType = CommentList[number]
-
-// Improve error handling types
-export type FormErrors = Partial<Record<ProfileFormField, string>>
-
-// Improve context type with more specific error handling
 export interface EditProfileContextType {
   editProfileForm: EditProfileFormTypes
   visitorProfile: ProfileTypes
@@ -89,8 +87,8 @@ export interface EditProfileContextType {
   isProfileLoading: boolean
   formRef: RefObject<HTMLFormElement> | null
   isSubmitting: boolean
+  isProfileError: boolean
 
-  // Improve function signatures
   updateErrors: (field: ProfileFormField, errorMessage: string) => void
   updateField: (field: ProfileFormField, value: string) => void
   handleSubmit: () => Promise<void>
@@ -101,5 +99,4 @@ export interface EditProfileContextType {
   handleInputChange: (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
-  isProfileError: boolean
 }
