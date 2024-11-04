@@ -98,7 +98,7 @@ export default function LoginCode() {
           {Array.from({ length: codeDigits }, (_, index) => (
             <input
               key={index}
-              inputMode="numeric"
+              inputMode="text"
               maxLength={1}
               className={`body-2 h-8 w-10 border-b ${
                 values[index]

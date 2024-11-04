@@ -1,5 +1,6 @@
 'use server'
 
+import { RESTFUL_ENDPOINTS } from '@/constants/config'
 import {
   GetSentInvitationCodesDocument,
   GetValidInvitationCodesDocument,
@@ -8,9 +9,10 @@ import {
   UpdateMemberInvitedByDocument,
 } from '@/graphql/__generated__/graphql'
 import fetchGraphQL, { mutateGraphQL } from '@/utils/fetch-graphql'
+import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
-export async function isInvitationCodeValid(code: string) {
+async function isInvitationCodeValid(code: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
   const response = await fetchGraphQL(
     IsInvitationCodeValidDocument,
@@ -26,7 +28,7 @@ export async function isInvitationCodeValid(code: string) {
   return response.invitationCodes ?? []
 }
 
-export async function getValidInvitationCodes(memberId: string) {
+async function getValidInvitationCodes(memberId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await fetchGraphQL(
@@ -43,7 +45,7 @@ export async function getValidInvitationCodes(memberId: string) {
   return response.invitationCodes ?? []
 }
 
-export async function getSentInvitationCodes(memberId: string) {
+async function getSentInvitationCodes(memberId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await fetchGraphQL(
@@ -60,10 +62,7 @@ export async function getSentInvitationCodes(memberId: string) {
   return response.invitationCodes ?? []
 }
 
-export async function invalidateInvitationCode(
-  codeId: string,
-  memberId: string
-) {
+async function invalidateInvitationCode(codeId: string, memberId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
   try {
     const invalidateInvitationCodeResponse = await mutateGraphQL(
@@ -93,4 +92,21 @@ export async function invalidateInvitationCode(
     )
     return null
   }
+}
+
+async function generateInvitationCodes() {
+  return await fetchRestfulPost(
+    RESTFUL_ENDPOINTS.invitationCodes,
+    {},
+    { cache: 'no-cache' },
+    `Failed to generate 5 invitation codes`
+  )
+}
+
+export {
+  generateInvitationCodes,
+  getSentInvitationCodes,
+  getValidInvitationCodes,
+  invalidateInvitationCode,
+  isInvitationCodeValid,
 }
