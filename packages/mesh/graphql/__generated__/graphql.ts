@@ -3918,6 +3918,15 @@ export type UpdateWalletAddressMutation = {
   } | null
 }
 
+export type DeactiveMemberMutationVariables = Exact<{
+  memberId: Scalars['ID']['input']
+}>
+
+export type DeactiveMemberMutation = {
+  __typename?: 'Mutation'
+  updateMember?: { __typename?: 'Member'; is_active?: boolean | null } | null
+}
+
 export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetAllCategoriesQuery = {
@@ -5898,6 +5907,80 @@ export const UpdateWalletAddressDocument = {
 } as unknown as DocumentNode<
   UpdateWalletAddressMutation,
   UpdateWalletAddressMutationVariables
+>
+export const DeactiveMemberDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeactiveMember' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateMember' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'memberId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'is_active' },
+                      value: { kind: 'BooleanValue', value: false },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'is_active' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeactiveMemberMutation,
+  DeactiveMemberMutationVariables
 >
 export const GetAllCategoriesDocument = {
   kind: 'Document',

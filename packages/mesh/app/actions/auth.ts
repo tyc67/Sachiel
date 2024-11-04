@@ -1,6 +1,7 @@
 'use server'
 import type { FirebaseError } from 'firebase-admin/app'
 import jwt from 'jsonwebtoken'
+import { nanoid } from 'nanoid'
 import { cookies } from 'next/headers'
 import { type Hex } from 'viem'
 
@@ -10,6 +11,7 @@ import { type UserFormData } from '@/context/login'
 import { getAdminAuth } from '@/firebase/server'
 import {
   type MemberCreateInput,
+  DeactiveMemberDocument,
   GetCurrentUserMemberIdDocument,
   SignUpMemberDocument,
   UpdateWalletAddressDocument,
@@ -181,7 +183,7 @@ export async function signUpMember(
       name: decodedToken.name || formData.name,
       nickname: formData.name,
       email: decodedToken.email,
-      customId: decodedToken.email?.split('@')[0],
+      customId: nanoid(8),
       avatar: decodedToken.picture,
       following: {
         connect: formData.followings.map((id) => ({ id })),
@@ -286,4 +288,26 @@ export async function getStoryAccess(idToken: string, storyId: string) {
   }
 
   return undefined
+}
+
+export async function deactiveMember(memberId: string) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+  // TODO: 改打 pubsub
+  try {
+    const result = await mutateGraphQL(
+      DeactiveMemberDocument,
+      { memberId },
+      globalLogFields,
+      `Failed to deactive member memberId:${memberId} status`
+    )
+    if (result?.updateMember?.is_active !== false) return { success: false }
+  } catch (error) {
+    logServerSideError(
+      error,
+      `Failed to deactivate member, memberId:${memberId}`,
+      globalLogFields
+    )
+    return { success: false }
+  }
+  return { success: true }
 }

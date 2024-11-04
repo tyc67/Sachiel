@@ -45,7 +45,7 @@ type UserContextType = {
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
-const guest: User = {
+export const guest: User = {
   memberId: '',
   avatarImageId: '',
   customId: '',
