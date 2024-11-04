@@ -33,7 +33,7 @@ export default function ConfirmationLayout({
             {children}
           </div>
         </div>
-        <Footer />
+        <Footer className="hidden sm:block" />
       </div>
       <Nav type={NavType.Default} />
       <MobileNavigation {...navigationData} />
