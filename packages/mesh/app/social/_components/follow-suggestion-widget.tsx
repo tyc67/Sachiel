@@ -34,7 +34,7 @@ export default function FollowSuggestionWidget({
                       <>
                         <span>{member.from.name}</span>
                         及其他<span> {member.followerCount} </span>
-                        的追蹤對象
+                        人的追蹤對象
                       </>
                     ) : (
                       <>
