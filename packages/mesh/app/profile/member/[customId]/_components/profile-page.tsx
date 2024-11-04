@@ -166,9 +166,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
       {pickCollections()?.length ? (
         <>
           <CollectionsCarousel pickCollections={pickCollections()} />
-          <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
-            精選文章
-          </p>
         </>
       ) : (
         <></>
