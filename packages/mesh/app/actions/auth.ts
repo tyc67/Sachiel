@@ -292,7 +292,7 @@ export async function getStoryAccess(idToken: string, storyId: string) {
 
 export async function deactiveMember(memberId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
-
+  // TODO: 改打 pubsub
   try {
     const result = await mutateGraphQL(
       DeactiveMemberDocument,
