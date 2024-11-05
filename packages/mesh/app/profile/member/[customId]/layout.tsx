@@ -6,11 +6,12 @@ import { useParams, usePathname } from 'next/navigation'
 import LayoutTemplate from '@/components/layout-template'
 import MobileNavigationButton from '@/components/layout-template/navigation/mobile-navigation/mobile-navigation-button'
 import GoBackButton from '@/components/navigation/go-back-button'
-import MoreButton from '@/components/story-card/more-button'
 import { FOLLOW_LIST_PATHS } from '@/constants/page-style'
 import { EditProfileProvider } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { logout } from '@/utils/logout'
+
+import ProfileMoreActionButton from '../../_components/profile-more-action-button'
 
 const hasNestedLayout = (pathName: string) => {
   return FOLLOW_LIST_PATHS.some((path) => pathName.endsWith(path))
@@ -58,13 +59,23 @@ export default function ProfileMemberLayout({
         title: pageCustomId,
         rightButtons: [
           // TODO: replace with ProfileMoreActionButton
-          <MoreButton key={0} />,
+          <ProfileMoreActionButton
+            key={0}
+            customId={pageCustomId}
+            publisherId=""
+          />,
         ],
       }}
       nonMobileNavigation={{
         leftButtons: isSelf ? [] : [<GoBackButton key={0} />],
         title: pageCustomId,
-        rightButtons: [<MoreButton key={0} />],
+        rightButtons: [
+          <ProfileMoreActionButton
+            key={0}
+            customId={pageCustomId}
+            publisherId=""
+          />,
+        ],
       }}
     >
       <EditProfileProvider>{children}</EditProfileProvider>
