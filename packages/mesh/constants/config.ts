@@ -94,7 +94,7 @@ switch (ENV) {
   default:
     break
 }
-
+const GTM_ID = 'GTM-MKLVHSGJ'
 const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
@@ -173,6 +173,7 @@ export {
   FIREBASE_PRIVATE_KEY,
   GCP_PROJECT_ID,
   GQL_ENDPOINT,
+  GTM_ID,
   PAYMENT_CHAIN,
   RESTFUL_ENDPOINTS,
   STATIC_FILE_ENDPOINTS,
