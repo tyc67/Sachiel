@@ -220,6 +220,7 @@ export const publisherProfileSchema = z.object({
   }),
   stories: z.array(
     z.object({
+      __typename: z.enum(['Pick', 'Collection']),
       id: z.string().min(1),
       title: z.string().min(1),
       url: z.string().url(),

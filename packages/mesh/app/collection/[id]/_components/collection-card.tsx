@@ -39,7 +39,7 @@ export default function CollectionCard({
               alt={collection.title ?? '集錦圖'}
               fill
             />
-            <div className="absolute right-3 top-2 hidden items-center rounded-md bg-[rgba(0,0,0,50)] px-1 py-[2px] sm:flex">
+            <div className="absolute right-3 top-2 hidden items-center rounded-md bg-black/50 px-1 py-[2px] sm:flex">
               <Icon iconName="icon-collection-folder" size="m" />
               <span className="caption-1 text-white">集錦</span>
             </div>
