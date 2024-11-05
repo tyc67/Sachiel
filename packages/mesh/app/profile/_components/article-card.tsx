@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Comment from '@/app/profile/_components/comment'
+import CollectionPickButton from '@/components/collection-card/collection-pick-button'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
@@ -10,13 +11,19 @@ import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
 import { CommentObjective } from '@/types/objective'
 import {
+  type BookmarkItem,
+  type CollectionItem,
   type CommentType,
   type PickListItem,
-  type StoryDataItem,
 } from '@/types/profile'
 
+type StoryDataTypes =
+  | NonNullable<PickListItem>
+  | NonNullable<BookmarkItem>
+  | CollectionItem
+
 type ArticleCardProps = {
-  storyData: NonNullable<PickListItem> | StoryDataItem
+  storyData: StoryDataTypes
   isLast: boolean
   memberId?: string
   avatar?: string
@@ -24,11 +31,80 @@ type ArticleCardProps = {
   shouldShowComment: boolean
 }
 function hasComment(
-  storyData: NonNullable<PickListItem> | StoryDataItem
+  storyData: StoryDataTypes
 ): storyData is NonNullable<PickListItem> {
   if (!storyData) return false
   return 'comment' in storyData
 }
+const isStory = (
+  data: StoryDataTypes
+): data is NonNullable<PickListItem> | NonNullable<BookmarkItem> =>
+  data.__typename !== 'Collection'
+
+const isCollection = (data: StoryDataTypes): data is CollectionItem =>
+  data.__typename === 'Collection'
+type GetterConfig<T> = {
+  story: (data: NonNullable<PickListItem> | NonNullable<BookmarkItem>) => T
+  collection: (data: CollectionItem) => T
+  default: T
+}
+const createGetter = <T,>(config: GetterConfig<T>) => {
+  return (data: StoryDataTypes): T => {
+    if (isStory(data)) return config.story(data)
+    if (isCollection(data)) return config.collection(data)
+    return config.default
+  }
+}
+const storyGetters = {
+  image: createGetter<string>({
+    story: (data) => data.og_image ?? '',
+    collection: (data) => data.heroImage?.urlOriginal ?? '',
+    default: '',
+  }),
+
+  source: createGetter<string>({
+    story: (data) => data.source?.title ?? '預設媒體',
+    collection: () => '',
+    default: '預設媒體',
+  }),
+
+  sourceId: createGetter<string>({
+    story: (data) => data.source?.id ?? '',
+    collection: () => '',
+    default: '',
+  }),
+
+  publishedDate: createGetter<string>({
+    story: (data) => data.published_date ?? '',
+    collection: (data) => data.updatedAt ?? data.createdAt ?? '',
+    default: '',
+  }),
+
+  paywall: createGetter<boolean>({
+    story: (data) => data.paywall ?? false,
+    collection: () => false,
+    default: false,
+  }),
+
+  fullScreenAd: createGetter<string>({
+    story: (data) => data.full_screen_ad ?? '',
+    collection: () => '',
+    default: '',
+  }),
+
+  pickCount: createGetter<number>({
+    story: (data) => data.pickCount ?? 0,
+    collection: (data) => data.picksCount ?? 0,
+    default: 0,
+  }),
+  pick: createGetter<
+    NonNullable<PickListItem>['pick'] | CollectionItem['picks']
+  >({
+    story: (data) => data.pick ?? [],
+    collection: (data) => data.picks ?? [],
+    default: [],
+  }),
+} as const
 
 const ArticleCard = ({
   storyData,
@@ -61,19 +137,25 @@ const ArticleCard = ({
             avatar,
           },
         }
-  if (!storyData.og_title) return <></>
+
+  const shouldShowSource = !isCollection
+  const redirectLink = () => {
+    if (isCollection(storyData)) return `/collection/${storyData.id}`
+    return `/story/${storyData?.id}`
+  }
   return (
     <>
       <CommentProvider
         initialComments={storyData.comment || []}
         commentObjective={CommentObjective.Story}
+        // TODO: check what it use
         commentObjectiveData={storyData}
       >
-        <Link href={`/story/${storyData?.id}`}>
+        <Link className="md:flex md:w-full" href={redirectLink()}>
           <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
             <ImageWithFallback
               fallbackCategory={ImageCategory.STORY}
-              src={storyData?.og_image ?? ''}
+              src={storyGetters.image(storyData)}
               alt={`${storyData?.title}'s story cover image`}
               fill
               className="size-full object-cover"
@@ -81,53 +163,86 @@ const ArticleCard = ({
           </section>
         </Link>
         <div
-          className={`flex flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:pt-[12px] md:after:hidden ${
+          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:pt-[12px] md:after:hidden ${
             isLast && 'after:hidden'
+          } ${
+            isCollection(storyData) &&
+            'py-[10px] after:hidden sm:p-0 md:justify-between'
           }`}
         >
-          <Link href={`/story/${storyData?.id}`}>
-            <section className="mb-1 flex items-center justify-between">
-              <p className="caption-1 text-primary-500">
-                {(storyData?.source && storyData?.source.title) ?? '預設媒體'}
-              </p>
-              <StoryMoreActionButton
-                storyId={storyData?.id ?? ''}
-                publisherId={storyData?.source?.id ?? ''}
-              />
-            </section>
-            <section className="mb-2 flex items-start justify-between sm:gap-10">
-              <div className="flex h-full flex-col justify-between">
+          <Link className="flex grow flex-col" href={redirectLink()}>
+            {shouldShowSource && (
+              <section className="mb-1 flex items-center justify-between">
+                <>
+                  <p className="caption-1 text-primary-500">
+                    {storyGetters.source(storyData)}
+                  </p>
+                  <StoryMoreActionButton
+                    storyId={storyData?.id ?? ''}
+                    publisherId={storyGetters.sourceId(storyData)}
+                  />
+                </>
+              </section>
+            )}
+            <section
+              className={`flex ${
+                isCollection(storyData)
+                  ? 'size-full grow flex-col-reverse justify-end rounded-t border border-b-0 border-primary-200 md:border-0'
+                  : 'mb-2 items-start justify-between sm:gap-10'
+              }`}
+            >
+              <div className="flex h-fit flex-col justify-between px-3">
                 <p className="body-2 mb-2 w-full sm:mb-1 sm:line-clamp-2 lg:line-clamp-3 lg:min-h-[72px]">
                   {storyData?.title || '預設標題'}
                 </p>
-                <span className=" *:caption-1 *:text-primary-500">
+                <span className="*:caption-1 *:text-primary-500">
                   <StoryMeta
                     commentCount={storyData?.commentCount || 0}
-                    publishDate={storyData?.published_date || ''}
-                    paywall={storyData?.paywall || false}
-                    fullScreenAd={storyData?.full_screen_ad || ''}
+                    publishDate={storyGetters.publishedDate(storyData)}
+                    paywall={storyGetters.paywall(storyData)}
+                    fullScreenAd={storyGetters.fullScreenAd(storyData)}
                   />
                 </span>
               </div>
-              <div className="relative ml-3 aspect-[2/1] min-w-24 overflow-hidden rounded border-[0.5px] border-primary-200 sm:w-40 sm:min-w-40 md:hidden">
+              <div
+                className={`relative aspect-[2/1] min-w-24 overflow-hidden sm:min-w-40 md:hidden ${
+                  isCollection(storyData)
+                    ? 'mb-3 rounded-t'
+                    : 'ml-3 rounded border-[0.5px] border-primary-200 sm:w-40 md:border-0'
+                }`}
+              >
                 <ImageWithFallback
                   fallbackCategory={ImageCategory.STORY}
-                  src={storyData?.og_image ?? ''}
+                  src={storyGetters.image(storyData)}
                   alt={`${storyData?.title}'s story cover image`}
                   fill
                   className="object-cover"
                 />
               </div>
             </section>
-            <section className="mt-4 flex justify-between">
-              <StoryPickInfo
-                displayPicks={storyData?.pick}
-                pickCount={storyData?.pickCount || 0}
-                maxCount={4}
-              />
-              <StoryPickButton storyId={storyData?.id} />
-            </section>
           </Link>
+          <section
+            className={`
+                flex justify-between
+                ${
+                  isCollection(storyData)
+                    ? `rounded-b border border-t-0 border-primary-200 px-3 py-4 md:border-0`
+                    : ` pt-4`
+                }
+              `}
+          >
+            <StoryPickInfo
+              displayPicks={storyGetters.pick(storyData)}
+              pickCount={storyGetters.pickCount(storyData)}
+              maxCount={4}
+            />
+            {isCollection(storyData) ? (
+              <CollectionPickButton collectionId={storyData.id} />
+            ) : (
+              <StoryPickButton storyId={storyData?.id} />
+            )}
+          </section>
+
           {shouldShowComment && (
             <Comment
               data={authorComment as CommentType}

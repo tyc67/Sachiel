@@ -1,0 +1,86 @@
+fragment MemberBasicInfo on Member {
+  id
+  name
+  avatar
+}
+
+fragment CommentInfo on Comment {
+  id
+  content
+  createdAt
+  likeCount
+  member {
+    ...MemberBasicInfo
+  }
+}
+
+fragment AuthenticatedCommentInfo on Comment {
+  ...CommentInfo
+  isMemberLiked: like(where: { customId: { equals: $customId } }) {
+    id
+  }
+}
+
+fragment StoryInfo on Story {
+  id
+  og_image
+  source {
+    title
+    official_site
+    id
+  }
+  title
+  og_title
+  createdAt
+  tag {
+    id
+    name
+  }
+  pick {
+    createdAt
+    member {
+      ...MemberBasicInfo
+    }
+  }
+  pickCount
+  commentCount
+  paywall
+  full_screen_ad
+  published_date
+}
+
+fragment CollectionInfo on Collection {
+  id
+  title
+  heroImage {
+    resized {
+      w480
+      w800
+      w1200
+      w1600
+      w2400
+      original
+    }
+  }
+  picks(where: { is_active: { equals: true } }) {
+    id
+    createdAt
+    member {
+      ...MemberBasicInfo
+    }
+  }
+  picksCount
+  commentCount
+  comment(
+    orderBy: { createdAt: desc }
+    where: { member: { customId: { equals: $customId } } }
+    take: 1
+  ) {
+    ...AuthenticatedCommentInfo
+  }
+  updatedAt
+  createdAt
+  creator {
+    customId
+  }
+}

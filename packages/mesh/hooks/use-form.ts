@@ -1,19 +1,21 @@
 import { useRef, useState } from 'react'
 
+type ValidationErrors<T> = Partial<Record<keyof T, string>>
+
 export const useForm = <T extends Record<string, unknown>>(
   initialState: T,
-  validateFormFn: (form: T) => Partial<T>
+  validateFormFn: (form: T) => ValidationErrors<T>
 ) => {
   const originalState = useRef(initialState)
   const [form, setForm] = useState<T>(initialState)
-  const [errors, setErrors] = useState<Partial<T>>({})
+  const [errors, setErrors] = useState<ValidationErrors<T>>({})
 
   const updateField = (field: keyof T, value: T[keyof T]) => {
     setForm((prev) => ({ ...prev, [field]: value }))
     setErrors((prev) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [field]: _, ...rest } = prev
-      return rest as Partial<T>
+      const newErrors = { ...prev }
+      delete newErrors[field]
+      return newErrors
     })
   }
 

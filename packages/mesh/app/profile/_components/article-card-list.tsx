@@ -1,15 +1,17 @@
 import ArticleCard from '@/app/profile/_components/article-card'
 import type {
+  BookmarkItem,
   Bookmarks,
+  Collections,
   PickList,
   PickListItem,
-  StoryData,
-  StoryDataItem,
 } from '@/types/profile'
+import type { PublisherProfile } from '@/utils/data-schema'
 
 interface ArticleCardListProps {
-  items: StoryData | PickList | Bookmarks
+  items: PickList | Bookmarks | Collections | PublisherProfile['stories']
   emptyMessage: string
+  elementForEmpty?: React.ReactNode
   memberId?: string
   avatar?: string
   name?: string
@@ -20,6 +22,7 @@ function ArticleCardList({
   items,
   shouldShowComment,
   emptyMessage,
+  elementForEmpty,
   memberId,
   avatar,
   name,
@@ -27,43 +30,59 @@ function ArticleCardList({
   if (!items?.length) {
     return (
       <div className="flex grow flex-col">
-        <section className="flex h-full max-w-[theme(width.maxMain)] grow items-center justify-center whitespace-pre bg-primary-700-dark text-center text-base text-primary-400 sm:min-h-full">
-          <p className="my-10 w-full">{emptyMessage}</p>
+        <section className="flex h-full max-w-[theme(width.maxMain)] grow flex-col items-center justify-center whitespace-pre bg-primary-700-dark text-center text-base text-primary-400 sm:min-h-full">
+          <p className="mb-4 w-full">{emptyMessage}</p>
+          {elementForEmpty}
         </section>
       </div>
     )
   }
+  const isCollection = items.some((item) => item.__typename === 'Collection')
+
   return (
-    <div className="bg-multi-layer-light">
-      <ul className="max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 lg:grid-cols-3">
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1
-          return (
-            <li
-              key={index}
-              className="relative w-full bg-white md:h-full md:rounded-md md:drop-shadow"
-            >
-              {'story' in item && item.story ? (
-                <ArticleCard
-                  storyData={item.story as NonNullable<PickListItem>}
-                  isLast={isLast}
-                  memberId={memberId}
-                  avatar={avatar}
-                  name={name}
-                  shouldShowComment={shouldShowComment}
-                />
-              ) : (
-                <ArticleCard
-                  storyData={item as StoryDataItem}
-                  isLast={isLast}
-                  shouldShowComment={shouldShowComment}
-                />
-              )}
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <>
+      <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+        精選文章
+      </p>
+      <div className="bg-multi-layer-light">
+        <ul
+          className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
+            isCollection
+              ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
+              : ''
+          }`}
+        >
+          {items.map((item, index) => {
+            const isLast = index === items.length - 1
+            if (!item) return
+            if ('story' in item && !item.story) return
+            return (
+              <li
+                key={index}
+                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+              >
+                {'story' in item ? (
+                  <ArticleCard
+                    storyData={item.story as NonNullable<PickListItem>}
+                    isLast={isLast}
+                    memberId={memberId}
+                    avatar={avatar}
+                    name={name}
+                    shouldShowComment={shouldShowComment}
+                  />
+                ) : (
+                  <ArticleCard
+                    storyData={item as NonNullable<BookmarkItem>}
+                    isLast={isLast}
+                    shouldShowComment={shouldShowComment}
+                  />
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </>
   )
 }
 
