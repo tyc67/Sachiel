@@ -3761,6 +3761,121 @@ export type UserWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type MemberBasicInfoFragment = {
+  __typename?: 'Member'
+  id: string
+  name?: string | null
+  avatar?: string | null
+}
+
+export type CommentInfoFragment = {
+  __typename?: 'Comment'
+  id: string
+  content?: string | null
+  createdAt?: any | null
+  likeCount?: number | null
+  member?: {
+    __typename?: 'Member'
+    id: string
+    name?: string | null
+    avatar?: string | null
+  } | null
+}
+
+export type AuthenticatedCommentInfoFragment = {
+  __typename?: 'Comment'
+  id: string
+  content?: string | null
+  createdAt?: any | null
+  likeCount?: number | null
+  isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
+  member?: {
+    __typename?: 'Member'
+    id: string
+    name?: string | null
+    avatar?: string | null
+  } | null
+}
+
+export type StoryInfoFragment = {
+  __typename?: 'Story'
+  id: string
+  og_image?: string | null
+  title?: string | null
+  og_title?: string | null
+  createdAt?: any | null
+  pickCount?: number | null
+  commentCount?: number | null
+  paywall?: boolean | null
+  full_screen_ad?: string | null
+  published_date?: any | null
+  source?: {
+    __typename?: 'Publisher'
+    title?: string | null
+    official_site?: string | null
+    id: string
+  } | null
+  tag?: Array<{ __typename?: 'Tag'; id: string; name?: string | null }> | null
+  pick?: Array<{
+    __typename?: 'Pick'
+    createdAt?: any | null
+    member?: {
+      __typename?: 'Member'
+      id: string
+      name?: string | null
+      avatar?: string | null
+    } | null
+  }> | null
+}
+
+export type CollectionInfoFragment = {
+  __typename?: 'Collection'
+  id: string
+  title?: string | null
+  picksCount?: number | null
+  commentCount?: number | null
+  updatedAt?: any | null
+  createdAt?: any | null
+  heroImage?: {
+    __typename?: 'Photo'
+    resized?: {
+      __typename?: 'ResizedImages'
+      w480?: string | null
+      w800?: string | null
+      w1200?: string | null
+      w1600?: string | null
+      w2400?: string | null
+      original?: string | null
+    } | null
+  } | null
+  picks?: Array<{
+    __typename?: 'Pick'
+    id: string
+    createdAt?: any | null
+    member?: {
+      __typename?: 'Member'
+      id: string
+      name?: string | null
+      avatar?: string | null
+    } | null
+  }> | null
+  comment?: Array<{
+    __typename?: 'Comment'
+    id: string
+    content?: string | null
+    createdAt?: any | null
+    likeCount?: number | null
+    isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
+    member?: {
+      __typename?: 'Member'
+      id: string
+      name?: string | null
+      avatar?: string | null
+    } | null
+  }> | null
+  creator?: { __typename?: 'Member'; customId?: string | null } | null
+}
+
 export type UserActionStoryFragment = {
   __typename?: 'Story'
   id: string
@@ -4042,121 +4157,6 @@ export type GetCollectionLatestAddedCommentQueryVariables = Exact<{
 export type GetCollectionLatestAddedCommentQuery = {
   __typename?: 'Query'
   comments?: Array<{ __typename?: 'Comment'; id: string }> | null
-}
-
-export type MemberBasicInfoFragment = {
-  __typename?: 'Member'
-  id: string
-  name?: string | null
-  avatar?: string | null
-}
-
-export type CommentInfoFragment = {
-  __typename?: 'Comment'
-  id: string
-  content?: string | null
-  createdAt?: any | null
-  likeCount?: number | null
-  member?: {
-    __typename?: 'Member'
-    id: string
-    name?: string | null
-    avatar?: string | null
-  } | null
-}
-
-export type AuthenticatedCommentInfoFragment = {
-  __typename?: 'Comment'
-  id: string
-  content?: string | null
-  createdAt?: any | null
-  likeCount?: number | null
-  isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
-  member?: {
-    __typename?: 'Member'
-    id: string
-    name?: string | null
-    avatar?: string | null
-  } | null
-}
-
-export type StoryInfoFragment = {
-  __typename?: 'Story'
-  id: string
-  og_image?: string | null
-  title?: string | null
-  og_title?: string | null
-  createdAt?: any | null
-  pickCount?: number | null
-  commentCount?: number | null
-  paywall?: boolean | null
-  full_screen_ad?: string | null
-  published_date?: any | null
-  source?: {
-    __typename?: 'Publisher'
-    title?: string | null
-    official_site?: string | null
-    id: string
-  } | null
-  tag?: Array<{ __typename?: 'Tag'; id: string; name?: string | null }> | null
-  pick?: Array<{
-    __typename?: 'Pick'
-    createdAt?: any | null
-    member?: {
-      __typename?: 'Member'
-      id: string
-      name?: string | null
-      avatar?: string | null
-    } | null
-  }> | null
-}
-
-export type CollectionInfoFragment = {
-  __typename?: 'Collection'
-  id: string
-  title?: string | null
-  picksCount?: number | null
-  commentCount?: number | null
-  updatedAt?: any | null
-  createdAt?: any | null
-  heroImage?: {
-    __typename?: 'Photo'
-    resized?: {
-      __typename?: 'ResizedImages'
-      w480?: string | null
-      w800?: string | null
-      w1200?: string | null
-      w1600?: string | null
-      w2400?: string | null
-      original?: string | null
-    } | null
-  } | null
-  picks?: Array<{
-    __typename?: 'Pick'
-    id: string
-    createdAt?: any | null
-    member?: {
-      __typename?: 'Member'
-      id: string
-      name?: string | null
-      avatar?: string | null
-    } | null
-  }> | null
-  comment?: Array<{
-    __typename?: 'Comment'
-    id: string
-    content?: string | null
-    createdAt?: any | null
-    likeCount?: number | null
-    isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
-    member?: {
-      __typename?: 'Member'
-      id: string
-      name?: string | null
-      avatar?: string | null
-    } | null
-  }> | null
-  creator?: { __typename?: 'Member'; customId?: string | null } | null
 }
 
 export type GetMemberFollowingQueryVariables = Exact<{
@@ -5299,103 +5299,6 @@ export type GetStorySourceQuery = {
   } | null
 }
 
-export const UserActionStoryFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'UserActionStory' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Story' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'og_image' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'og_description' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'source' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'published_date' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'paywall' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'full_screen_ad' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'pickCount' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'pick' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'member' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'comment' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'published_date' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'member' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<UserActionStoryFragment, unknown>
 export const MemberBasicInfoFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -5949,6 +5852,103 @@ export const CollectionInfoFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CollectionInfoFragment, unknown>
+export const UserActionStoryFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserActionStory' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Story' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'og_image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'og_description' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'source' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'published_date' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'paywall' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'full_screen_ad' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'pickCount' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'pick' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'member' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'comment' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'published_date' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'member' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserActionStoryFragment, unknown>
 export const SignUpMemberDocument = {
   kind: 'Document',
   definitions: [
