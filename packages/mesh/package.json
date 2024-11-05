@@ -26,10 +26,12 @@
     "firebase-admin": "^12.2.0",
     "graphql": "^16.8.1",
     "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.8",
     "next": "^14.2.3",
     "react": "^18",
     "react-dom": "^18",
     "server-only": "^0.0.1",
+    "swiper": "^11.1.14",
     "tailwind-merge": "^2.3.0",
     "ts-import": "^5.0.0-beta.0",
     "zod": "3.23.8"

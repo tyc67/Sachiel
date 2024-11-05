@@ -77,3 +77,9 @@ mutation UpdateWalletAddress($id: ID!, $wallet: String!) {
     wallet
   }
 }
+
+mutation DeactiveMember($memberId: ID!) {
+  updateMember(where: { id: $memberId }, data: { is_active: false }) {
+    is_active
+  }
+}

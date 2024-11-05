@@ -52,7 +52,11 @@ export default function LoginStepsTitle() {
       return (
         <>
           <button onClick={() => setStep(goToStep)}>
-            <Icon iconName="icon-chevron-left" size="m" className="ml-5" />
+            <Icon
+              iconName="icon-chevron-left-hover"
+              size="m"
+              className="ml-5"
+            />
           </button>
           <h2 className="list-title mx-auto">{title}</h2>
           <div className="size-5 px-5"></div>

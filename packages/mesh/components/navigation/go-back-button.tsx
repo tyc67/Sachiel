@@ -20,7 +20,7 @@ export default function GoBackButton({
       className="flex size-11 items-center justify-center sm:size-6"
       onClick={customAction ?? backToPreviousPage}
     >
-      <Icon iconName="icon-chevron-left" size="m" />
+      <Icon iconName="icon-chevron-left-hover" size="m" />
     </button>
   )
 }
