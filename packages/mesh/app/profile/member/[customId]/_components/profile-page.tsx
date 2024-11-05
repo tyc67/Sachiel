@@ -1,16 +1,25 @@
 'use client'
-import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
+import CollectionsCarousel from '@/app/profile/_components/collections-carousel'
 import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
+import Button from '@/components/button'
 import ErrorPage from '@/components/status/error-page'
 import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
+import { PickObjective } from '@/types/objective'
+import type {
+  Collections,
+  PickCollections,
+  TabCategoryType,
+} from '@/types/profile'
 import {
   type Bookmarks,
   type PickList,
@@ -26,13 +35,17 @@ interface ProfilePageProps {
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const { user } = useUser()
+  const searchParams = useSearchParams()
+  const queryTab = searchParams.get('tab')
   const { visitorProfile, isProfileError, isProfileLoading } = useEditProfile()
   const router = useRouter()
   const pathName = usePathname()
   const currentUrl = pathName
 
-  const [category, setCategory] = useState<TabCategory>(TabCategory.PICK)
-  const [tabData, setTabData] = useState<PickList | Bookmarks>([])
+  const [category, setCategory] = useState<TabCategoryType>(
+    (queryTab as TabCategoryType) ?? TabCategory.PICKS
+  )
+  const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile
   const { handleClickFollow, isFollowing } = useFollow(
@@ -40,21 +53,35 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   )
 
   useEffect(() => {
-    if (isMember) {
-      switch (category) {
-        case TabCategory.PICK:
-          setTabData(profileData.picksData)
-          break
-        case TabCategory.BOOKMARKS:
-          setTabData(profileData.bookmarks)
-          break
-        default:
-          setTabData(profileData.picksData)
-      }
-    } else {
-      setTabData(profileData.picksData)
+    switch (category) {
+      case TabCategory.PICKS:
+        setTabData(profileData.picksData ?? [])
+        break
+      case TabCategory.BOOKMARKS:
+        setTabData(profileData.bookmarks ?? [])
+        break
+      case TabCategory.COLLECTIONS:
+        setTabData(profileData.collections ?? [])
+        break
+      default:
+        setTabData(profileData.picksData ?? [])
     }
   }, [category, isMember, profileData])
+
+  const isCollection = tabData.some((item) => item.__typename === 'Collection')
+
+  const pickCollections: PickCollections = useMemo(() => {
+    if (isCollection || !(tabData as PickList)?.length) {
+      return []
+    }
+
+    return (tabData as PickList)
+      .filter((item) => item?.objective === PickObjective.Collection)
+      .map(({ collection }) => ({
+        ...collection!,
+        id: collection?.id || '',
+      })) as PickCollections
+  }, [isCollection, tabData])
 
   if (isProfileLoading) {
     return <Loading />
@@ -105,17 +132,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         },
       ]
 
-  const getMessage = (category: TabCategory): string => {
+  const getMessage = (category: TabCategoryType): string => {
     const messages: { [key: string]: string } = {
       PICKS: isMember
         ? '這裡還空空的\n趕緊將喜愛的新聞加入精選吧'
         : '這個人還沒有精選新聞',
       BOOKMARKS: '沒有已儲存的書籤',
+      COLLECTIONS: `從精選新聞或書籤中\n將數篇新聞打包成集錦`,
     }
     return messages[category] || ''
   }
 
-  const shouldShowComment = category !== TabCategory.BOOKMARKS || !isMember
+  const shouldShowComment = category === TabCategory.PICKS
+  const emptyElement = (category: TabCategoryType): React.ReactNode => {
+    if (category === TabCategory.COLLECTIONS)
+      return (
+        <Link href={`/collection/new`}>
+          <Button size="md" color="transparent" text="立即嘗試" />
+        </Link>
+      )
+  }
 
   return (
     <>
@@ -137,10 +173,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         setCategory={setCategory}
         userType={isMember ? 'member' : 'visitor'}
       />
+      {pickCollections?.length ? (
+        <>
+          <CollectionsCarousel pickCollections={pickCollections} />
+        </>
+      ) : (
+        <></>
+      )}
       <ArticleCardList
         items={tabData || []}
         shouldShowComment={shouldShowComment}
         emptyMessage={getMessage(category)}
+        elementForEmpty={emptyElement(category)}
         memberId={memberId}
         avatar={avatar}
         name={name}

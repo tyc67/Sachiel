@@ -51,6 +51,13 @@ export default function DefaultHeader() {
             </Link>
           </HeaderIconWrapper>
           {isLoggedIn ? (
+            <HeaderIconWrapper className="">
+              <Link href="/invitation-code">
+                <Icon size="2xl" iconName="icon-invitation-code" />
+              </Link>
+            </HeaderIconWrapper>
+          ) : null}
+          {isLoggedIn ? (
             newNotification ? (
               // TODO: replace with correct path
               <div>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { getMemberProfile, getVisitorProfile } from '@/app/actions/get-profile'
 import { useUser } from '@/context/user'
+import { PickObjective } from '@/types/objective'
 import type { ProfileTypes } from '@/types/profile'
 import { formatFollowCount } from '@/utils/format-follow-count'
 
@@ -21,6 +22,8 @@ const initialProfileState: ProfileTypes = {
   bookmarks: [],
   memberId: '',
   customId: '',
+  collections: [],
+  pickCollections: [],
 }
 
 export default function useProfileState({
@@ -58,8 +61,13 @@ export default function useProfileState({
       pickCount: visitorProfileData.picksCount || 0,
       followingCount: formatFollowCount(visitorProfileData.followingCount || 0),
       followerCount: formatFollowCount(visitorProfileData.followerCount || 0),
-      picksData: visitorProfileData.picks,
+      picksData: visitorProfileData.picks ?? [],
       bookmarks: [], // Assuming visitor doesn't have access to bookmarks
+      collections: visitorProfileResult.collections ?? [],
+      pickCollections:
+        visitorProfileData.picks?.filter(
+          (item) => item.objective === PickObjective.Collection
+        ) ?? [],
     })
   }, [memberId, takesCount])
 

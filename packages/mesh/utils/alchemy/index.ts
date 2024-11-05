@@ -23,7 +23,6 @@ export const queryClient = new QueryClient()
 export const accountType: SupportedAccountTypes = 'LightAccount'
 export const gasManagerConfig: AlchemyGasManagerConfig = {
   policyId: ALCHEMY_ADDRESS.policyId,
-  paymasterAddress: ALCHEMY_ADDRESS.paymaster,
 }
 
 type SmartAccountClientOptions = z.infer<typeof SmartAccountClientOptsSchema>

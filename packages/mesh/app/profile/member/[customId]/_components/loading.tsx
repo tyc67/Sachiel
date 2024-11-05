@@ -37,6 +37,11 @@ export default function Loading() {
         </div>
         <div className="flex flex-1 justify-center  sm:flex-none">
           <div className="button-large flex h-12 w-15 items-center justify-center text-primary-400 sm:w-24">
+            集錦
+          </div>
+        </div>
+        <div className="flex flex-1 justify-center  sm:flex-none">
+          <div className="button-large flex h-12 w-15 items-center justify-center text-primary-400 sm:w-24">
             書籤
           </div>
         </div>
@@ -53,6 +58,28 @@ export default function Loading() {
         ))}
       </div>
       <div className="animate-pulse bg-multi-layer-light">
+        <div className="max-w-[theme(width.maxMain)] p-10 pb-0">
+          <div className="h-5 w-full rounded-sm bg-loading" />
+        </div>
+        <div className="hidden max-w-[theme(width.maxMain)] grow gap-5 p-10 md:grid md:grid-cols-2 lg:grid-cols-3">
+          {Array.from(Array(3)).map((_, i) => (
+            <div
+              key={i}
+              className="overflow-hidden rounded-md drop-shadow md:first-of-type:hidden lg:first-of-type:block"
+            >
+              <div className="aspect-[2/1] bg-loading"></div>
+              <div className="bg-white pb-5 pt-3">
+                <div className="flex flex-col gap-3 px-5 py-3">
+                  <div className="h-5 w-full rounded-sm bg-loading" />
+                  <div className="h-5 w-[200px] rounded-sm bg-loading" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="max-w-[theme(width.maxMain)] p-10 pb-0">
+          <div className="h-5 w-full rounded-sm bg-loading" />
+        </div>
         <div className="hidden max-w-[theme(width.maxMain)] grow gap-5 p-10 md:grid md:grid-cols-2 lg:grid-cols-3">
           {Array.from(Array(3)).map((_, i) => (
             <div

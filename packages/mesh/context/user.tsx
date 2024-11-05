@@ -12,6 +12,9 @@ import { type GetCurrentUserMemberIdQuery } from '@/graphql/__generated__/graphq
 import type { ProfileTypes } from '@/types/profile'
 
 type Member = NonNullable<NonNullable<GetCurrentUserMemberIdQuery>['member']>
+type Collections = NonNullable<
+  NonNullable<GetCurrentUserMemberIdQuery>['collections']
+>
 type FollowingCategories = NonNullable<Member['followingCategories']>
 type FollowingPublishers = NonNullable<Member['followingPublishers']>
 
@@ -36,6 +39,8 @@ export type User = {
   followingCount?: number
   picksData?: ProfileTypes['picksData']
   bookmarks?: ProfileTypes['bookmarks']
+  collections?: Collections
+  pickCollections?: ProfileTypes['picksData']
 }
 
 type UserContextType = {
@@ -45,7 +50,7 @@ type UserContextType = {
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
-const guest: User = {
+export const guest: User = {
   memberId: '',
   avatarImageId: '',
   customId: '',

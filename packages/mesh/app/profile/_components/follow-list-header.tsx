@@ -24,7 +24,7 @@ const FollowListHeader = ({
             onClick={backToPreviousPage}
           >
             <Icon
-              iconName="icon-chevron-left"
+              iconName="icon-chevron-left-hover"
               size={{ width: 20, height: 20 }}
             />
           </button>

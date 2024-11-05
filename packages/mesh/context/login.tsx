@@ -9,6 +9,7 @@ export const LoginState = {
   SetCategory: 'set-category',
   SetFollowing: 'set-following',
   SetWallet: 'set-wallet',
+  Code: 'code',
 } as const
 
 export type LoginStepsKey = typeof LoginState[keyof typeof LoginState]
@@ -18,6 +19,10 @@ export type UserFormData = {
   name: string
   interests: string[]
   followings: string[]
+  code: {
+    id: string
+    code: string
+  }
 }
 
 type LoginContextType = {
@@ -36,6 +41,10 @@ export function LoginProvider({ children }: { children: React.ReactNode }) {
     name: '',
     interests: [],
     followings: [],
+    code: {
+      id: '',
+      code: '',
+    },
   })
   const [lastUsedEmail, setLastUsedEmail] = useState('')
 

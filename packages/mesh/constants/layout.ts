@@ -119,7 +119,7 @@ const NON_MOBILE_NAV_ICONS = {
         hover: 'icon-bookmark-lg-hover',
         on: 'icon-bookmark-lg-on',
       },
-      href: '/bookmark',
+      href: '/profile',
       text: '書籤',
     },
   ],
