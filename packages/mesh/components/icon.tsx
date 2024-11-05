@@ -140,6 +140,7 @@ export type IconName =
   | 'icon-collection-report'
   | 'icon-arrow-forward'
   | 'icon-invitation-code'
+  | 'icon-forbidden'
 
 export type IconProps = {
   size: Size

@@ -162,9 +162,6 @@ export default function ProfileMoreActionButton({
 }
 
 enum ActionType {
-  Sponsor = 'sponsor',
-  AddBookMark = 'add-bookmark',
-  UnFollow = 'unfollow',
   CopyLink = 'copy-link',
   Share = 'Share',
   REPORT = 'report',
@@ -174,8 +171,8 @@ enum ActionType {
 const actions = [
   { type: ActionType.CopyLink, text: '複製個人檔案連結', icon: 'icon-copy' },
   { type: ActionType.Share, text: '分享這個人的個人檔案', icon: 'icon-share' },
-  { type: ActionType.REPORT, text: '檢舉', icon: 'icon-wallet' },
-  { type: ActionType.BLOCK, text: '封鎖', icon: 'icon-wallet' },
+  { type: ActionType.REPORT, text: '檢舉', icon: 'icon-flag' },
+  { type: ActionType.BLOCK, text: '封鎖', icon: 'icon-forbidden' },
 ] as const
 
 const ActionSheet = forwardRef(function ActionSheet(
@@ -266,6 +263,20 @@ const ActionSheet = forwardRef(function ActionSheet(
     >
       {actions.map((action) => {
         switch (action.type) {
+          case ActionType.BLOCK: {
+            return (
+              <button
+                key={action.type}
+                className="flex w-full cursor-pointer gap-1 px-5 py-3 hover:bg-primary-100 sm:w-auto sm:min-w-max sm:py-[9px]"
+                onClick={onAction.bind(null, action.type)}
+              >
+                <Icon iconName={action.icon} size="l" />
+                <span className="button-large shrink-0 text-custom-red-text">
+                  {action.text}
+                </span>
+              </button>
+            )
+          }
           default: {
             return (
               <button
