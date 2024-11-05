@@ -13,6 +13,8 @@ import {
   type CollectionPickStory,
   type PickOrBookmark,
   CollectionFormat,
+  DesktopEditCollectionStep,
+  MobielEditCollectionStep,
 } from '@/app/collection/(mutate)/_types/edit-collection'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { clearCreateCollectionStoryLS } from '@/utils/cross-page-create-collection'
@@ -23,6 +25,18 @@ import {
 } from '@/utils/date'
 
 import { useUser } from './user'
+
+const mobileStepNames = [
+  MobielEditCollectionStep.MobileStep1SelectStories,
+  MobielEditCollectionStep.MobileStep2SetTitle,
+  MobielEditCollectionStep.MobileStep3SetSummary,
+  MobielEditCollectionStep.MobileStep4SortStories,
+]
+
+const desktopStepNames = [
+  DesktopEditCollectionStep.DesktopStep1EditAll,
+  DesktopEditCollectionStep.DesktopStep2SortStories,
+]
 
 type EditCollectionContextValue = {
   step: number
@@ -42,6 +56,8 @@ type EditCollectionContextValue = {
   createCollection: () => void
   checkMobileStepFullfilled: () => boolean
   mobileTitle: string
+  mobileStepName: MobielEditCollectionStep
+  desktopStepName: DesktopEditCollectionStep
 }
 
 const EditCollectionContext = createContext<
@@ -64,35 +80,43 @@ export default function EditCollectionProvider({
   const router = useRouter()
   const { user } = useUser()
   const { width } = useWindowDimensions()
+  const mobileStepName = mobileStepNames[step]
+  const desktopStepName = desktopStepNames[step]
 
   const checkMobileStepFullfilled = () => {
-    switch (step) {
-      case 0:
+    switch (mobileStepName) {
+      case MobielEditCollectionStep.MobileStep1SelectStories:
         return Boolean(collectionPickStories.length)
-      case 1:
+      case MobielEditCollectionStep.MobileStep2SetTitle:
         return Boolean(heroImage) && Boolean(title)
-      case 2:
+      case MobielEditCollectionStep.MobileStep3SetSummary:
         // optional filed
         return true
+      // TODO: implement in phase 2
+      // case MobielEditCollectionStep.MobileStep4SortStories:
+      //   return true
       default:
         return false
     }
   }
 
   const getMobileTitle = useCallback(() => {
-    switch (step) {
-      case 0: {
+    switch (mobileStepName) {
+      case MobielEditCollectionStep.MobileStep1SelectStories: {
         const pickedStoryCount = collectionPickStories.length
         return pickedStoryCount ? `已選${pickedStoryCount}篇` : '選擇文章'
       }
-      case 1:
+      case MobielEditCollectionStep.MobileStep2SetTitle:
         return '標題'
-      case 2:
+      case MobielEditCollectionStep.MobileStep3SetSummary:
         return '敘述'
+      // TODO: implement in phase 2
+      // case MobielEditCollectionStep.MobileStep4SortStories:
+      //   return ''
       default:
         return '建立集錦'
     }
-  }, [collectionPickStories.length, step])
+  }, [collectionPickStories.length, mobileStepName])
   const mobileTitle = getMobileTitle()
 
   const createCollection = async () => {
@@ -160,6 +184,8 @@ export default function EditCollectionProvider({
         createCollection,
         checkMobileStepFullfilled,
         mobileTitle,
+        mobileStepName,
+        desktopStepName,
       }}
     >
       {children}

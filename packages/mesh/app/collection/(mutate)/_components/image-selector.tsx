@@ -43,6 +43,7 @@ export default function ImageSelector({
       try {
         const file = await getImageFileFromImageElement(imageRef.current)
         setHeroImage(file)
+        onClose()
       } catch (error) {
         console.error('get image from imageRef failed,', error)
       }

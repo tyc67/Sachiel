@@ -1,7 +1,7 @@
 'use client'
 
 import DesktopEditCollection from '../_components/desktop/desktop-edit-collection'
-import MobileNewCollection from '../_components/mobile/mobile-new-collection'
+import MobileNewCollection from '../_components/mobile/new-collection'
 
 export default function NewCollectionPage() {
   return (

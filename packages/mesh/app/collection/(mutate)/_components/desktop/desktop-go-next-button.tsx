@@ -1,15 +1,22 @@
 import Button from '@/components/button'
 import { useEditCollection } from '@/context/edit-collection'
 
+import { DesktopEditCollectionStep } from '../../_types/edit-collection'
+
 export default function DesktopGoNextButton() {
-  const { step, heroImage, collectionPickStories, title, createCollection } =
-    useEditCollection()
+  const {
+    desktopStepName,
+    heroImage,
+    collectionPickStories,
+    title,
+    createCollection,
+  } = useEditCollection()
   const canGoToNextStep =
     !!heroImage && !!collectionPickStories.length && !!title
 
-  switch (step) {
+  switch (desktopStepName) {
     // TODO: two step creation
-    case 0:
+    case DesktopEditCollectionStep.DesktopStep1EditAll:
       return (
         <Button
           onClick={createCollection}
@@ -19,7 +26,9 @@ export default function DesktopGoNextButton() {
           text="建立集錦"
         />
       )
-
+    // TODO: implement in phase2
+    // case DesktopEditCollectionStep.DesktopStep2SortStories:
+    //   return null
     default:
       return null
   }

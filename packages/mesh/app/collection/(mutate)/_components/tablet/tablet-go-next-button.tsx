@@ -1,19 +1,25 @@
 import Button from '@/components/button'
 import { useEditCollection } from '@/context/edit-collection'
 
+import { MobielEditCollectionStep } from '../../_types/edit-collection'
+
 export default function TabletGoNextButton() {
-  const { step, setStep, checkMobileStepFullfilled, createCollection } =
-    useEditCollection()
+  const {
+    mobileStepName,
+    setStep,
+    checkMobileStepFullfilled,
+    createCollection,
+  } = useEditCollection()
 
   const isStepFullfilled = checkMobileStepFullfilled()
 
   const goNextStep = () => {
-    setStep(step + 1)
+    setStep((step) => step + 1)
   }
 
-  switch (step) {
-    case 0:
-    case 1:
+  switch (mobileStepName) {
+    case MobielEditCollectionStep.MobileStep1SelectStories:
+    case MobielEditCollectionStep.MobileStep2SetTitle:
       return (
         <Button
           text="下一步"
@@ -23,7 +29,7 @@ export default function TabletGoNextButton() {
           onClick={goNextStep}
         />
       )
-    case 2:
+    case MobielEditCollectionStep.MobileStep3SetSummary:
       return (
         <Button
           text="建立"
@@ -33,7 +39,9 @@ export default function TabletGoNextButton() {
           onClick={createCollection}
         />
       )
-
+    // TODO: implement in phase2
+    // case MobielEditCollectionStep.MobileStep4SortStories:
+    //   return null
     default:
       return null
   }

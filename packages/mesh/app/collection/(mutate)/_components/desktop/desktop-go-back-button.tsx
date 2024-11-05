@@ -5,16 +5,18 @@ import Dialog from '@/components/dialog'
 import GoBackButton from '@/components/navigation/go-back-button'
 import { useEditCollection } from '@/context/edit-collection'
 
+import { DesktopEditCollectionStep } from '../../_types/edit-collection'
+
 export default function DesktopGoBackButton() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
-  const { step, setStep } = useEditCollection()
+  const { setStep, desktopStepName } = useEditCollection()
 
   const onGoBackClicked = () => {
-    if (step === 0) {
+    if (desktopStepName === DesktopEditCollectionStep.DesktopStep1EditAll) {
       dialogRef.current?.showModal()
     } else {
-      setStep(step - 1)
+      setStep((step) => step - 1)
     }
   }
 

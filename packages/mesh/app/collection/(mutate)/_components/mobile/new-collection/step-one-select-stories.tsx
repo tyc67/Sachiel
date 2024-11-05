@@ -4,52 +4,31 @@ import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
 import Spinner from '@/components/spinner'
 import { useEditCollection } from '@/context/edit-collection'
 import { useUser } from '@/context/user'
-import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collection'
 
-import { picksAndBookmarksPageCount } from '../../_const/edit-collection'
-import type { CollectionPickStory } from '../../_types/edit-collection'
-import InfiniteCollectionPicks from '../infinite-collection-picks'
-import PickStoryCard from '../pick-story-card'
+import { picksAndBookmarksPageCount } from '../../../_const/edit-collection'
+import type { CollectionPickStory } from '../../../_types/edit-collection'
+import InfiniteCollectionPicks from '../../infinite-collection-picks'
+import PickStoryCard from '../../pick-story-card'
+import TabletGoNextButton from '../../tablet/tablet-go-next-button'
 
-export default function DesktopCollectionPicks() {
-  const [fixedStory, setFixedStory] = useState<CollectionPickStory | null>(null)
-
-  const { step, collectionPickStories, setCollectionPickStories } =
-    useEditCollection()
-
-  useEffect(() => {
-    if (!collectionPickStories.length) {
-      const story = getCrossPageCollectinPickStory()
-      if (story) {
-        setFixedStory(story)
-        setCollectionPickStories([story])
-      }
-    }
-  }, [collectionPickStories.length, setCollectionPickStories])
-
-  const getStepJsx = (step: number) => {
-    switch (step) {
-      case 0:
-        return <Step1 fixedStory={fixedStory} />
-      case 1:
-        return null
-      default:
-        return null
-    }
-  }
-
+export default function MobileStep1SelectStories({
+  fixedStory,
+}: {
+  fixedStory: CollectionPickStory | null
+}) {
   return (
-    <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
-      {getStepJsx(step)}
-    </div>
-  )
-}
-
-const Step1 = ({ fixedStory }: { fixedStory: CollectionPickStory | null }) => {
-  return !fixedStory ? (
-    <Step1PickStories />
-  ) : (
-    <Step1FixedStory fixedStory={fixedStory} />
+    <>
+      {!fixedStory ? (
+        <Step1PickStories />
+      ) : (
+        <Step1FixedStory fixedStory={fixedStory} />
+      )}
+      <div className="fixed inset-x-0 bottom-0 hidden items-center justify-center bg-white py-4 sm:flex lg:hidden">
+        <div className="w-[335px]">
+          <TabletGoNextButton />
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -93,12 +72,14 @@ const Step1PickStories = () => {
   return isLoading ? (
     <Spinner />
   ) : (
-    <InfiniteCollectionPicks
-      key={candidates.length}
-      candidates={candidates}
-      loadMore={loadMorePicksAndBookmarks}
-      shouldLoadMore={shouldLoadMore}
-    />
+    <div className="mb-[72px] flex grow flex-col">
+      <InfiniteCollectionPicks
+        key={candidates.length}
+        candidates={candidates}
+        loadMore={loadMorePicksAndBookmarks}
+        shouldLoadMore={shouldLoadMore}
+      />
+    </div>
   )
 }
 

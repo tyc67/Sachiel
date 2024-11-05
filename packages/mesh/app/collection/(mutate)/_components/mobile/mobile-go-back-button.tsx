@@ -5,16 +5,18 @@ import Dialog from '@/components/dialog'
 import GoBackButton from '@/components/navigation/go-back-button'
 import { useEditCollection } from '@/context/edit-collection'
 
+import { MobielEditCollectionStep } from '../../_types/edit-collection'
+
 export default function MobileGoBackButton() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
-  const { step, setStep } = useEditCollection()
+  const { setStep, mobileStepName } = useEditCollection()
 
   const onGoBackClicked = () => {
-    if (step === 0) {
+    if (mobileStepName === MobielEditCollectionStep.MobileStep1SelectStories) {
       dialogRef.current?.showModal()
     } else {
-      setStep(step - 1)
+      setStep((step) => step - 1)
     }
   }
   return (
