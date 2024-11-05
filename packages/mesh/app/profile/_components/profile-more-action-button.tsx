@@ -10,8 +10,11 @@ import ShareSheet from '@/components/share-sheet'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import useClickOutside from '@/hooks/use-click-outside'
-import { getMemberProfileUrl, getStoryUrl } from '@/utils/get-url'
+import { getMemberProfileUrl } from '@/utils/get-url'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
+
+import BlockSheet from './block-sheet'
+import ReportSheet from './report-sheet'
 
 type Position = {
   top: number
@@ -37,6 +40,8 @@ export default function ProfileMoreActionButton({
 }) {
   const [shouldShowShareSheet, setShouldShowShareSheet] = useState(false)
   const [shouldShowActionSheet, setShouldShowActionSheet] = useState(false)
+  const [shouldShowReportSheet, setShouldShowReportSheet] = useState(false)
+  const [shouldShowBlockSheet, setShouldShowBlockSheet] = useState(false)
   const [position, setPosition] = useState<Position>({
     top: Infinity,
     left: Infinity,
@@ -72,6 +77,23 @@ export default function ProfileMoreActionButton({
     setShouldShowShareSheet(false)
   }
 
+  const openReportSheet = () => {
+    setShouldShowActionSheet(false)
+    setShouldShowReportSheet(true)
+  }
+
+  const closeReportSheet = () => {
+    setShouldShowReportSheet(false)
+  }
+
+  const openBlockSheet = () => {
+    setShouldShowActionSheet(false)
+    setShouldShowBlockSheet(true)
+  }
+
+  const closeBlockSheet = () => {
+    setShouldShowBlockSheet(false)
+  }
   useEffect(() => {
     const onScroll = () => {
       closeActionSheet()
@@ -119,12 +141,21 @@ export default function ProfileMoreActionButton({
           publisherId={publisherId}
           onClose={closeActionSheet}
           openShareSheet={openShareSheet}
+          openReportSheet={openReportSheet}
+          openBlockSheet={openBlockSheet}
           canUnFollowPublisher={canUnFollowPublisher}
           position={position}
         />
       )}
       {shouldShowShareSheet && (
-        <ShareSheet onClose={closeShareSheet} url={getStoryUrl('')} />
+        <ShareSheet
+          onClose={closeShareSheet}
+          url={getMemberProfileUrl(customId)}
+        />
+      )}
+      {shouldShowReportSheet && <ReportSheet onClose={closeReportSheet} />}
+      {shouldShowBlockSheet && (
+        <BlockSheet customId={customId} onClose={closeBlockSheet} />
       )}
     </div>
   )
@@ -152,12 +183,16 @@ const ActionSheet = forwardRef(function ActionSheet(
     customId,
     publisherId,
     openShareSheet,
+    openBlockSheet,
+    openReportSheet,
     position,
     onClose,
   }: {
     customId: string
     publisherId: string
     openShareSheet: () => void
+    openReportSheet: () => void
+    openBlockSheet: () => void
     canUnFollowPublisher: boolean
     position: Position
     onClose: () => void
@@ -194,6 +229,12 @@ const ActionSheet = forwardRef(function ActionSheet(
       }
       case ActionType.Share:
         openShareSheet()
+        break
+      case ActionType.REPORT:
+        openReportSheet()
+        break
+      case ActionType.BLOCK:
+        openBlockSheet()
         break
       default:
         break
