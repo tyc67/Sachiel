@@ -6,6 +6,19 @@ mutation SignUpMember($registrationData: MemberCreateInput!) {
   }
 }
 
+mutation UpdateMemberInvitedBy($codeId: ID, $memberId: ID) {
+  updateMember(
+    where: { id: $memberId }
+    data: { invited_by: { connect: { id: $codeId } } }
+  ) {
+    id
+    invited_by {
+      id
+      code
+    }
+  }
+}
+
 mutation UpdateMemberProfile(
   $customId: String
   $changedCustomId: String
@@ -62,5 +75,11 @@ mutation UpdateWalletAddress($id: ID!, $wallet: String!) {
   updateMember(where: { id: $id }, data: { wallet: $wallet }) {
     id
     wallet
+  }
+}
+
+mutation DeactiveMember($memberId: ID!) {
+  updateMember(where: { id: $memberId }, data: { is_active: false }) {
+    is_active
   }
 }

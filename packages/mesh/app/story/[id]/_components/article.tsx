@@ -53,7 +53,7 @@ export default function Article({
         </>
       )
     } else {
-      const isExternal = story?.full_content
+      const isExternal = story?.source?.full_content
 
       if (isExternal) {
         return (

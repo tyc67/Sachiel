@@ -61,6 +61,7 @@ const ArticleCard = ({
             avatar,
           },
         }
+  if (!storyData.og_title) return <></>
   return (
     <>
       <CommentProvider

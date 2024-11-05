@@ -8,7 +8,7 @@ import InteractiveIcon from '@/components/interactive-icon'
 import Avatar from '@/components/story-card/avatar'
 import { MOBILE_NAV_ICONS, NON_MOBILE_NAV_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
-import { logout } from '@/utils/logout'
+import { TabCategory } from '@/types/profile'
 import { matchPath } from '@/utils/nav-button'
 
 type IconInfo = {
@@ -87,6 +87,20 @@ const NonMobileNav = ({
                     avatarUrl={avatarUrl}
                   />
                 )
+              } else if (iconInfo.text === '書籤') {
+                return (
+                  <NonMobileNavIcon
+                    key={iconInfo.text}
+                    isOn={matchPath(iconInfo.href, path)}
+                    iconInfo={{
+                      ...iconInfo,
+                      href:
+                        iconInfo.href +
+                        `/member/${userCustomId}?tab=${TabCategory.BOOKMARKS}`,
+                    }}
+                    avatarUrl={avatarUrl}
+                  />
+                )
               } else {
                 return (
                   <NonMobileNavIcon
@@ -102,17 +116,13 @@ const NonMobileNav = ({
         {/* bottom (third) part */}
         {isLoggedIn && (
           <div className="flex flex-col border-t py-6">
-            {/* TODO: uncomment after setting page is implemented */}
-            {/* {NON_MOBILE_NAV_ICONS.third.map((iconInfo) => (
-            <NonMobileNavIcon
-              key={iconInfo.text}
-              isOn={matchPath(iconInfo.href, path)}
-              iconInfo={iconInfo}
-            />
-          ))} */}
-            <button className="button text-primary-500" onClick={logout}>
-              登出
-            </button>
+            {NON_MOBILE_NAV_ICONS.third.map((iconInfo) => (
+              <NonMobileNavIcon
+                key={iconInfo.text}
+                isOn={matchPath(iconInfo.href, path)}
+                iconInfo={iconInfo}
+              />
+            ))}
           </div>
         )}
       </div>

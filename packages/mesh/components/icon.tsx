@@ -129,12 +129,17 @@ export type IconName =
   | 'icon-liked'
   | 'icon-toast-success'
   | 'icon-toast-fail'
+  | 'icon-apple'
+  | 'icon-facebook-square'
+  | 'icon-google'
   | 'icon-deleted-collection'
   | 'icon-collection-folder'
   | 'icon-collection-delete'
   | 'icon-collection-edit-stories'
   | 'icon-collection-edit'
   | 'icon-collection-report'
+  | 'icon-arrow-forward'
+  | 'icon-invitation-code'
 
 export type IconProps = {
   size: Size

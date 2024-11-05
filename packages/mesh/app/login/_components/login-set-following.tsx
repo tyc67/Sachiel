@@ -6,7 +6,7 @@ import Button from '@/components/button'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
 import { socialPageAvatarLayer } from '@/constants/z-index'
-import { useLogin } from '@/context/login'
+import { LoginState, useLogin } from '@/context/login'
 import { useUser } from '@/context/user'
 import { auth } from '@/firebase/client'
 import type { GetMemberByFollowingCategoryQuery } from '@/graphql/__generated__/graphql'
@@ -71,7 +71,7 @@ export default function LoginSetFollowing() {
         ...prev,
         email: response.email || formData.email,
       }))
-      setStep('set-wallet')
+      setStep(LoginState.SetWallet)
     }
 
     setLoading(false)
