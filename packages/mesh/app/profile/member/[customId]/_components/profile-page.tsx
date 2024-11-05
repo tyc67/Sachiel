@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
@@ -35,12 +35,16 @@ interface ProfilePageProps {
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const { user } = useUser()
+  const searchParams = useSearchParams()
+  const queryTab = searchParams.get('tab')
   const { visitorProfile, isProfileError, isProfileLoading } = useEditProfile()
   const router = useRouter()
   const pathName = usePathname()
   const currentUrl = pathName
 
-  const [category, setCategory] = useState<TabCategoryType>(TabCategory.PICKS)
+  const [category, setCategory] = useState<TabCategoryType>(
+    (queryTab as TabCategoryType) ?? TabCategory.PICKS
+  )
   const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile

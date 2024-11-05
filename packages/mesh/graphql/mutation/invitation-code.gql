@@ -1,0 +1,10 @@
+mutation InvalidateInvitationCode($codeId: ID, $memberId: ID) {
+  updateInvitationCode(
+    where: { id: $codeId }
+    data: { expired: true, receive: { connect: { id: $memberId } } }
+  ) {
+    id
+    code
+    expired
+  }
+}
