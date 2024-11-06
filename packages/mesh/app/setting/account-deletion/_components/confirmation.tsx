@@ -2,14 +2,14 @@
 
 import { type User, deleteUser, onAuthStateChanged } from 'firebase/auth'
 import type { FirebaseError } from 'firebase-admin/app'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 
 import { deactiveMember } from '@/app/actions/auth'
 import Button from '@/components/button'
-import { DELETION_STEP } from '@/constants/config'
+import { DELETION_STEP } from '@/constants/setting'
 import { useUser } from '@/context/user'
 import { auth } from '@/firebase/client'
 
@@ -22,15 +22,15 @@ type Props = {
 }
 
 export default function Confirmation({ setDeleteStatus }: Props) {
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [firebaseUser, setFirebaseUser] = useState<User | null>(null)
   const { user } = useUser()
-
+  const router = useRouter()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(user)
+        setFirebaseUser(user)
       } else {
-        setCurrentUser(null)
+        setFirebaseUser(null)
       }
     })
     return () => unsubscribe()
@@ -40,12 +40,12 @@ export default function Confirmation({ setDeleteStatus }: Props) {
   if (!memberId) redirect('/login')
 
   const handleDeleteMember = async () => {
-    if (!currentUser) {
+    if (!firebaseUser) {
       return
     }
 
     try {
-      await deleteUser(currentUser)
+      await deleteUser(firebaseUser)
       const result = await deactiveMember(memberId)
       if (!result.success) {
         setDeleteStatus(DELETION_STEP.FAILURE)
@@ -71,9 +71,12 @@ export default function Confirmation({ setDeleteStatus }: Props) {
             </p>
           </div>
           <div className="w-full max-w-[295px] sm:max-w-[320px]">
-            <Link href="/setting">
-              <Button size="lg" color="transparent" text="那我再想想" />
-            </Link>
+            <Button
+              size="lg"
+              color="transparent"
+              text="那我再想想"
+              onClick={() => router.push('/setting')}
+            />
           </div>
           <button
             onClick={() => handleDeleteMember()}

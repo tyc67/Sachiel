@@ -4,37 +4,30 @@ import { onAuthStateChanged } from 'firebase/auth'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-import type { IconName } from '@/components/icon'
 import Icon from '@/components/icon'
 import InteractiveIcon from '@/components/interactive-icon'
-import { ACTION_NAMES } from '@/constants/config'
+import { ACTION_NAMES, ICON_MAP } from '@/constants/setting'
 import { useUser } from '@/context/user'
 import { auth } from '@/firebase/client'
 import { logout } from '@/utils/logout'
 
 export default function NonMobileAccountActions() {
-  const [logInMethodName, setlogInMethodName] = useState('')
+  const [logInMethodName, setLogInMethodName] = useState('')
   const { user } = useUser()
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setlogInMethodName(user.providerData[0].providerId)
+        setLogInMethodName(user.providerData[0].providerId)
       } else {
-        setlogInMethodName('')
+        setLogInMethodName('')
       }
     })
 
     return () => unsubscribe()
   }, [])
 
-  const iconMap: { [key: string]: IconName } = {
-    'google.com': 'icon-google',
-    'facebook.com': 'icon-facebook',
-    'apple.com': 'icon-apple',
-  }
-
-  const iconName = iconMap[logInMethodName] || null
+  const iconName = ICON_MAP[logInMethodName] || null
 
   return (
     <section className="body-2 hidden w-articleMain rounded-xl bg-single-layer text-primary-700 shadow-[0_0_4px_0_rgba(0,9,40,0.1),0_2px_2px_0_rgba(0,9,40,0.1)] sm:block">
