@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react'
 
-import type { CreateCollectionParams } from '@/app/actions/mutate-collection'
-import { createCollection as sendCreateCollection } from '@/app/actions/mutate-collection'
+import type { CreateCollectionParams } from '@/app/actions/collection'
+import { createCollection as sendCreateCollection } from '@/app/actions/collection'
 import {
   type CollectionPickStory,
   type PickOrBookmark,

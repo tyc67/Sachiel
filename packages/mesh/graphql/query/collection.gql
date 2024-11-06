@@ -3,6 +3,7 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
     id
     title
     heroImage {
+      id
       resized {
         original
       }
@@ -130,6 +131,32 @@ query GetCollectionToEdit($id: ID) {
       }
       sort_order
       picked_date
+    }
+  }
+}
+
+query GetMemberCollections($creatorId: ID) {
+  collections(
+    where: {
+      status: { equals: "publish" }
+      creator: { id: { equals: $creatorId } }
+    }
+    orderBy: { createdAt: desc }
+  ) {
+    id
+    title
+    heroImage {
+      urlOriginal
+      resized {
+        original
+      }
+    }
+    collectionpicks(orderBy: { sort_order: asc }) {
+      id
+      sort_order
+      story {
+        id
+      }
     }
   }
 }

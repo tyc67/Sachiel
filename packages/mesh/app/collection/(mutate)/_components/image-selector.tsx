@@ -58,7 +58,7 @@ export default function ImageSelector({
   return (
     <div className="fixed inset-0 z-modal flex items-center justify-center bg-lightbox-light">
       <div
-        className="relative flex size-full flex-col bg-white sm:h-[540px] sm:w-[480px] sm:rounded-md sm:shadow-[0px_0px_24px_0px_rgba(0,9,40,0.1),0px_2px_40px_0px_rgba(0,9,40,0.1)]"
+        className="relative flex size-full flex-col bg-white sm:h-[540px] sm:w-[480px] sm:rounded-md sm:shadow-light-box"
         onClick={(evt) => {
           evt.stopPropagation()
         }}

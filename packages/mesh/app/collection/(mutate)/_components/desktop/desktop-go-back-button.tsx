@@ -27,7 +27,7 @@ export default function DesktopGoBackButton() {
         ref={dialogRef}
         title="確認要退出編輯？"
         description="系統不會儲存您所做的變更"
-        primayAction={{
+        primaryAction={{
           text: '繼續編輯',
           action: () => {
             dialogRef.current?.close()

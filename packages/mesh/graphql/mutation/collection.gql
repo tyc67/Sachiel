@@ -34,3 +34,45 @@ mutation UpdateCollection($id: ID, $data: CollectionUpdateInput!) {
     title
   }
 }
+
+mutation AddStoryToCollection(
+  $id: ID
+  $storyId: ID
+  $sortOrder: Int
+  $memberId: ID
+  $pickDate: DateTime
+) {
+  updateCollection(
+    where: { id: $id }
+    data: {
+      collectionpicks: {
+        create: [
+          {
+            story: { connect: { id: $storyId } }
+            sort_order: $sortOrder
+            creator: { connect: { id: $memberId } }
+            picked_date: $pickDate
+          }
+        ]
+      }
+    }
+  ) {
+    collectionpicks {
+      story {
+        title
+      }
+    }
+  }
+}
+
+mutation RemoveCollection($collectionId: ID, $heroImageId: ID) {
+  updateCollection(
+    where: { id: $collectionId }
+    data: { status: "delete", heroImage: { disconnect: true } }
+  ) {
+    status
+  }
+  deletePhoto(where: { id: $heroImageId }) {
+    id
+  }
+}

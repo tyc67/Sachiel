@@ -130,10 +130,12 @@ export default function Article({
               <div className="hidden items-center gap-1 sm:flex">
                 <PublisherDonateButton publisherId={story?.source?.id ?? ''} />
                 <StoryPickButton storyId={story?.id ?? ''} />
-                <StoryMoreActionButton
-                  storyId={story?.id ?? ''}
-                  publisherId={story?.source?.id ?? ''}
-                />
+                {story && (
+                  <StoryMoreActionButton
+                    story={story}
+                    publisherId={story?.source?.id ?? ''}
+                  />
+                )}
               </div>
             </div>
           </div>

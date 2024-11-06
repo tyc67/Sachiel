@@ -62,7 +62,7 @@ export default forwardRef(function StoryCard(
             </h4>
           </Link>
           <StoryMoreActionButton
-            storyId={story.id}
+            story={story}
             publisherId={story.source?.id ?? ''}
             canUnFollowPublisher={true}
           />

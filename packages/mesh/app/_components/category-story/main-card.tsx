@@ -40,7 +40,7 @@ export default function MainCard({ story }: Props) {
             </NextLink>
 
             <StoryMoreActionButton
-              storyId={story.id}
+              story={story}
               publisherId={story.source.id ?? ''}
             />
           </div>

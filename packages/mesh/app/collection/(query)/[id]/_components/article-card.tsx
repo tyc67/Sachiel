@@ -42,10 +42,12 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
           <p className="caption-1 text-primary-500">
             {(story?.source && story?.source.title) ?? '預設媒體'}
           </p>
-          <StoryMoreActionButton
-            storyId={story?.id ?? ''}
-            publisherId={story?.source?.id ?? ''}
-          />
+          {story && (
+            <StoryMoreActionButton
+              story={story}
+              publisherId={story?.source?.id ?? ''}
+            />
+          )}
         </section>
         <section className="mb-2 flex items-start justify-between sm:gap-10">
           <div className="flex h-full flex-col justify-between">

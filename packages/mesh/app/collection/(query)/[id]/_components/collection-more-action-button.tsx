@@ -1,10 +1,13 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import type { ForwardedRef, MouseEventHandler, RefObject } from 'react'
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
 
+import { removeCollection } from '@/app/actions/collection'
+import Dialog from '@/components/dialog'
 import Icon from '@/components/icon'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
@@ -18,6 +21,16 @@ type Position = {
   top: number
   left: number
 }
+
+enum ActionType {
+  EditTitle = 'edit-title',
+  EditDescription = 'edit-description',
+  EditStories = 'edit-stories',
+  Delete = 'delete',
+  Report = 'report',
+}
+
+type DialogActionType = ActionType.Delete | ActionType.Report
 
 const isPositionValid = (position: Position) => {
   return Number.isFinite(position.top) && Number.isFinite(position.left)
@@ -37,7 +50,15 @@ export default function CollectionMoreActionButton({
     top: Infinity,
     left: Infinity,
   })
+  const [dialogActionType, setDialogActionType] = useState<DialogActionType>(
+    ActionType.Delete
+  )
   const actionSheetRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const router = useRouter()
+
+  const { user } = useUser()
+  const { addToast } = useToast()
 
   useClickOutside(actionSheetRef, () => {
     closeActionSheet()
@@ -58,6 +79,52 @@ export default function CollectionMoreActionButton({
   const closeActionSheet = useCallback(() => {
     setShouldShowActionSheet(false)
   }, [])
+
+  const openDialog = (dialogActionType: DialogActionType) => {
+    setDialogActionType(dialogActionType)
+    closeActionSheet()
+    dialogRef.current?.showModal()
+  }
+
+  const dialogInfos = {
+    [ActionType.Delete]: {
+      title: '確認刪除集錦',
+      description: '此動作無法還原',
+      primaryAction: {
+        text: '取消',
+        action: () => {
+          dialogRef.current?.close()
+        },
+      },
+      secondaryAction: {
+        text: '刪除集錦',
+        action: async () => {
+          const response = await removeCollection({
+            collectionId: collection.id,
+            heroImageId: collection.heroImage?.id ?? '',
+          })
+          if (response) {
+            router.push(`/profile/member/${user.customId}?tab=COLLECTIONS`)
+          } else {
+            addToast({ status: 'fail', text: '刪除集錦失敗' })
+          }
+          dialogRef.current?.close()
+        },
+      },
+    },
+    [ActionType.Report]: {
+      title: '檢舉成功',
+      description: '我們已收到您的檢舉，感謝提供資訊。',
+      primaryAction: {
+        text: '好的',
+        action: () => {
+          dialogRef.current?.close()
+        },
+      },
+    },
+  }
+
+  const dialogInfo = dialogInfos[dialogActionType]
 
   useEffect(() => {
     const onScroll = () => {
@@ -83,58 +150,58 @@ export default function CollectionMoreActionButton({
   }, [closeActionSheet, nestedScrollContainerRef])
 
   return (
-    <div className="relative">
-      <button
-        onClick={openActionSheet}
-        className={twMerge('group flex items-center justify-center', className)}
-      >
-        <Icon
-          iconName="icon-more-horiz"
-          size="l"
-          className="group-hover:hidden"
-        />
-        <Icon
-          iconName="icon-more-horiz-hover"
-          size="l"
-          className="hidden group-hover:block"
-        />
-      </button>
-      {shouldShowActionSheet && (
-        <ActionSheet
-          collection={collection}
-          ref={actionSheetRef}
-          onClose={closeActionSheet}
-          position={position}
-        />
-      )}
-    </div>
+    <>
+      <div className="relative">
+        <button
+          onClick={openActionSheet}
+          className={twMerge(
+            'group flex items-center justify-center',
+            className
+          )}
+        >
+          <Icon
+            iconName="icon-more-horiz"
+            size="l"
+            className="group-hover:hidden"
+          />
+          <Icon
+            iconName="icon-more-horiz-hover"
+            size="l"
+            className="hidden group-hover:block"
+          />
+        </button>
+        {shouldShowActionSheet && (
+          <ActionSheet
+            collection={collection}
+            ref={actionSheetRef}
+            onClose={closeActionSheet}
+            position={position}
+            onOpenDialog={openDialog}
+          />
+        )}
+      </div>
+      <Dialog ref={dialogRef} {...dialogInfo} />
+    </>
   )
 }
 
-enum ActionType {
-  EditTitle = 'edit-title',
-  EditDescription = 'edit-description',
-  EditStories = 'edit-stories',
-  Delete = 'delete',
-  Report = 'report',
-}
-
 const creatorActions = [
-  {
-    type: ActionType.EditTitle,
-    text: '修改標題',
-    icon: 'icon-collection-edit',
-  },
-  {
-    type: ActionType.EditDescription,
-    text: '修改敘述',
-    icon: 'icon-collection-edit',
-  },
-  {
-    type: ActionType.EditStories,
-    text: '編輯內容與排序',
-    icon: 'icon-collection-edit-stories',
-  },
+  // TODO: implement in phase 2
+  // {
+  //   type: ActionType.EditTitle,
+  //   text: '修改標題',
+  //   icon: 'icon-collection-edit',
+  // },
+  // {
+  //   type: ActionType.EditDescription,
+  //   text: '修改敘述',
+  //   icon: 'icon-collection-edit',
+  // },
+  // {
+  //   type: ActionType.EditStories,
+  //   text: '編輯內容與排序',
+  //   icon: 'icon-collection-edit-stories',
+  // },
   { type: ActionType.Delete, text: '刪除集錦', icon: 'icon-collection-delete' },
   { type: ActionType.Report, text: '檢舉', icon: 'icon-collection-report' },
 ] as const
@@ -147,15 +214,19 @@ const ActionSheet = forwardRef(function ActionSheet(
   {
     collection,
     position,
+    onClose,
+    onOpenDialog,
   }: {
     collection: Collection
     position: Position
     onClose: () => void
+    onOpenDialog: (actionType: DialogActionType) => void
   },
   ref: ForwardedRef<HTMLDivElement>
 ) {
   const { user } = useUser()
   const { addToast } = useToast()
+
   const hasPosition = isPositionValid(position)
 
   const isCreator = collection.creator?.customId === user.customId
@@ -170,23 +241,27 @@ const ActionSheet = forwardRef(function ActionSheet(
     switch (type) {
       case ActionType.EditTitle: {
         // TODO: enter edit title
-
+        onClose()
         break
       }
       case ActionType.EditDescription: {
         // TODO: enter edit description
+        onClose()
         break
       }
       case ActionType.EditStories: {
         // TODO: enter edit stories
+        onClose()
         break
       }
       case ActionType.Delete: {
         // TODO: double check to delete collection
+        onOpenDialog(ActionType.Delete)
         break
       }
       case ActionType.Report: {
         // TODO: report the collection
+        onOpenDialog(ActionType.Report)
         break
       }
       default:
@@ -194,34 +269,44 @@ const ActionSheet = forwardRef(function ActionSheet(
     }
   }
 
-  return createPortal(
-    <div
-      ref={ref}
-      className="fixed bottom-0 left-0 z-modal flex w-full flex-col bg-white py-2 shadow-[0px_0px_8px_0px_rgba(0,0,0,0.1),0px_-8px_20px_0px_rgba(0,0,0,0.1)] sm:fixed sm:inset-[unset] sm:top-0 sm:w-[unset] sm:min-w-[180px] sm:rounded-md sm:px-0 sm:shadow-light-box"
-      style={
-        hasPosition
-          ? {
-              top: position.top,
-              left: position.left - 180 + 20,
-            }
-          : undefined
-      }
-    >
-      {actions.map((action) => {
-        return (
-          <button
-            key={action.type}
-            className="flex w-full cursor-pointer gap-1 px-5 py-3 hover:bg-primary-100 sm:w-auto sm:min-w-max sm:py-[9px]"
-            onClick={onAction.bind(null, action.type)}
-          >
-            <Icon iconName={action.icon} size="l" />
-            <span className="button-large shrink-0 text-primary-700">
-              {action.text}
-            </span>
-          </button>
-        )
-      })}
-    </div>,
-    document.body
+  return (
+    <>
+      {createPortal(
+        <div
+          ref={ref}
+          className="fixed bottom-0 left-0 z-modal flex w-full flex-col bg-white py-2 shadow-[0px_0px_8px_0px_rgba(0,0,0,0.1),0px_-8px_20px_0px_rgba(0,0,0,0.1)] sm:fixed sm:inset-[unset] sm:top-0 sm:w-[unset] sm:min-w-[180px] sm:rounded-md sm:px-0 sm:shadow-light-box"
+          style={
+            hasPosition
+              ? {
+                  top: position.top,
+                  left: position.left - 180 + 20,
+                }
+              : undefined
+          }
+        >
+          {actions.map((action) => {
+            return (
+              <button
+                key={action.type}
+                className="flex w-full cursor-pointer gap-1 px-5 py-3 hover:bg-primary-100 sm:w-auto sm:min-w-max sm:py-[9px]"
+                onClick={onAction.bind(null, action.type)}
+              >
+                <Icon iconName={action.icon} size="l" />
+                <span
+                  className={`button-large shrink-0  ${
+                    action.type === ActionType.Delete
+                      ? 'text-custom-red-text'
+                      : 'text-primary-700'
+                  }`}
+                >
+                  {action.text}
+                </span>
+              </button>
+            )
+          })}
+        </div>,
+        document.body
+      )}
+    </>
   )
 })
