@@ -4,6 +4,7 @@ import Button from '@/components/button'
 type ReportSheet = {
   onClose: () => void
 }
+// TODO: onClose 尚未實作，等待api
 const ReportSheet = ({ onClose }: ReportSheet) => {
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-lightbox-dark">
