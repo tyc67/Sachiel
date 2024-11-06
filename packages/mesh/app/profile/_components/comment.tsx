@@ -78,7 +78,7 @@ const Comment: React.FC<CommentProps> = ({
         </div>
       </div>
       <div
-        className={`relative md:flex md:items-start ${
+        className={`relative md:flex md:items-center ${
           needClamp ? '' : 'after:opacity-0'
         } after:body-3 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-primary-100 after:to-25% after:pl-6 after:text-primary-400 after:content-['...繼續閱讀'] md:after:bottom-[6px]`}
         onClick={handleCommentClick}
