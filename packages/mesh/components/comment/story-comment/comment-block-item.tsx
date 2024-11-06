@@ -71,6 +71,7 @@ const CommentBlockItem = ({
         : EditDrawerShowType.Other
     initializeEditCommentDrawer(editMode, commentId, commentContent)
   }
+  console.log(comment.content)
 
   return (
     <li
