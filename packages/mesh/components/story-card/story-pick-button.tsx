@@ -38,7 +38,10 @@ export default function StoryPickButton({
       color={color}
       text="精選"
       icon={{ iconName: 'icon-star-primary', size: 's' }}
-      onClick={handleClickPick}
+      onClick={(evt) => {
+        evt.preventDefault()
+        handleClickPick()
+      }}
       activeState={{
         isActive: isStoryPicked,
         activeText: '已精選',

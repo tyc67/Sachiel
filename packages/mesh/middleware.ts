@@ -9,6 +9,7 @@ export async function middleware(request: NextRequest) {
     /^\/profile(\/.*)?$/,
     /^\/payment(\/.*)?$/,
     /^\/setting(\/.*)?$/,
+    /^\/collection(\/.*)?$/,
   ]
   const currentPath = request.nextUrl.pathname
   const isProtectedRoute = protectRoutesPattern.some((pattern) =>

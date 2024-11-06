@@ -77,6 +77,12 @@ export const EditProfileProvider: React.FC<{
       // when file exceeds the limitation, will not show the image.
       return
     }
+
+    // if (file && file.type.startsWith('image/')) {
+    //   const imageUrl = URL.createObjectURL(file) // Create a temporary URL for the image file
+    //   document.querySelector('#test-image').src = imageUrl
+    //   console.log(imageUrl)
+    // }
     const reader = new FileReader()
     reader.onloadend = () => {
       updateField('avatar', String(reader.result))

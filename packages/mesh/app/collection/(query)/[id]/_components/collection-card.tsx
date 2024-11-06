@@ -1,11 +1,12 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import type { RefObject } from 'react'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import CollectionPickButton from '@/components/collection-card/collection-pick-button'
 import Icon from '@/components/icon'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useUser } from '@/context/user'
 import useClamp from '@/hooks/use-clamp'
 import { getDisplayPicks } from '@/utils/story-display'
@@ -31,13 +32,14 @@ export default function CollectionCard({
       <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 lg:px-5 xl:px-10">
         <div className="mx-auto flex flex-col sm:max-w-[600px] lg:grid lg:max-w-[unset]  lg:grid-cols-[640px_1fr] lg:gap-10 xl:grid-cols-[600px_1fr]">
           <div className="relative aspect-[2/1] w-full overflow-hidden sm:rounded-md lg:order-2">
-            <Image
-              src={
-                collection.heroImage?.urlOriginal ??
-                '/images/default-story-image'
-              }
+            <ImageWithFallback
+              fallbackCategory={ImageCategory.STORY}
+              src={collection.heroImage?.resized?.original ?? ''}
               alt={collection.title ?? '集錦圖'}
               fill
+              style={{
+                objectFit: 'cover',
+              }}
             />
             <div className="absolute right-3 top-2 hidden items-center rounded-md bg-black/50 px-1 py-[2px] sm:flex">
               <Icon iconName="icon-collection-folder" size="m" />

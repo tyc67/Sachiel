@@ -44,7 +44,10 @@ const Comment: React.FC<CommentProps> = ({
   if (width < getTailwindConfigBreakpointNumber('md') && !data.content)
     return <></>
   return (
-    <section className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3">
+    <section
+      className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3"
+      onClick={(evt) => evt.preventDefault()}
+    >
       <div className="flex items-center justify-between md:hidden">
         <div className="flex items-center">
           <Avatar

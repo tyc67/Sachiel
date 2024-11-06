@@ -1,5 +1,6 @@
-import type { MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react'
 
+import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 import { getShareUrl } from '@/utils/get-url'
 
 import Icon from './icon'
@@ -38,6 +39,7 @@ export default function ShareSheet({
   url: string
   onClose: () => void
 }) {
+  useBlockBodyScroll()
   const onBackgroundClicked = () => {
     onClose()
   }

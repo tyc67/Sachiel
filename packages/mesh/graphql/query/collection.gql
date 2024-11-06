@@ -3,7 +3,9 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
     id
     title
     heroImage {
-      urlOriginal
+      resized {
+        original
+      }
     }
     updatedAt
     summary
@@ -103,6 +105,31 @@ query GetCollectionStories(
           }
         }
       }
+    }
+  }
+}
+
+query GetCollectionToEdit($id: ID) {
+  collection(where: { id: $id }) {
+    id
+    title
+    summary
+    heroImage {
+      urlOriginal
+    }
+    collectionpicks {
+      story {
+        id
+        title
+        og_image
+        source {
+          id
+          title
+        }
+        published_date
+      }
+      sort_order
+      picked_date
     }
   }
 }

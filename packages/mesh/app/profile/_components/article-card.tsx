@@ -146,7 +146,7 @@ const ArticleCard = ({
   return (
     <>
       <CommentProvider
-        initialComments={storyData.comment || []}
+        initialComments={storyData?.comment || []}
         commentObjective={CommentObjective.Story}
         // TODO: check what it use
         commentObjectiveData={storyData}

@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function Loading() {
   return (
     <div className="grow bg-white">
@@ -12,16 +14,15 @@ export default function Loading() {
       <div className="bg-white md:bg-multi-layer-light">
         <div className="max-w-[theme(width.maxMain)] md:grid md:grid-cols-2 md:gap-5 md:p-10 lg:grid-cols-3">
           {Array.from(Array(3)).map((_, i) => (
-            <>
-              <div key={i} className="flex items-center gap-3 p-5 md:hidden">
+            <React.Fragment key={i}>
+              <div className="flex items-center gap-3 p-5 md:hidden">
                 <div className="flex w-full flex-col gap-3">
                   <div className="h-3 w-full animate-pulse rounded-sm bg-loading sm:h-5" />
-                  <div className="h-3 w-[50%] animate-pulse rounded-sm bg-loading sm:h-5" />
+                  <div className="h-3 w-1/2 animate-pulse rounded-sm bg-loading sm:h-5" />
                 </div>
                 <div className="aspect-[2/1] w-24 shrink-0 animate-pulse rounded bg-loading sm:w-[160px]" />
               </div>
               <div
-                key={i}
                 className={`hidden flex-col rounded-md bg-white shadow-card md:flex ${
                   i === 2 ? 'md:hidden lg:invisible' : ''
                 }`}
@@ -32,7 +33,7 @@ export default function Loading() {
                   <div className="h-5 w-[240px] animate-pulse rounded-sm bg-loading" />
                 </div>
               </div>
-            </>
+            </React.Fragment>
           ))}
         </div>
       </div>
