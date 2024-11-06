@@ -26,15 +26,11 @@ const isPositionValid = (position: Position) => {
 }
 
 export default function ProfileMoreActionButton({
-  publisherId,
   customId,
-  canUnFollowPublisher = false,
   nestedScrollContainerRef,
   className,
 }: {
   customId: string
-  publisherId: string
-  canUnFollowPublisher?: boolean
   nestedScrollContainerRef?: RefObject<HTMLElement>
   className?: string
 }) {
@@ -138,12 +134,10 @@ export default function ProfileMoreActionButton({
         <ActionSheet
           customId={customId}
           ref={actionSheetRef}
-          publisherId={publisherId}
           onClose={closeActionSheet}
           openShareSheet={openShareSheet}
           openReportSheet={openReportSheet}
           openBlockSheet={openBlockSheet}
-          canUnFollowPublisher={canUnFollowPublisher}
           position={position}
         />
       )}
@@ -178,7 +172,6 @@ const actions = [
 const ActionSheet = forwardRef(function ActionSheet(
   {
     customId,
-    publisherId,
     openShareSheet,
     openBlockSheet,
     openReportSheet,
@@ -186,25 +179,23 @@ const ActionSheet = forwardRef(function ActionSheet(
     onClose,
   }: {
     customId: string
-    publisherId: string
     openShareSheet: () => void
     openReportSheet: () => void
     openBlockSheet: () => void
-    canUnFollowPublisher: boolean
     position: Position
     onClose: () => void
   },
   ref: ForwardedRef<HTMLDivElement>
 ) {
   const hasPosition = isPositionValid(position)
+  const sheetMinWidth = 180
+  const sheetButtonOverlap = 20
   const { addToast } = useToast()
 
   const onAction = async (type: ActionType) => {
     if (!customId) {
       addToast({ status: 'fail', text: TOAST_MESSAGE.moreActionError })
-      console.error(
-        `more action on story error, storyId: ${customId}, publisherId: ${publisherId}`
-      )
+      console.error(`more action on profile error,customId : ${customId}`)
       return
     }
     switch (type) {
@@ -253,7 +244,7 @@ const ActionSheet = forwardRef(function ActionSheet(
         hasPosition
           ? {
               top: position.top,
-              left: position.left - 180 + 20,
+              left: position.left - sheetMinWidth + sheetButtonOverlap,
             }
           : undefined
       }

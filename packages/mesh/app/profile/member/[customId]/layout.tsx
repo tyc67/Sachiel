@@ -58,22 +58,14 @@ export default function ProfileMemberLayout({
         ],
         title: pageCustomId,
         rightButtons: [
-          <ProfileMoreActionButton
-            key={0}
-            customId={pageCustomId}
-            publisherId=""
-          />,
+          <ProfileMoreActionButton key={0} customId={pageCustomId} />,
         ],
       }}
       nonMobileNavigation={{
         leftButtons: isSelf ? [] : [<GoBackButton key={0} />],
         title: pageCustomId,
         rightButtons: [
-          <ProfileMoreActionButton
-            key={0}
-            customId={pageCustomId}
-            publisherId=""
-          />,
+          <ProfileMoreActionButton key={0} customId={pageCustomId} />,
         ],
       }}
     >
