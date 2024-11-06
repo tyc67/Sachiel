@@ -3,6 +3,7 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
     id
     title
     heroImage {
+      id
       resized {
         original
       }

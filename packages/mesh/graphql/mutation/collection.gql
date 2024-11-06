@@ -64,3 +64,15 @@ mutation AddStoryToCollection(
     }
   }
 }
+
+mutation RemoveCollection($collectionId: ID, $heroImageId: ID) {
+  updateCollection(
+    where: { id: $collectionId }
+    data: { status: "delete", heroImage: { disconnect: true } }
+  ) {
+    status
+  }
+  deletePhoto(where: { id: $heroImageId }) {
+    id
+  }
+}

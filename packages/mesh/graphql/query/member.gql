@@ -180,6 +180,7 @@ query GetMemberProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { not: { equals: "delete" } }
     }
   ) {
     ...CollectionInfo
@@ -228,6 +229,7 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { equals: "publish" }
     }
   ) {
     ...CollectionInfo

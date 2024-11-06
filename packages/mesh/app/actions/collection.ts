@@ -7,6 +7,7 @@ import {
   GetCollectionDocument,
   GetCollectionStoriesDocument,
   GetMemberCollectionsDocument,
+  RemoveCollectionDocument,
 } from '@/graphql/__generated__/graphql'
 import queryGraphQL, { mutateGraphQL } from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
@@ -124,6 +125,24 @@ export async function addStoryToCollection({
       sortOrder,
       memberId,
       pickDate,
+    },
+    globalLogFields
+  )
+}
+
+export async function removeCollection({
+  collectionId,
+  heroImageId,
+}: {
+  collectionId: string
+  heroImageId: string
+}) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+  return await mutateGraphQL(
+    RemoveCollectionDocument,
+    {
+      collectionId,
+      heroImageId,
     },
     globalLogFields
   )

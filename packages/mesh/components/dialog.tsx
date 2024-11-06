@@ -11,12 +11,12 @@ type DialogAction = {
 type DialogProps = {
   title?: string
   description?: string
-  primayAction: DialogAction
-  secondaryAction: DialogAction
+  primaryAction: DialogAction
+  secondaryAction?: DialogAction
 }
 
 export default forwardRef(function Dialog(
-  { title, description, primayAction, secondaryAction }: DialogProps,
+  { title, description, primaryAction, secondaryAction }: DialogProps,
   ref: ForwardedRef<HTMLDialogElement>
 ) {
   return (
@@ -31,17 +31,19 @@ export default forwardRef(function Dialog(
         )}
       </div>
       <div className="flex flex-row items-center justify-end gap-3 pt-5">
-        <Button
-          size="sm"
-          color="transparent-blue"
-          text={secondaryAction.text}
-          onClick={secondaryAction.action}
-        />
+        {secondaryAction && (
+          <Button
+            size="sm"
+            color="transparent-blue"
+            text={secondaryAction.text}
+            onClick={secondaryAction.action}
+          />
+        )}
         <Button
           size="sm"
           color="custom-blue"
-          text={primayAction.text}
-          onClick={primayAction.action}
+          text={primaryAction.text}
+          onClick={primaryAction.action}
         />
       </div>
     </dialog>
