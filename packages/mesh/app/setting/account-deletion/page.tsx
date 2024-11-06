@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { DELETION_STEP } from '@/constants/config'
+import { DELETION_STEP } from '@/constants/setting'
 
 import Confirmation from './_components/confirmation'
 import Failure from './_components/failure'

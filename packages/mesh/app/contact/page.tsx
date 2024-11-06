@@ -1,5 +1,5 @@
 import Icon from '@/components/icon'
-import { CONTACT_LINKS } from '@/constants/config'
+import { CONTACT_LINKS } from '@/constants/contact'
 
 export default function Page() {
   return (
@@ -24,6 +24,7 @@ export default function Page() {
               <a
                 href={href}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="subtitle-1 text-primary-700 hover-or-active:text-primary-500"
               >
                 {text}

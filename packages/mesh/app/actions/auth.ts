@@ -11,7 +11,6 @@ import { type UserFormData } from '@/context/login'
 import { getAdminAuth } from '@/firebase/server'
 import {
   type MemberCreateInput,
-  DeactiveMemberDocument,
   GetCurrentUserMemberIdDocument,
   SignUpMemberDocument,
   UpdateWalletAddressDocument,
@@ -291,23 +290,19 @@ export async function getStoryAccess(idToken: string, storyId: string) {
 }
 
 export async function deactiveMember(memberId: string) {
-  const globalLogFields = getLogTraceObjectFromHeaders()
-  // TODO: 改打 pubsub
-  try {
-    const result = await mutateGraphQL(
-      DeactiveMemberDocument,
-      { memberId },
-      globalLogFields,
-      `Failed to deactive member memberId:${memberId} status`
-    )
-    if (result?.updateMember?.is_active !== false) return { success: false }
-  } catch (error) {
-    logServerSideError(
-      error,
-      `Failed to deactivate member, memberId:${memberId}`,
-      globalLogFields
-    )
+  const pubSubResponse = await fetchRestfulPost(
+    RESTFUL_ENDPOINTS.pubsub,
+    {
+      action: 'remove_member',
+      memberId: memberId,
+    },
+    { cache: 'no-cache' },
+    `Failed to deactive_member via pub/sub, memberId:${memberId}`
+  )
+
+  if (!pubSubResponse) {
     return { success: false }
   }
+
   return { success: true }
 }
