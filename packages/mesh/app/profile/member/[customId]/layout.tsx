@@ -58,7 +58,6 @@ export default function ProfileMemberLayout({
         ],
         title: pageCustomId,
         rightButtons: [
-          // TODO: replace with ProfileMoreActionButton
           <ProfileMoreActionButton
             key={0}
             customId={pageCustomId}
