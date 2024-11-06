@@ -70,7 +70,7 @@ export default function Button({
     <button
       className={`flex ${buttonStyles[size]} items-center justify-center ${
         isActive ? buttonColor['primary'] : buttonColor[color]
-      } `}
+      } focus-visible:outline-none`}
       onClick={onClick}
       type={type ?? 'button'}
       disabled={disabled}
