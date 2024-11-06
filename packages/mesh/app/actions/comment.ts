@@ -77,7 +77,7 @@ const getLatestAddComment = async (
         `Failed to get latest story comment's ID`
       )
       const comments = data?.comments
-      commentId = comments?.[0].id ?? ''
+      commentId = comments?.[0]?.id ?? ''
       break
     }
 
