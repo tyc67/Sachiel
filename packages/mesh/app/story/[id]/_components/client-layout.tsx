@@ -46,12 +46,14 @@ export default function ClientLayout({
             publisherId={story?.source?.id ?? ''}
           />,
           <StoryPickButton storyId={story?.id ?? ''} key={1} />,
-          <StoryMoreActionButton
-            storyId={story?.id ?? ''}
-            publisherId={story?.source?.id ?? ''}
-            key={2}
-            className="pl-2"
-          />,
+          story ? (
+            <StoryMoreActionButton
+              story={story}
+              publisherId={story?.source?.id ?? ''}
+              key={2}
+              className="pl-2"
+            />
+          ) : undefined,
         ],
       }}
       mobileActionBar={{

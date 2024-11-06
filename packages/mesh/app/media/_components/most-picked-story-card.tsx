@@ -58,7 +58,7 @@ export default function MostPickedStoryCard({
                   </h4>
                 </Link>
                 <StoryMoreActionButton
-                  storyId={story.id}
+                  story={story}
                   publisherId={story.source?.id ?? ''}
                   canUnFollowPublisher={true}
                 />

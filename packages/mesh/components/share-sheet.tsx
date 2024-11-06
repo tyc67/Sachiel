@@ -40,10 +40,6 @@ export default function ShareSheet({
   onClose: () => void
 }) {
   useBlockBodyScroll()
-  const onBackgroundClicked = () => {
-    onClose()
-  }
-
   const onShareSheetContainerClicked: MouseEventHandler<HTMLDivElement> = (
     evt
   ) => {
@@ -53,7 +49,10 @@ export default function ShareSheet({
   return (
     <div
       className="fixed inset-0 z-modal flex  items-center justify-center  bg-lightbox-light"
-      onClick={onBackgroundClicked}
+      onClick={(evt) => {
+        evt.stopPropagation()
+        onClose()
+      }}
     >
       <div
         className="w-[335px] rounded-xl bg-white shadow-light-box sm:w-[480px]"

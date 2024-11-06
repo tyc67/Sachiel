@@ -34,7 +34,7 @@ export default function SwiperComponent({ stories }: Props) {
               </NextLink>
 
               <StoryMoreActionButton
-                storyId={story.id}
+                story={story}
                 publisherId={story.source.id}
                 nestedScrollContainerRef={scrollContainerRef}
               />

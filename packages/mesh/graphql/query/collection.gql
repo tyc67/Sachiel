@@ -133,3 +133,29 @@ query GetCollectionToEdit($id: ID) {
     }
   }
 }
+
+query GetMemberCollections($creatorId: ID) {
+  collections(
+    where: {
+      status: { equals: "publish" }
+      creator: { id: { equals: $creatorId } }
+    }
+    orderBy: { createdAt: desc }
+  ) {
+    id
+    title
+    heroImage {
+      urlOriginal
+      resized {
+        original
+      }
+    }
+    collectionpicks(orderBy: { sort_order: asc }) {
+      id
+      sort_order
+      story {
+        id
+      }
+    }
+  }
+}

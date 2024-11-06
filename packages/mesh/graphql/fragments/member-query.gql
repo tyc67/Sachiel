@@ -69,11 +69,14 @@ fragment CollectionInfo on Collection {
       ...MemberBasicInfo
     }
   }
-  picksCount
-  commentCount
+  picksCount(where: { is_active: { equals: true } })
+  commentCount(where: { is_active: { equals: true } })
   comment(
     orderBy: { createdAt: desc }
-    where: { member: { customId: { equals: $customId } } }
+    where: {
+      member: { customId: { equals: $customId } }
+      is_active: { equals: true }
+    }
     take: 1
   ) {
     ...AuthenticatedCommentInfo

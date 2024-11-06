@@ -138,7 +138,7 @@ const ArticleCard = ({
           },
         }
 
-  const shouldShowSource = !isCollection
+  const shouldShowSource = !isCollection(storyData)
   const redirectLink = () => {
     if (isCollection(storyData)) return `/collection/${storyData.id}`
     return `/story/${storyData?.id}`
@@ -178,7 +178,7 @@ const ArticleCard = ({
                     {storyGetters.source(storyData)}
                   </p>
                   <StoryMoreActionButton
-                    storyId={storyData?.id ?? ''}
+                    story={storyData}
                     publisherId={storyGetters.sourceId(storyData)}
                   />
                 </>
