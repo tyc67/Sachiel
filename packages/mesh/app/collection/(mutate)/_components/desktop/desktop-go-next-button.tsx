@@ -4,15 +4,10 @@ import { useEditCollection } from '@/context/edit-collection'
 import { DesktopEditCollectionStep } from '../../_types/edit-collection'
 
 export default function DesktopGoNextButton() {
-  const {
-    desktopStepName,
-    heroImage,
-    collectionPickStories,
-    title,
-    createCollection,
-  } = useEditCollection()
-  const canGoToNextStep =
-    !!heroImage && !!collectionPickStories.length && !!title
+  const { desktopStepName, checkDesktopStepFullfilled, createCollection } =
+    useEditCollection()
+
+  const isStepFullfilled = checkDesktopStepFullfilled()
 
   switch (desktopStepName) {
     // TODO: two step creation
@@ -20,7 +15,7 @@ export default function DesktopGoNextButton() {
       return (
         <Button
           onClick={createCollection}
-          disabled={!canGoToNextStep}
+          disabled={!isStepFullfilled}
           size="lg"
           color="primary"
           text="建立集錦"
