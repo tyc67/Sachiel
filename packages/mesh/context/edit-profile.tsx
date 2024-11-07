@@ -1,5 +1,5 @@
 'use client'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import type { ChangeEvent } from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
@@ -23,11 +23,9 @@ export const EditProfileProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   const router = useRouter()
-  const params = useParams()
   const { user, setUser } = useUser()
   const formRef = useRef(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const customId = String(params.customId)
   const formData = formRef.current ? new FormData(formRef.current) : null
 
   const {
@@ -35,7 +33,7 @@ export const EditProfileProvider: React.FC<{
     isLoading: isProfileLoading,
     isError: isProfileError,
   } = useProfileState({
-    memberId: customId,
+    memberId: user.customId,
     takesCount: 20,
   })
 
@@ -108,6 +106,7 @@ export const EditProfileProvider: React.FC<{
   }
 
   const handleSubmit = async () => {
+    console.log('enter')
     if (!formData) return
     const avatarInput = document.getElementById('avatar') as HTMLInputElement
     const avatarFile = avatarInput.files?.[0]
@@ -130,7 +129,9 @@ export const EditProfileProvider: React.FC<{
         intro: String(formData.get('intro')),
         customId: String(formData.get('customId')),
       }))
-      router.push(`/profile/member/${formData.get('customId')}`)
+      setTimeout(() => {
+        router.push(`/profile/member/${formData.get('customId')}`)
+      }, 100)
     } catch (error) {
       router.push(`/profile/member/${user.customId}`)
       console.error('Failed to update profile:', error)
