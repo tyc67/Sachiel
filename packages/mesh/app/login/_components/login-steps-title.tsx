@@ -1,4 +1,4 @@
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import Icon from '@/components/icon'
 import { type LoginStepsKey, LoginState, useLogin } from '@/context/login'
@@ -32,7 +32,13 @@ const chevronMap: Pick<
 
 export default function LoginStepsTitle() {
   const { step, setStep } = useLogin()
-  // const router = useRouter()
+  const router = useRouter()
+
+  const handleSkipButton = () => {
+    const redirectRoute = localStorage.getItem('login-redirect') ?? '/'
+    localStorage.removeItem('login-redirect')
+    router.push(redirectRoute)
+  }
 
   switch (step) {
     case LoginState.Entry:
@@ -52,7 +58,11 @@ export default function LoginStepsTitle() {
       return (
         <>
           <button onClick={() => setStep(goToStep)}>
-            <Icon iconName="icon-chevron-left" size="m" className="ml-5" />
+            <Icon
+              iconName="icon-chevron-left-hover"
+              size="m"
+              className="ml-5"
+            />
           </button>
           <h2 className="list-title mx-auto">{title}</h2>
           <div className="size-5 px-5"></div>
@@ -66,16 +76,14 @@ export default function LoginStepsTitle() {
     case LoginState.SetWallet:
       return (
         <div className="flex w-full px-5">
-          {/* <div className="w-9"></div> */}
+          <div className="w-9"></div>
           <h2 className="list-title mx-auto">連結錢包</h2>
-          {/* <button
-            // temporarily remove skip button
+          <button
             className="list-title text-custom-blue"
-            //TODO: update URL
-            onClick={() => router.push('/media')}
+            onClick={handleSkipButton}
           >
             略過
-          </button> */}
+          </button>
         </div>
       )
   }

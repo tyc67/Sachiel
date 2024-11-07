@@ -4,6 +4,7 @@ import {
   GetMemberProfileDocument,
   GetVisitorProfileDocument,
 } from '@/graphql/__generated__/graphql'
+import { PickObjective } from '@/types/objective'
 import queryGraphQL from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
@@ -27,6 +28,11 @@ export async function getMemberProfile(memberId: string, takes: number) {
       followingCount: memberData.followingCount || 0,
       picksData: memberData.picks || [],
       bookmarks: memberData.books || [],
+      collections: result.collections ?? [],
+      pickCollections:
+        memberData.picks?.filter(
+          (pick) => pick.objective === PickObjective.Collection
+        ) ?? [],
     }
   } catch (error) {
     logServerSideError(error, 'Failed to get member profile', globalLogFields)

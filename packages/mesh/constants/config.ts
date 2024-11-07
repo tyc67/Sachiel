@@ -94,7 +94,7 @@ switch (ENV) {
   default:
     break
 }
-
+const GTM_ID = 'GTM-MKLVHSGJ'
 const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
@@ -128,44 +128,8 @@ const STATIC_FILE_ENDPOINTS = {
   invalidNameList: `${STATIC_FILE_ORIGIN}/data/invalid_names.json`,
 }
 
-//TODO: Skip "Block List" and "About" for now
-const ACTION_NAMES = [
-  // { name: '封鎖名單', href: '/' },
-  { name: '聯絡我們', href: '/contact' },
-  // { name: '關於', href: '/' },
-  { name: '登出' },
-  { name: '刪除帳號', href: '/account-deletion' },
-]
-
-const CONTACT_LINKS = [
-  {
-    name: '客服信箱',
-    href: 'mailto:readr@readr.tw',
-    text: 'readr@readr.tw',
-  },
-  {
-    name: '客服電話',
-    href: 'tel:+886(02)6633-3890',
-    text: '(02) 6633-3890',
-  },
-  {
-    name: 'Discord 社群',
-    href: 'https://discord.gg/zDTZsGEn',
-    text: 'https://discord.gg/zDTZsGEn',
-  },
-]
-
-const DELETION_STEP = {
-  PENDING: 'pending',
-  SUCCESS: 'success',
-  FAILURE: 'failure',
-} as const
-
 export {
-  ACTION_NAMES,
   ALCHEMY_ADDRESS,
-  CONTACT_LINKS,
-  DELETION_STEP,
   ENV,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_CONFIG,
@@ -173,6 +137,7 @@ export {
   FIREBASE_PRIVATE_KEY,
   GCP_PROJECT_ID,
   GQL_ENDPOINT,
+  GTM_ID,
   PAYMENT_CHAIN,
   RESTFUL_ENDPOINTS,
   STATIC_FILE_ENDPOINTS,

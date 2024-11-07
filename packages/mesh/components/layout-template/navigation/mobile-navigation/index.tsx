@@ -1,6 +1,8 @@
+import React from 'react'
+
 export type MobileNavigationProps = {
   leftButtons: React.ReactNode[]
-  title: string
+  title: string | React.ReactNode
   rightButtons: React.ReactNode[]
 }
 

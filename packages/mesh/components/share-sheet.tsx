@@ -1,5 +1,6 @@
-import type { MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react'
 
+import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 import { getShareUrl } from '@/utils/get-url'
 
 import Icon from './icon'
@@ -38,10 +39,7 @@ export default function ShareSheet({
   url: string
   onClose: () => void
 }) {
-  const onBackgroundClicked = () => {
-    onClose()
-  }
-
+  useBlockBodyScroll()
   const onShareSheetContainerClicked: MouseEventHandler<HTMLDivElement> = (
     evt
   ) => {
@@ -51,7 +49,10 @@ export default function ShareSheet({
   return (
     <div
       className="fixed inset-0 z-modal flex  items-center justify-center  bg-lightbox-light"
-      onClick={onBackgroundClicked}
+      onClick={(evt) => {
+        evt.stopPropagation()
+        onClose()
+      }}
     >
       <div
         className="w-[335px] rounded-xl bg-white shadow-light-box sm:w-[480px]"

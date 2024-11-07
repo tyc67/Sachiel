@@ -18,6 +18,7 @@
     "@alchemy/aa-alchemy": "^3.19.0",
     "@alchemy/aa-core": "^3.19.0",
     "@apollo/client": "^3.10.4",
+    "@next/third-parties": "^15.0.2",
     "@readr-media/react-image": "^2.2.3",
     "@readr-media/react-infinite-scroll-list": "^1.1.0",
     "@tanstack/react-query": "^5.52.2",
@@ -31,6 +32,7 @@
     "react": "^18",
     "react-dom": "^18",
     "server-only": "^0.0.1",
+    "swiper": "^11.1.14",
     "tailwind-merge": "^2.3.0",
     "ts-import": "^5.0.0-beta.0",
     "zod": "3.23.8"

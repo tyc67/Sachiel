@@ -2,6 +2,7 @@
 import '@/styles/global.css'
 
 import { useParams, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import LayoutTemplate from '@/components/layout-template'
 import MobileNavigationButton from '@/components/layout-template/navigation/mobile-navigation/mobile-navigation-button'
@@ -9,7 +10,6 @@ import GoBackButton from '@/components/navigation/go-back-button'
 import { FOLLOW_LIST_PATHS } from '@/constants/page-style'
 import { EditProfileProvider } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
-import { logout } from '@/utils/logout'
 
 import ProfileMoreActionButton from '../../_components/profile-more-action-button'
 
@@ -25,6 +25,7 @@ export default function ProfileMemberLayout({
   const pathName = usePathname()
   const params = useParams<{ customId?: string }>()
   const { user } = useUser()
+  const router = useRouter()
 
   const pageCustomId = params.customId ?? ''
   const isSelf = pageCustomId === user?.customId
@@ -46,11 +47,9 @@ export default function ProfileMemberLayout({
           isSelf ? (
             <MobileNavigationButton
               key={0}
-              type="text"
-              text="登出"
-              color="gray"
-              customCss="button"
-              onClick={logout}
+              type="icon"
+              icon="icon-setting"
+              onClick={() => router.push('/setting')}
             />
           ) : (
             <GoBackButton key={0} />

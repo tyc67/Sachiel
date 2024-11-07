@@ -4,7 +4,11 @@ import { useRouter } from 'next/navigation'
 
 import Icon from '../icon'
 
-export default function GoBackButton() {
+export default function GoBackButton({
+  customAction,
+}: {
+  customAction?: () => void
+}) {
   const router = useRouter()
   const backToPreviousPage = () => {
     router.back()
@@ -14,9 +18,9 @@ export default function GoBackButton() {
     <button
       type="button"
       className="flex size-11 items-center justify-center sm:size-6"
-      onClick={backToPreviousPage}
+      onClick={customAction ?? backToPreviousPage}
     >
-      <Icon iconName="icon-chevron-left" size="m" />
+      <Icon iconName="icon-chevron-left-hover" size="m" />
     </button>
   )
 }

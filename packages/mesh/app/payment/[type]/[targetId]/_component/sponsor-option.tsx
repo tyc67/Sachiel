@@ -92,36 +92,35 @@ export default function SponsorOption({
           <div className="body-3 flex flex-row text-primary-500">
             <span className="pr-3">1</span>
             <div className="flex flex-col gap-1">
-              <p>第一條。格式跟文章頁的註解一樣。</p>
+              <p>
+                贊助方式：您可以選擇平台提供的預設贊助點數金額，或是自行設置您想要的贊助額度，支持您喜愛的媒體。
+              </p>
             </div>
           </div>
           <div className="body-3 flex flex-row text-primary-500">
             <span className="pr-3">2</span>
             <div className="flex flex-col gap-1">
               <p>
-                註解二。有超過一段的話。月方案計算天數為 30 日，年方案計算天數為
-                365 日。
-              </p>
-              <p>
-                這是註解二的第二段。月訂閱方案經會員授權扣款購買即為完成服務，因此月費會員無法退費，但可取消繼續訂閱。
+                贊助用途：您的贊助將直接用於支持該媒體的內容創作、報導開支和平台運營，以維持優質內容的持續輸出。
               </p>
             </div>
           </div>
           <div className="body-3 flex flex-row text-primary-500">
             <span className="pr-3">3</span>
             <div className="flex flex-col gap-1">
-              <p>第一條。格式跟文章頁的註解一樣。</p>
+              <p>
+                贊助確認：每筆贊助完成後無法取消或退還，請確認贊助金額無誤後再提交。
+              </p>
             </div>
           </div>
           <div className="body-3 flex flex-row text-primary-500">
             <span className="pr-3">4</span>
             <div className="flex flex-col gap-1">
               <p>
-                註解二。有超過一段的話。月方案計算天數為 30 日，年方案計算天數為
-                365 日。
+                紀錄查詢：您可以在個人帳戶的【讀選點數】頁面中查看已完成的贊助詳情，隨時掌握您的支持情況。
               </p>
               <p>
-                這是註解二的第二段。月訂閱方案經會員授權扣款購買即為完成服務，因此月費會員無法退費，但可取消繼續訂閱。
+                若有任何疑問或遇到贊助問題，歡迎聯繫我們的客服團隊。我們將隨時為您提供協助。
               </p>
             </div>
           </div>

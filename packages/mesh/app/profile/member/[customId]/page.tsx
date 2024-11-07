@@ -15,9 +15,9 @@ const Page = async (props: PageProps) => {
   const isMember = currentUser?.customId === customId
 
   return (
-    <main className="flex grow flex-col">
+    <div className="flex grow flex-col">
       <ProfilePage isMember={isMember} />
-    </main>
+    </div>
   )
 }
 

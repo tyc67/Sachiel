@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-type SizeCode = 's' | 'm' | 'l' | 'xl' | '2xl'
+type SizeCode = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl'
 type CustomSize = { width: number; height: number }
 export type Size = SizeCode | CustomSize
 export type IconName =
@@ -78,6 +78,12 @@ export type IconName =
   | 'icon-google'
   | 'icon-email'
   | 'icon-chevron-left'
+  | 'icon-chevron-left-white'
+  | 'icon-chevron-left-hover'
+  | 'icon-chevron-left-disable'
+  | 'icon-chevron-right'
+  | 'icon-chevron-right-hover'
+  | 'icon-chevron-right-disable'
   | 'icon-login-step-1'
   | 'icon-login-step-2'
   | 'icon-login-step-3'
@@ -138,9 +144,14 @@ export type IconName =
   | 'icon-collection-edit-stories'
   | 'icon-collection-edit'
   | 'icon-collection-report'
+  | 'icon-left-arrow'
   | 'icon-arrow-forward'
   | 'icon-invitation-code'
   | 'icon-forbidden'
+  | 'icon-checkbox-on'
+  | 'icon-checkbox-off'
+  | 'icon-select-image'
+  | 'icon-collection'
 
 export type IconProps = {
   size: Size
@@ -148,6 +159,7 @@ export type IconProps = {
   className?: string
 }
 export const sizeVariant = {
+  xs: 10,
   s: 16,
   m: 20,
   l: 24,

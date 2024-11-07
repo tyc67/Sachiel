@@ -1,17 +1,21 @@
 'use client'
 import type { Dispatch, SetStateAction } from 'react'
 
-import { type UserType, TabCategory } from '@/types/profile'
+import {
+  type TabCategoryType,
+  type UserType,
+  TabCategory,
+} from '@/types/profile'
 
 type TabProps = {
-  setCategory?: Dispatch<SetStateAction<TabCategory>>
-  tabCategory?: TabCategory
+  setCategory?: Dispatch<SetStateAction<TabCategoryType>>
+  tabCategory?: TabCategoryType
   userType: UserType
 }
 
 type TabItem = {
   tabName: string
-  tabCategory: TabCategory
+  tabCategory: TabCategoryType
 }
 
 const Tab = ({ tabCategory, setCategory, userType }: TabProps) => {
@@ -19,26 +23,31 @@ const Tab = ({ tabCategory, setCategory, userType }: TabProps) => {
     'after:absolute after:bottom-[-1px] after:left-0 after:w-full after:border after:border-primary-800 text-primary-700'
   const inactiveTabStyle = 'text-primary-400'
 
-  function handleTabOnClick(category: TabCategory) {
+  function handleTabOnClick(category: TabCategoryType) {
     if (!setCategory) return
     setCategory(category)
   }
 
   const tabList: TabItem[] = [
-    { tabName: '精選', tabCategory: TabCategory.PICK },
+    { tabName: '精選', tabCategory: TabCategory.PICKS },
+    { tabName: '集錦', tabCategory: TabCategory.COLLECTIONS },
     { tabName: '書籤', tabCategory: TabCategory.BOOKMARKS },
     { tabName: '報導', tabCategory: TabCategory.PUBLISH },
   ]
 
   const tabFilter = (item: TabItem) => {
     if (userType === 'visitor') {
-      return item.tabCategory === TabCategory.PICK
+      return (
+        item.tabCategory === TabCategory.PICKS ||
+        item.tabCategory === TabCategory.COLLECTIONS
+      )
     }
     if (userType === 'publisher') {
       return item.tabCategory === TabCategory.PUBLISH
     }
     return (
-      item.tabCategory === TabCategory.PICK ||
+      item.tabCategory === TabCategory.PICKS ||
+      item.tabCategory === TabCategory.COLLECTIONS ||
       item.tabCategory === TabCategory.BOOKMARKS
     )
   }

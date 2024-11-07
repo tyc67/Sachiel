@@ -121,9 +121,7 @@ query GetCurrentUserMemberId($uid: String!) {
 
 query GetMemberProfile($customId: String, $takes: Int!) {
   member(where: { customId: $customId }) {
-    id
-    name
-    avatar
+    ...MemberBasicInfo
     customId
     avatar_image {
       urlOriginal
@@ -141,55 +139,20 @@ query GetMemberProfile($customId: String, $takes: Int!) {
       take: $takes
     ) {
       story {
-        id
-        og_image
-        source {
-          title
-          official_site
-        }
-        title
-        og_title
-        createdAt
-        tag {
-          id
-          name
-        }
-        pick {
-          createdAt
-          member {
-            id
-            name
-            avatar
-          }
-        }
-        pickCount
-        commentCount
-        paywall
-        full_screen_ad
-        published_date
+        ...StoryInfo
         comment(
           orderBy: { createdAt: desc }
           where: { member: { customId: { equals: $customId } } }
           take: 1
         ) {
-          id
-          content
-          createdAt
-          likeCount
-          isMemberLiked: like(where: { customId: { equals: $customId } }) {
-            id
-          }
-          member {
-            id
-            name
-            avatar
-          }
-        }
-        source {
-          id
+          ...AuthenticatedCommentInfo
         }
       }
+      collection {
+        ...CollectionInfo
+      }
       kind
+      objective
     }
 
     booksCount: pickCount(
@@ -201,63 +164,35 @@ query GetMemberProfile($customId: String, $takes: Int!) {
       take: $takes
     ) {
       story {
-        id
-        og_image
-        source {
-          title
-          official_site
-        }
-        title
-        og_title
-        commentCount
-        createdAt
-        tag {
-          id
-          name
-        }
-        pick {
-          createdAt
-          member {
-            id
-            name
-            avatar
-          }
-        }
-        pickCount
-        commentCount
-        paywall
-        full_screen_ad
-        published_date
+        ...StoryInfo
         comment(
           orderBy: { createdAt: desc }
           where: { member: { customId: { equals: $customId } } }
           take: 1
         ) {
-          id
-          content
-          createdAt
-          likeCount
-          isMemberLiked: like(where: { customId: { equals: $customId } }) {
-            id
-          }
-          member {
-            id
-            name
-            avatar
-          }
+          ...AuthenticatedCommentInfo
         }
       }
       kind
+      objective
+    }
+  }
+  collections(
+    where: {
+      creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { not: { equals: "delete" } }
+    }
+  ) {
+    ...CollectionInfo
+    heroImage {
+      urlOriginal
     }
   }
 }
 
 query GetVisitorProfile($customId: String, $takes: Int!) {
   member(where: { customId: $customId }) {
-    # id, name, avatar use auth's context
-    id
-    name
-    avatar
+    ...MemberBasicInfo
     customId
     avatar_image {
       urlOriginal
@@ -274,52 +209,32 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
       orderBy: { createdAt: desc }
       take: $takes
     ) {
+      objective
+      id
       story {
-        id
-        og_image
-        source {
-          title
-          official_site
-        }
-        title
-        og_title
-        createdAt
-        tag {
-          id
-          name
-        }
-        pick {
-          createdAt
-          member {
-            id
-            name
-            avatar
-          }
-        }
-        pickCount
-        commentCount
-        paywall
-        full_screen_ad
-        published_date
+        ...StoryInfo
         comment(
           orderBy: { createdAt: desc }
           where: { member: { customId: { equals: $customId } } }
         ) {
-          id
-          content
-          createdAt
-          likeCount
-          member {
-            id
-            name
-            avatar
-          }
-        }
-        source {
-          id
+          ...CommentInfo
         }
       }
+      collection {
+        ...CollectionInfo
+      }
       kind
+    }
+  }
+  collections(
+    where: {
+      creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { equals: "publish" }
+    }
+  ) {
+    ...CollectionInfo
+    heroImage {
+      urlOriginal
     }
   }
 }
@@ -556,6 +471,34 @@ query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
       pick_comment(where: { is_active: { equals: true } }) {
         id
         content
+      }
+    }
+  }
+}
+
+query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
+  member(where: { id: $memberId }) {
+    name
+    picksAndBookmarksCount: pickCount(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    )
+    picksAndBookmarks: pick(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+      orderBy: { picked_date: desc }
+      take: $pickTake
+      skip: $pickSkip
+    ) {
+      id
+      kind
+      story {
+        id
+        title
+        og_image
+        published_date
+        source {
+          id
+          title
+        }
       }
     }
   }
