@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
 
 import Icon from '@/components/icon'
 
@@ -36,17 +35,18 @@ export default function Avatar({
   isRound = true,
   extra = '',
   ringColor = 'white',
+  alt = '',
 }: {
   src: string
   size: Size
   isRound?: boolean
   extra?: string
   ringColor?: RingColor
+  alt?: string
 }) {
   const sideLength = avatarSizes[size]
   const avatarClass = avatarClasses[size]
   const ringColorClass = avatarRingColors[ringColor]
-  const [imgSrc, setImgSrc] = useState(src)
 
   // TODO: replace with <ImageWithFallback/>
   return src ? (
@@ -54,11 +54,14 @@ export default function Avatar({
       className={`${avatarClass} inline-block ${
         isRound && 'rounded-full'
       } bg-white ring-2 ${ringColorClass} ${extra} object-cover`}
-      src={imgSrc}
+      src={src}
       width={sideLength}
       height={sideLength}
-      alt={src}
-      onError={() => setImgSrc('/images/default-avatar-image.png')}
+      alt={alt ?? src}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement
+        target.src = '/images/default-avatar-image.png'
+      }}
     />
   ) : (
     <Icon

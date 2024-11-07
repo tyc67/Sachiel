@@ -1,0 +1,80 @@
+import { useEffect, useMemo } from 'react'
+
+import { useEditCollection } from '@/context/edit-collection'
+import useInView from '@/hooks/use-in-view'
+
+import type {
+  CollectionPickStory,
+  PickOrBookmark,
+} from '../_types/edit-collection'
+import PickStoryCard from './pick-story-card'
+
+export default function InfiniteCollectionPicks({
+  candidates,
+  loadMore,
+  shouldLoadMore,
+}: {
+  candidates: PickOrBookmark[]
+  loadMore: () => Promise<void>
+  shouldLoadMore: boolean
+}) {
+  const { collectionPickStories, setCollectionPickStories } =
+    useEditCollection()
+  const { targetRef: triggerLoadmoreRef, isIntersecting: shouldStartLoadMore } =
+    useInView()
+
+  const collectionPickStoryIds = useMemo(() => {
+    return collectionPickStories.reduce((ids, collectionPickStory) => {
+      const storyId = collectionPickStory.id
+      if (storyId) {
+        ids.add(storyId)
+      }
+      return ids
+    }, new Set<string>())
+  }, [collectionPickStories])
+
+  const onPickStoryClicked = (
+    candidateStory: CollectionPickStory,
+    isStoryPicked: boolean
+  ) => {
+    if (isStoryPicked) {
+      setCollectionPickStories([
+        ...collectionPickStories.filter(
+          (collectionPick) => collectionPick.id !== candidateStory?.id
+        ),
+      ])
+    } else {
+      setCollectionPickStories([...collectionPickStories, candidateStory])
+    }
+  }
+
+  useEffect(() => {
+    if (shouldStartLoadMore && shouldLoadMore) {
+      loadMore()
+    }
+  }, [loadMore, shouldLoadMore, shouldStartLoadMore])
+
+  return (
+    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+      {candidates.map((candidate, i) => {
+        if (!candidate.story) return null
+        const isStoryPicked = collectionPickStoryIds.has(
+          candidate.story?.id ?? ''
+        )
+        return (
+          <PickStoryCard
+            key={candidate.story.id}
+            isPicked={isStoryPicked}
+            story={candidate.story}
+            onClick={onPickStoryClicked.bind(
+              null,
+              candidate.story,
+              isStoryPicked
+            )}
+            ref={i === candidates.length - 1 ? triggerLoadmoreRef : undefined}
+          />
+        )
+      })}
+    </div>
+  )
+}

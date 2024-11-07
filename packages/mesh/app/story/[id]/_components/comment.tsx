@@ -49,7 +49,7 @@ const Comment = ({ targetId = '' }: { targetId: string }) => {
             placeholder="有什麼要補充的嗎..."
             onChange={handleTextChange}
             value={comment}
-            className="grow rounded-md border border-primary-200 p-3"
+            className="grow rounded-md border border-primary-200 p-3 focus-visible:outline-none"
           />
         </div>
         <div className="h-8 w-[52px] place-self-end *:size-full *:p-0">

@@ -42,7 +42,7 @@ const Page = async ({ params }: PageProps) => {
     const pickedCount = parseInt(formatFollowCount(userData.picksCount ?? 0))
 
     return (
-      <main className="flex grow flex-col">
+      <div className="flex grow flex-col">
         <PublisherPage
           pickedCount={pickedCount}
           sponsoredCount={convertedSponsoredCount}
@@ -55,7 +55,7 @@ const Page = async ({ params }: PageProps) => {
           userType={userType}
           storyData={storyData}
         />
-      </main>
+      </div>
     )
   } catch (error) {
     console.error('Error fetching publisher data:', error)

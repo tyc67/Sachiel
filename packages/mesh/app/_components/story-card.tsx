@@ -33,10 +33,7 @@ export default forwardRef(function StoryCard<
             {story.source.title}
           </p>
         </NextLink>
-        <StoryMoreActionButton
-          storyId={story.id}
-          publisherId={story.source.id}
-        />
+        <StoryMoreActionButton story={story} publisherId={story.source.id} />
       </div>
 
       <div className="flex justify-between gap-x-3 sm:gap-x-10">

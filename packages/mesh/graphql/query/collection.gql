@@ -3,7 +3,10 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
     id
     title
     heroImage {
-      urlOriginal
+      id
+      resized {
+        original
+      }
     }
     updatedAt
     summary
@@ -102,6 +105,57 @@ query GetCollectionStories(
             avatar
           }
         }
+      }
+    }
+  }
+}
+
+query GetCollectionToEdit($id: ID) {
+  collection(where: { id: $id }) {
+    id
+    title
+    summary
+    heroImage {
+      urlOriginal
+    }
+    collectionpicks {
+      story {
+        id
+        title
+        og_image
+        source {
+          id
+          title
+        }
+        published_date
+      }
+      sort_order
+      picked_date
+    }
+  }
+}
+
+query GetMemberCollections($creatorId: ID) {
+  collections(
+    where: {
+      status: { equals: "publish" }
+      creator: { id: { equals: $creatorId } }
+    }
+    orderBy: { createdAt: desc }
+  ) {
+    id
+    title
+    heroImage {
+      urlOriginal
+      resized {
+        original
+      }
+    }
+    collectionpicks(orderBy: { sort_order: asc }) {
+      id
+      sort_order
+      story {
+        id
       }
     }
   }

@@ -49,7 +49,10 @@ const Comment: React.FC<CommentProps> = ({
   if (width < getTailwindConfigBreakpointNumber('md') && !commentData.content)
     return <></>
   return (
-    <section className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3">
+    <section
+      className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3"
+      onClick={(evt) => evt.preventDefault()}
+    >
       <div className="flex items-center justify-between md:hidden">
         <div className="flex items-center">
           <Avatar
@@ -75,7 +78,7 @@ const Comment: React.FC<CommentProps> = ({
         </div>
       </div>
       <div
-        className={`relative md:flex md:items-start ${
+        className={`relative md:flex md:items-center ${
           needClamp ? '' : 'after:opacity-0'
         } after:body-3 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-primary-100 after:to-25% after:pl-6 after:text-primary-400 after:content-['...繼續閱讀'] md:after:bottom-[6px]`}
         onClick={handleCommentClick}
