@@ -18,7 +18,7 @@ export function profileFormValidation(
 
   const newErrors: Partial<EditProfileFormTypes> = {}
 
-  const isUserNameEmpty = form.name.trim()
+  const isUserNameEmpty = !form.name.trim()
   const isCustomIdEmpty = !form.customId.trim()
   const hasSpaceAroundCustomId = form.customId !== form.customId.trim()
   const hasInvalidCharacters = !/^[a-zA-Z0-9]+$/.test(form.customId)
