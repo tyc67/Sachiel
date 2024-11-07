@@ -10,10 +10,32 @@ export function profileFormValidation(
     intro: '自我介紹超過字數上限',
     avatar: '', //TODO: Add an appropriate error message if needed
   }
+  const customIdErrors = {
+    empty: 'ID 不能空白',
+    format: 'ID 只能包含英文字母和數字',
+    space: 'ID 開頭和結尾不能有空白',
+  }
 
   const newErrors: Partial<EditProfileFormTypes> = {}
-  if (!form.name.trim()) newErrors.name = errorMessages.name
-  if (!form.customId.trim()) newErrors.customId = errorMessages.customId
+
+  const isUserNameEmpty = form.name.trim()
+  const isCustomIdEmpty = !form.customId.trim()
+  const hasSpaceAroundCustomId = form.customId !== form.customId.trim()
+  const hasInvalidCharacters = !/^[a-zA-Z0-9]+$/.test(form.customId)
+
+  // user name
+  if (isUserNameEmpty) newErrors.name = errorMessages.name
+  // custom id
+  if (isCustomIdEmpty) {
+    newErrors.customId = customIdErrors.empty
+  }
+  if (hasSpaceAroundCustomId) {
+    newErrors.customId = customIdErrors.space
+  }
+  if (hasInvalidCharacters) {
+    newErrors.customId = customIdErrors.format
+  }
+  // intro
   if (form.intro.length > INTRO_LIMITATION)
     newErrors.intro = errorMessages.intro
   return newErrors
