@@ -1,10 +1,11 @@
 'use client'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import type { ChangeEvent } from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { deletePhoto, updateProfile } from '@/app/actions/edit-profile'
 import { IMAGE_SIZE_LIMITATION } from '@/constants/profile'
+import TOAST_MESSAGE from '@/constants/toast'
 import { useForm } from '@/hooks/use-form'
 import useProfileState from '@/hooks/use-profile-state'
 import type {
@@ -13,6 +14,7 @@ import type {
 } from '@/types/profile'
 import { profileFormValidation } from '@/utils/profile-form-validate'
 
+import { useToast } from './toast'
 import { useUser } from './user'
 
 const EditProfileContext = createContext<EditProfileContextType | undefined>(
@@ -23,11 +25,10 @@ export const EditProfileProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   const router = useRouter()
-  const params = useParams()
   const { user, setUser } = useUser()
   const formRef = useRef(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const customId = String(params.customId)
+  const { addToast } = useToast()
   const formData = formRef.current ? new FormData(formRef.current) : null
 
   const {
@@ -35,7 +36,7 @@ export const EditProfileProvider: React.FC<{
     isLoading: isProfileLoading,
     isError: isProfileError,
   } = useProfileState({
-    memberId: customId,
+    memberId: user.customId,
     takesCount: 20,
   })
 
@@ -114,32 +115,65 @@ export const EditProfileProvider: React.FC<{
   }
 
   const handleSubmit = async () => {
-    if (!formData) return
-    const avatarInput = document.getElementById('avatar') as HTMLInputElement
-    const avatarFile = avatarInput.files?.[0]
-
-    if (avatarFile) formData.append('avatar', avatarFile)
-
-    if (!validateForm() || !isFormDataChanged()) {
-      return
-    }
-
     try {
-      if (!formData.get('customId')) return
+      // 1. 表單驗證
+      if (!formData) {
+        console.warn('Form data is missing')
+        return
+      }
+
+      const newCustomId = formData.get('customId')
+      if (!newCustomId) {
+        console.warn('Custom ID is required')
+        return
+      }
+
+      if (!validateForm() || !isFormDataChanged()) {
+        console.warn('Form validation failed or no changes detected')
+        return
+      }
+
+      // 2. 處理avatar上傳
+      const avatarInput = document.getElementById('avatar') as HTMLInputElement
+      const avatarFile = avatarInput?.files?.[0]
+      if (avatarFile) {
+        formData.append('avatar', avatarFile)
+      }
+
+      // 3. state
       setIsSubmitting(true)
+
+      // 4. api
       await updateProfile(formData, user.customId, user.memberId)
 
-      setUser((prev) => ({
-        ...prev,
+      // 5. new profile data
+      const newUserData = {
         name: String(formData.get('name')),
         avatar: editProfileForm.avatar,
         intro: String(formData.get('intro')),
-        customId: String(formData.get('customId')),
+        customId: String(newCustomId),
+      }
+
+      // 6. 更新local state
+      setUser((prev) => ({
+        ...prev,
+        ...newUserData,
       }))
-      router.push(`/profile/member/${formData.get('customId')}`)
+
+      // 7. 使用 Promise 確保導航時序正確
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          router.push(`/profile/member/${newCustomId}`)
+          resolve()
+        }, 100)
+      })
     } catch (error) {
-      router.push(`/profile/member/${user.customId}`)
       console.error('Failed to update profile:', error)
+      addToast({ status: 'fail', text: TOAST_MESSAGE.updateProfileFailed })
+      router.push(`/profile/member/${user.customId}`)
+    } finally {
+      // 9. 清理狀態
+      setIsSubmitting(false)
     }
   }
 
