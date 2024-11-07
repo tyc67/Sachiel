@@ -18,7 +18,7 @@ export default function StorySection({ activeTitle, stories, slug }: Props) {
     <div>
       <NextLink href={`/${slug}`}>
         <div className="group flex pb-3 pt-2 lg:pb-4">
-          <h3 className="list-title lg:title-1 text-primary-700">
+          <h3 className="list-title lg:title-1 text-primary-700 group-hover:text-primary-500 group-active:text-primary-500">
             {activeTitle}
           </h3>
           <div className="flex items-center">
