@@ -20,7 +20,11 @@ export default function FollowSuggestionWidget({
         {suggestedFollowers?.map((member, index) => (
           <div key={member.id}>
             <div className="flex flex-row items-center py-3">
-              <Avatar src={member.avatar} size="l" />
+              <Avatar
+                src={member.avatar}
+                size="l"
+                ringColor="multi-layer-light"
+              />
               <div className="flex w-full items-center justify-between">
                 <div className="ml-3 grow-0">
                   <Link
