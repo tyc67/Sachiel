@@ -9,6 +9,7 @@ import {
 
 import type { CreateCollectionParams } from '@/app/actions/collection'
 import { createCollection as sendCreateCollection } from '@/app/actions/collection'
+import { maxSummaryLength } from '@/app/collection/(mutate)/_components/edit-summary'
 import {
   type CollectionPickStory,
   type PickOrBookmark,
@@ -55,6 +56,7 @@ type EditCollectionContextValue = {
   >
   createCollection: () => void
   checkMobileStepFullfilled: () => boolean
+  checkDesktopStepFullfilled: () => boolean
   mobileTitle: string
   mobileStepName: MobielEditCollectionStep
   desktopStepName: DesktopEditCollectionStep
@@ -90,10 +92,26 @@ export default function EditCollectionProvider({
       case MobielEditCollectionStep.MobileStep2SetTitle:
         return Boolean(heroImage) && Boolean(title)
       case MobielEditCollectionStep.MobileStep3SetSummary:
-        // optional filed
-        return true
+        return !summary || summary.length <= maxSummaryLength
       // TODO: implement in phase 2
       // case MobielEditCollectionStep.MobileStep4SortStories:
+      //   return true
+      default:
+        return false
+    }
+  }
+
+  const checkDesktopStepFullfilled = () => {
+    switch (desktopStepName) {
+      case DesktopEditCollectionStep.DesktopStep1EditAll:
+        return (
+          Boolean(heroImage) &&
+          Boolean(collectionPickStories.length) &&
+          Boolean(title) &&
+          (!summary || summary.length <= maxSummaryLength)
+        )
+      // TODO: implement in phase 2
+      // case DesktopEditCollectionStep.DesktopStep2SortStories:
       //   return true
       default:
         return false
@@ -183,6 +201,7 @@ export default function EditCollectionProvider({
         setCollectionPickStories,
         createCollection,
         checkMobileStepFullfilled,
+        checkDesktopStepFullfilled,
         mobileTitle,
         mobileStepName,
         desktopStepName,
