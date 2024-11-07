@@ -6,6 +6,7 @@ import { useState } from 'react'
 import Icon from '@/components/icon'
 
 type Size = 's' | 'm' | 'l' | 'xl' | 'xxl'
+export type RingColor = keyof typeof avatarRingColors
 
 const avatarSizes = {
   s: 26,
@@ -23,19 +24,28 @@ const avatarClasses = {
   xxl: 'h-20 w-20',
 }
 
+const avatarRingColors = {
+  'primary-100': 'ring-primary-100',
+  'multi-layer-light': 'ring-multi-layer-light',
+  white: 'ring-white',
+}
+
 export default function Avatar({
   src,
   size,
   isRound = true,
   extra = '',
+  ringColor = 'white',
 }: {
   src: string
   size: Size
   isRound?: boolean
   extra?: string
+  ringColor?: RingColor
 }) {
   const sideLength = avatarSizes[size]
   const avatarClass = avatarClasses[size]
+  const ringColorClass = avatarRingColors[ringColor]
   const [imgSrc, setImgSrc] = useState(src)
 
   // TODO: replace with <ImageWithFallback/>
@@ -43,7 +53,7 @@ export default function Avatar({
     <Image
       className={`${avatarClass} inline-block ${
         isRound && 'rounded-full'
-      } bg-white ring-2 ring-white ${extra} object-cover`}
+      } bg-white ring-2 ${ringColorClass} ${extra} object-cover`}
       src={imgSrc}
       width={sideLength}
       height={sideLength}
@@ -53,7 +63,7 @@ export default function Avatar({
   ) : (
     <Icon
       iconName="icon-avatar-default"
-      className={`${avatarClass} inline-block rounded-full bg-white ring-2 ring-white ${extra}`}
+      className={`${avatarClass} inline-block rounded-full bg-white ring-2 ${ringColorClass} ${extra}`}
       size={{ width: sideLength, height: sideLength }}
     />
   )

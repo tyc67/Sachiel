@@ -85,6 +85,7 @@ const Comment: React.FC<CommentProps> = ({
           src={avatar || ''}
           size="m"
           extra="mr-2 hidden md:flex min-w-[28px] min-h-[28px]"
+          ringColor="primary-100"
         />
         <p
           className={`body-3 line-clamp-3 size-full ${

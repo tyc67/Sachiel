@@ -1,6 +1,7 @@
 import { socialPageAvatarLayer } from '@/constants/z-index'
 import { type UserActionStoryFragment } from '@/graphql/__generated__/graphql'
 
+import type { RingColor } from './avatar'
 import Avatar from './avatar'
 import StoryCommentCount from './story-comment-count'
 import StoryPickCount from './story-pick-count'
@@ -12,11 +13,13 @@ export default function StoryPickInfo({
   pickCount,
   maxCount = 4,
   commentCount = 0,
+  ringColor = 'white',
 }: {
   displayPicks: Picks
   pickCount: number
   maxCount?: number
   commentCount?: number
+  ringColor?: RingColor
 }) {
   const designedMaxCount = 4
   if (!Array.isArray(displayPicks)) return <></>
@@ -26,13 +29,17 @@ export default function StoryPickInfo({
   return (
     <div className="footnote flex items-center gap-2 text-primary-500">
       {!!displayPicks.length && (
-        <div className="flex -space-x-1 overflow-hidden">
+        <div className="flex -space-x-1">
           {displayPicks?.slice(0, maxCount).map((data, index) => (
             <div
               key={data.member?.id ?? ''}
               style={{ zIndex: socialPageAvatarLayer[index] }}
             >
-              <Avatar src={data.member?.avatar ?? ''} size="m" />
+              <Avatar
+                src={data.member?.avatar ?? ''}
+                size="m"
+                ringColor={ringColor}
+              />
             </div>
           ))}
         </div>

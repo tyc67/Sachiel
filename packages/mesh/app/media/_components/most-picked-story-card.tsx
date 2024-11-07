@@ -86,6 +86,7 @@ export default function MostPickedStoryCard({
                 <StoryPickInfo
                   displayPicks={displayPicks}
                   pickCount={story.picksCount ?? 0}
+                  ringColor="primary-100"
                 />
                 <StoryPickButton storyId={story.id} color="transparent" />
               </div>
