@@ -147,6 +147,7 @@ export type IconName =
   | 'icon-left-arrow'
   | 'icon-arrow-forward'
   | 'icon-invitation-code'
+  | 'icon-forbidden'
   | 'icon-checkbox-on'
   | 'icon-checkbox-off'
   | 'icon-select-image'
