@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 
+import { NEXT_PAGES_REVALIDATE } from '@/constants/config'
+
 import {
   fetchCategoryInformation,
   fetchCategoryStory,
@@ -10,6 +12,8 @@ import DesktopStories from './_components/desktop-stories'
 import MostPickedStory from './_components/most-picked-story'
 import NonDesktopStories from './_components/non-desktop-stories'
 import TopStoriesSection from './_components/top-stories-section'
+
+export const revalidate = NEXT_PAGES_REVALIDATE.homepage
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const categorySlug = params.slug
