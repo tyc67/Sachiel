@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import type { ChangeEvent } from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
@@ -26,6 +26,8 @@ export const EditProfileProvider: React.FC<{
 }> = ({ children }) => {
   const router = useRouter()
   const { user, setUser } = useUser()
+  const params = useParams()
+  const customId = String(params.customId)
   const formRef = useRef(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { addToast } = useToast()
@@ -36,7 +38,7 @@ export const EditProfileProvider: React.FC<{
     isLoading: isProfileLoading,
     isError: isProfileError,
   } = useProfileState({
-    memberId: user.customId,
+    memberId: customId,
     takesCount: 20,
   })
 
