@@ -1,7 +1,9 @@
 import { useRouter } from 'next/navigation'
 
+import { getCurrentUser } from '@/app/actions/auth'
 import Icon from '@/components/icon'
 import { type LoginStepsKey, LoginState, useLogin } from '@/context/login'
+import { useUser } from '@/context/user'
 
 const chevronMap: Pick<
   Record<LoginStepsKey, { title: string; goToStep: LoginStepsKey }>,
@@ -33,11 +35,18 @@ const chevronMap: Pick<
 export default function LoginStepsTitle() {
   const { step, setStep } = useLogin()
   const router = useRouter()
+  const { setUser } = useUser()
 
-  const handleSkipButton = () => {
+  const handleSkipButton = async () => {
     const redirectRoute = localStorage.getItem('login-redirect') ?? '/'
     localStorage.removeItem('login-redirect')
-    router.push(redirectRoute)
+    const userData = await getCurrentUser()
+    if (userData) {
+      setUser(userData)
+      router.push(redirectRoute)
+    } else {
+      router.refresh()
+    }
   }
 
   switch (step) {
