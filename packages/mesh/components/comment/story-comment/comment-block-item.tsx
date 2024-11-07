@@ -92,7 +92,7 @@ const CommentBlockItem = ({
             {/* meta data */}
             <div className="flex max-w-full grow items-center justify-between">
               <div className="flex max-w-[calc(100%_-_50px)] flex-wrap">
-                <p className="subtitle-2 max-w-full cursor-pointer truncate">
+                <p className="subtitle-2 max-w-full cursor-pointer truncate hover-or-active:underline">
                   <Link href={`/profile/member/${comment.member?.customId}`}>
                     {commentData.member?.name || '使用者'}
                   </Link>
