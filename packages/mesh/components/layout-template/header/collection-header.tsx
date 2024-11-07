@@ -7,7 +7,6 @@ import { twMerge } from 'tailwind-merge'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
-import SearchBar from '@/components/search-bar'
 import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
 
@@ -40,7 +39,6 @@ export default function CollectionHeader() {
               className="hidden sm:block"
             />
           </Link>
-          <SearchBar className="hidden sm:flex" />
         </div>
         {/* right side block */}
         <div className="flex">
