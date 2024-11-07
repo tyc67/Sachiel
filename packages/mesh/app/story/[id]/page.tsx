@@ -7,6 +7,7 @@ import {
   getRelatedStories,
   getStory,
 } from '@/app/actions/story'
+import { NEXT_PAGES_REVALIDATE } from '@/constants/config'
 
 import { type ApiData } from './_components/api-data-renderer/renderer'
 import SideIndex from './_components/api-data-renderer/side-index'
@@ -15,6 +16,8 @@ import Comment from './_components/comment'
 import RelatedStories from './_components/related-stories'
 
 export type PublisherPolicy = Awaited<ReturnType<typeof getPublisherPolicy>>
+
+export const revalidate = NEXT_PAGES_REVALIDATE.story
 
 export default async function Page({ params }: { params: { id: string } }) {
   const storyId = params.id
