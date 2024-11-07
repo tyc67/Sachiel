@@ -13,7 +13,7 @@ import RootLayoutWrapper from './_components/root-layout-wrapper'
 import { getCurrentUser } from './actions/auth'
 
 export const metadata: Metadata = {
-  title: 'READr Mesh 讀選',
+  title: 'READr Mesh 讀',
 }
 
 const notoSans = Noto_Sans_TC({
