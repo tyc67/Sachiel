@@ -1,15 +1,14 @@
 import ArticleCard from '@/app/profile/_components/article-card'
-import type {
-  BookmarkItem,
-  Bookmarks,
-  Collections,
-  PickList,
-  PickListItem,
-} from '@/types/profile'
+import * as profile from '@/types/profile'
 import type { PublisherProfile } from '@/utils/data-schema'
 
 interface ArticleCardListProps {
-  items: PickList | Bookmarks | Collections | PublisherProfile['stories']
+  tabCategory?: profile.TabCategoryType
+  items:
+    | profile.PickList
+    | profile.Bookmarks
+    | profile.Collections
+    | PublisherProfile['stories']
   emptyMessage: string
   elementForEmpty?: React.ReactNode
   memberId?: string
@@ -26,6 +25,7 @@ function ArticleCardList({
   memberId,
   avatar,
   name,
+  tabCategory,
 }: ArticleCardListProps) {
   if (!items?.length) {
     return (
@@ -41,9 +41,11 @@ function ArticleCardList({
 
   return (
     <>
-      <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
-        精選文章
-      </p>
+      {tabCategory === profile.TabCategory.PICKS && (
+        <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+          精選文章
+        </p>
+      )}
       <div className="bg-multi-layer-light">
         <ul
           className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
@@ -54,29 +56,47 @@ function ArticleCardList({
         >
           {items.map((item, index) => {
             const isLast = index === items.length - 1
-            if (!item) return
-            if ('story' in item && !item.story) return
-            return (
-              <li
-                key={index}
-                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
-              >
-                {'story' in item ? (
+            if (!item) return null
+            if ('story' in item && !item.story) return null
+
+            if ('story' in item) {
+              return (
+                <li
+                  key={
+                    index +
+                    (item.story?.id || 'id') +
+                    (item.story?.title || 'story title') +
+                    item.story?.createdAt
+                  }
+                  className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+                >
                   <ArticleCard
-                    storyData={item.story as NonNullable<PickListItem>}
+                    storyData={item.story as NonNullable<profile.PickListItem>}
                     isLast={isLast}
                     memberId={memberId}
                     avatar={avatar}
                     name={name}
                     shouldShowComment={shouldShowComment}
                   />
-                ) : (
-                  <ArticleCard
-                    storyData={item as NonNullable<BookmarkItem>}
-                    isLast={isLast}
-                    shouldShowComment={shouldShowComment}
-                  />
-                )}
+                </li>
+              )
+            }
+
+            return (
+              <li
+                key={
+                  index +
+                  (item as NonNullable<profile.BookmarkItem>).id +
+                  (item as NonNullable<profile.BookmarkItem>).title +
+                  (item as NonNullable<profile.BookmarkItem>).createdAt
+                }
+                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+              >
+                <ArticleCard
+                  storyData={item as NonNullable<profile.BookmarkItem>}
+                  isLast={isLast}
+                  shouldShowComment={shouldShowComment}
+                />
               </li>
             )
           })}
