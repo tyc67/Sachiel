@@ -52,6 +52,9 @@ export default function Page() {
 
   const firstSectionStories = stories.slice(0, firstSectionAmount)
   const secondSectionStories = stories.slice(firstSectionAmount)
+  const suggestedMembers = members
+    .filter((m) => m.id !== memberId)
+    .slice(0, suggestedFollowersNumber)
 
   return (
     <main>
@@ -61,7 +64,7 @@ export default function Page() {
             return <Feed key={story.id} story={story} />
           })}
           <FollowSuggestionFeed
-            suggestedFollowers={members.slice(0, suggestedFollowersNumber)}
+            suggestedFollowers={suggestedMembers}
             isNoFollowings={false}
           />
           {secondSectionStories.map((story) => {
@@ -69,9 +72,7 @@ export default function Page() {
           })}
           <MoreFeed feedsNumber={feedsNumber} />
         </div>
-        <FollowSuggestionWidget
-          suggestedFollowers={members.slice(0, suggestedFollowersNumber)}
-        />
+        <FollowSuggestionWidget suggestedFollowers={suggestedMembers} />
       </div>
     </main>
   )
