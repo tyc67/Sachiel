@@ -36,7 +36,7 @@ export default function FeaturedCard({
         <NextLink href={`/story/${story.id}`}>
           <div className="relative aspect-[2/1] shrink-0 overflow-hidden rounded-md sm:aspect-square sm:size-[168px] lg:h-[178px] lg:w-[356px] xl:h-[200px] xl:w-[400px]">
             <NextImage
-              src={story.og_image}
+              src={story.og_image || '/images/default-story-image.webP'}
               fill
               alt={story.title}
               className="object-cover"

@@ -22,7 +22,7 @@ export default function MainCard({ story }: Props) {
       <NextLink href={`story/${story.id}`}>
         <div className="relative aspect-[2/1] shrink-0 overflow-hidden rounded-md lg:h-[250px] lg:w-[500px]">
           <NextImage
-            src={story.og_image}
+            src={story.og_image || '/images/default-story-image.webP'}
             alt={story.title}
             fill
             className="object-cover"
