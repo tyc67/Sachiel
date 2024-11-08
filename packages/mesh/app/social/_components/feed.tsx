@@ -49,7 +49,7 @@ export default function Feed({
         </div>
       ) : null}
       <div className="px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-4">
-        <Link href={`/publisher/${story.publisher.customId}}`}>
+        <Link href={`/profile/publisher/${story.publisher.customId}`}>
           <h4 className="body-3 mb-1 text-primary-500 hover-or-active:text-primary-700">
             {story.publisher.title}
           </h4>
