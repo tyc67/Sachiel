@@ -37,7 +37,7 @@ const CollectionsCarouselElement = ({
         </div>
       </Link>
       <section className="flex h-auto grow flex-col px-3 py-2">
-        <Link className="flex flex-col" href={`/collection/${id}`}>
+        <Link className="flex grow flex-col" href={`/collection/${id}`}>
           <div className="h-full flex-col justify-between">
             <p className="caption-1 text-primary-500">@{creator?.customId}</p>
             <p className="subtitle-2 pb-3 text-primary-700">{title}</p>
