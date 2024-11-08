@@ -19,7 +19,7 @@ const StoryCard = ({
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
             <NextImage
               alt={story.title}
-              src={story.og_image}
+              src={story.og_image || '/images/default-story-image.webP'}
               fill
               className="object-cover"
             />
