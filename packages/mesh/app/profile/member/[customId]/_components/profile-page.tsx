@@ -182,6 +182,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
       )}
       <ArticleCardList
         items={tabData || []}
+        tabCategory={category}
         shouldShowComment={shouldShowComment}
         emptyMessage={getMessage(category)}
         elementForEmpty={emptyElement(category)}

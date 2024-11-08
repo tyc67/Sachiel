@@ -105,6 +105,11 @@ const storyGetters = {
     collection: (data) => data.picks ?? [],
     default: [],
   }),
+  redirectUrl: createGetter<string>({
+    story: (data) => `/story/${data.id}` ?? '',
+    collection: (data) => `/collection/${data.id}` ?? '',
+    default: '',
+  }),
 } as const
 
 const ArticleCard = ({
@@ -169,11 +174,12 @@ const ArticleCard = ({
           </section>
         </Link>
         <div
-          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:pt-[12px] md:after:hidden ${
-            isLast && 'after:hidden'
+          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
+            isLast ? 'after:hidden' : ''
           } ${
-            isCollection(storyData) &&
-            'py-[10px] after:hidden sm:p-0 md:justify-between'
+            isCollection(storyData)
+              ? 'py-[10px] after:hidden sm:p-0 md:justify-between'
+              : ''
           }`}
         >
           <Link className="flex grow flex-col" href={redirectLink()}>
@@ -256,6 +262,7 @@ const ArticleCard = ({
               avatar={avatar}
               clampLineCount={3}
               canToggle={false}
+              redirectUrl={storyGetters.redirectUrl(storyData)}
             />
           )}
         </div>
