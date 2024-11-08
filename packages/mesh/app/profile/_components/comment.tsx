@@ -91,7 +91,7 @@ const Comment: React.FC<CommentProps> = ({
           ringColor="primary-100"
         />
         <p
-          className={`body-3 line-clamp-3 size-full cursor-pointer ${
+          className={`body-3 line-clamp-3 h-fit w-full cursor-pointer ${
             commentData.content ? 'text-primary-600' : 'text-primary-400'
           } sm:line-clamp-1`}
           ref={commentRef}
