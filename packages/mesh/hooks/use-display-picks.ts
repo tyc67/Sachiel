@@ -1,33 +1,80 @@
+import { type Story as LatestStory } from '@/app/actions/get-latest-stories-in-category'
+import { type Collection } from '@/app/collection/(query)/_types/collection'
 import type { SocialStoryPicks } from '@/app/social/_components/feed'
+import { type Story as ArticleStory } from '@/app/story/[id]/_components/article'
 import { useUser } from '@/context/user'
-import type { CategoryStory, DailyStory, Story } from '@/types/homepage'
+import type {
+  CategoryStory,
+  DailyStory,
+  Story as HomepageStory,
+} from '@/types/homepage'
 
-// This hook handles the display of picks for homepage
 export function useDisplayPicks(
-  story: CategoryStory | DailyStory | Story | SocialStoryPicks
+  story:
+    | CategoryStory
+    | DailyStory
+    | HomepageStory
+    | SocialStoryPicks
+    | ArticleStory
+    | LatestStory
+    | Collection
 ) {
   const { user } = useUser()
-  const isStoryPicked = user.pickStoryIds.has(story.id)
-  const isUserInPicks = story.picks.some(
-    (pick) => pick.member?.id === user.memberId
-  )
+  if (!story || !story.picks) return { displayPicks: [], displayPicksCount: 0 }
 
-  // If the user's data is in the JSON, filter it out first,
-  // so it can be added later based on the isStoryPicked flag
-  let displayPicks = story.picks.filter(
+  const isUserLoggedIn = !!user.memberId
+  const isStoryPicked = isUserLoggedIn ? user.pickStoryIds.has(story.id) : false
+  const isUserInPicks = isUserLoggedIn
+    ? story.picks.some((pick) => pick.member?.id === user.memberId)
+    : false
+
+  const picksCount =
+    'picksCount' in story
+      ? (story as { picksCount: number }).picksCount
+      : 'pickCount' in story
+      ? (story as { pickCount: number }).pickCount
+      : 0
+
+  const transformedData = {
+    id: story.id,
+    picksCount,
+    picks: story.picks.map((p) => ({
+      member: {
+        id: p.member?.id ?? '',
+        name: p.member?.name ?? '',
+        avatar: p.member?.avatar ?? '',
+        customId: p.member && 'customId' in p.member ? p.member.customId : '',
+      },
+    })),
+  }
+
+  const displayPicks = transformedData.picks.filter(
     (pick) => pick.member?.id !== user.memberId
   )
-  let displayPicksCount =
-    ('picksCount' in story ? story.picksCount : story.pickCount) -
-    (isUserInPicks ? 1 : 0)
+
+  let displayPicksCount = isUserInPicks
+    ? transformedData.picksCount - 1
+    : transformedData.picksCount
 
   if (isStoryPicked) {
-    displayPicks = [
-      ...displayPicks,
-      { member: { id: user.memberId, name: user.name, avatar: user.avatar } },
-    ]
+    const currentUserPick = {
+      member: {
+        id: user.memberId,
+        name: user.name ?? '',
+        avatar: user.avatar ?? '',
+        customId: user.customId ?? '',
+      },
+    }
+    displayPicks.unshift(currentUserPick)
     displayPicksCount++
   }
 
+  // console.log({ isUserLoggedIn, isStoryPicked, isUserInPicks })
+  // console.log(story)
+  // console.log(transformedData)
+  // console.log(displayPicks, displayPicksCount)
+
   return { displayPicks, displayPicksCount }
 }
+
+export type DisplayPicks = ReturnType<typeof useDisplayPicks>['displayPicks']

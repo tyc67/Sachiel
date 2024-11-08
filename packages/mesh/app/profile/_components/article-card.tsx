@@ -9,6 +9,7 @@ import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { CommentObjective } from '@/types/objective'
 import {
   type BookmarkItem,
@@ -138,6 +139,11 @@ const ArticleCard = ({
           },
         }
 
+  const { displayPicks, displayPicksCount } = useDisplayPicks({
+    id: storyData.id,
+    picks: storyGetters.pick(storyData),
+    picksCount: storyGetters.pickCount(storyData),
+  })
   const shouldShowSource = !isCollection(storyData)
   const redirectLink = () => {
     if (isCollection(storyData)) return `/collection/${storyData.id}`
@@ -232,9 +238,10 @@ const ArticleCard = ({
               `}
           >
             <StoryPickInfo
-              displayPicks={storyGetters.pick(storyData)}
-              pickCount={storyGetters.pickCount(storyData)}
+              displayPicks={displayPicks}
+              pickCount={displayPicksCount}
               maxCount={4}
+              storyId={storyData.id}
             />
             {isCollection(storyData) ? (
               <CollectionPickButton collectionId={storyData.id} />

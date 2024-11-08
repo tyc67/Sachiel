@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { sortAndFilterComments, sortAuthorComments } from '@/utils/comment'
 
 import CommentBlock from '../story-comment/comment-block'
@@ -41,6 +42,7 @@ export function MobileCommentModalContent({
     isConfirmDeleteCommentModalOpen,
   } = state
   const { user } = useUser()
+  const { displayPicks, displayPicksCount } = useDisplayPicks(data)
   const handleAddCommentModalOnLeave = () => {
     dispatch({ type: 'TOGGLE_CONFIRM_MODAL', payload: { isVisible: false } })
     dispatch({
@@ -67,10 +69,11 @@ export function MobileCommentModalContent({
       <MobileStoryCommentHeader />
       <div className="max-h-[calc(100dvh_-_60px)] overflow-y-auto py-4 pb-[69px]">
         <MobileStoryCommentMeta
+          storyId={data.id}
           title={data?.title || ''}
           publisher={data?.source?.title || 'publisher'}
-          displayPicks={data?.picks}
-          pickCount={data?.picksCount || 0}
+          displayPicks={displayPicks}
+          pickCount={displayPicksCount}
         />
         {!!popularComments.length && (
           <CommentBlock
