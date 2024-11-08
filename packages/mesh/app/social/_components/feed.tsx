@@ -72,6 +72,7 @@ export default function Feed({
             <StoryPickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} />
           </div>

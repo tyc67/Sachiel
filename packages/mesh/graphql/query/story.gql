@@ -169,3 +169,28 @@ query GetStorySource($storyId: ID) {
     }
   }
 }
+
+query GetStoryPickers($storyId: ID, $picksTake: Int, $picksSkip: Int) {
+  story(where: { id: $storyId }) {
+    id
+    picks: pick(
+      where: { kind: { equals: "read" }, is_active: { equals: true } }
+      orderBy:  {
+         createdAt: desc
+      }
+      take: $picksTake
+      skip: $picksSkip
+  
+    ) {
+      id
+      createdAt
+      kind
+      member {
+        id
+        name
+        avatar
+        customId
+      }
+    }
+  }
+}

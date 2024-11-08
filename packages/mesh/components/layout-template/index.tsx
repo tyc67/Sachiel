@@ -3,6 +3,9 @@
 import { usePathname } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
+import { usePickersModal } from '@/context/pickers-modal'
+
+import PickersModal from '../pickers-modal'
 import Spinner from '../spinner'
 import type { MobileBottomActionBarProps } from './bottom-action-bar'
 import MobileBottomActionBar from './bottom-action-bar'
@@ -124,6 +127,8 @@ const DefaultLayout = ({
   customStyle?: CustomStyle
   children: React.ReactNode
 }) => {
+  const { isModalOpen: isPickersModalOpen } = usePickersModal()
+
   return (
     <body className={`min-h-screen ${customStyle.background}`}>
       {/* fixed header */}
@@ -161,6 +166,7 @@ const DefaultLayout = ({
       {mobileNavigation && <MobileNavigation {...mobileNavigation} />}
       {/* cover on mobile bottom fixed nav if mobileActionBar is setup */}
       {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
+      {isPickersModalOpen ? <PickersModal /> : null}
     </body>
   )
 }
@@ -204,6 +210,8 @@ const ArticleLayout = ({
   const closeNav = () => {
     setShouldShowNav(false)
   }
+  const { isModalOpen: isPickersModalOpen } = usePickersModal()
+
   return (
     <body className="min-h-screen bg-white">
       {/* fixed header */}
@@ -235,6 +243,7 @@ const ArticleLayout = ({
       <MobileNavigation {...mobileNavigation} />
       {/* cover on mobile bottom nav */}
       <MobileBottomActionBar {...mobileActionBar} />
+      {isPickersModalOpen ? <PickersModal /> : null}
     </body>
   )
 }

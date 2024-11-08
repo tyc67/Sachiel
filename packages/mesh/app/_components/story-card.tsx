@@ -67,6 +67,7 @@ export default forwardRef(function StoryCard<
         <StoryPickInfo
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
+          storyId={story.id}
         />
         <StoryPickButton storyId={story.id} />
       </div>

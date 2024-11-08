@@ -3,17 +3,19 @@ import React from 'react'
 
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
-import type { UserActionStoryFragment } from '@/graphql/__generated__/graphql'
-type Picks = UserActionStoryFragment['pick']
+import { type DisplayPicks } from '@/hooks/use-display-picks'
+
 const MobileStoryCommentMeta = ({
+  storyId,
   title,
   publisher,
   displayPicks,
   pickCount,
 }: {
+  storyId: string
   title: string
   publisher: string
-  displayPicks: Picks
+  displayPicks: DisplayPicks
   pickCount: number
 }) => {
   return (
@@ -25,7 +27,11 @@ const MobileStoryCommentMeta = ({
         </h4>
       </Link>
       <div className="mt-4 flex h-8 flex-row justify-between">
-        <StoryPickInfo displayPicks={displayPicks} pickCount={pickCount} />
+        <StoryPickInfo
+          displayPicks={displayPicks}
+          pickCount={pickCount}
+          storyId={storyId}
+        />
         <StoryPickButton storyId={'0'} />
       </div>
     </section>
