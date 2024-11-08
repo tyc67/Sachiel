@@ -1,6 +1,6 @@
 import type { ImageProps } from 'next/image'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import type { ImageCategory } from '@/constants/fallback-src'
 import { DEFAULT_IMAGES } from '@/constants/fallback-src'
@@ -18,6 +18,12 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   ...props
 }) => {
   const [imgSrc, setImgSrc] = useState(src || DEFAULT_IMAGES[fallbackCategory])
+
+  useEffect(() => {
+    if (src) {
+      setImgSrc(src)
+    }
+  }, [src])
 
   const handleError = () => {
     setImgSrc(DEFAULT_IMAGES[fallbackCategory])

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import type { IconName } from '@/components/icon'
 import Icon from '@/components/icon'
@@ -57,6 +57,7 @@ const NonMobileNav = ({
 }) => {
   const { user } = useUser()
   const isLoggedIn = isUserLoggedIn(user)
+  const searchParams = useSearchParams()
   return (
     <nav className="hidden sm:fixed sm:bottom-0 sm:left-0 sm:top-[theme(height.header.sm)] sm:z-layout sm:flex sm:w-[theme(width.nav.sm)] sm:justify-end sm:bg-white md:w-[theme(width.nav.md)] xl:w-[calc((100vw-theme(width.maxContent))/2+theme(width.nav.xl))]">
       {/* nested nav bar to maintain the max width for screen width larger than 1440 */}
@@ -79,7 +80,7 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path)}
+                    isOn={matchPath(iconInfo.href, path) && !searchParams.size}
                     iconInfo={{
                       ...iconInfo,
                       href: iconInfo.href + `/member/${userCustomId}`,
@@ -91,7 +92,7 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path)}
+                    isOn={matchPath(iconInfo.href, path) && !!searchParams.size}
                     iconInfo={{
                       ...iconInfo,
                       href:

@@ -3,6 +3,9 @@
 import { usePathname } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
+import { usePickersModal } from '@/context/pickers-modal'
+
+import PickersModal from '../pickers-modal'
 import Spinner from '../spinner'
 import type { MobileBottomActionBarProps } from './bottom-action-bar'
 import MobileBottomActionBar from './bottom-action-bar'
@@ -20,7 +23,7 @@ import NonMobileNavigation, {
   NonMobileNavigationType,
 } from './navigation/non-mobile-navigation'
 
-type LayoutType = 'default' | 'stateless' | 'article'
+type LayoutType = 'default' | 'stateless' | 'article' | 'collection'
 
 type CustomStyle = {
   background?: string
@@ -50,6 +53,10 @@ type LayoutTemplateProps = {
     }
   | {
       type: 'stateless'
+    }
+  | {
+      type: 'collection'
+      mobileNavigation: MobileNavigationProps
     }
 )
 
@@ -92,6 +99,12 @@ export default function LayoutTemplate(props: LayoutTemplateProps) {
           {childrenJsx}
         </ArticleLayout>
       )
+    case 'collection':
+      return (
+        <CollectionLayout mobileNavigation={props.mobileNavigation}>
+          {childrenJsx}
+        </CollectionLayout>
+      )
     default:
       console.error('LayoutTemplate with unhandleType', type)
       return null
@@ -114,6 +127,8 @@ const DefaultLayout = ({
   customStyle?: CustomStyle
   children: React.ReactNode
 }) => {
+  const { isModalOpen: isPickersModalOpen } = usePickersModal()
+
   return (
     <body className={`min-h-screen ${customStyle.background}`}>
       {/* fixed header */}
@@ -151,6 +166,7 @@ const DefaultLayout = ({
       {mobileNavigation && <MobileNavigation {...mobileNavigation} />}
       {/* cover on mobile bottom fixed nav if mobileActionBar is setup */}
       {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
+      {isPickersModalOpen ? <PickersModal /> : null}
     </body>
   )
 }
@@ -194,6 +210,8 @@ const ArticleLayout = ({
   const closeNav = () => {
     setShouldShowNav(false)
   }
+  const { isModalOpen: isPickersModalOpen } = usePickersModal()
+
   return (
     <body className="min-h-screen bg-white">
       {/* fixed header */}
@@ -225,6 +243,27 @@ const ArticleLayout = ({
       <MobileNavigation {...mobileNavigation} />
       {/* cover on mobile bottom nav */}
       <MobileBottomActionBar {...mobileActionBar} />
+      {isPickersModalOpen ? <PickersModal /> : null}
+    </body>
+  )
+}
+
+const CollectionLayout = ({
+  mobileNavigation,
+  children,
+}: {
+  mobileNavigation: MobileNavigationProps
+  customStyle?: CustomStyle
+  children: React.ReactNode
+}) => {
+  return (
+    <body className="min-h-screen bg-white">
+      {/* fixed header */}
+      <Header type={HeaderType.Collection} />
+      {/* block for non-fixed content, set padding for fixed blocks */}
+      <div className="primary-container-collection">{children}</div>
+      {/* cover on mobile header if navigation is setup */}
+      {mobileNavigation && <MobileNavigation {...mobileNavigation} />}
     </body>
   )
 }

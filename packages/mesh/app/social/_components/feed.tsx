@@ -28,10 +28,7 @@ export default function Feed({
     <div className="flex w-screen min-w-[375px] max-w-[600px] flex-col bg-white drop-shadow sm:rounded-md">
       <div className="flex items-center justify-between px-5 py-3">
         <FeedLatestAction actions={storyActions} />
-        <StoryMoreActionButton
-          storyId={story.id}
-          publisherId={story.publisher.id}
-        />
+        <StoryMoreActionButton story={story} publisherId={story.publisher.id} />
       </div>
       {story.og_image ? (
         <div className="aspect-[2/1] overflow-hidden bg-multi-layer-light">
@@ -75,6 +72,7 @@ export default function Feed({
             <StoryPickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} />
           </div>

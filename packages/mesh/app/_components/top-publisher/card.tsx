@@ -54,7 +54,9 @@ export default function TopPublisherCard({ publisher }: Props) {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex gap-x-3">
           {/* TODO: render logo of publisher */}
-          <div>LOGO</div>
+          <NextLink href={`profile/publisher/${publisher.customId}`}>
+            <div>LOGO</div>
+          </NextLink>
           <div>
             <p className="subtitle-2 text-primary-700 hover-or-active:underline">
               <NextLink href={`profile/publisher/${publisher.customId}`}>

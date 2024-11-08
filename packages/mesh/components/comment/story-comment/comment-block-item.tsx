@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import React from 'react'
 
 import Icon from '@/components/icon'
@@ -79,7 +80,9 @@ const CommentBlockItem = ({
         commentData.id === state.highlightedId ? 'bg-highlight-red' : ''
       }`}
     >
-      <Avatar src={commentData.member?.avatar || ''} size="l" />
+      <Link href={`/profile/member/${comment.member?.customId}`}>
+        <Avatar src={commentData.member?.avatar || ''} size="l" />
+      </Link>
       {state.isEditingComment &&
       state.commentEditState.commentId === commentData.id ? (
         <CommentEditor />
@@ -89,8 +92,10 @@ const CommentBlockItem = ({
             {/* meta data */}
             <div className="flex max-w-full grow items-center justify-between">
               <div className="flex max-w-[calc(100%_-_50px)] flex-wrap">
-                <p className="subtitle-2 max-w-full truncate">
-                  {commentData.member?.name || '使用者'}
+                <p className="subtitle-2 max-w-full cursor-pointer truncate hover-or-active:underline">
+                  <Link href={`/profile/member/${comment.member?.customId}`}>
+                    {commentData.member?.name || '使用者'}
+                  </Link>
                 </p>
                 <div className="flex items-center">
                   <span className="caption-1 mr-1 text-primary-500">
@@ -141,11 +146,11 @@ const CommentBlockItem = ({
                 onClick={handleToggleClamp}
                 className="body-3 relative max-h-10 overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
               >
-                {commentData.content}
+                {comment.content}
               </p>
             ) : (
               <p className="body-3 whitespace-pre text-wrap break-words text-primary-600">
-                {commentData.content}
+                {comment.content}
               </p>
             )}
           </div>

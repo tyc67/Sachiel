@@ -1,0 +1,78 @@
+mutation CreateCollection(
+  $title: String
+  $slug: String
+  $summary: String
+  $status: String
+  $public: String
+  $format: String
+  $imageName: String
+  $imageUpload: Upload
+  $collectionpicks: [CollectionPickCreateInput!]
+  $memberId: ID
+) {
+  createCollection(
+    data: {
+      title: $title
+      slug: $slug
+      summary: $summary
+      status: $status
+      public: $public
+      format: $format
+      heroImage: {
+        create: { name: $imageName, file: { upload: $imageUpload } }
+      }
+      collectionpicks: { create: $collectionpicks }
+      creator: { connect: { id: $memberId } }
+    }
+  ) {
+    id
+  }
+}
+
+mutation UpdateCollection($id: ID, $data: CollectionUpdateInput!) {
+  updateCollection(where: { id: $id }, data: $data) {
+    title
+  }
+}
+
+mutation AddStoryToCollection(
+  $id: ID
+  $storyId: ID
+  $sortOrder: Int
+  $memberId: ID
+  $pickDate: DateTime
+) {
+  updateCollection(
+    where: { id: $id }
+    data: {
+      collectionpicks: {
+        create: [
+          {
+            story: { connect: { id: $storyId } }
+            sort_order: $sortOrder
+            creator: { connect: { id: $memberId } }
+            picked_date: $pickDate
+          }
+        ]
+      }
+    }
+  ) {
+    collectionpicks {
+      story {
+        title
+      }
+    }
+  }
+}
+
+mutation RemoveCollection($collectionId: ID, $heroImageId: ID) {
+  updateCollection(
+    where: { id: $collectionId }
+    data: { status: "delete", heroImage: { disconnect: true } }
+  ) {
+    status
+  }
+  deletePhoto(where: { id: $heroImageId }) {
+    id
+  }
+}

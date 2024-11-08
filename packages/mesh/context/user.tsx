@@ -8,12 +8,13 @@ import {
   useState,
 } from 'react'
 
+import type { GetMemberProfileQuery } from '@/graphql/__generated__/graphql'
 import { type GetCurrentUserMemberIdQuery } from '@/graphql/__generated__/graphql'
 import type { ProfileTypes } from '@/types/profile'
 
 type Member = NonNullable<NonNullable<GetCurrentUserMemberIdQuery>['member']>
 type Collections = NonNullable<
-  NonNullable<GetCurrentUserMemberIdQuery>['collections']
+  NonNullable<GetMemberProfileQuery>['collections']
 >
 type FollowingCategories = NonNullable<Member['followingCategories']>
 type FollowingPublishers = NonNullable<Member['followingPublishers']>

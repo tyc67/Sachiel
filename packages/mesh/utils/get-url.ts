@@ -15,3 +15,10 @@ export function getCollectionUrl(collectionId: string) {
   }
   return ''
 }
+
+export function getMemberProfileUrl(customId: string) {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/profile/member/${customId}`
+  }
+  return ''
+}

@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import {
   createContext,
   useCallback,
@@ -8,11 +9,17 @@ import {
   useRef,
   useState,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import Icon from '@/components/icon'
 import { SECOND } from '@/constants/time-unit'
+import useIsClient from '@/hooks/use-is-client'
+import {
+  clearCrossPageToasts,
+  getCrossPageToast,
+} from '@/utils/cross-page-toast'
 
-type Toast = {
+export type Toast = {
   status: 'success' | 'fail'
   text: string
 }
@@ -103,6 +110,9 @@ const Toast = ({ toast, onClose }: { toast?: Toast; onClose: () => void }) => {
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
+  const pathname = usePathname()
+  const isClient = useIsClient()
+
   const currentToast = toasts[0]
 
   const addToast = useCallback((newToast: Toast) => {
@@ -113,11 +123,27 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts(toasts.slice(1))
   }, [toasts])
 
+  useEffect(() => {
+    const crossPageToasts = getCrossPageToast()
+    if (crossPageToasts) {
+      setTimeout(() => {
+        crossPageToasts.forEach((toast) => {
+          addToast(toast)
+        })
+      }, SECOND)
+      clearCrossPageToasts()
+    }
+  }, [addToast, isClient, pathname])
+
   return (
     <ToastContext.Provider value={{ addToast }}>
       <>
         {children}
-        <Toast toast={currentToast} onClose={onToastEnded} />
+        {isClient &&
+          createPortal(
+            <Toast toast={currentToast} onClose={onToastEnded} />,
+            document.body
+          )}
       </>
     </ToastContext.Provider>
   )
@@ -126,7 +152,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 export function useToast() {
   const context = useContext(ToastContext)
   if (!context) {
-    throw new Error('ToastProvider Error')
+    throw new Error('useToast must be used within a ToastProvider')
   }
   return context
 }

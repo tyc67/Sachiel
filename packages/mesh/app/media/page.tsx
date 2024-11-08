@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
 
 import { getCurrentUser } from '@/app/actions/auth'
+import { NEXT_PAGES_REVALIDATE } from '@/constants/config'
 import { type GetAllCategoriesQuery } from '@/graphql/__generated__/graphql'
 
 import getAllCategories from '../actions/get-all-categories'
 import MediaStories from './_components/media-stories'
 
-//TODO: cache setting
-export const revalidate = 0
+export const revalidate = NEXT_PAGES_REVALIDATE.media
 
 export type Category = NonNullable<GetAllCategoriesQuery['categories']>[number]
 
