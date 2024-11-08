@@ -54,14 +54,20 @@ function ArticleCardList({
         >
           {items.map((item, index) => {
             const isLast = index === items.length - 1
-            if (!item) return
-            if ('story' in item && !item.story) return
-            return (
-              <li
-                key={index}
-                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
-              >
-                {'story' in item ? (
+            if (!item) return null
+            if ('story' in item && !item.story) return null
+
+            if ('story' in item) {
+              return (
+                <li
+                  key={
+                    index +
+                    (item.story?.id || 'id') +
+                    (item.story?.title || 'story title') +
+                    item.story?.createdAt
+                  }
+                  className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+                >
                   <ArticleCard
                     storyData={item.story as NonNullable<PickListItem>}
                     isLast={isLast}
@@ -70,13 +76,25 @@ function ArticleCardList({
                     name={name}
                     shouldShowComment={shouldShowComment}
                   />
-                ) : (
-                  <ArticleCard
-                    storyData={item as NonNullable<BookmarkItem>}
-                    isLast={isLast}
-                    shouldShowComment={shouldShowComment}
-                  />
-                )}
+                </li>
+              )
+            }
+
+            return (
+              <li
+                key={
+                  index +
+                  (item as NonNullable<BookmarkItem>).id +
+                  (item as NonNullable<BookmarkItem>).title +
+                  (item as NonNullable<BookmarkItem>).createdAt
+                }
+                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+              >
+                <ArticleCard
+                  storyData={item as NonNullable<BookmarkItem>}
+                  isLast={isLast}
+                  shouldShowComment={shouldShowComment}
+                />
               </li>
             )
           })}
