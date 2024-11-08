@@ -59,7 +59,7 @@ const createGetter = <T,>(config: GetterConfig<T>) => {
 const storyGetters = {
   image: createGetter<string>({
     story: (data) => data.og_image ?? '',
-    collection: (data) => data.heroImage?.urlOriginal ?? '',
+    collection: (data) => data.heroImage?.resized?.original ?? '',
     default: '',
   }),
 
@@ -154,6 +154,7 @@ const ArticleCard = ({
     if (isCollection(storyData)) return `/collection/${storyData.id}`
     return `/story/${storyData?.id}`
   }
+
   return (
     <>
       <CommentProvider
