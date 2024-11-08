@@ -69,11 +69,6 @@ export function useDisplayPicks(
     displayPicksCount++
   }
 
-  // console.log({ isUserLoggedIn, isStoryPicked, isUserInPicks })
-  // console.log(story)
-  // console.log(transformedData)
-  // console.log(displayPicks, displayPicksCount)
-
   return { displayPicks, displayPicksCount }
 }
 
