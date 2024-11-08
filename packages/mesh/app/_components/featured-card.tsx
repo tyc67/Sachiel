@@ -52,10 +52,7 @@ export default function FeaturedCard({
               </p>
             </NextLink>
 
-            <StoryMoreActionButton
-              storyId={story.id}
-              publisherId={publisherId}
-            />
+            <StoryMoreActionButton story={story} publisherId={publisherId} />
           </div>
 
           <h3 className="title-2 lg:title-1 mb-2 text-primary-700 hover-or-active:underline lg:mb-3">
@@ -75,6 +72,8 @@ export default function FeaturedCard({
             <StoryPickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
+              ringColor="primary-100"
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} color="transparent" />
           </div>

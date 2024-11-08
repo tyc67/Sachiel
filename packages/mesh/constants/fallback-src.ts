@@ -5,7 +5,7 @@ export enum ImageCategory {
 }
 
 export const DEFAULT_IMAGES: Record<ImageCategory, string> = {
-  [ImageCategory.STORY]: '/images/default-story-image.webp',
-  [ImageCategory.AVATAR]: '/images/default-avatar-image.webp',
-  [ImageCategory.PUBLISHER]: '/images/default-publisher-image.webp',
+  [ImageCategory.STORY]: '/images/default-story-image.webP',
+  [ImageCategory.AVATAR]: '/images/default-avatar-image.png',
+  [ImageCategory.PUBLISHER]: '/images/default-publisher-logo.png',
 }

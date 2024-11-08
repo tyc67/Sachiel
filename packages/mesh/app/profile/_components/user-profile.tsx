@@ -38,12 +38,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   return (
     <>
       <section className="flex w-full gap-4">
-        <Avatar
-          size="xl"
-          src={avatar}
-          extra="sm:w-20 sm:h-20 object-cover"
-          isRound={userType !== 'publisher'}
-        />
+        <Avatar size="xl" src={avatar} extra="sm:w-20 sm:h-20 object-cover" />
         <div className="flex flex-col justify-center gap-1">
           <p className="profile-title  sm:title-1 text-primary-700">{name}</p>
           {userPickOrPickedSubtitle(userType)}

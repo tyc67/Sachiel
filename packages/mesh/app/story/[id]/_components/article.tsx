@@ -9,6 +9,7 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
 
 import { type PublisherPolicy } from '../page'
@@ -16,7 +17,7 @@ import ApiDataRenderer, { type ApiData } from './api-data-renderer/renderer'
 import SideIndex from './api-data-renderer/side-index'
 import PaymentWall from './payment-wall'
 
-type Story = NonNullable<GetStoryQuery>['story']
+export type Story = NonNullable<GetStoryQuery>['story']
 
 const inHousePublisherCustomIds = ['mirrormedia', 'readr']
 
@@ -88,7 +89,9 @@ export default function Article({
 
   const publishDateInFormat = displayTime(story?.published_date)
   // TODO: handle login user's following situation like feed.tsx did
-  const displayPicks = story?.picks
+  // const displayPicks = story?.picks
+
+  const { displayPicks, displayPicksCount } = useDisplayPicks(story)
 
   return (
     <div>
@@ -123,17 +126,20 @@ export default function Article({
               <StoryPickInfo
                 displayPicks={displayPicks}
                 maxCount={4}
-                pickCount={story?.picksCount ?? 0}
+                pickCount={displayPicksCount}
                 commentCount={story?.commentsCount ?? 0}
+                storyId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
               <div className="hidden items-center gap-1 sm:flex">
                 <PublisherDonateButton publisherId={story?.source?.id ?? ''} />
                 <StoryPickButton storyId={story?.id ?? ''} />
-                <StoryMoreActionButton
-                  storyId={story?.id ?? ''}
-                  publisherId={story?.source?.id ?? ''}
-                />
+                {story && (
+                  <StoryMoreActionButton
+                    story={story}
+                    publisherId={story?.source?.id ?? ''}
+                  />
+                )}
               </div>
             </div>
           </div>

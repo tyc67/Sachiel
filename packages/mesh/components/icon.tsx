@@ -78,6 +78,7 @@ export type IconName =
   | 'icon-google'
   | 'icon-email'
   | 'icon-chevron-left'
+  | 'icon-chevron-left-white'
   | 'icon-chevron-left-hover'
   | 'icon-chevron-left-disable'
   | 'icon-chevron-right'
@@ -146,6 +147,11 @@ export type IconName =
   | 'icon-left-arrow'
   | 'icon-arrow-forward'
   | 'icon-invitation-code'
+  | 'icon-forbidden'
+  | 'icon-checkbox-on'
+  | 'icon-checkbox-off'
+  | 'icon-select-image'
+  | 'icon-collection'
 
 export type IconProps = {
   size: Size

@@ -1,7 +1,9 @@
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
+import { getCurrentUser } from '@/app/actions/auth'
 import Icon from '@/components/icon'
 import { type LoginStepsKey, LoginState, useLogin } from '@/context/login'
+import { useUser } from '@/context/user'
 
 const chevronMap: Pick<
   Record<LoginStepsKey, { title: string; goToStep: LoginStepsKey }>,
@@ -32,7 +34,20 @@ const chevronMap: Pick<
 
 export default function LoginStepsTitle() {
   const { step, setStep } = useLogin()
-  // const router = useRouter()
+  const router = useRouter()
+  const { setUser } = useUser()
+
+  const handleSkipButton = async () => {
+    const redirectRoute = localStorage.getItem('login-redirect') ?? '/'
+    localStorage.removeItem('login-redirect')
+    const userData = await getCurrentUser()
+    if (userData) {
+      setUser(userData)
+      router.push(redirectRoute)
+    } else {
+      router.refresh()
+    }
+  }
 
   switch (step) {
     case LoginState.Entry:
@@ -70,16 +85,14 @@ export default function LoginStepsTitle() {
     case LoginState.SetWallet:
       return (
         <div className="flex w-full px-5">
-          {/* <div className="w-9"></div> */}
+          <div className="w-9"></div>
           <h2 className="list-title mx-auto">連結錢包</h2>
-          {/* <button
-            // temporarily remove skip button
+          <button
             className="list-title text-custom-blue"
-            //TODO: update URL
-            onClick={() => router.push('/media')}
+            onClick={handleSkipButton}
           >
             略過
-          </button> */}
+          </button>
         </div>
       )
   }

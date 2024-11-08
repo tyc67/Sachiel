@@ -63,7 +63,7 @@ export function PickModalProvider({ children }: { children: React.ReactNode }) {
 export const usePickModal = () => {
   const context = useContext(ModalContext)
   if (context === undefined) {
-    throw new Error('useModal must be used within a ModalProvider')
+    throw new Error('usePickModal must be used within a ModalProvider')
   }
   return context
 }

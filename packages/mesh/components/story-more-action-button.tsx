@@ -8,6 +8,7 @@ import { twMerge } from 'tailwind-merge'
 
 import { addBookmark, removeBookmark } from '@/app/actions/bookmark'
 import { removeFollowPublisher } from '@/app/actions/follow-publisher'
+import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/edit-collection'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
@@ -16,6 +17,7 @@ import { PaymentType } from '@/types/payment'
 import { getStoryUrl } from '@/utils/get-url'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
+import AddStoryToCollection from './add-story-to-collection'
 import Icon from './icon'
 import ShareSheet from './share-sheet'
 
@@ -29,13 +31,13 @@ const isPositionValid = (position: Position) => {
 }
 
 export default function StoryMoreActionButton({
-  storyId,
+  story,
   publisherId,
   canUnFollowPublisher = false,
   nestedScrollContainerRef,
   className,
 }: {
-  storyId: string
+  story: CollectionPickStory
   publisherId: string
   canUnFollowPublisher?: boolean
   nestedScrollContainerRef?: RefObject<HTMLElement>
@@ -43,6 +45,7 @@ export default function StoryMoreActionButton({
 }) {
   const [shouldShowShareSheet, setShouldShowShareSheet] = useState(false)
   const [shouldShowActionSheet, setShouldShowActionSheet] = useState(false)
+  const [shouldShowAddCollection, setShouldShowAddCollection] = useState(false)
   const [position, setPosition] = useState<Position>({
     top: Infinity,
     left: Infinity,
@@ -70,12 +73,21 @@ export default function StoryMoreActionButton({
   }, [])
 
   const openShareSheet = () => {
-    setShouldShowActionSheet(false)
+    closeActionSheet()
     setShouldShowShareSheet(true)
   }
 
   const closeShareSheet = () => {
     setShouldShowShareSheet(false)
+  }
+
+  const openAddCollection = () => {
+    closeActionSheet()
+    setShouldShowAddCollection(true)
+  }
+
+  const closeAddCollection = () => {
+    setShouldShowAddCollection(false)
   }
 
   useEffect(() => {
@@ -121,17 +133,25 @@ export default function StoryMoreActionButton({
       {shouldShowActionSheet && (
         <ActionSheet
           ref={actionSheetRef}
-          storyId={storyId}
+          storyId={story.id}
           publisherId={publisherId}
           onClose={closeActionSheet}
           openShareSheet={openShareSheet}
+          openAddCollection={openAddCollection}
           canUnFollowPublisher={canUnFollowPublisher}
           position={position}
         />
       )}
-      {shouldShowShareSheet && (
-        <ShareSheet onClose={closeShareSheet} url={getStoryUrl(storyId)} />
-      )}
+      {shouldShowShareSheet &&
+        createPortal(
+          <ShareSheet onClose={closeShareSheet} url={getStoryUrl(story.id)} />,
+          document.body
+        )}
+      {shouldShowAddCollection &&
+        createPortal(
+          <AddStoryToCollection onClose={closeAddCollection} story={story} />,
+          document.body
+        )}
     </div>
   )
 }
@@ -142,6 +162,7 @@ enum ActionType {
   UnFollow = 'unfollow',
   CopyLink = 'copy-link',
   Share = 'Share',
+  AddCollection = 'add-collection',
 }
 
 const actions = [
@@ -152,6 +173,11 @@ const actions = [
     icon: 'icon-bookmark',
     offText: '移除書籤',
     offIcon: 'icon-bookmark-off',
+  },
+  {
+    type: ActionType.AddCollection,
+    text: '加入集錦',
+    icon: 'icon-collection',
   },
   {
     type: ActionType.UnFollow,
@@ -167,6 +193,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     storyId,
     publisherId,
     openShareSheet,
+    openAddCollection,
     canUnFollowPublisher,
     position,
     onClose,
@@ -174,6 +201,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     storyId: string
     publisherId: string
     openShareSheet: () => void
+    openAddCollection: () => void
     canUnFollowPublisher: boolean
     position: Position
     onClose: () => void
@@ -287,6 +315,9 @@ const ActionSheet = forwardRef(function ActionSheet(
       }
       case ActionType.Share:
         openShareSheet()
+        break
+      case ActionType.AddCollection:
+        openAddCollection()
         break
       default:
         break

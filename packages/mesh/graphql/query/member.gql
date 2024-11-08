@@ -117,48 +117,6 @@ query GetCurrentUserMemberId($uid: String!) {
       title
     }
   }
-  collections(
-    where: {
-      creator: { firebaseId: { equals: $uid }, is_active: { equals: true } }
-    }
-  ) {
-    id
-    title
-    heroImage {
-      urlOriginal
-    }
-    picks(where: { is_active: { equals: true } }) {
-      id
-      createdAt
-      member {
-        id
-        name
-        avatar
-      }
-    }
-    picksCount
-    commentCount
-    comment(
-      orderBy: { createdAt: desc }
-      where: { member: { firebaseId: { equals: $uid } } }
-      take: 1
-    ) {
-      id
-      content
-      createdAt
-      likeCount
-      isMemberLiked: like(where: { firebaseId: { equals: $uid } }) {
-        id
-      }
-      member {
-        id
-        name
-        avatar
-      }
-    }
-    updatedAt
-    createdAt
-  }
 }
 
 query GetMemberProfile($customId: String, $takes: Int!) {
@@ -222,6 +180,7 @@ query GetMemberProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { not: { equals: "delete" } }
     }
   ) {
     ...CollectionInfo
@@ -270,6 +229,7 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { equals: "publish" }
     }
   ) {
     ...CollectionInfo
@@ -511,6 +471,34 @@ query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
       pick_comment(where: { is_active: { equals: true } }) {
         id
         content
+      }
+    }
+  }
+}
+
+query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
+  member(where: { id: $memberId }) {
+    name
+    picksAndBookmarksCount: pickCount(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    )
+    picksAndBookmarks: pick(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+      orderBy: { picked_date: desc }
+      take: $pickTake
+      skip: $pickSkip
+    ) {
+      id
+      kind
+      story {
+        id
+        title
+        og_image
+        published_date
+        source {
+          id
+          title
+        }
       }
     }
   }

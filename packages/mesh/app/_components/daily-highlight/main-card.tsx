@@ -39,7 +39,7 @@ export default function MainCard({ story }: Props) {
               </p>
             </NextLink>
             <StoryMoreActionButton
-              storyId={story.id}
+              story={story}
               publisherId={story.source.id}
             />
           </div>
@@ -67,6 +67,7 @@ export default function MainCard({ story }: Props) {
           <StoryPickInfo
             displayPicks={displayPicks}
             pickCount={displayPicksCount}
+            storyId={story.id}
           />
           <StoryPickButton storyId={story.id} />
         </div>

@@ -5,6 +5,7 @@ import {
   GetPublisherPolicyDocument,
   GetStoriesDocument,
   GetStoryDocument,
+  GetStoryPickersDocument,
   GetStorySourceDocument,
 } from '@/graphql/__generated__/graphql'
 import queryGraphQL from '@/utils/fetch-graphql'
@@ -98,4 +99,20 @@ export async function getStoryUnlockPolicy(storyId: string) {
     getStorySourceResponse?.story?.source?.customId ?? ''
 
   return getPublisherPolicy(storySourceCustomId)
+}
+
+export async function getStoryPickers(
+  storyId: string,
+  picksTake: number,
+  picksSkip: number
+) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const getStoryPickersResponse = await queryGraphQL(
+    GetStoryPickersDocument,
+    { storyId, picksTake, picksSkip },
+    globalLogFields,
+    'Failed to getStoryPickers'
+  )
+  return getStoryPickersResponse?.story
 }

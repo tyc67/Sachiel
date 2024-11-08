@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
+import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 
 import type { Category } from '../page'
 
@@ -18,16 +19,11 @@ export default function CategoryEditor({
 }) {
   const [selectingCategories, setSelectingCategories] =
     useState(followingCategories)
+  useBlockBodyScroll()
+
   const selectingCategoryIds = new Set(
     selectingCategories.map((category) => category.id)
   )
-
-  useEffect(() => {
-    document.body.classList.add('overflow-hidden')
-    return () => {
-      document.body.classList.remove('overflow-hidden')
-    }
-  }, [])
 
   return (
     <div
