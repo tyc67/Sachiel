@@ -3,7 +3,7 @@ import axios from 'axios'
 import type { NextPage } from 'next'
 import type { AppContext, AppProps } from 'next/app'
 import App from 'next/app'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import Script from 'next/script'
 import type { ReactElement, ReactNode } from 'react'
 import { useEffect } from 'react'
@@ -43,17 +43,17 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = ({ Component, pageProps, props }: AppPropsWithLayout) => {
   const client = getGqlClient()
-  const router = useRouter()
+  // const router = useRouter()
 
   useEffect(() => {
     gtag.init()
   }, [])
 
-  useEffect(() => {
-    const path =
-      window.location.pathname + window.location.search + window.location.hash
-    gtag.sendPageview(path)
-  }, [router.pathname])
+  // useEffect(() => {
+  //   const path =
+  //     window.location.pathname + window.location.search + window.location.hash
+  //   gtag.sendPageview(path)
+  // }, [router.pathname])
 
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page)
