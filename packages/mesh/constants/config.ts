@@ -124,7 +124,7 @@ const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
   pubsub: `${API_ORIGIN}/pubsub`,
-  relatedStories: `${API_ORIGIN}/search/`,
+  search: `${API_ORIGIN}/search`,
   accessToken: `${API_ORIGIN}/accesstoken`,
   paymentBalance: `${PAYMENT_ORIGIN}/balance/`,
   socialPage: `${API_ORIGIN}/socialpage`,
