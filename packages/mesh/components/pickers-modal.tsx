@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 import { getStoryPickers } from '@/app/actions/story'
@@ -14,10 +15,12 @@ export default function PickersModal() {
   const { user } = useUser()
   const { storyId, closePickersModal } = usePickersModal()
   const { targetRef: scrollRef, isIntersecting: isInView } = useInView()
+  const router = useRouter()
   const loadingRef = useRef(false)
   const pickersTake = 5
   const [page, setPage] = useState(0)
   const [pickersData, setPickersData] = useState<Picker[]>([])
+  const isPicked = user.pickStoryIds.has(storyId)
 
   useEffect(() => {
     if (storyId) {
@@ -29,6 +32,19 @@ export default function PickersModal() {
       document.body.style.overflow = 'auto'
     }
   }, [storyId])
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closePickersModal()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [closePickersModal])
 
   useEffect(() => {
     const fetchMorePickers = async () => {
@@ -84,6 +100,17 @@ export default function PickersModal() {
               </button>
             </div>
             <div className="h-[540px] overflow-y-auto px-5">
+              {isPicked && (
+                <div className="mx-5 flex flex-row border-b-[0.5px] border-primary-200 py-5">
+                  <Avatar size="l" src={user.avatar} extra="shrink-0" />
+                  <div className="flex w-full flex-row items-center justify-between">
+                    <div className="flex flex-col pl-2">
+                      <p className="subtitle-1">{user.name}</p>
+                      <p className="body-3 text-primary-500">{user.customId}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
               {pickersData
                 .filter((p) => p.id !== user.memberId)
                 .map((p) => (
@@ -91,15 +118,25 @@ export default function PickersModal() {
                     key={p.id}
                     className="mx-5 flex flex-row border-b-[0.5px] border-primary-200 py-5"
                   >
-                    <Avatar size="l" src={p.avatar} />
+                    <Avatar size="l" src={p.avatar} extra="shrink-0" />
                     <div className="flex w-full flex-row items-center justify-between">
                       <div className="flex flex-col pl-2">
-                        <p className="subtitle-1">{p.name}</p>
+                        <p
+                          className="subtitle-1 hover:cursor-pointer hover-or-active:underline"
+                          onClick={() => {
+                            closePickersModal()
+                            router.push(`/profile/member/${p.customId}`)
+                          }}
+                        >
+                          {p.name}
+                        </p>
                         <p className="body-3 text-primary-500">
                           {p.customId || p.id}
                         </p>
                       </div>
-                      <FollowButton followingId={p.id} />
+                      <div className="shrink-0">
+                        <FollowButton followingId={p.id} />
+                      </div>
                     </div>
                   </div>
                 ))}
