@@ -3,13 +3,13 @@ import type { Rect } from '@/types/canvas'
 export async function getImageFileFromImageElement(
   imageElement: HTMLImageElement
 ) {
-  const imageBlob = (await getImageBlob(imageElement)) as Blob
+  const imageBlob = await getImageBlob(imageElement)
   const file = new File([imageBlob], 'image.jpg', imageBlob)
   return file
 }
 
 function getImageBlob(imageElement: HTMLImageElement) {
-  return new Promise((resolve, reject) => {
+  return new Promise<Blob>((resolve, reject) => {
     const canvas = document.createElement('canvas')
     // Set canvas dimensions to the image's original (natural) dimensions
     canvas.width = imageElement.naturalWidth
@@ -44,11 +44,11 @@ export async function getCroppedImageFileFromImageElement(
   selectionRect: Rect,
   imageRect: Rect
 ) {
-  const imageBlob = (await getCroppedImageBlob(
+  const imageBlob = await getCroppedImageBlob(
     imageElement,
     selectionRect,
     imageRect
-  )) as Blob
+  )
   const file = new File([imageBlob], 'image.jpg', imageBlob)
   return file
 }
@@ -58,7 +58,7 @@ function getCroppedImageBlob(
   selectionRect: Rect,
   imageRect: Rect
 ) {
-  return new Promise((resolve, reject) => {
+  return new Promise<Blob>((resolve, reject) => {
     const canvas = document.createElement('canvas')
     // Set canvas dimensions to the selectionRect
     canvas.width = selectionRect.width
