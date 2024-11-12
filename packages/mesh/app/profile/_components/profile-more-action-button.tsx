@@ -96,10 +96,6 @@ export default function ProfileMoreActionButton({
     }
     const nestedScrollContainer = nestedScrollContainerRef?.current
 
-    /**
-     * Hide the action sheet when scroll, for scroll event on both window and nested scroll container (if exists).
-     * Avoid complicated logic to set dynamic position.
-     */
     if (nestedScrollContainer) {
       nestedScrollContainer.addEventListener('scroll', onScroll)
     }
@@ -254,6 +250,13 @@ const ActionSheet = forwardRef(function ActionSheet(
     >
       {actions.map((action) => {
         switch (action.type) {
+          // TODO: wait for report and block functions
+          case ActionType.REPORT:
+            return null
+          case ActionType.BLOCK:
+            return null
+            {
+              /**
           case ActionType.BLOCK: {
             return (
               <button
@@ -267,7 +270,8 @@ const ActionSheet = forwardRef(function ActionSheet(
                 </span>
               </button>
             )
-          }
+          }*/
+            }
           default: {
             return (
               <button
