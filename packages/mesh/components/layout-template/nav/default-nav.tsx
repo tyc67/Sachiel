@@ -189,6 +189,7 @@ const MobileNav = ({
   avatarUrl: string
   userCustomId: string
 }) => {
+  const searchParams = useSearchParams()
   return (
     <nav className="fixed inset-x-0 bottom-0 z-layout h-[theme(height.nav.default)] border-t bg-white sm:hidden">
       <div className="flex h-full items-center">
@@ -197,10 +198,15 @@ const MobileNav = ({
             return (
               <MobileNavIcon
                 key={iconInfo.icon.default}
-                isOn={matchPath(iconInfo.href, path)}
+                isOn={
+                  matchPath(iconInfo.href, path) &&
+                  searchParams.get('tab') === TabCategory.PICKS
+                }
                 iconInfo={{
                   ...iconInfo,
-                  href: iconInfo.href + `/member/${userCustomId}`,
+                  href:
+                    iconInfo.href +
+                    `/member/${userCustomId}?tab=${TabCategory.PICKS}`,
                 }}
                 avatarUrl={avatarUrl}
               />
