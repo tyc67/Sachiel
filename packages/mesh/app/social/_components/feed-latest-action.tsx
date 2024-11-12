@@ -60,18 +60,22 @@ export default function FeedLatestAction({
                 )}
               </Link>
             </span>
-            及
-            <span className="text-primary-700">
-              <Link
-                href={`profile/member/${commentsData[1].member.customId}`}
-                className="hover-or-active:underline"
-              >
-                {truncateNameByBytes(
-                  commentsData[1]?.member?.name,
-                  maxNameBytes
-                )}
-              </Link>
-            </span>
+            {commentsData[1] ? (
+              <div>
+                及
+                <span className="text-primary-700">
+                  <Link
+                    href={`profile/member/${commentsData[1].member.customId}`}
+                    className="hover-or-active:underline"
+                  >
+                    {truncateNameByBytes(
+                      commentsData[1]?.member?.name,
+                      maxNameBytes
+                    )}
+                  </Link>
+                </span>
+              </div>
+            ) : null}
             在這篇文章留言
           </div>
         </div>
