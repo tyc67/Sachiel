@@ -33,7 +33,6 @@ export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
   function ImageEditorCanvas({ imageFile }, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imgRef = useRef<HTMLImageElement | null>(null)
-    const canvasScaleRate = useRef(1)
     const drawDataRef = useRef<DrawData>()
     const draggingPointRef = useRef<Point | null>(null)
 
@@ -65,7 +64,6 @@ export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, imageRect.x, imageRect.y)
-      canvasScaleRate.current = scaleRate
 
       ctx.strokeStyle = 'white'
       ctx.lineWidth = DrawRectWidth * scaleRate
