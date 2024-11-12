@@ -63,7 +63,10 @@ export async function getRelatedStories({
     }
   )
 
-  const relatedRawStories = response?.story?.slice(0, 4) ?? []
+  const relatedRawStories =
+    response?.story
+      ?.filter((story) => story.title !== storyTitle)
+      .slice(0, 4) ?? []
 
   // TODO: use new api to get story pick list according to user.followingIds
   const relatedStories =
