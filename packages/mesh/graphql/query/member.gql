@@ -112,7 +112,12 @@ query GetCurrentUserMemberId($uid: String!) {
       title
       slug
     }
-    followingPublishers: follow_publisher {
+    followingPublishers: follow_publisher(
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
+    ) {
       id
       title
     }
@@ -245,7 +250,12 @@ query GetMemberFollowingList($customId: String, $take: Int!) {
     name
     avatar
     followingCount
-    follow_publisherCount(where: { source_type: { not: { equals: "empty" } } })
+    follow_publisherCount(
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
+    )
     following(take: $take) {
       id
       customId
@@ -253,7 +263,10 @@ query GetMemberFollowingList($customId: String, $take: Int!) {
       avatar
     }
     follow_publisher(
-      where: { source_type: { not: { equals: "empty" } } }
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
       take: $take
     ) {
       id
