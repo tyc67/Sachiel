@@ -1,3 +1,5 @@
+'use client'
+
 import MobileNavigationButton from '@/components/layout-template/navigation/mobile-navigation/mobile-navigation-button'
 import { useEditCollection } from '@/context/edit-collection'
 
