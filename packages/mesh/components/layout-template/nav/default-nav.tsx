@@ -80,10 +80,15 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path) && !searchParams.size}
+                    isOn={
+                      matchPath(iconInfo.href, path) &&
+                      searchParams.get('tab') === TabCategory.PICKS
+                    }
                     iconInfo={{
                       ...iconInfo,
-                      href: iconInfo.href + `/member/${userCustomId}`,
+                      href:
+                        iconInfo.href +
+                        `/member/${userCustomId}?tab=${TabCategory.PICKS}`,
                     }}
                     avatarUrl={avatarUrl}
                   />
@@ -92,7 +97,10 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path) && !!searchParams.size}
+                    isOn={
+                      matchPath(iconInfo.href, path) &&
+                      searchParams.get('tab') === TabCategory.BOOKMARKS
+                    }
                     iconInfo={{
                       ...iconInfo,
                       href:
