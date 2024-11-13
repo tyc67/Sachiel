@@ -41,10 +41,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const router = useRouter()
   const pathName = usePathname()
   const currentUrl = pathName
+  const category = useMemo(() => {
+    // NOTE: 如果tab 非預期，使用精選替代
+    const tab = queryTab as TabCategoryType
+    return Object.values(TabCategory).includes(tab) ? tab : TabCategory.PICKS
+  }, [queryTab])
 
-  const [category, setCategory] = useState<TabCategoryType>(
-    (queryTab as TabCategoryType) ?? TabCategory.PICKS
-  )
+  const setCategory = (newCategory: TabCategoryType) => {
+    // NOTE: 透過url 控制tab內容，移除state
+    router.push(`${pathName}?tab=${newCategory}`, { scroll: false })
+  }
   const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile

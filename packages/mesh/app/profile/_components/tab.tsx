@@ -1,5 +1,4 @@
 'use client'
-import type { Dispatch, SetStateAction } from 'react'
 
 import {
   type TabCategoryType,
@@ -8,7 +7,7 @@ import {
 } from '@/types/profile'
 
 type TabProps = {
-  setCategory?: Dispatch<SetStateAction<TabCategoryType>>
+  setCategory?: (newCategory: TabCategoryType) => void
   tabCategory?: TabCategoryType
   userType: UserType
 }
