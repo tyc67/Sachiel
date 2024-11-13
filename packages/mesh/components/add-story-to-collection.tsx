@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -33,9 +34,7 @@ export default function AddStoryToCollection({
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [collections, setCollections] = useState<Collection[]>([])
-  const [addedCollectionTitles, setAddedCollectionTitles] = useState<string[]>(
-    []
-  )
+  const [addedCollections, setAddedCollections] = useState<Collection[]>([])
   const router = useRouter()
   const { user } = useUser()
   useBlockBodyScroll()
@@ -74,9 +73,9 @@ export default function AddStoryToCollection({
       const collections = response?.collections ?? []
       const intialProcessedCollectionObj: {
         newCollections: Collection[]
-        addedCollectionTitles: string[]
-      } = { newCollections: [], addedCollectionTitles: [] }
-      const { newCollections, addedCollectionTitles } = collections.reduce(
+        addedCollections: Collection[]
+      } = { newCollections: [], addedCollections: [] }
+      const { newCollections, addedCollections } = collections.reduce(
         (processedObj, collection) => {
           const collectionStorySet = new Set(
             collection.collectionpicks?.map(
@@ -84,21 +83,21 @@ export default function AddStoryToCollection({
             )
           )
           collectionStorySet.has(story.id)
-            ? processedObj.addedCollectionTitles.push(collection.title ?? '')
+            ? processedObj.addedCollections.push(collection)
             : processedObj.newCollections.push(collection)
           return processedObj
         },
         intialProcessedCollectionObj
       )
       setCollections(newCollections)
-      setAddedCollectionTitles(addedCollectionTitles)
+      setAddedCollections(addedCollections)
       setIsLoading(false)
     }
     fetchMemberCollections()
   }, [story.id, user.memberId])
 
   const getHintJsx = () => {
-    if (!collections.length && !addedCollectionTitles.length)
+    if (!collections.length && !addedCollections.length)
       return (
         <div className="body-3 p-5 pb-0 text-primary-500">
           你目前還沒有任何集錦...
@@ -110,19 +109,22 @@ export default function AddStoryToCollection({
           你之前已將這篇新聞加入你所有的集錦囉
         </div>
       )
-    if (!addedCollectionTitles.length) return null
+    if (!addedCollections.length) return null
     const endingText =
-      addedCollectionTitles.length > 1
-        ? `等${addedCollectionTitles.length}個集錦囉`
+      addedCollections.length > 1
+        ? `等${addedCollections.length}個集錦囉`
         : '集錦囉'
 
     return (
       <div className="body-3 p-5 pb-0 text-primary-500">
         你之前已將這篇新聞加入
-        {addedCollectionTitles.map((title, i) => (
+        {addedCollections.map((collection, i) => (
           <React.Fragment key={i}>
-            「<span className="text-primary-700">{title}</span>」
-            {i !== addedCollectionTitles.length - 1 ? '、' : ''}
+            「
+            <Link href={`/collection/${collection.id}`}>
+              <span className="text-primary-700">{collection.title ?? ''}</span>
+            </Link>
+            」{i !== addedCollections.length - 1 ? '、' : ''}
           </React.Fragment>
         ))}
         {endingText}
