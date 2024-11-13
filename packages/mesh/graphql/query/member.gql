@@ -51,9 +51,12 @@ query GetMemberFollowing($memberId: ID!, $takes: Int!) {
   }
 }
 
-query GetMemberByFollowingCategory($slugs: [String!]!) {
+query GetMemberByFollowingCategory($slugs: [ID!]!) {
   members(
-    where: { following_category: { every: { slug: { in: $slugs } } } }
+    where: {
+      following_category: { some: { id: { in: $slugs } } }
+      is_active: { equals: true }
+    }
     orderBy: [{ id: desc }]
     take: 20
     skip: 0
