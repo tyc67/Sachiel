@@ -19,7 +19,7 @@ export default function Page() {
   const { user } = useUser()
   const feedsNumber = 10
   const firstSectionAmount = 3
-  const suggestedFollowersNumber = 5
+  const suggestedFollowersNumber = 10
   const memberId = user.memberId
   const [socialData, setSocialData] = useState<MongoDBResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)

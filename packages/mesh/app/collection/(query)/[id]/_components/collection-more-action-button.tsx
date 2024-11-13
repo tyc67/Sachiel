@@ -102,6 +102,7 @@ export default function CollectionMoreActionButton({
           const response = await removeCollection({
             collectionId: collection.id,
             heroImageId: collection.heroImage?.id ?? '',
+            memberId: user.memberId,
           })
           if (response) {
             router.push(`/profile/member/${user.customId}?tab=COLLECTIONS`)

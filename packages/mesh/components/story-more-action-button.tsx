@@ -254,6 +254,10 @@ const ActionSheet = forwardRef(function ActionSheet(
                 )
               ),
             }))
+            addToast({
+              status: 'success',
+              text: TOAST_MESSAGE.removeBookmarkSuccess,
+            })
           } else {
             addToast({
               status: 'fail',
@@ -271,6 +275,10 @@ const ActionSheet = forwardRef(function ActionSheet(
               ...oldUser,
               bookmarkStoryIds: new Set([...oldUser.bookmarkStoryIds, storyId]),
             }))
+            addToast({
+              status: 'success',
+              text: TOAST_MESSAGE.addBookmarkSuccess,
+            })
           } else {
             addToast({
               status: 'fail',
