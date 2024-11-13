@@ -4,7 +4,6 @@ import { getInvalidNameList } from '@/app/actions/get-invalid-names'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import { useLogin } from '@/context/login'
-import { debounce } from '@/utils/performance'
 
 export default function LoginSetName() {
   const { formData, setFormData, setStep } = useLogin()
@@ -20,12 +19,6 @@ export default function LoginSetName() {
     }
     fetchInvalidNames()
   }, [])
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      debounce(handleSubmit)()
-    }
-  }
 
   const validationResults = validateName({ invalidNames, name })
   const isValid = validationResults.every((result) => result.isValid)
@@ -50,7 +43,12 @@ export default function LoginSetName() {
               name: e.target.value,
             }))
           }
-          onKeyDown={handleKeyDown}
+          onBlur={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              name: e.target.value.trim(),
+            }))
+          }
           autoFocus
           required
         ></input>
@@ -100,14 +98,22 @@ const validationRules = [
   {
     message: '不包含特殊符號',
     check: ({ name }: { name: string }) =>
-      /^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(name),
+      /^[a-zA-Z0-9\u4e00-\u9fa5\s]+$/.test(name),
   },
   {
     message: '沒有跟媒體名稱重複',
-    check: ({ invalidNames, name }: { invalidNames: string[]; name: string }) =>
-      !invalidNames.some((invalidName) =>
-        name.toLowerCase().includes(invalidName.toLowerCase())
-      ),
+    check: ({
+      invalidNames,
+      name,
+    }: {
+      invalidNames: string[]
+      name: string
+    }) => {
+      const normalizedName = name.replace(/\s+/g, '').trim().toLowerCase()
+      return !invalidNames.some((invalidName) =>
+        normalizedName.includes(invalidName.toLowerCase())
+      )
+    },
   },
 ]
 
