@@ -74,7 +74,7 @@ const AddPickModal = () => {
   const textareaPlaceHolder =
     pickObjective === PickObjective.Story
       ? '留言分享你為什麼精選這篇文章...'
-      : '留言分享你為什麼精選這則精選...'
+      : '留言分享你為什麼精選這個集錦...'
 
   return (
     <>
