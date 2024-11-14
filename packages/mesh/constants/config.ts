@@ -85,6 +85,7 @@ switch (ENV) {
       media: 1 * 60 * 1000,
       story: 1 * 60 * 1000,
     }
+	GTM_ENV = 'GTM-MKLVHSGJ'
 
     break
 
@@ -113,13 +114,14 @@ switch (ENV) {
       media: 10 * 60 * 1000,
       story: 20 * 60 * 1000,
     }
+	GTM_ENV = 'GTM-WPC2M99H'
 
     break
 
   default:
     break
 }
-const GTM_ID = 'GTM-MKLVHSGJ'
+const GTM_ID = `${GTM_ENV}`
 const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
