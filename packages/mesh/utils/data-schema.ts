@@ -104,6 +104,7 @@ export const rawCategoryStorySchema = storySchema
         content: z.string(),
         member: memberSchema,
         likeCount: z.number(),
+        createdAt: z.string(),
       })
       .optional()
       .or(z.object({})),

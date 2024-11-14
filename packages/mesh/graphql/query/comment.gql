@@ -27,3 +27,13 @@ query GetCollectionLatestAddedComment($memberId: ID!, $collectionId: ID!) {
     id
   }
 }
+
+query GetCommentLikes($commentId: ID) {
+  comment(where: { id: $commentId }) {
+    like {
+      id
+      name
+    }
+    likeCount
+  }
+}

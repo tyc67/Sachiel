@@ -3,8 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const useCommentClamp = (
   clampLineCount: number,
-  canToggle: boolean = false,
-  comment = null
+  canToggle: boolean = false
 ) => {
   const [isTooLong, setIsTooLong] = useState(false)
   const [isOpened, setIsOpened] = useState(false)
@@ -21,7 +20,7 @@ export const useCommentClamp = (
     const realHeight = commentRef.current.scrollHeight
     const expectedParagraphHeight = lineHeight * clampLineCount
     setIsTooLong(realHeight > expectedParagraphHeight)
-  }, [clampLineCount, comment])
+  }, [clampLineCount])
 
   const handleToggleClamp = useCallback(() => {
     if (!commentRef.current || !isTooLong) return

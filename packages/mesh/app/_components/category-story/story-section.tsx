@@ -4,6 +4,7 @@ import InteractiveIcon from '@/components/interactive-icon'
 import type { CategoryStory } from '@/types/homepage'
 
 import StoryCard from '../story-card'
+import Comment from './comment'
 import EmptyMessage from './empty-message'
 import MainCard from './main-card'
 
@@ -12,6 +13,8 @@ type Props = {
   activeTitle: string
   slug: string
 }
+type NonEmptyObject<T> = T extends Record<string, never> ? never : T
+type CommentType = NonEmptyObject<Exclude<CategoryStory['comment'], undefined>>
 
 export default function StorySection({ activeTitle, stories, slug }: Props) {
   return (
@@ -35,7 +38,16 @@ export default function StorySection({ activeTitle, stories, slug }: Props) {
 
       {stories && stories.length > 0 ? (
         <div className="flex flex-col gap-y-5 lg:flex-row lg:gap-x-10">
-          <MainCard story={stories[0]} />
+          <div>
+            <MainCard story={stories[0]} />
+            {stories[0].comment &&
+              Object.keys(stories[0].comment).length !== 0 && (
+                <Comment
+                  comment={stories[0].comment as CommentType}
+                  activeCategoryTitle={activeTitle}
+                />
+              )}
+          </div>
 
           <div className="flex flex-col gap-y-5">
             {stories.slice(1, 4).map((story) => (
