@@ -42,6 +42,11 @@ const DrawRectWidth = 2
  *
  * The editor only support moving the selection area in the direction of Y-axis.
  * When the save button clicked, the cropped image will be produced by the selection area.
+ *
+ * Related discussions:
+ * - Crop the image with transparent area - [link](https://github.com/readr-media/Sachiel/pull/911#discussion_r1837825085)
+ * - Canvas height will always bigger than width - [link](https://github.com/readr-media/Sachiel/pull/911#discussion_r1837824917)
+ * - Only move the selection area in Y-axis - [link](https://github.com/readr-media/Sachiel/pull/911#discussion_r1837898052)
  */
 export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
   function ImageEditorCanvas({ imageFile }, ref) {
