@@ -72,6 +72,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
       default:
         setTabData(profileData.picksData ?? [])
     }
+    console.log({ tabData })
   }, [category, isMember, profileData])
 
   const isCollection = tabData.some((item) => item.__typename === 'Collection')
@@ -193,6 +194,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         emptyMessage={getMessage(category)}
         elementForEmpty={emptyElement(category)}
         memberId={memberId}
+        customId={customId}
         avatar={avatar}
         name={name}
       />

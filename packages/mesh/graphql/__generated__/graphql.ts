@@ -5480,9 +5480,8 @@ export type GetMorePicksQuery = {
   __typename?: 'Query'
   picks?: Array<{
     __typename?: 'Pick'
-    id: string
-    objective?: string | null
     kind?: string | null
+    objective?: string | null
     story?: {
       __typename?: 'Story'
       id: string
@@ -5530,6 +5529,53 @@ export type GetMorePicksQuery = {
           avatar?: string | null
         } | null
       }> | null
+    } | null
+    collection?: {
+      __typename?: 'Collection'
+      id: string
+      title?: string | null
+      picksCount?: number | null
+      commentCount?: number | null
+      updatedAt?: any | null
+      createdAt?: any | null
+      heroImage?: {
+        __typename?: 'Photo'
+        resized?: {
+          __typename?: 'ResizedImages'
+          w480?: string | null
+          w800?: string | null
+          w1200?: string | null
+          w1600?: string | null
+          w2400?: string | null
+          original?: string | null
+        } | null
+      } | null
+      picks?: Array<{
+        __typename?: 'Pick'
+        id: string
+        createdAt?: any | null
+        member?: {
+          __typename?: 'Member'
+          id: string
+          name?: string | null
+          avatar?: string | null
+        } | null
+      }> | null
+      comment?: Array<{
+        __typename?: 'Comment'
+        id: string
+        content?: string | null
+        createdAt?: any | null
+        likeCount?: number | null
+        isMemberLiked?: Array<{ __typename?: 'Member'; id: string }> | null
+        member?: {
+          __typename?: 'Member'
+          id: string
+          name?: string | null
+          avatar?: string | null
+        } | null
+      }> | null
+      creator?: { __typename?: 'Member'; customId?: string | null } | null
     } | null
   }> | null
 }
@@ -15109,7 +15155,7 @@ export const GetMorePicksDocument = {
             name: { kind: 'Name', value: 'start' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          defaultValue: { kind: 'IntValue', value: '0' },
+          defaultValue: { kind: 'IntValue', value: '1' },
         },
       ],
       selectionSet: {
@@ -15239,9 +15285,6 @@ export const GetMorePicksDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'objective' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'story' },
@@ -15336,6 +15379,21 @@ export const GetMorePicksDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'collection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CollectionInfo' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'objective' } },
               ],
             },
           },
@@ -15382,6 +15440,62 @@ export const GetMorePicksDocument = {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'MemberBasicInfo' },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AuthenticatedCommentInfo' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Comment' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'CommentInfo' },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'isMemberLiked' },
+            name: { kind: 'Name', value: 'like' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'customId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'customId' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -15462,22 +15576,46 @@ export const GetMorePicksDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AuthenticatedCommentInfo' },
+      name: { kind: 'Name', value: 'CollectionInfo' },
       typeCondition: {
         kind: 'NamedType',
-        name: { kind: 'Name', value: 'Comment' },
+        name: { kind: 'Name', value: 'Collection' },
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           {
-            kind: 'FragmentSpread',
-            name: { kind: 'Name', value: 'CommentInfo' },
+            kind: 'Field',
+            name: { kind: 'Name', value: 'heroImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resized' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'w480' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'w800' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'w1200' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'w1600' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'w2400' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'original' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
           },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'isMemberLiked' },
-            name: { kind: 'Name', value: 'like' },
+            name: { kind: 'Name', value: 'picks' },
             arguments: [
               {
                 kind: 'Argument',
@@ -15487,17 +15625,14 @@ export const GetMorePicksDocument = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'customId' },
+                      name: { kind: 'Name', value: 'is_active' },
                       value: {
                         kind: 'ObjectValue',
                         fields: [
                           {
                             kind: 'ObjectField',
                             name: { kind: 'Name', value: 'equals' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'customId' },
-                            },
+                            value: { kind: 'BooleanValue', value: true },
                           },
                         ],
                       },
@@ -15510,6 +15645,173 @@ export const GetMorePicksDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'member' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'MemberBasicInfo' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'picksCount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'is_active' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: true },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'commentCount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'is_active' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: true },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'comment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'createdAt' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'member' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'customId' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'customId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'is_active' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: { kind: 'BooleanValue', value: true },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AuthenticatedCommentInfo' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'creator' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
               ],
             },
           },

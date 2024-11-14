@@ -492,7 +492,7 @@ query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
   }
 }
 
-query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 0) {
+query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 1) {
   picks(
     skip: $start
     take: $takes
@@ -504,9 +504,6 @@ query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 0) {
       }
     }
   ) {
-    id
-    objective
-    kind
     story {
       ...StoryInfo
       comment(
@@ -517,8 +514,14 @@ query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 0) {
         ...AuthenticatedCommentInfo
       }
     }
+    collection {
+      ...CollectionInfo
+    }
+    kind
+    objective
   }
 }
+
 query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
   member(where: { id: $memberId }) {
     name

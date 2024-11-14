@@ -1,7 +1,10 @@
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { getMoreMemberPicks } from '@/app/actions/get-more-profile-data'
+import {
+  getMoreMemberBookmarks,
+  getMoreMemberPicks,
+} from '@/app/actions/get-more-profile-data'
 import ArticleCard from '@/app/profile/_components/article-card'
 import * as profile from '@/types/profile'
 import type { PublisherProfile } from '@/utils/data-schema'
@@ -19,6 +22,7 @@ interface ArticleCardListProps {
   avatar?: string
   name?: string
   shouldShowComment: boolean
+  customId?: string
 }
 
 function ArticleCardList({
@@ -29,12 +33,17 @@ function ArticleCardList({
   memberId,
   avatar,
   name,
+  customId,
   tabCategory,
 }: ArticleCardListProps) {
   const [hasMoreData, setHasMoreData] = useState(true)
   const pageSize = 20
   const amountOfElements = 200
-  console.log({ items })
+
+  useEffect(() => {
+    setHasMoreData(true)
+  }, [tabCategory])
+
   if (!items?.length) {
     return (
       <div className="flex grow flex-col">
@@ -45,17 +54,26 @@ function ArticleCardList({
       </div>
     )
   }
+
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
   const fetchMorePicksInProfile = async (pageIndex: number) => {
     if (!hasMoreData) return []
 
-    const moreMemberPicks = await getMoreMemberPicks({
-      customId: memberId || '',
-      takes: pageSize,
-      start: pageSize * (pageIndex - 1),
-    })
-
+    const moreMemberPicks =
+      tabCategory === 'PICKS'
+        ? await getMoreMemberPicks({
+            customId: customId ?? '',
+            takes: pageSize,
+            start: pageSize * (pageIndex - 1),
+          })
+        : tabCategory === 'BOOKMARKS'
+        ? await getMoreMemberBookmarks({
+            customId: customId ?? '',
+            takes: pageSize,
+            start: pageSize * (pageIndex - 1),
+          })
+        : []
     if (moreMemberPicks.length) {
       return moreMemberPicks
     } else {
@@ -63,6 +81,7 @@ function ArticleCardList({
       return []
     }
   }
+  const listKey = `${tabCategory}-${items.length}-${Date.now()}`
   return (
     <>
       {tabCategory === profile.TabCategory.PICKS && (
@@ -71,11 +90,10 @@ function ArticleCardList({
         </p>
       )}
       <InfiniteScrollList
-        // TODO: 要解決TS型別問題
-        initialList={items.filter((item) => item.__typename === 'Pick')}
+        key={listKey}
+        initialList={items as profile.PickList}
         pageSize={pageSize}
         amountOfElements={amountOfElements}
-        // TODO: 要在封裝一層，並且params只能傳入page index
         fetchListInPage={fetchMorePicksInProfile}
         isAutoFetch={true}
       >
@@ -118,7 +136,6 @@ function ArticleCardList({
                       </li>
                     )
                   }
-
                   return (
                     <li
                       key={

@@ -1,7 +1,10 @@
 'use server'
 import { z } from 'zod'
 
-import { GetMorePicksDocument } from '@/graphql/__generated__/graphql'
+import {
+  GetMoreBookmarksDocument,
+  GetMorePicksDocument,
+} from '@/graphql/__generated__/graphql'
 import fetchGraphQL from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 
@@ -28,8 +31,25 @@ export const getMoreMemberPicks = async (
     globalLogFields,
     'Failed to get more member picks'
   )
-
   const pickList =
     response?.picks?.filter((item) => item.objective === 'story') ?? []
   return pickList
+}
+
+export const getMoreMemberBookmarks = async (
+  params: z.infer<typeof getMoreMemberPicksSchema>
+) => {
+  // Validate the input parameters
+  const { customId, takes, start } = getMoreMemberPicksSchema.parse(params)
+
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const response = await fetchGraphQL(
+    GetMoreBookmarksDocument,
+    { customId, takes, start },
+    globalLogFields,
+    'Failed to get more member picks'
+  )
+  const bookmarkList = response?.picks ?? []
+  return bookmarkList
 }
