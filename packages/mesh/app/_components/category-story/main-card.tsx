@@ -10,9 +10,13 @@ import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import type { CategoryStory } from '@/types/homepage'
 
+import Comment from './comment'
+
 type Props = {
   story: CategoryStory
 }
+type NonEmptyObject<T> = T extends Record<string, never> ? never : T
+type CommentType = NonEmptyObject<Exclude<CategoryStory['comment'], undefined>>
 
 export default function MainCard({ story }: Props) {
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
@@ -72,6 +76,10 @@ export default function MainCard({ story }: Props) {
           <StoryPickButton storyId={story.id} />
         </div>
       </div>
+
+      {story.comment && Object.keys(story.comment).length !== 0 && (
+        <Comment comment={story.comment as CommentType} />
+      )}
     </div>
   )
 }

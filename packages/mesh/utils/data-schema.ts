@@ -97,8 +97,19 @@ export const rawCategoryStorySchema = storySchema
       slug: z.string(),
     }),
     source: sourceSchema,
+    commentCount: z.number(),
+    comment: z
+      .object({
+        id: z.string(),
+        content: z.string(),
+        member: memberSchema,
+        likeCount: z.number(),
+      })
+      .optional()
+      .or(z.object({})),
   })
   .omit({ isMember: true, pickCount: true })
+
 // TODO: add paywall
 export const rawMostSponsoredPublisherStoryByCategorySchema = z.object({
   publisher: z.object({
