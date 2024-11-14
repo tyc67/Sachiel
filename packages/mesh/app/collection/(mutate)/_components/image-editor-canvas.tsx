@@ -29,6 +29,20 @@ type ImageEditorCanvasProps = { imageFile: File }
 
 const DrawRectWidth = 2
 
+/**
+ * This editor canvas is designed to crop the image as aspect ratio 2:1 according to how it displays on the canvas.
+ * The canvas will find a way to fit the image and place it horizontally or vertically center.
+ *
+ * If image is placed horizontally center, the cropped image might contain the transparent spaces in both upper and lower area according to the image's aspect ratio comparing to 2:1.
+ * If image is placed vertically center, the cropped image will contain the transparent spaces in both left and right. The selection'x always starts from 0.
+ *
+ * There are two size of the canvas, canvas dom size and canvas inner size.
+ * The former will be the editor space according to the [design](https://www.figma.com/design/wqODc69zqgbu7TZFtQAmnN/2024_READr-Mesh_Web?node-id=13082-325896&t=szEXMP1DWoEICb3F-4).
+ * The latter will be count to fit the image by comparing the canvas dom aspect ratio to image's aspect ratio. And canvas inner size will be set big enough to not lose the quality of the image.
+ *
+ * The editor only support moving the selection area in the direction of Y-axis.
+ * When the save button clicked, the cropped image will be produced by the selection area.
+ */
 export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
   function ImageEditorCanvas({ imageFile }, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -135,7 +149,7 @@ export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
             },
             selectionRect: {
               x: 0,
-              y: (canvas.height - canvas.width / 2) / 2,
+              y: (canvas.height - canvas.width / 2) / 2, // in this scenario, the height will never smaller than the width, check [discussion](https://github.com/readr-media/Sachiel/pull/911#discussion_r1828962453)
               width: canvas.width,
               height: canvas.width / 2,
             },

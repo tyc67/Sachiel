@@ -65,7 +65,7 @@ function getCroppedImageBlob(
     canvas.height = selectionRect.height
 
     const ctx = canvas.getContext('2d')
-    // Draw the image onto the canvas using the cropped rect
+    // Draw the image onto the canvas using the cropped rect, check the [discussion](https://github.com/readr-media/Sachiel/pull/911#discussion_r1828893204) for more detail.
     ctx?.drawImage(
       imageElement,
       // Rect inside image to be drawn in canvas
