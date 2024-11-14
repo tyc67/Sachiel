@@ -9,6 +9,7 @@ const FIREBASE_CLIENT_EMAIL =
 const FIREBASE_PRIVATE_KEY =
   process.env.FIREBASE_PRIVATE_KEY || 'admin-sdk-service-account-keys'
 
+let GTM_ENV = ''
 let API_ORIGIN = ''
 let STATIC_FILE_ORIGIN = ''
 let PAYMENT_ORIGIN = ''
@@ -121,7 +122,7 @@ switch (ENV) {
   default:
     break
 }
-const GTM_ID = `${GTM_ENV}`
+const GTM_ID = GTM_ENV
 const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
