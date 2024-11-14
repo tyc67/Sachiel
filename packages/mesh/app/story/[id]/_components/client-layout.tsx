@@ -7,7 +7,9 @@ import ShareButton from '@/components/navigation/share-button'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { useUser } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { BookmarkObjective } from '@/types/objective'
 import { getStoryUrl } from '@/utils/get-url'
 
@@ -22,6 +24,10 @@ export default function ClientLayout({
   story: Story
   children: React.ReactNode
 }) {
+  const { user } = useUser()
+  const { displayPicks, displayPicksCount } = useDisplayPicks(story)
+  const isSinglePickByCurrentUser =
+    displayPicks.length === 1 && displayPicks[0].member.id === user.memberId
   return (
     <LayoutTemplate
       type="article"
@@ -46,17 +52,21 @@ export default function ClientLayout({
             publisherId={story?.source?.id ?? ''}
           />,
           <StoryPickButton storyId={story?.id ?? ''} key={1} />,
-          <StoryMoreActionButton
-            storyId={story?.id ?? ''}
-            publisherId={story?.source?.id ?? ''}
-            key={2}
-            className="pl-2"
-          />,
+          story ? (
+            <StoryMoreActionButton
+              story={story}
+              publisherId={story?.source?.id ?? ''}
+              key={2}
+              className="pl-2"
+            />
+          ) : undefined,
         ],
       }}
       mobileActionBar={{
+        storyId: story?.id ?? '',
         commentsCount: story?.commentsCount ?? 0,
-        picksCount: story?.picksCount ?? 0,
+        picksCount: displayPicksCount,
+        displayPicks: displayPicks,
         actions: [
           <PublisherDonateButton
             key={0}
@@ -64,6 +74,7 @@ export default function ClientLayout({
           />,
           <StoryPickButton key={1} storyId={story?.id ?? ''} />,
         ],
+        isSinglePickByCurrentUser,
       }}
       suspenseFallback={<Loading />}
     >

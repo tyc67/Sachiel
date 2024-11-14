@@ -92,6 +92,10 @@
     @apply flex min-h-screen flex-col pb-[theme(height.nav.default)] pt-[theme(height.header.default)];
     @apply sm:pb-0 sm:pt-[theme(height.header.sm)];
   }
+  .primary-container-collection {
+    @apply flex min-h-screen flex-col items-center pt-[theme(height.header.default)];
+    @apply sm:pt-[theme(height.header.sm)];
+  }
 }
 
 @layer utilities {

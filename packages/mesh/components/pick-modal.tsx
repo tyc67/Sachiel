@@ -74,7 +74,7 @@ const AddPickModal = () => {
   const textareaPlaceHolder =
     pickObjective === PickObjective.Story
       ? '留言分享你為什麼精選這篇文章...'
-      : '留言分享你為什麼精選這則精選...'
+      : '留言分享你為什麼精選這個集錦...'
 
   return (
     <>
@@ -163,7 +163,7 @@ const AddPickModal = () => {
 
       <dialog
         ref={dialogRef}
-        className="max-w-80 rounded-lg border p-6 text-center"
+        className="max-w-80 rounded-lg border p-6 text-left"
       >
         <p className="body-2 pb-3">您輸入的資訊尚未儲存，是否離開此頁面?</p>
         <div className="flex flex-row items-center justify-end gap-1">

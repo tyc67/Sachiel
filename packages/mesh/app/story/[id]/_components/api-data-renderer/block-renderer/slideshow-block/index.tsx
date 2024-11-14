@@ -47,13 +47,6 @@ const Slideshow = ({ images }: { images: SlideshowImage[] }) => {
   const expandSlideshow = () => {
     setFoldSlideshow(false)
   }
-  useEffect(() => {
-    if (showLightbox) {
-      document.body.classList.add('overflow-hidden')
-    } else {
-      document.body.classList.remove('overflow-hidden')
-    }
-  }, [showLightbox])
 
   useEffect(() => {
     const resizeHandler = () => {

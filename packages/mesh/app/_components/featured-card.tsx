@@ -36,7 +36,7 @@ export default function FeaturedCard({
         <NextLink href={`/story/${story.id}`}>
           <div className="relative aspect-[2/1] shrink-0 overflow-hidden rounded-md sm:aspect-square sm:size-[168px] lg:h-[178px] lg:w-[356px] xl:h-[200px] xl:w-[400px]">
             <NextImage
-              src={story.og_image}
+              src={story.og_image || '/images/default-story-image.webP'}
               fill
               alt={story.title}
               className="object-cover"
@@ -52,10 +52,7 @@ export default function FeaturedCard({
               </p>
             </NextLink>
 
-            <StoryMoreActionButton
-              storyId={story.id}
-              publisherId={publisherId}
-            />
+            <StoryMoreActionButton story={story} publisherId={publisherId} />
           </div>
 
           <h3 className="title-2 lg:title-1 mb-2 text-primary-700 hover-or-active:underline lg:mb-3">
@@ -75,6 +72,8 @@ export default function FeaturedCard({
             <StoryPickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
+              ringColor="primary-100"
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} color="transparent" />
           </div>

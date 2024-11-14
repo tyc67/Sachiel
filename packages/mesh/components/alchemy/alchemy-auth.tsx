@@ -24,7 +24,7 @@ export default function AlchemyAuth({
   if (!hasAlchemyAccount && !address)
     return (
       <LogInCard
-        formDescription="您尚未新增/連結錢包，成功啟用錢包可獲得 100 讀選點數。點擊下方按鈕，我們會將錢包的啟用連結寄送至您的 Email。"
+        formDescription="您尚未新增/連結錢包。點擊下方按鈕，我們會將錢包的啟用連結寄送至您的 Email。"
         isHelperText={true}
       />
     )

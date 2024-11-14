@@ -5,21 +5,31 @@ import {
   GetPublisherPolicyDocument,
   GetStoriesDocument,
   GetStoryDocument,
+  GetStoryPickersDocument,
   GetStorySourceDocument,
 } from '@/graphql/__generated__/graphql'
 import queryGraphQL from '@/utils/fetch-graphql'
-import { fetchRestfulGet } from '@/utils/fetch-restful'
+import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 
 type RelatedStory = {
+  id: string
   title: string
-  summary: string
-  content: string
-  source: string
-  id: number
   og_image: string
-  type: string
-  lastUpdated: string
+  og_description: string
+  published_date: string
+  full_screen_ad: string
+  isMember: boolean
+  source: {
+    id: string
+    customId: string
+    title: string
+    is_active: boolean
+  }
+}
+
+type SearchedResult = {
+  story: RelatedStory[]
 }
 
 export async function getStory({ storyId }: { storyId: string }) {
@@ -45,12 +55,18 @@ export async function getRelatedStories({
   const commentsTake = 3
 
   const globalLogFields = getLogTraceObjectFromHeaders()
+  const response = await fetchRestfulPost<SearchedResult>(
+    RESTFUL_ENDPOINTS.search,
+    {
+      text: storyTitle,
+      objectives: ['story'],
+    }
+  )
+
   const relatedRawStories =
-    (
-      await fetchRestfulGet<RelatedStory[]>(
-        RESTFUL_ENDPOINTS.relatedStories + storyTitle
-      )
-    )?.slice(0, 4) ?? []
+    response?.story
+      ?.filter((story) => story.title !== storyTitle)
+      .slice(0, 4) ?? []
 
   // TODO: use new api to get story pick list according to user.followingIds
   const relatedStories =
@@ -98,4 +114,20 @@ export async function getStoryUnlockPolicy(storyId: string) {
     getStorySourceResponse?.story?.source?.customId ?? ''
 
   return getPublisherPolicy(storySourceCustomId)
+}
+
+export async function getStoryPickers(
+  storyId: string,
+  picksTake: number,
+  picksSkip: number
+) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const getStoryPickersResponse = await queryGraphQL(
+    GetStoryPickersDocument,
+    { storyId, picksTake, picksSkip },
+    globalLogFields,
+    'Failed to getStoryPickers'
+  )
+  return getStoryPickersResponse?.story
 }

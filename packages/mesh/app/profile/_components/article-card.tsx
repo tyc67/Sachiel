@@ -9,6 +9,7 @@ import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { CommentObjective } from '@/types/objective'
 import {
   type BookmarkItem,
@@ -58,7 +59,7 @@ const createGetter = <T,>(config: GetterConfig<T>) => {
 const storyGetters = {
   image: createGetter<string>({
     story: (data) => data.og_image ?? '',
-    collection: (data) => data.heroImage?.urlOriginal ?? '',
+    collection: (data) => data.heroImage?.resized?.original ?? '',
     default: '',
   }),
 
@@ -104,6 +105,11 @@ const storyGetters = {
     collection: (data) => data.picks ?? [],
     default: [],
   }),
+  redirectUrl: createGetter<string>({
+    story: (data) => `/story/${data.id}` ?? '',
+    collection: (data) => `/collection/${data.id}` ?? '',
+    default: '',
+  }),
 } as const
 
 const ArticleCard = ({
@@ -138,15 +144,21 @@ const ArticleCard = ({
           },
         }
 
-  const shouldShowSource = !isCollection
+  const { displayPicks, displayPicksCount } = useDisplayPicks({
+    id: storyData.id,
+    picks: storyGetters.pick(storyData),
+    picksCount: storyGetters.pickCount(storyData),
+  })
+  const shouldShowSource = !isCollection(storyData)
   const redirectLink = () => {
     if (isCollection(storyData)) return `/collection/${storyData.id}`
     return `/story/${storyData?.id}`
   }
+
   return (
     <>
       <CommentProvider
-        initialComments={storyData.comment || []}
+        initialComments={storyData?.comment || []}
         commentObjective={CommentObjective.Story}
         // TODO: check what it use
         commentObjectiveData={storyData}
@@ -163,11 +175,12 @@ const ArticleCard = ({
           </section>
         </Link>
         <div
-          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:pt-[12px] md:after:hidden ${
-            isLast && 'after:hidden'
+          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
+            isLast ? 'after:hidden' : ''
           } ${
-            isCollection(storyData) &&
-            'py-[10px] after:hidden sm:p-0 md:justify-between'
+            isCollection(storyData)
+              ? 'py-[10px] after:hidden sm:p-0 md:justify-between'
+              : ''
           }`}
         >
           <Link className="flex grow flex-col" href={redirectLink()}>
@@ -178,7 +191,7 @@ const ArticleCard = ({
                     {storyGetters.source(storyData)}
                   </p>
                   <StoryMoreActionButton
-                    storyId={storyData?.id ?? ''}
+                    story={storyData}
                     publisherId={storyGetters.sourceId(storyData)}
                   />
                 </>
@@ -232,9 +245,10 @@ const ArticleCard = ({
               `}
           >
             <StoryPickInfo
-              displayPicks={storyGetters.pick(storyData)}
-              pickCount={storyGetters.pickCount(storyData)}
+              displayPicks={displayPicks}
+              pickCount={displayPicksCount}
               maxCount={4}
+              storyId={storyData.id}
             />
             {isCollection(storyData) ? (
               <CollectionPickButton collectionId={storyData.id} />
@@ -249,6 +263,7 @@ const ArticleCard = ({
               avatar={avatar}
               clampLineCount={3}
               canToggle={false}
+              redirectUrl={storyGetters.redirectUrl(storyData)}
             />
           )}
         </div>

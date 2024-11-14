@@ -33,10 +33,7 @@ export default forwardRef(function StoryCard<
             {story.source.title}
           </p>
         </NextLink>
-        <StoryMoreActionButton
-          storyId={story.id}
-          publisherId={story.source.id}
-        />
+        <StoryMoreActionButton story={story} publisherId={story.source.id} />
       </div>
 
       <div className="flex justify-between gap-x-3 sm:gap-x-10">
@@ -57,7 +54,7 @@ export default forwardRef(function StoryCard<
         <NextLink href={`/story/${story.id}`}>
           <div className="relative h-[48px] w-[96px] shrink-0 overflow-hidden rounded sm:h-[80px] sm:w-[160px]">
             <NextImage
-              src={story.og_image}
+              src={story.og_image || '/images/default-story-image.webP'}
               fill
               alt={story.title}
               className="object-cover"
@@ -70,6 +67,7 @@ export default forwardRef(function StoryCard<
         <StoryPickInfo
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
+          storyId={story.id}
         />
         <StoryPickButton storyId={story.id} />
       </div>

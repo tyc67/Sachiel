@@ -28,6 +28,9 @@ const TOAST_MESSAGE = {
   createCollectionFailed: '建立集錦失敗，請重新嘗試',
   deleteCollectionSuccess: '成功刪除集錦',
   deleteCollectionFailed: '刪除集錦失敗，請重新嘗試',
+  updateProfileFailed: '編輯個人檔案失敗，請重新嘗試',
+  addBookmarkSuccess: '已加入書籤',
+  removeBookmarkSuccess: '已移除書籤',
 } as const
 
 export default TOAST_MESSAGE

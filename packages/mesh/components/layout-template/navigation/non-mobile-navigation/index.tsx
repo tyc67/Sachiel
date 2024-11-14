@@ -26,7 +26,7 @@ export default function NonMobileNavigation(props: NonMobileNavigationProps) {
 
 export type DefaultNavigationProps = {
   leftButtons: React.ReactNode[]
-  title: string
+  title: string | React.ReactNode
   rightButtons: React.ReactNode[]
 }
 

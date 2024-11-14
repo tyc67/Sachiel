@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import React from 'react'
 
 import Icon from '@/components/icon'
@@ -79,7 +80,9 @@ const CommentBlockItem = ({
         commentData.id === state.highlightedId ? 'bg-highlight-red' : ''
       }`}
     >
-      <Avatar src={commentData.member?.avatar || ''} size="l" />
+      <Link href={`/profile/member/${comment.member?.customId}`}>
+        <Avatar src={commentData.member?.avatar || ''} size="l" />
+      </Link>
       {state.isEditingComment &&
       state.commentEditState.commentId === commentData.id ? (
         <CommentEditor />
@@ -89,8 +92,10 @@ const CommentBlockItem = ({
             {/* meta data */}
             <div className="flex max-w-full grow items-center justify-between">
               <div className="flex max-w-[calc(100%_-_50px)] flex-wrap">
-                <p className="subtitle-2 max-w-full truncate">
-                  {commentData.member?.name || '使用者'}
+                <p className="subtitle-2 max-w-full cursor-pointer truncate hover-or-active:underline">
+                  <Link href={`/profile/member/${comment.member?.customId}`}>
+                    {commentData.member?.name || '使用者'}
+                  </Link>
                 </p>
                 <div className="flex items-center">
                   <span className="caption-1 mr-1 text-primary-500">

@@ -51,9 +51,12 @@ query GetMemberFollowing($memberId: ID!, $takes: Int!) {
   }
 }
 
-query GetMemberByFollowingCategory($slugs: [String!]!) {
+query GetMemberByFollowingCategory($slugs: [ID!]!) {
   members(
-    where: { following_category: { every: { slug: { in: $slugs } } } }
+    where: {
+      following_category: { some: { id: { in: $slugs } } }
+      is_active: { equals: true }
+    }
     orderBy: [{ id: desc }]
     take: 20
     skip: 0
@@ -112,52 +115,15 @@ query GetCurrentUserMemberId($uid: String!) {
       title
       slug
     }
-    followingPublishers: follow_publisher {
+    followingPublishers: follow_publisher(
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
+    ) {
       id
       title
     }
-  }
-  collections(
-    where: {
-      creator: { firebaseId: { equals: $uid }, is_active: { equals: true } }
-    }
-  ) {
-    id
-    title
-    heroImage {
-      urlOriginal
-    }
-    picks(where: { is_active: { equals: true } }) {
-      id
-      createdAt
-      member {
-        id
-        name
-        avatar
-      }
-    }
-    picksCount
-    commentCount
-    comment(
-      orderBy: { createdAt: desc }
-      where: { member: { firebaseId: { equals: $uid } } }
-      take: 1
-    ) {
-      id
-      content
-      createdAt
-      likeCount
-      isMemberLiked: like(where: { firebaseId: { equals: $uid } }) {
-        id
-      }
-      member {
-        id
-        name
-        avatar
-      }
-    }
-    updatedAt
-    createdAt
   }
 }
 
@@ -222,6 +188,7 @@ query GetMemberProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { not: { equals: "delete" } }
     }
   ) {
     ...CollectionInfo
@@ -270,6 +237,7 @@ query GetVisitorProfile($customId: String, $takes: Int!) {
   collections(
     where: {
       creator: { customId: { equals: $customId }, is_active: { equals: true } }
+      status: { equals: "publish" }
     }
   ) {
     ...CollectionInfo
@@ -285,7 +253,12 @@ query GetMemberFollowingList($customId: String, $take: Int!) {
     name
     avatar
     followingCount
-    follow_publisherCount(where: { source_type: { not: { equals: "empty" } } })
+    follow_publisherCount(
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
+    )
     following(take: $take) {
       id
       customId
@@ -293,7 +266,10 @@ query GetMemberFollowingList($customId: String, $take: Int!) {
       avatar
     }
     follow_publisher(
-      where: { source_type: { not: { equals: "empty" } } }
+      where: {
+        is_active: { equals: true }
+        source_type: { not: { equals: "empty" } }
+      }
       take: $take
     ) {
       id
@@ -539,6 +515,33 @@ query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 0) {
         take: 1
       ) {
         ...AuthenticatedCommentInfo
+      }
+    }
+  }
+}
+query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
+  member(where: { id: $memberId }) {
+    name
+    picksAndBookmarksCount: pickCount(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    )
+    picksAndBookmarks: pick(
+      where: { objective: { equals: "story" }, is_active: { equals: true } }
+      orderBy: { picked_date: desc }
+      take: $pickTake
+      skip: $pickSkip
+    ) {
+      id
+      kind
+      story {
+        id
+        title
+        og_image
+        published_date
+        source {
+          id
+          title
+        }
       }
     }
   }

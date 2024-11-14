@@ -27,8 +27,9 @@ const DOWNLOAD_APP_LINKS = [
 
 // TODO: update path
 const FOOTER_NAV_LINKS = [
-  { text: '關於我們', href: '/' },
-  { text: '聯絡我們', href: '/' },
+  // TODO: Uncomment it when page is complete
+  // { text: '關於我們', href: '/' },
+  { text: '聯絡我們', href: '/contact' },
   { text: '隱私政策', href: '/' },
   { text: '服務條款', href: '/' },
 ] as const
