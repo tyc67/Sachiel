@@ -126,6 +126,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const crossPageToasts = getCrossPageToast()
     if (crossPageToasts) {
+      // add a delay to let toast show when page mounted, might need to check in the future why toast won't show if directly addToast
       setTimeout(() => {
         crossPageToasts.forEach((toast) => {
           addToast(toast)

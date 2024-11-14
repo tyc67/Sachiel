@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import type { ChangeEventHandler, RefObject } from 'react'
 import { useRef, useState } from 'react'
