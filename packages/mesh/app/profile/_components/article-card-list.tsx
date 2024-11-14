@@ -1,3 +1,7 @@
+import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
+import { useState } from 'react'
+
+import { getMoreMemberPicks } from '@/app/actions/get-more-profile-data'
 import ArticleCard from '@/app/profile/_components/article-card'
 import type {
   BookmarkItem,
@@ -27,6 +31,10 @@ function ArticleCardList({
   avatar,
   name,
 }: ArticleCardListProps) {
+  const [hasMoreData, setHasMoreData] = useState(true)
+  const pageSize = 20
+  const amountOfElements = 200
+  console.log({ items })
   if (!items?.length) {
     return (
       <div className="flex grow flex-col">
@@ -39,49 +47,94 @@ function ArticleCardList({
   }
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
+  const fetchMorePicksInProfile = async (pageIndex: number) => {
+    if (!hasMoreData) return []
+
+    const moreMemberPicks = await getMoreMemberPicks({
+      customId: memberId || '',
+      takes: pageSize,
+      start: pageSize * (pageIndex - 1),
+    })
+
+    if (moreMemberPicks.length) {
+      return moreMemberPicks
+    } else {
+      setHasMoreData(false)
+      return []
+    }
+  }
   return (
     <>
-      <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
-        精選文章
-      </p>
-      <div className="bg-multi-layer-light">
-        <ul
-          className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
-            isCollection
-              ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
-              : ''
-          }`}
-        >
-          {items.map((item, index) => {
-            const isLast = index === items.length - 1
-            if (!item) return
-            if ('story' in item && !item.story) return
-            return (
-              <li
-                key={index}
-                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
-              >
-                {'story' in item ? (
-                  <ArticleCard
-                    storyData={item.story as NonNullable<PickListItem>}
-                    isLast={isLast}
-                    memberId={memberId}
-                    avatar={avatar}
-                    name={name}
-                    shouldShowComment={shouldShowComment}
-                  />
-                ) : (
-                  <ArticleCard
-                    storyData={item as NonNullable<BookmarkItem>}
-                    isLast={isLast}
-                    shouldShowComment={shouldShowComment}
-                  />
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      <InfiniteScrollList
+        // TODO: 要解決TS型別問題
+        initialList={
+          items.filter((item) => item.__typename === 'Pick') as PickList
+        }
+        pageSize={pageSize}
+        amountOfElements={amountOfElements}
+        // TODO: 要在封裝一層，並且params只能傳入page index
+        fetchListInPage={fetchMorePicksInProfile}
+        isAutoFetch={true}
+      >
+        {(renderList) => {
+          // TODO: 新增picks 測試，如果沒問題就可以新增書籤跟collection
+          console.log({ renderList })
+          return (
+            <>
+              <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+                精選文章
+              </p>
+              <div className="bg-multi-layer-light">
+                <ul
+                  className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
+                    isCollection
+                      ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
+                      : ''
+                  }`}
+                >
+                  {renderList.map((item, index) => {
+                    const isLast = index === items.length - 1
+                    if (!item) return
+                    if ('story' in item && !item.story) return
+                    const getUniqueKey = () => {
+                      if ('story' in item) {
+                        return item.story?.id + item.story?.createdAt
+                      }
+                      return (
+                        (item as NonNullable<BookmarkItem>).id +
+                        (item as NonNullable<BookmarkItem>).createdAt
+                      )
+                    }
+                    return (
+                      <li
+                        key={getUniqueKey()}
+                        className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+                      >
+                        {'story' in item ? (
+                          <ArticleCard
+                            storyData={item.story as NonNullable<PickListItem>}
+                            isLast={isLast}
+                            memberId={memberId}
+                            avatar={avatar}
+                            name={name}
+                            shouldShowComment={shouldShowComment}
+                          />
+                        ) : (
+                          <ArticleCard
+                            storyData={item as NonNullable<BookmarkItem>}
+                            isLast={isLast}
+                            shouldShowComment={shouldShowComment}
+                          />
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            </>
+          )
+        }}
+      </InfiniteScrollList>
     </>
   )
 }
