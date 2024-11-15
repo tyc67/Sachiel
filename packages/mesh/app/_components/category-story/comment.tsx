@@ -28,7 +28,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   const commentId = comment.id
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchCommentLikes(comment.id)
+      const data = await fetchCommentLikes(commentId)
 
       if (data) {
         setLikeCount(data.likeCount || 0)
