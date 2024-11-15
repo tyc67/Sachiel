@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useMemo } from 'react'
 
@@ -8,8 +9,10 @@ import getLatestStoriesInCategory, {
 } from '@/app/actions/get-latest-stories-in-category'
 import getMostPickedStoriesInCategory from '@/app/actions/get-most-picked-stories-in-category'
 import getMostSponsorPublishersAndStories from '@/app/actions/get-most-sponsor-publishers-and-stories'
+import { categorySearchParamName } from '@/constants/search-param-names'
 import { useUser } from '@/context/user'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
+import { replaceSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'
 import CategorySelector from './category-selector'
@@ -62,11 +65,13 @@ export default function MediaStories({
 }) {
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState(true)
-  const [currentCategory, setCurrentCategory] = useState(
-    user.followingCategories[0]
-  )
   const [pageDataInCategories, setPageDataInCategories] = useState<PageData>(
     getInitialPageData(allCategories)
+  )
+  const searchParams = useSearchParams()
+  const currentCategorySlug = searchParams.get(categorySearchParamName)
+  const currentCategory = user.followingCategories.find(
+    (category) => category.slug === currentCategorySlug
   )
 
   const followingPublisherIds = useMemo(
@@ -74,15 +79,17 @@ export default function MediaStories({
     [user.followingPublishers]
   )
   const { mostPickedStory, latestStoriesInfo, publishersAndStories } =
-    pageDataInCategories[currentCategory.slug ?? '']
+    pageDataInCategories[
+      (currentCategory?.slug || user.followingCategories[0].slug) ?? ''
+    ]
   const getLatestStoriesfetchBody = useMemo(
     () => ({
       publishers: followingPublisherIds,
-      category: currentCategory.id,
+      category: currentCategory?.id ?? '',
       index: 0,
       take: latestStoryPageCount,
     }),
-    [currentCategory.id, followingPublisherIds]
+    [currentCategory?.id, followingPublisherIds]
   )
 
   const loadMoreLatestStories = useCallback(async () => {
@@ -103,34 +110,41 @@ export default function MediaStories({
       shouldLoadmore: latestStoriesResponse.stories.length !== 0 ? true : false,
     }
 
-    const currentPageData = pageDataInCategories[currentCategory.slug ?? '']
+    const currentPageData = pageDataInCategories[currentCategory?.slug ?? '']
     setPageDataInCategories((oldPageData) => {
       return {
         ...oldPageData,
-        [currentCategory.slug ?? '']: {
+        [currentCategory?.slug ?? '']: {
           ...currentPageData,
           latestStoriesInfo: newLatestStoriesInfo,
         },
       }
     })
   }, [
-    currentCategory.slug,
+    currentCategory?.slug,
     getLatestStoriesfetchBody,
     latestStoriesInfo.stories,
     pageDataInCategories,
   ])
 
   useEffect(() => {
+    if (!currentCategorySlug) {
+      replaceSearchParams(
+        categorySearchParamName,
+        user.followingCategories[0].slug ?? ''
+      )
+    }
+  }, [currentCategorySlug, user.followingCategories])
+
+  useEffect(() => {
     const fetchPageData = async () => {
       try {
-        setIsLoading(true)
-
         const [
           mostPickedStoryResponse,
           latestStoriesResponse,
           publishersAndStoriesResponse,
         ] = await Promise.all([
-          getMostPickedStoriesInCategory(currentCategory.slug ?? ''),
+          getMostPickedStoriesInCategory(currentCategory?.slug ?? ''),
           getLatestStoriesInCategory(getLatestStoriesfetchBody),
           getMostSponsorPublishersAndStories(),
         ])
@@ -156,22 +170,29 @@ export default function MediaStories({
 
         setPageDataInCategories((oldPageData) => ({
           ...oldPageData,
-          [currentCategory.slug ?? '']: {
+          [currentCategory?.slug ?? '']: {
             mostPickedStory,
             latestStoriesInfo,
             publishersAndStories,
           },
         }))
+
         setIsLoading(false)
       } catch (error) {
         console.error('fetchPageData error', error)
       }
     }
 
-    if (!mostPickedStory) {
+    if (!mostPickedStory && currentCategory) {
+      setIsLoading(true)
       fetchPageData()
     }
-  }, [currentCategory.slug, getLatestStoriesfetchBody, mostPickedStory])
+  }, [
+    currentCategory,
+    currentCategory?.slug,
+    getLatestStoriesfetchBody,
+    mostPickedStory,
+  ])
 
   useEffect(() => {
     setPageDataInCategories(getInitialPageData(allCategories))
@@ -179,7 +200,7 @@ export default function MediaStories({
 
   let contentJsx: JSX.Element
 
-  if (isLoading) {
+  if (isLoading || !currentCategory) {
     contentJsx = <Loading withCategory={false} />
   } else if (!latestStoriesInfo?.stories.length) {
     contentJsx = <NoStories />
@@ -208,7 +229,6 @@ export default function MediaStories({
       <CategorySelector
         allCategories={allCategories}
         currentCategory={currentCategory}
-        setCurrentCategory={setCurrentCategory}
       />
       {contentJsx}
     </main>

@@ -1,14 +1,17 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import type { MouseEventHandler } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import { fetchCategoryStory } from '@/app/actions/get-homepage'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
+import { categorySearchParamName } from '@/constants/search-param-names'
 import type { GetAllCategoriesQuery } from '@/graphql/__generated__/graphql'
 import useInView from '@/hooks/use-in-view'
 import type { CategoryStory } from '@/types/homepage'
+import { replaceSearchParams, setSearchParams } from '@/utils/search-params'
 
 import StorySection from './story-section'
 
@@ -29,21 +32,33 @@ const NavigateButton = ({
 }
 
 type Props = {
-  categories: GetAllCategoriesQuery['categories']
+  categories: NonNullable<GetAllCategoriesQuery['categories']>
   initialStories: CategoryStory[] | null
 }
 
 export default function NavList({ categories, initialStories }: Props) {
-  const [activeCategory, setActiveCategory] = useState(categories?.[0])
   const [data, setData] = useState<CategoryStory[] | null>(initialStories)
+  const searchParams = useSearchParams()
+  const activeCategorySlug = searchParams.get(categorySearchParamName)
+  const activeCategory = categories?.find(
+    (category) => category.slug === activeCategorySlug
+  )
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchCategoryStory(activeCategory?.slug ?? '')
+    if (!activeCategorySlug) {
+      replaceSearchParams(categorySearchParamName, categories[0].slug ?? '')
+    }
+  }, [activeCategorySlug, categories])
+
+  useEffect(() => {
+    const fetchCategoryData = async (categorySlug: string) => {
+      const result = await fetchCategoryStory(categorySlug)
       setData(result)
     }
 
-    fetchData()
+    if (activeCategory?.slug) {
+      fetchCategoryData(activeCategory.slug)
+    }
   }, [activeCategory])
 
   const categoriesRef = useRef<HTMLDivElement>(null)
@@ -78,7 +93,10 @@ export default function NavList({ categories, initialStories }: Props) {
                     isActive: category === activeCategory,
                   }}
                   onClick={() => {
-                    setActiveCategory(category)
+                    setSearchParams(
+                      categorySearchParamName,
+                      category.slug ?? ''
+                    )
                   }}
                 />
               </div>

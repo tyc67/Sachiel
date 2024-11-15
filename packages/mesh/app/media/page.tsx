@@ -18,6 +18,5 @@ export default async function Page() {
 
   const allCategoriesResponse = await getAllCategories()
   const allCategories = allCategoriesResponse?.categories ?? []
-
   return <MediaStories allCategories={allCategories} />
 }
