@@ -130,7 +130,7 @@ export const EditProfileProvider: React.FC<{
         return
       }
 
-      if (!validateForm() || !isFormDataChanged()) {
+      if (!(await validateForm()) || !isFormDataChanged()) {
         console.warn('Form validation failed or no changes detected')
         return
       }

@@ -1,3 +1,5 @@
+'use client'
+
 import Button from '@/components/button'
 
 import DesktopGoBackButton from '../desktop-go-back-button'

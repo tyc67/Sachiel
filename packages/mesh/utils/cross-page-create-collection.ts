@@ -9,16 +9,26 @@ type CreateCollectionStory = {
 const createCollectionStoryKey = 'create-collecction-story' as const
 
 export function getCrossPageCollectinPickStory() {
-  const createCollectionStory: CreateCollectionStory | null = JSON.parse(
-    localStorage.getItem(createCollectionStoryKey) ?? 'null'
-  )
-  if (!createCollectionStory) return null
+  try {
+    const createCollectionStory: CreateCollectionStory | null = JSON.parse(
+      localStorage.getItem(createCollectionStoryKey) ?? 'null'
+    )
+    if (!createCollectionStory) return null
 
-  if (Date.now() - createCollectionStory?.ts > 30 * MINUTE) {
-    clearCreateCollectionStoryLS()
+    if (Date.now() - createCollectionStory?.ts > 30 * MINUTE) {
+      clearCreateCollectionStoryLS()
+      return null
+    }
+    return createCollectionStory.story
+  } catch (error) {
+    console.error(
+      `createCollectionStoryKey in localStorage in not a valid JSON string: ${localStorage.getItem(
+        createCollectionStoryKey
+      )}`,
+      error
+    )
     return null
   }
-  return createCollectionStory.story
 }
 
 export function setCrossPageCollectionPickStory(story: CollectionPickStory) {

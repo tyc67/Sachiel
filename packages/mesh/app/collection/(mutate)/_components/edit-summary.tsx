@@ -1,3 +1,5 @@
+'use client'
+
 import { useEditCollection } from '@/context/edit-collection'
 
 export const maxSummaryLength = 3000
