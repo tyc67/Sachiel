@@ -254,16 +254,14 @@ const MobileNavIcon = ({
   const textJsx = isOn ? (
     <span className="caption-1 text-primary-700">{iconInfo.text}</span>
   ) : (
-    <span className="caption-1 text-primary-600 group-active:text-primary-700">
-      {iconInfo.text}
-    </span>
+    <span className="caption-1 text-primary-600">{iconInfo.text}</span>
   )
 
   return (
     <Link
       key={iconInfo.icon.default}
       href={iconInfo.href}
-      className="group flex h-full flex-1 flex-col items-center justify-center"
+      className="flex h-full flex-1 flex-col items-center justify-center"
     >
       {iconJsx}
       {textJsx}

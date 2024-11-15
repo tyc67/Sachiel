@@ -16,7 +16,7 @@ type StyledProps = {
   $shouldHighlightReport: boolean
 }
 
-const Link = styled(NextLink)<StyledProps>`
+const Link = styled.a<StyledProps>`
   display: flex;
   position: relative;
   border-radius: 2px;
