@@ -1,4 +1,5 @@
 'use client'
+import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { likeComment, unlikeComment } from '@/app/actions/comment'
@@ -45,6 +46,8 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   }, [activeCategoryTitle, commentId])
 
   const handleCommentLiked = debounce(async () => {
+    if (!memberId) redirect('/login')
+
     if (isLiked) {
       try {
         const response = await unlikeComment({ memberId, commentId })
