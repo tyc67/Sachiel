@@ -37,12 +37,12 @@ function ArticleCardList({
   tabCategory,
 }: ArticleCardListProps) {
   const [hasMoreData, setHasMoreData] = useState(true)
-  const pageSize = 20
+  const pageSize = 40
   const amountOfElements = 200
 
   useEffect(() => {
     setHasMoreData(true)
-  }, [tabCategory])
+  }, [tabCategory, items])
 
   if (!items?.length) {
     return (
@@ -70,7 +70,7 @@ function ArticleCardList({
         : tabCategory === 'BOOKMARKS'
         ? await getMoreMemberBookmarks({
             customId: customId ?? '',
-            takes: pageSize,
+            takes: pageSize * pageIndex,
             start: pageSize * (pageIndex - 1),
           })
         : []
@@ -81,7 +81,7 @@ function ArticleCardList({
       return []
     }
   }
-  const listKey = `${tabCategory}-${items.length}-${Date.now()}`
+  // const listKey = `${tabCategory}-${items.length}-${Date.now()}`
   return (
     <>
       {tabCategory === profile.TabCategory.PICKS && (
@@ -90,7 +90,7 @@ function ArticleCardList({
         </p>
       )}
       <InfiniteScrollList
-        key={listKey}
+        key={tabCategory}
         initialList={items as profile.PickList}
         pageSize={pageSize}
         amountOfElements={amountOfElements}
