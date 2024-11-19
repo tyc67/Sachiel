@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import {
   GetMoreBookmarksDocument,
+  GetMoreCollectionsDocument,
   GetMorePicksDocument,
 } from '@/graphql/__generated__/graphql'
 import fetchGraphQL from '@/utils/fetch-graphql'
@@ -20,36 +21,74 @@ const getMoreMemberPicksSchema = z.object({
 export const getMoreMemberPicks = async (
   params: z.infer<typeof getMoreMemberPicksSchema>
 ) => {
-  // Validate the input parameters
-  const { customId, takes, start } = getMoreMemberPicksSchema.parse(params)
+  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  if (!parseResult.success) {
+    console.error('Invalid parameters:', parseResult.error)
+    return []
+  }
 
+  const { customId, takes, start } = parseResult.data
   const globalLogFields = getLogTraceObjectFromHeaders()
 
-  const response = await fetchGraphQL(
-    GetMorePicksDocument,
-    { customId, takes, start },
-    globalLogFields,
-    'Failed to get more member picks'
-  )
-  const pickList =
-    response?.picks?.filter((item) => item.objective === 'story') ?? []
-  return pickList
+  try {
+    const response = await fetchGraphQL(
+      GetMorePicksDocument,
+      { customId, takes, start },
+      globalLogFields,
+      'Failed to get more member picks'
+    )
+
+    return response?.picks?.filter((item) => item.objective === 'story') ?? []
+  } catch (error) {
+    console.error('Failed to fetch picks:', error)
+    return []
+  }
 }
 
+/**
+ * 在個人檔案頁中無限滾動拿取更多集錦
+ */
 export const getMoreMemberBookmarks = async (
   params: z.infer<typeof getMoreMemberPicksSchema>
 ) => {
   // Validate the input parameters
-  const { customId, takes, start } = getMoreMemberPicksSchema.parse(params)
-
+  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  if (!parseResult.success) {
+    console.error('Invalid parameters:', parseResult.error)
+    return []
+  }
+  const { customId, takes, start } = parseResult.data
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await fetchGraphQL(
     GetMoreBookmarksDocument,
     { customId, takes, start },
     globalLogFields,
-    'Failed to get more member picks'
+    'Failed to get more member bookmarks'
   )
   const bookmarkList = response?.picks ?? []
   return bookmarkList
+}
+
+export const getMoreMemberCollections = async (
+  params: z.infer<typeof getMoreMemberPicksSchema>
+) => {
+  // Validate the input parameters
+  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  if (!parseResult.success) {
+    console.error('Invalid parameters:', parseResult.error)
+    return []
+  }
+
+  const { customId, takes, start } = parseResult.data
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const response = await fetchGraphQL(
+    GetMoreCollectionsDocument,
+    { customId, takes, start },
+    globalLogFields,
+    'Failed to get more member collections'
+  )
+  const collectionList = response?.picks ?? []
+  return collectionList
 }

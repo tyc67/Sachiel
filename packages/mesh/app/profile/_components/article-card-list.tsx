@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import {
   getMoreMemberBookmarks,
+  getMoreMemberCollections,
   getMoreMemberPicks,
 } from '@/app/actions/get-more-profile-data'
 import ArticleCard from '@/app/profile/_components/article-card'
@@ -36,9 +37,11 @@ function ArticleCardList({
   customId,
   tabCategory,
 }: ArticleCardListProps) {
+  const PAGINATION_CONFIG = {
+    PAGE_SIZE: 40,
+    MAX_ELEMENTS: 200,
+  } as const
   const [hasMoreData, setHasMoreData] = useState(true)
-  const pageSize = 40
-  const amountOfElements = 200
 
   useEffect(() => {
     setHasMoreData(true)
@@ -58,30 +61,29 @@ function ArticleCardList({
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
   const fetchMorePicksInProfile = async (pageIndex: number) => {
+    console.log('trigger', hasMoreData)
     if (!hasMoreData) return []
 
-    const moreMemberPicks =
-      tabCategory === 'PICKS'
-        ? await getMoreMemberPicks({
-            customId: customId ?? '',
-            takes: pageSize,
-            start: pageSize * (pageIndex - 1),
-          })
-        : tabCategory === 'BOOKMARKS'
-        ? await getMoreMemberBookmarks({
-            customId: customId ?? '',
-            takes: pageSize * pageIndex,
-            start: pageSize * (pageIndex - 1),
-          })
-        : []
-    if (moreMemberPicks.length) {
-      return moreMemberPicks
-    } else {
-      setHasMoreData(false)
-      return []
-    }
+    const FETCH_FUNCTIONS = {
+      [profile.TabCategory.PICKS]: getMoreMemberPicks,
+      [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
+      [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
+    } as const
+
+    const fetchFunction =
+      FETCH_FUNCTIONS[
+        tabCategory as Exclude<profile.TabCategoryType, 'PUBLISH'>
+      ] ?? FETCH_FUNCTIONS[profile.TabCategory.PICKS]
+
+    const moreItems = await fetchFunction({
+      customId: customId ?? '',
+      takes: PAGINATION_CONFIG.PAGE_SIZE * pageIndex,
+      start: PAGINATION_CONFIG.PAGE_SIZE * (pageIndex - 1),
+    })
+
+    setHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
+    return moreItems
   }
-  // const listKey = `${tabCategory}-${items.length}-${Date.now()}`
   return (
     <>
       {tabCategory === profile.TabCategory.PICKS && (
@@ -92,8 +94,8 @@ function ArticleCardList({
       <InfiniteScrollList
         key={tabCategory}
         initialList={items as profile.PickList}
-        pageSize={pageSize}
-        amountOfElements={amountOfElements}
+        pageSize={PAGINATION_CONFIG.PAGE_SIZE}
+        amountOfElements={PAGINATION_CONFIG.MAX_ELEMENTS}
         fetchListInPage={fetchMorePicksInProfile}
         isAutoFetch={true}
       >
