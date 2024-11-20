@@ -2,8 +2,10 @@
 
 import { usePathname } from 'next/navigation'
 import { Suspense, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { usePickersModal } from '@/context/pickers-modal'
+import { Toast, useToast } from '@/context/toast'
 
 import PickersModal from '../pickers-modal'
 import Spinner from '../spinner'
@@ -128,6 +130,7 @@ const DefaultLayout = ({
   children: React.ReactNode
 }) => {
   const { isModalOpen: isPickersModalOpen } = usePickersModal()
+  const { currentToast, onToastEnded } = useToast()
 
   return (
     <body className={`min-h-screen ${customStyle.background}`}>
@@ -167,6 +170,10 @@ const DefaultLayout = ({
       {/* cover on mobile bottom fixed nav if mobileActionBar is setup */}
       {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
       {isPickersModalOpen ? <PickersModal /> : null}
+      {createPortal(
+        <Toast toast={currentToast} onClose={onToastEnded} />,
+        document.body
+      )}
     </body>
   )
 }
