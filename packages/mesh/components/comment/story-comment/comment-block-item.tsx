@@ -80,7 +80,10 @@ const CommentBlockItem = ({
         commentData.id === state.highlightedId ? 'bg-highlight-red' : ''
       }`}
     >
-      <Link href={`/profile/member/${comment.member?.customId}`}>
+      <Link
+        href={`/profile/member/${comment.member?.customId}`}
+        className="flex min-w-fit"
+      >
         <Avatar src={commentData.member?.avatar || ''} size="l" />
       </Link>
       {state.isEditingComment &&
