@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import Icon from '@/components/icon'
 import { SECOND } from '@/constants/time-unit'
@@ -24,9 +25,7 @@ export type Toast = {
 }
 
 type ToastContextValue = {
-  currentToast: Toast
   addToast: (newToast: Toast) => void
-  onToastEnded: () => void
 }
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined)
@@ -35,13 +34,7 @@ const delayToShowToast = 0.5 * SECOND
 const delayToCompleteToast = 0.4 * SECOND
 const delayToHideToast = 3 * SECOND
 
-export const Toast = ({
-  toast,
-  onClose,
-}: {
-  toast?: Toast
-  onClose: () => void
-}) => {
+const Toast = ({ toast, onClose }: { toast?: Toast; onClose: () => void }) => {
   const [showToast, setShowToast] = useState(false)
   // use ref to store onClose callback to prevent timeout being cleared
   const onCloseRef = useRef(onClose)
@@ -144,8 +137,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }, [addToast, isClient, pathname])
 
   return (
-    <ToastContext.Provider value={{ currentToast, addToast, onToastEnded }}>
-      <>{children}</>
+    <ToastContext.Provider value={{ addToast }}>
+      <>
+        {children}
+        {isClient &&
+          createPortal(
+            <Toast toast={currentToast} onClose={onToastEnded} />,
+            document.body
+          )}
+      </>
     </ToastContext.Provider>
   )
 }
