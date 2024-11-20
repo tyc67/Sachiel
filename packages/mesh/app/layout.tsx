@@ -32,15 +32,17 @@ export default async function RootLayout({
   return (
     <html lang="zh-Hant" className={notoSans.className}>
       <GoogleTagManager gtmId={GTM_ID} />
-      <UserProvider user={user}>
-        <ToastProvider>
-          <PickModalProvider>
-            <PickersModalProvider>
-              <RootLayoutWrapper>{children}</RootLayoutWrapper>
-            </PickersModalProvider>
-          </PickModalProvider>
-        </ToastProvider>
-      </UserProvider>
+      <body>
+        <UserProvider user={user}>
+          <ToastProvider>
+            <PickModalProvider>
+              <PickersModalProvider>
+                <RootLayoutWrapper>{children}</RootLayoutWrapper>
+              </PickersModalProvider>
+            </PickModalProvider>
+          </ToastProvider>
+        </UserProvider>
+      </body>
     </html>
   )
 }

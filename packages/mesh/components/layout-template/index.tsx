@@ -130,7 +130,7 @@ const DefaultLayout = ({
   const { isModalOpen: isPickersModalOpen } = usePickersModal()
 
   return (
-    <body className={`min-h-screen ${customStyle.background}`}>
+    <div className={`min-h-screen ${customStyle.background}`}>
       {/* fixed header */}
       <Header type={HeaderType.Default} />
       {/* block for non-fixed content, set padding for fixed blocks */}
@@ -167,7 +167,7 @@ const DefaultLayout = ({
       {/* cover on mobile bottom fixed nav if mobileActionBar is setup */}
       {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
       {isPickersModalOpen ? <PickersModal /> : null}
-    </body>
+    </div>
   )
 }
 
@@ -181,14 +181,14 @@ const StatelessLayout = ({
   customStyle?: CustomStyle
 }) => {
   return (
-    <body className={`min-h-screen ${customStyle?.background}`}>
+    <div className={`min-h-screen ${customStyle?.background}`}>
       <div className="h-dvh">
         <Header type={HeaderType.Stateless} />
         <div className="flex h-full flex-col items-center sm:pt-15">
           {children}
         </div>
       </div>
-    </body>
+    </div>
   )
 }
 
@@ -213,7 +213,7 @@ const ArticleLayout = ({
   const { isModalOpen: isPickersModalOpen } = usePickersModal()
 
   return (
-    <body className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       {/* fixed header */}
       <Header type={HeaderType.Article} showNav={showNav} />
       {/* block for non-fixed content, set padding for fixed blocks */}
@@ -244,7 +244,7 @@ const ArticleLayout = ({
       {/* cover on mobile bottom nav */}
       <MobileBottomActionBar {...mobileActionBar} />
       {isPickersModalOpen ? <PickersModal /> : null}
-    </body>
+    </div>
   )
 }
 
@@ -257,13 +257,13 @@ const CollectionLayout = ({
   children: React.ReactNode
 }) => {
   return (
-    <body className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       {/* fixed header */}
       <Header type={HeaderType.Collection} />
       {/* block for non-fixed content, set padding for fixed blocks */}
       <div className="primary-container-collection">{children}</div>
       {/* cover on mobile header if navigation is setup */}
       {mobileNavigation && <MobileNavigation {...mobileNavigation} />}
-    </body>
+    </div>
   )
 }
