@@ -76,7 +76,7 @@ const CommentBlockItem = ({
   return (
     <li
       key={commentData.id}
-      className={`mx-5 flex gap-2 border-b border-b-primary-200 py-5 transition-colors duration-500 first-of-type:pt-0 last-of-type:border-none ${
+      className={`flex gap-2 border-b border-b-primary-200 p-5 transition-colors duration-500 first-of-type:pt-0 last-of-type:border-none md:px-0 ${
         commentData.id === state.highlightedId ? 'bg-highlight-red' : ''
       }`}
     >

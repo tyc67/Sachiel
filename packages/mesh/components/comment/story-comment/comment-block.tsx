@@ -31,7 +31,7 @@ const CommentBlock = ({
 
   return (
     <ul className="flex grow flex-col">
-      <p className="list-title px-5 py-4">
+      <p className="list-title px-5 py-4 md:px-0">
         {title}
         <span
           className={`${type === EditDrawerBlockType.Popular ? 'hidden' : ''}`}
