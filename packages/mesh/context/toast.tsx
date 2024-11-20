@@ -11,8 +11,8 @@ import {
 } from 'react'
 
 import Icon from '@/components/icon'
+import StablePortal from '@/components/stable-portal'
 import { SECOND } from '@/constants/time-unit'
-import useIsClient from '@/hooks/use-is-client'
 import {
   clearCrossPageToasts,
   getCrossPageToast,
@@ -24,9 +24,7 @@ export type Toast = {
 }
 
 type ToastContextValue = {
-  currentToast: Toast
   addToast: (newToast: Toast) => void
-  onToastEnded: () => void
 }
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined)
@@ -35,13 +33,7 @@ const delayToShowToast = 0.5 * SECOND
 const delayToCompleteToast = 0.4 * SECOND
 const delayToHideToast = 3 * SECOND
 
-export const Toast = ({
-  toast,
-  onClose,
-}: {
-  toast?: Toast
-  onClose: () => void
-}) => {
+const Toast = ({ toast, onClose }: { toast?: Toast; onClose: () => void }) => {
   const [showToast, setShowToast] = useState(false)
   // use ref to store onClose callback to prevent timeout being cleared
   const onCloseRef = useRef(onClose)
@@ -94,31 +86,32 @@ export const Toast = ({
   if (!toast) return null
 
   return (
-    <div
-      className={`fixed bottom-full left-1/2 z-modal flex h-toast -translate-x-1/2 items-center gap-1 rounded-md pl-3 pr-4 transition-transform ${
-        toast?.status === 'success' ? 'bg-primary-600' : 'bg-custom-red'
-      } ${classes}`}
-      role="alert"
-    >
-      <span className="flex size-6 items-center justify-center ">
-        <Icon
-          iconName={
-            toast?.status === 'success'
-              ? 'icon-toast-success'
-              : 'icon-toast-fail'
-          }
-          size="m"
-        />
-      </span>
-      <span className="footnote text-white">{toast?.text}</span>
-    </div>
+    <StablePortal>
+      <div
+        className={`fixed bottom-full left-1/2 z-modal flex h-toast -translate-x-1/2 items-center gap-1 rounded-md pl-3 pr-4 transition-transform ${
+          toast?.status === 'success' ? 'bg-primary-600' : 'bg-custom-red'
+        } ${classes}`}
+        role="alert"
+      >
+        <span className="flex size-6 items-center justify-center ">
+          <Icon
+            iconName={
+              toast?.status === 'success'
+                ? 'icon-toast-success'
+                : 'icon-toast-fail'
+            }
+            size="m"
+          />
+        </span>
+        <span className="footnote text-white">{toast?.text}</span>
+      </div>
+    </StablePortal>
   )
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
   const pathname = usePathname()
-  const isClient = useIsClient()
 
   const currentToast = toasts[0]
 
@@ -141,11 +134,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       }, SECOND)
       clearCrossPageToasts()
     }
-  }, [addToast, isClient, pathname])
+  }, [addToast, pathname])
 
   return (
-    <ToastContext.Provider value={{ currentToast, addToast, onToastEnded }}>
-      <>{children}</>
+    <ToastContext.Provider value={{ addToast }}>
+      <>
+        {children}
+        {/* re-render the component when path changes */}
+        <Toast key={pathname} toast={currentToast} onClose={onToastEnded} />
+      </>
     </ToastContext.Provider>
   )
 }
