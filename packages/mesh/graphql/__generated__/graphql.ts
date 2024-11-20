@@ -4570,6 +4570,20 @@ export type GetCollectionLatestAddedCommentQuery = {
   comments?: Array<{ __typename?: 'Comment'; id: string }> | null
 }
 
+export type GetCommentLikesQueryVariables = Exact<{
+  commentId?: InputMaybe<Scalars['ID']['input']>
+  memberId: Scalars['ID']['input']
+}>
+
+export type GetCommentLikesQuery = {
+  __typename?: 'Query'
+  comment?: {
+    __typename?: 'Comment'
+    likeCount?: number | null
+    isLiked?: Array<{ __typename?: 'Member'; id: string }> | null
+  } | null
+}
+
 export type IsInvitationCodeValidQueryVariables = Exact<{
   code: Scalars['String']['input']
 }>
@@ -9602,6 +9616,113 @@ export const GetCollectionLatestAddedCommentDocument = {
 } as unknown as DocumentNode<
   GetCollectionLatestAddedCommentQuery,
   GetCollectionLatestAddedCommentQueryVariables
+>
+export const GetCommentLikesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCommentLikes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'commentId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'comment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'commentId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'isLiked' },
+                  name: { kind: 'Name', value: 'like' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'memberId' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'likeCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetCommentLikesQuery,
+  GetCommentLikesQueryVariables
 >
 export const IsInvitationCodeValidDocument = {
   kind: 'Document',
