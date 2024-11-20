@@ -117,6 +117,7 @@ export async function getCurrentUser() {
         memberId: data.member.id,
         customId: data.member.customId ?? '',
         name: data.member.name ?? '',
+        firebaseId: data.member.firebaseId ?? '',
         email: data.member.email ?? '',
         avatar: data.member.avatar ?? '',
         avatarImageId: data.member.avatar_image?.id ?? '',
