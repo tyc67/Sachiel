@@ -23,12 +23,15 @@ export function Header2Block({
   switch (organization) {
     case 'mirror-media':
       return (
-        <h2 id={genMMSideIndexHeaderId(apiDataBlock.id)}>
-          {apiDataBlock.content[0]}
-        </h2>
+        <h2
+          id={genMMSideIndexHeaderId(apiDataBlock.id)}
+          dangerouslySetInnerHTML={{ __html: apiDataBlock.content[0] }}
+        />
       )
     case 'readr-media':
-      return <h2>{apiDataBlock.content[0]}</h2>
+      return (
+        <h2 dangerouslySetInnerHTML={{ __html: apiDataBlock.content[0] }} />
+      )
     default:
       return null
   }
@@ -44,12 +47,15 @@ export function Header3Block({
   switch (organization) {
     case 'mirror-media':
       return (
-        <h3 id={genMMSideIndexHeaderId(apiDataBlock.id)}>
-          {apiDataBlock.content[0]}
-        </h3>
+        <h3
+          id={genMMSideIndexHeaderId(apiDataBlock.id)}
+          dangerouslySetInnerHTML={{ __html: apiDataBlock.content[0] }}
+        />
       )
     case 'readr-media':
-      return <h3>{apiDataBlock.content[0]}</h3>
+      return (
+        <h3 dangerouslySetInnerHTML={{ __html: apiDataBlock.content[0] }} />
+      )
     default:
       return null
   }

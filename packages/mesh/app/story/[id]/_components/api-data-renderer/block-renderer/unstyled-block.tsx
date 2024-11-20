@@ -20,9 +20,8 @@ const Annotation = ({ text, body }: { text: string; body: string }) => {
       <span
         onClick={() => setShowBody(!showBody)}
         className={showBody ? 'expand' : ''}
-      >
-        {text}
-      </span>
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
       <div
         className={`body ${showBody ? 'expand' : ''}`}
         dangerouslySetInnerHTML={{ __html: body }}
