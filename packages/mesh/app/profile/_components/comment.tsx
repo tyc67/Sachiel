@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
+import { useUser } from '@/context/user'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
 import { useCommentLike } from '@/hooks/use-comment-like'
 import useWindowDimensions from '@/hooks/use-window-dimension'
@@ -27,6 +28,10 @@ const Comment: React.FC<CommentProps> = ({
   redirectUrl = '',
 }) => {
   const { width } = useWindowDimensions()
+  const { user } = useUser()
+  const { memberId } = user
+  const { member } = data
+  const isOwnComment = memberId === member?.id
   const router = useRouter()
   const { needClamp, commentRef, handleToggleClamp } = useCommentClamp(
     clampLineCount,
@@ -63,9 +68,12 @@ const Comment: React.FC<CommentProps> = ({
           <p className="caption-1 text-primary-500">
             {displayTimeFromNow(commentData.createdAt)}
           </p>
-          <Icon iconName="icon-dot" size="s" />
-
-          <button className="caption-1 text-primary-500">編輯留言</button>
+          {isOwnComment && (
+            <>
+              <Icon iconName="icon-dot" size="s" />
+              <button className="caption-1 text-primary-500">編輯留言</button>
+            </>
+          )}
         </div>
         <div className="flex items-center justify-end">
           <p className="caption-1 text-primary-600">{commentData.likeCount}</p>
