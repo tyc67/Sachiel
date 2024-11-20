@@ -272,12 +272,12 @@ export default async function fetchMostSponsoredPublishersByCategory(
   }
 }
 
-async function fetchCommentLikes(commentId: string) {
+async function fetchCommentLikes(commentId: string, memberId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const data = await queryGraphQL(
     GetCommentLikesDocument,
-    { commentId },
+    { commentId, memberId },
     globalLogFields
   )
 

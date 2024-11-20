@@ -1,7 +1,7 @@
 'use client'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
-
+import Link from 'next/link'
 import { likeComment, unlikeComment } from '@/app/actions/comment'
 import { fetchCommentLikes } from '@/app/actions/get-homepage'
 import Icon from '@/components/icon'
@@ -29,19 +29,14 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   const commentId = comment.id
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchCommentLikes(commentId)
-
+      const data = await fetchCommentLikes(commentId, memberId)
       if (data) {
         setLikeCount(data.likeCount || 0)
-        if (data.like) {
-          const userHasLiked = data.like.some(
-            (person) => person.id === memberId
-          )
-          setIsLiked(userHasLiked)
+        if (data.isLiked) {
+          setIsLiked(true)
         }
       }
     }
-
     fetchData()
   }, [activeCategoryTitle, commentId])
 
@@ -86,17 +81,21 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   return (
     <div className="cursor-pointer rounded-md border-[0.5px] border-primary-200 bg-primary-100 p-3">
       <div className="mb-2 flex justify-between">
-        <div className="flex items-center">
-          {/* TODO: add profile link */}
-          <Avatar
-            src={comment.member.avatar}
-            size="m"
-            ringColor="primary-100"
-          />
+        <div>
+          <Link
+            href={comment.member.customId || '/'}
+            className="flex items-center"
+          >
+            <Avatar
+              src={comment.member.avatar}
+              size="m"
+              ringColor="primary-100"
+            />
+            <p className="subtitle-2 ml-2 text-primary-700">
+              {comment.member.name}
+            </p>
+          </Link>
 
-          <p className="subtitle-2 ml-2 text-primary-700">
-            {comment.member.name}
-          </p>
           <Icon iconName="icon-dot" size="xxs" />
           <p className="caption-1 text-primary-500">
             {displayTimeFromNow(comment.createdAt)}
