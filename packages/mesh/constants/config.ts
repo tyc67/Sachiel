@@ -86,7 +86,7 @@ switch (ENV) {
       media: 1 * 60 * 1000,
       story: 1 * 60 * 1000,
     }
-	GTM_ENV = 'GTM-MKLVHSGJ'
+    GTM_ENV = 'GTM-MKLVHSGJ'
 
     break
 
@@ -115,7 +115,7 @@ switch (ENV) {
       media: 10 * 60 * 1000,
       story: 20 * 60 * 1000,
     }
-	GTM_ENV = 'GTM-WPC2M99H'
+    GTM_ENV = 'GTM-WPC2M99H'
 
     break
 
