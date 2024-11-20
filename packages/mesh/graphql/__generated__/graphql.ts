@@ -2229,6 +2229,7 @@ export type Photo = {
   id: Scalars['ID']['output']
   name?: Maybe<Scalars['String']['output']>
   resized?: Maybe<ResizedImages>
+  resizedWebp?: Maybe<ResizedWebPImages>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   updatedBy?: Maybe<User>
   urlOriginal?: Maybe<Scalars['String']['output']>
@@ -2714,6 +2715,7 @@ export type PolicyWhereUniqueInput = {
 
 export type Publisher = {
   __typename?: 'Publisher'
+  category?: Maybe<Category>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   createdBy?: Maybe<User>
   customId?: Maybe<Scalars['String']['output']>
@@ -2775,6 +2777,7 @@ export type PublisherUserCountArgs = {
 }
 
 export type PublisherCreateInput = {
+  category?: InputMaybe<CategoryRelateToOneForCreateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>
   customId?: InputMaybe<Scalars['String']['input']>
@@ -2853,6 +2856,7 @@ export type PublisherUpdateArgs = {
 }
 
 export type PublisherUpdateInput = {
+  category?: InputMaybe<CategoryRelateToOneForUpdateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
   customId?: InputMaybe<Scalars['String']['input']>
@@ -2880,6 +2884,7 @@ export type PublisherWhereInput = {
   AND?: InputMaybe<Array<PublisherWhereInput>>
   NOT?: InputMaybe<Array<PublisherWhereInput>>
   OR?: InputMaybe<Array<PublisherWhereInput>>
+  category?: InputMaybe<CategoryWhereInput>
   createdAt?: InputMaybe<DateTimeNullableFilter>
   createdBy?: InputMaybe<UserWhereInput>
   customId?: InputMaybe<StringFilter>
@@ -3281,6 +3286,16 @@ export enum QueryMode {
 
 export type ResizedImages = {
   __typename?: 'ResizedImages'
+  original?: Maybe<Scalars['String']['output']>
+  w480?: Maybe<Scalars['String']['output']>
+  w800?: Maybe<Scalars['String']['output']>
+  w1200?: Maybe<Scalars['String']['output']>
+  w1600?: Maybe<Scalars['String']['output']>
+  w2400?: Maybe<Scalars['String']['output']>
+}
+
+export type ResizedWebPImages = {
+  __typename?: 'ResizedWebPImages'
   original?: Maybe<Scalars['String']['output']>
   w480?: Maybe<Scalars['String']['output']>
   w800?: Maybe<Scalars['String']['output']>
