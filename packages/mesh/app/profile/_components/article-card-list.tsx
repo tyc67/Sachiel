@@ -26,6 +26,12 @@ interface ArticleCardListProps {
   customId?: string
 }
 
+const FETCH_FUNCTIONS = {
+  [profile.TabCategory.PICKS]: getMoreMemberPicks,
+  [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
+  [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
+} as const
+
 function ArticleCardList({
   items,
   shouldShowComment,
@@ -65,16 +71,9 @@ function ArticleCardList({
   const fetchMorePicksInProfile = async (pageIndex: number) => {
     if (!hasMoreData) return []
 
-    const FETCH_FUNCTIONS = {
-      [profile.TabCategory.PICKS]: getMoreMemberPicks,
-      [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
-      [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
-    } as const
-
     const fetchFunction =
-      FETCH_FUNCTIONS[
-        tabCategory as Exclude<profile.TabCategoryType, 'PUBLISH'>
-      ] ?? FETCH_FUNCTIONS[profile.TabCategory.PICKS]
+      FETCH_FUNCTIONS[tabCategory as keyof typeof FETCH_FUNCTIONS] ??
+      FETCH_FUNCTIONS[profile.TabCategory.PICKS]
 
     const moreItems = await fetchFunction({
       customId: customId ?? '',
