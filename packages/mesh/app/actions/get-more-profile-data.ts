@@ -9,18 +9,23 @@ import {
 import fetchGraphQL from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
+const DEFAULT_TAKES = 20
+const DEFAULT_START_INDEX = 20
+
 const getMoreMemberDataArgsSchema = z.object({
   customId: z.string(),
-  takes: z.number().default(20),
-  start: z.number().default(0),
+  takes: z.number().default(DEFAULT_TAKES),
+  start: z.number().default(DEFAULT_START_INDEX),
 })
 
-/**
- * 在個人檔案頁中無限滾動拿取更多精選
- */
-export const getMoreMemberPicks = async (
-  params: z.infer<typeof getMoreMemberDataArgsSchema>
-) => {
+async function getMoreMemberData(
+  document:
+    | typeof GetMorePicksDocument
+    | typeof GetMoreBookmarksDocument
+    | typeof GetMoreCollectionsDocument,
+  params: z.infer<typeof getMoreMemberDataArgsSchema>,
+  errorMessage: string
+) {
   const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
   const globalLogFields = getLogTraceObjectFromHeaders()
   if (!parseResult.success) {
@@ -32,17 +37,29 @@ export const getMoreMemberPicks = async (
 
   try {
     const response = await fetchGraphQL(
-      GetMorePicksDocument,
+      document,
       { customId, takes, start },
       globalLogFields,
-      'Failed to get more member picks'
+      errorMessage
     )
-
-    return response?.picks?.filter((item) => item.objective === 'story') ?? []
+    return response?.picks ?? []
   } catch (error) {
-    console.error('Failed to fetch picks:', error)
+    logServerSideError(error, errorMessage, globalLogFields)
     return []
   }
+}
+
+/**
+ * 在個人檔案頁中無限滾動拿取更多精選
+ */
+export const getMoreMemberPicks = async (
+  params: z.infer<typeof getMoreMemberDataArgsSchema>
+) => {
+  return getMoreMemberData(
+    GetMorePicksDocument,
+    params,
+    'Failed to get more member picks'
+  )
 }
 
 /**
@@ -51,44 +68,19 @@ export const getMoreMemberPicks = async (
 export const getMoreMemberBookmarks = async (
   params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
-  // Validate the input parameters
-  const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
-  const globalLogFields = getLogTraceObjectFromHeaders()
-  if (!parseResult.success) {
-    logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
-    return []
-  }
-  const { customId, takes, start } = parseResult.data
-
-  const response = await fetchGraphQL(
+  return getMoreMemberData(
     GetMoreBookmarksDocument,
-    { customId, takes, start },
-    globalLogFields,
+    params,
     'Failed to get more member bookmarks'
   )
-  const bookmarkList = response?.picks ?? []
-  return bookmarkList
 }
 
 export const getMoreMemberCollections = async (
   params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
-  // Validate the input parameters
-  const globalLogFields = getLogTraceObjectFromHeaders()
-  const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
-  if (!parseResult.success) {
-    logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
-    return []
-  }
-
-  const { customId, takes, start } = parseResult.data
-
-  const response = await fetchGraphQL(
+  return getMoreMemberData(
     GetMoreCollectionsDocument,
-    { customId, takes, start },
-    globalLogFields,
+    params,
     'Failed to get more member collections'
   )
-  const collectionList = response?.picks ?? []
-  return collectionList
 }
