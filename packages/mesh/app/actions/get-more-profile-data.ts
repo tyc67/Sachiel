@@ -7,7 +7,7 @@ import {
   GetMorePicksDocument,
 } from '@/graphql/__generated__/graphql'
 import fetchGraphQL from '@/utils/fetch-graphql'
-import { getLogTraceObjectFromHeaders } from '@/utils/log'
+import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
 const getMoreMemberPicksSchema = z.object({
   customId: z.string(),
@@ -22,13 +22,13 @@ export const getMoreMemberPicks = async (
   params: z.infer<typeof getMoreMemberPicksSchema>
 ) => {
   const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  const globalLogFields = getLogTraceObjectFromHeaders()
   if (!parseResult.success) {
-    console.error('Invalid parameters:', parseResult.error)
+    logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
     return []
   }
 
   const { customId, takes, start } = parseResult.data
-  const globalLogFields = getLogTraceObjectFromHeaders()
 
   try {
     const response = await fetchGraphQL(
@@ -53,12 +53,12 @@ export const getMoreMemberBookmarks = async (
 ) => {
   // Validate the input parameters
   const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  const globalLogFields = getLogTraceObjectFromHeaders()
   if (!parseResult.success) {
-    console.error('Invalid parameters:', parseResult.error)
+    logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
     return []
   }
   const { customId, takes, start } = parseResult.data
-  const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await fetchGraphQL(
     GetMoreBookmarksDocument,
@@ -74,14 +74,14 @@ export const getMoreMemberCollections = async (
   params: z.infer<typeof getMoreMemberPicksSchema>
 ) => {
   // Validate the input parameters
+  const globalLogFields = getLogTraceObjectFromHeaders()
   const parseResult = getMoreMemberPicksSchema.safeParse(params)
   if (!parseResult.success) {
-    console.error('Invalid parameters:', parseResult.error)
+    logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
     return []
   }
 
   const { customId, takes, start } = parseResult.data
-  const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await fetchGraphQL(
     GetMoreCollectionsDocument,
