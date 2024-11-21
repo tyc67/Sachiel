@@ -1,5 +1,5 @@
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import {
   getMoreMemberBookmarks,
@@ -41,10 +41,12 @@ function ArticleCardList({
     PAGE_SIZE: 40,
     MAX_ELEMENTS: 200,
   } as const
-  const [hasMoreData, setHasMoreData] = useState(true)
-
+  const hasMoreData = useRef(true)
+  const updateHasMoreData = (hasMore: boolean) => {
+    hasMoreData.current = hasMore
+  }
   useEffect(() => {
-    setHasMoreData(true)
+    updateHasMoreData(true)
   }, [tabCategory, items])
 
   if (!items?.length) {
@@ -80,7 +82,7 @@ function ArticleCardList({
       start: PAGINATION_CONFIG.PAGE_SIZE * (pageIndex - 1),
     })
 
-    setHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
+    updateHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
     return moreItems
   }
   return (
