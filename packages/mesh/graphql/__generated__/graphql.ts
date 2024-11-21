@@ -4580,7 +4580,7 @@ export type GetCommentLikesQuery = {
   comment?: {
     __typename?: 'Comment'
     likeCount?: number | null
-    isLiked?: Array<{ __typename?: 'Member'; id: string }> | null
+    isLikedBySelf?: Array<{ __typename?: 'Member'; id: string }> | null
   } | null
 }
 
@@ -9675,7 +9675,7 @@ export const GetCommentLikesDocument = {
               selections: [
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'isLiked' },
+                  alias: { kind: 'Name', value: 'isLikedBySelf' },
                   name: { kind: 'Name', value: 'like' },
                   arguments: [
                     {
