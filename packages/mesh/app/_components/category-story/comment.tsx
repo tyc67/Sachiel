@@ -1,5 +1,5 @@
 'use client'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { likeComment, unlikeComment } from '@/app/actions/comment'
@@ -25,6 +25,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   const [likeCount, setLikeCount] = useState(0)
   const { user } = useUser()
   const { addToast } = useToast()
+  const router = useRouter()
   const memberId = user.memberId
   const commentId = comment.id
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   }, [activeCategoryTitle, commentId])
 
   const handleCommentLiked = debounce(async () => {
-    if (!memberId) redirect('/login')
+    if (!memberId) router.push('/login')
 
     if (isLikedBySelf) {
       try {
