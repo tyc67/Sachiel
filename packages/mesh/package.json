@@ -18,6 +18,7 @@
     "@alchemy/aa-alchemy": "^3.19.0",
     "@alchemy/aa-core": "^3.19.0",
     "@apollo/client": "^3.10.4",
+    "@google-cloud/logging": "^11.2.0",
     "@next/third-parties": "^15.0.2",
     "@readr-media/react-image": "^2.2.3",
     "@readr-media/react-infinite-scroll-list": "^1.1.0",
