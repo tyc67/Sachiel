@@ -9,7 +9,7 @@ import {
 import fetchGraphQL from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
-const getMoreMemberPicksSchema = z.object({
+const getMoreMemberDataArgsSchema = z.object({
   customId: z.string(),
   takes: z.number().default(20),
   start: z.number().default(0),
@@ -19,9 +19,9 @@ const getMoreMemberPicksSchema = z.object({
  * 在個人檔案頁中無限滾動拿取更多精選
  */
 export const getMoreMemberPicks = async (
-  params: z.infer<typeof getMoreMemberPicksSchema>
+  params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
-  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
   const globalLogFields = getLogTraceObjectFromHeaders()
   if (!parseResult.success) {
     logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
@@ -49,10 +49,10 @@ export const getMoreMemberPicks = async (
  * 在個人檔案頁中無限滾動拿取更多集錦
  */
 export const getMoreMemberBookmarks = async (
-  params: z.infer<typeof getMoreMemberPicksSchema>
+  params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
   // Validate the input parameters
-  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
   const globalLogFields = getLogTraceObjectFromHeaders()
   if (!parseResult.success) {
     logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
@@ -71,11 +71,11 @@ export const getMoreMemberBookmarks = async (
 }
 
 export const getMoreMemberCollections = async (
-  params: z.infer<typeof getMoreMemberPicksSchema>
+  params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
   // Validate the input parameters
   const globalLogFields = getLogTraceObjectFromHeaders()
-  const parseResult = getMoreMemberPicksSchema.safeParse(params)
+  const parseResult = getMoreMemberDataArgsSchema.safeParse(params)
   if (!parseResult.success) {
     logServerSideError(parseResult.error, 'Invalid parameters', globalLogFields)
     return []
