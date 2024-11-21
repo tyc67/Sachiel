@@ -8,6 +8,7 @@ import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collec
 import type { CollectionPickStory } from '../../../_types/edit-collection'
 import { MobielEditCollectionStep } from '../../../_types/edit-collection'
 import TabletNavigation from '../../tablet/tablet-navigation'
+import MobileStep4SortStories from './step-four-sort-stories'
 import MobileStep1SelectStories from './step-one-select-stories'
 import MobileStep3SetSummary from './step-three-set-summary'
 import MobileStep2SetTitle from './step-two-set-title'
@@ -36,9 +37,8 @@ export default function MobileNewCollection() {
         return <MobileStep2SetTitle />
       case MobielEditCollectionStep.MobileStep3SetSummary:
         return <MobileStep3SetSummary />
-      // TODO: implement in phase2
-      // case MobielEditCollectionStep.MobileStep4SortStories:
-      //   return null
+      case MobielEditCollectionStep.MobileStep4SortStories:
+        return <MobileStep4SortStories />
       default:
         return null
     }

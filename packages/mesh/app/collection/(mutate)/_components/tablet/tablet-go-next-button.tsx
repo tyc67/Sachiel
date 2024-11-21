@@ -34,6 +34,16 @@ export default function TabletGoNextButton() {
     case MobielEditCollectionStep.MobileStep3SetSummary:
       return (
         <Button
+          text="下一步"
+          size="lg"
+          color="primary"
+          disabled={!isStepFullfilled}
+          onClick={goNextStep}
+        />
+      )
+    case MobielEditCollectionStep.MobileStep4SortStories:
+      return (
+        <Button
           text="建立"
           size="lg"
           color="primary"
@@ -41,9 +51,6 @@ export default function TabletGoNextButton() {
           onClick={createCollection}
         />
       )
-    // TODO: implement in phase2
-    // case MobielEditCollectionStep.MobileStep4SortStories:
-    //   return null
     default:
       return null
   }

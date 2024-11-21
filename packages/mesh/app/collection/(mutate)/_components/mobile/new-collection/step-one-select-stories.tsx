@@ -20,11 +20,13 @@ export default function MobileStep1SelectStories({
 }) {
   return (
     <>
-      {!fixedStory ? (
-        <Step1PickStories />
-      ) : (
-        <Step1FixedStory fixedStory={fixedStory} />
-      )}
+      <div className="mb-[72px] flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+        {!fixedStory ? (
+          <Step1PickStories />
+        ) : (
+          <Step1FixedStory fixedStory={fixedStory} />
+        )}
+      </div>
       <div className="fixed inset-x-0 bottom-0 hidden items-center justify-center bg-white py-4 sm:flex lg:hidden">
         <div className="w-[335px]">
           <TabletGoNextButton />
@@ -74,14 +76,12 @@ const Step1PickStories = () => {
   return isLoading ? (
     <Spinner />
   ) : (
-    <div className="mb-[72px] flex grow flex-col">
-      <InfiniteCollectionPicks
-        key={candidates.length}
-        candidates={candidates}
-        loadMore={loadMorePicksAndBookmarks}
-        shouldLoadMore={shouldLoadMore}
-      />
-    </div>
+    <InfiniteCollectionPicks
+      key={candidates.length}
+      candidates={candidates}
+      loadMore={loadMorePicksAndBookmarks}
+      shouldLoadMore={shouldLoadMore}
+    />
   )
 }
 
@@ -92,13 +92,11 @@ const Step1FixedStory = ({
 }) => {
   if (!fixedStory) return null
   return (
-    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
-      <PickStoryCard
-        key={fixedStory.id}
-        isPicked={true}
-        onClick={() => {}}
-        story={fixedStory}
-      />
-    </div>
+    <PickStoryCard
+      key={fixedStory.id}
+      isPicked={true}
+      onClick={() => {}}
+      story={fixedStory}
+    />
   )
 }

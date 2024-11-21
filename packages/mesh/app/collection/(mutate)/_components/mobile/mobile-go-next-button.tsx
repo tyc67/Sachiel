@@ -34,15 +34,21 @@ export default function MobileGoNextButton() {
     case MobielEditCollectionStep.MobileStep3SetSummary:
       return (
         <MobileNavigationButton
+          text="下一步"
+          type="text"
+          onClick={goNextStep}
+          color="blue"
+        />
+      )
+    case MobielEditCollectionStep.MobileStep4SortStories:
+      return (
+        <MobileNavigationButton
           text="建立"
           type="text"
           onClick={createCollection}
           color="blue"
         />
       )
-    // TODO: implement in phase2
-    // case MobielEditCollectionStep.MobileStep4SortStories:
-    //   return null
     default:
       return null
   }

@@ -80,13 +80,11 @@ const Step1FixedStory = ({
 }) => {
   if (!fixedStory) return null
   return (
-    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
-      <PickStoryCard
-        key={fixedStory.id}
-        isPicked={true}
-        onClick={() => {}}
-        story={fixedStory}
-      />
-    </div>
+    <PickStoryCard
+      key={fixedStory.id}
+      isPicked={true}
+      onClick={() => {}}
+      story={fixedStory}
+    />
   )
 }

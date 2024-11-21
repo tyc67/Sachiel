@@ -6,7 +6,7 @@ export default function MobileStep2SetTitle() {
   return (
     <div className="flex flex-col gap-8">
       <EditHeroImage />
-      <EditTitle />
+      <EditTitle autoFocus={true} />
       <div className="hidden items-center justify-center pt-6 sm:flex">
         <div className="w-[295px]">
           <TabletGoNextButton />

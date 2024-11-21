@@ -57,7 +57,7 @@ export default function InfiniteCollectionPicks({
   }, [loadMore, shouldLoadMore, shouldStartLoadMore])
 
   return (
-    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+    <>
       {candidates.map((candidate, i) => {
         if (!candidate.story) return null
         const isStoryPicked = collectionPickStoryIds.has(
@@ -77,6 +77,6 @@ export default function InfiniteCollectionPicks({
           />
         )
       })}
-    </div>
+    </>
   )
 }

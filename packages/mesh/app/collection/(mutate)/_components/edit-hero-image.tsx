@@ -29,7 +29,10 @@ export default function EditHeroImage() {
   return (
     <>
       <div className="flex flex-col gap-3 sm:px-5 md:px-[70px] lg:px-0">
-        <div className="relative aspect-[2/1]">
+        <div
+          className="relative aspect-[2/1] cursor-pointer"
+          onClick={openImageSelector}
+        >
           <ImageWithFallback
             className="sm:rounded-md"
             fallbackCategory={ImageCategory.STORY}

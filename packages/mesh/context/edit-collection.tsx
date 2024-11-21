@@ -58,6 +58,7 @@ type EditCollectionContextValue = {
   checkMobileStepFullfilled: () => boolean
   checkDesktopStepFullfilled: () => boolean
   mobileTitle: string
+  desktopTitle: string
   mobileStepName: MobielEditCollectionStep
   desktopStepName: DesktopEditCollectionStep
 }
@@ -93,9 +94,8 @@ export default function EditCollectionProvider({
         return Boolean(heroImage) && Boolean(title)
       case MobielEditCollectionStep.MobileStep3SetSummary:
         return !summary || summary.length <= maxSummaryLength
-      // TODO: implement in phase 2
-      // case MobielEditCollectionStep.MobileStep4SortStories:
-      //   return true
+      case MobielEditCollectionStep.MobileStep4SortStories:
+        return true
       default:
         return false
     }
@@ -110,9 +110,8 @@ export default function EditCollectionProvider({
           Boolean(title) &&
           (!summary || summary.length <= maxSummaryLength)
         )
-      // TODO: implement in phase 2
-      // case DesktopEditCollectionStep.DesktopStep2SortStories:
-      //   return true
+      case DesktopEditCollectionStep.DesktopStep2SortStories:
+        return true
       default:
         return false
     }
@@ -128,14 +127,26 @@ export default function EditCollectionProvider({
         return '標題'
       case MobielEditCollectionStep.MobileStep3SetSummary:
         return '敘述'
-      // TODO: implement in phase 2
-      // case MobielEditCollectionStep.MobileStep4SortStories:
-      //   return ''
+      case MobielEditCollectionStep.MobileStep4SortStories:
+        return '排序'
       default:
         return '建立集錦'
     }
   }, [collectionPickStories.length, mobileStepName])
+
+  const getDesktopTitle = useCallback(() => {
+    switch (desktopStepName) {
+      case DesktopEditCollectionStep.DesktopStep1EditAll:
+        return '建立集錦'
+      case DesktopEditCollectionStep.DesktopStep2SortStories:
+        return '排序'
+      default:
+        return '建立集錦'
+    }
+  }, [desktopStepName])
+
   const mobileTitle = getMobileTitle()
+  const desktopTitle = getDesktopTitle()
 
   const createCollection = async () => {
     const formData = new FormData()
@@ -203,6 +214,7 @@ export default function EditCollectionProvider({
         checkMobileStepFullfilled,
         checkDesktopStepFullfilled,
         mobileTitle,
+        desktopTitle,
         mobileStepName,
         desktopStepName,
       }}

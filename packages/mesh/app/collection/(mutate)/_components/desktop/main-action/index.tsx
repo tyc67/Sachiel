@@ -4,7 +4,7 @@ import { useEditCollection } from '@/context/edit-collection'
 
 import { DesktopEditCollectionStep } from '../../../_types/edit-collection'
 import DesktopStep1FullEdit from './step-one-full-edit'
-// import DesktopStep2SortStories from './step-two-sort-stories'
+import DesktopStep2SortStories from './step-two-sort-stories'
 
 export default function DesktopMainAction() {
   const { desktopStepName } = useEditCollection()
@@ -13,9 +13,8 @@ export default function DesktopMainAction() {
     switch (stepName) {
       case DesktopEditCollectionStep.DesktopStep1EditAll:
         return <DesktopStep1FullEdit />
-      // TODO: implement in phase2
-      // case DesktopEditCollectionStep.DesktopStep2SortStories:
-      //   return <DesktopStep2SortStories />
+      case DesktopEditCollectionStep.DesktopStep2SortStories:
+        return <DesktopStep2SortStories />
       default:
         return null
     }

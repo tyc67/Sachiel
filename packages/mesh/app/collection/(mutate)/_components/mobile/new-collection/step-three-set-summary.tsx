@@ -4,7 +4,7 @@ import TabletGoNextButton from '../../tablet/tablet-go-next-button'
 export default function MobileStep3SetSummary() {
   return (
     <div className="flex grow flex-col">
-      <EditSummary />
+      <EditSummary autoFocus={true} />
       <div className="hidden items-center justify-center pt-6 sm:flex">
         <div className="w-[295px]">
           <TabletGoNextButton />

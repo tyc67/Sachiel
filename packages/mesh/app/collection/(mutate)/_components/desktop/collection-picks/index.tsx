@@ -8,6 +8,7 @@ import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collec
 import type { CollectionPickStory } from '../../../_types/edit-collection'
 import { DesktopEditCollectionStep } from '../../../_types/edit-collection'
 import DesktopStep1FullEdit from './step-one-full-edit'
+import DesktopStep2SortStories from './step-two-sort-stories'
 
 export default function DesktopCollectionPicks() {
   const [fixedStory, setFixedStory] = useState<CollectionPickStory | null>(null)
@@ -29,9 +30,8 @@ export default function DesktopCollectionPicks() {
     switch (stepName) {
       case DesktopEditCollectionStep.DesktopStep1EditAll:
         return <DesktopStep1FullEdit fixedStory={fixedStory} />
-      // TODO: implement in phase2
       case DesktopEditCollectionStep.DesktopStep2SortStories:
-        return null
+        return <DesktopStep2SortStories />
       default:
         return null
     }
@@ -39,7 +39,9 @@ export default function DesktopCollectionPicks() {
 
   return (
     <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
-      {getStepJsx(desktopStepName)}
+      <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+        {getStepJsx(desktopStepName)}
+      </div>
     </div>
   )
 }
