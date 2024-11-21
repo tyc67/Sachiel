@@ -61,7 +61,6 @@ function ArticleCardList({
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
   const fetchMorePicksInProfile = async (pageIndex: number) => {
-    console.log('trigger', hasMoreData)
     if (!hasMoreData) return []
 
     const FETCH_FUNCTIONS = {
