@@ -30,7 +30,7 @@ query GetCollectionLatestAddedComment($memberId: ID!, $collectionId: ID!) {
 
 query GetCommentLikes($commentId: ID, $memberId: ID!) {
   comment(where: { id: $commentId }) {
-    isLiked: like(where: { id: { equals: $memberId } }) {
+    isLikedBySelf: like(where: { id: { equals: $memberId } }) {
       id
     }
     likeCount

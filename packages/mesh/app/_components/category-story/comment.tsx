@@ -21,7 +21,7 @@ type Props = {
 }
 
 export default function Comment({ comment, activeCategoryTitle }: Props) {
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLikedBySelf, setIsLikedBySelf] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const { user } = useUser()
   const { addToast } = useToast()
@@ -32,8 +32,8 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
       const data = await fetchCommentLikes(commentId, memberId)
       if (data) {
         setLikeCount(data.likeCount || 0)
-        if (data.isLiked) {
-          setIsLiked(true)
+        if (data.isLikedBySelf && data.isLikedBySelf.length !== 0) {
+          setIsLikedBySelf(true)
         }
       }
     }
@@ -43,7 +43,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   const handleCommentLiked = debounce(async () => {
     if (!memberId) redirect('/login')
 
-    if (isLiked) {
+    if (isLikedBySelf) {
       try {
         const response = await unlikeComment({ memberId, commentId })
         if (!response) {
@@ -51,7 +51,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
           throw new Error(`Failed to unlike comment, comment id:${commentId}`)
         }
         setLikeCount((prev) => prev - 1)
-        setIsLiked(false)
+        setIsLikedBySelf(false)
         return
       } catch (error) {
         console.error(error)
@@ -65,7 +65,7 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
         throw new Error(`Failed to like comment, comment id:${commentId}`)
       }
       setLikeCount((prev) => prev + 1)
-      setIsLiked(true)
+      setIsLikedBySelf(true)
     } catch (error) {
       console.error(error)
     }
@@ -105,7 +105,10 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
         <div className="flex items-center">
           <p className="caption-1 text-primary-600">{likeCount}</p>
           <button onClick={handleCommentLiked}>
-            <Icon iconName={isLiked ? 'icon-liked' : 'icon-heart'} size="l" />
+            <Icon
+              iconName={isLikedBySelf ? 'icon-liked' : 'icon-heart'}
+              size="l"
+            />
           </button>
         </div>
       </div>
