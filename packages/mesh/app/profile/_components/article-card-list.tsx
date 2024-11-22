@@ -1,5 +1,5 @@
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import {
   getMoreMemberBookmarks,
@@ -26,6 +26,12 @@ interface ArticleCardListProps {
   customId?: string
 }
 
+const FETCH_FUNCTIONS = {
+  [profile.TabCategory.PICKS]: getMoreMemberPicks,
+  [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
+  [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
+} as const
+
 function ArticleCardList({
   items,
   shouldShowComment,
@@ -41,10 +47,12 @@ function ArticleCardList({
     PAGE_SIZE: 40,
     MAX_ELEMENTS: 200,
   } as const
-  const [hasMoreData, setHasMoreData] = useState(true)
-
+  const hasMoreData = useRef(true)
+  const updateHasMoreData = (hasMore: boolean) => {
+    hasMoreData.current = hasMore
+  }
   useEffect(() => {
-    setHasMoreData(true)
+    updateHasMoreData(true)
   }, [tabCategory, items])
 
   if (!items?.length) {
@@ -61,19 +69,11 @@ function ArticleCardList({
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
   const fetchMorePicksInProfile = async (pageIndex: number) => {
-    console.log('trigger', hasMoreData)
     if (!hasMoreData) return []
 
-    const FETCH_FUNCTIONS = {
-      [profile.TabCategory.PICKS]: getMoreMemberPicks,
-      [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
-      [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
-    } as const
-
     const fetchFunction =
-      FETCH_FUNCTIONS[
-        tabCategory as Exclude<profile.TabCategoryType, 'PUBLISH'>
-      ] ?? FETCH_FUNCTIONS[profile.TabCategory.PICKS]
+      FETCH_FUNCTIONS[tabCategory as keyof typeof FETCH_FUNCTIONS] ??
+      FETCH_FUNCTIONS[profile.TabCategory.PICKS]
 
     const moreItems = await fetchFunction({
       customId: customId ?? '',
@@ -81,7 +81,7 @@ function ArticleCardList({
       start: PAGINATION_CONFIG.PAGE_SIZE * (pageIndex - 1),
     })
 
-    setHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
+    updateHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
     return moreItems
   }
   return (
