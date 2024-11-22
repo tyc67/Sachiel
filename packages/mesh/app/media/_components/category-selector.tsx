@@ -1,9 +1,10 @@
-import type { Dispatch, MouseEventHandler, SetStateAction } from 'react'
+import type { MouseEventHandler } from 'react'
 import { useRef, useState } from 'react'
 
 import { addCategory, removeCategory } from '@/app/actions/edit-category'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
+import { categorySearchParamName } from '@/constants/search-param-names'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
@@ -14,6 +15,7 @@ import {
   undoAddCategories,
   undoDeleteCategroies,
 } from '@/utils/edit-category'
+import { setSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'
 import CategoryEditor from './category-editor'
@@ -37,11 +39,9 @@ const NavigateButton = ({
 export default function CategorySelector({
   allCategories,
   currentCategory,
-  setCurrentCategory,
 }: {
   allCategories: Category[]
-  currentCategory: Category
-  setCurrentCategory: Dispatch<SetStateAction<Category>>
+  currentCategory?: Category
 }) {
   const { user, setUser } = useUser()
   const displayCategories = user.followingCategories
@@ -98,10 +98,10 @@ export default function CategorySelector({
     }
 
     const isCurrentCategoryDeleted = !finalCategories.find(
-      (category) => category.slug === currentCategory.slug
+      (category) => category.slug === currentCategory?.slug
     )
     if (isCurrentCategoryDeleted) {
-      setCurrentCategory(finalCategories[0])
+      setSearchParams(categorySearchParamName, finalCategories[0].slug ?? '')
     }
 
     setUser((user) => ({
@@ -130,10 +130,13 @@ export default function CategorySelector({
                   color="nav-chip"
                   text={category.title ?? ''}
                   activeState={{
-                    isActive: category.slug === currentCategory.slug,
+                    isActive: category.slug === currentCategory?.slug,
                   }}
                   onClick={() => {
-                    setCurrentCategory(category)
+                    setSearchParams(
+                      categorySearchParamName,
+                      category.slug ?? ''
+                    )
                   }}
                 />
               </div>

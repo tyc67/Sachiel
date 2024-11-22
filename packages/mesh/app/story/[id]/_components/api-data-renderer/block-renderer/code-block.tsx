@@ -14,6 +14,9 @@ export default function CodeBlock({
   const content = apiDataBlock.content[0]
 
   return content ? (
-    <pre className="code-block">{apiDataBlock.content[0]}</pre>
+    <pre
+      className="code-block"
+      dangerouslySetInnerHTML={{ __html: apiDataBlock.content[0] }}
+    />
   ) : null
 }

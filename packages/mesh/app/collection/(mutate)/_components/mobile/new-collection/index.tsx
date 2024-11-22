@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 
 import { useEditCollection } from '@/context/edit-collection'

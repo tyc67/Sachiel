@@ -1,3 +1,5 @@
+'use client'
+
 import { type MouseEventHandler } from 'react'
 
 import useBlockBodyScroll from '@/hooks/use-block-body-scroll'

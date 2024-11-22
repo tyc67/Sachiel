@@ -1,3 +1,5 @@
+'use client'
+
 import { useEditCollection } from '@/context/edit-collection'
 
 import { DesktopEditCollectionStep } from '../../../_types/edit-collection'

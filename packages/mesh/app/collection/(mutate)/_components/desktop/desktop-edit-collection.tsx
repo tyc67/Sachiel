@@ -1,5 +1,3 @@
-'use client'
-
 import DesktopCollectionPicks from './collection-picks'
 import DesktopMainAction from './main-action'
 
