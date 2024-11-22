@@ -4,7 +4,7 @@ import NextImage from 'next/image'
 import NextLink from 'next/link'
 import type { ForwardedRef } from 'react'
 import { forwardRef } from 'react'
-
+import useStoryClickLogger from '@/hooks/use-story-click-logger'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
@@ -21,7 +21,7 @@ export default forwardRef(function StoryCard<
   T extends CategoryStory | DailyStory
 >({ story, className }: Props<T>, ref: ForwardedRef<unknown>) {
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
-
+  const logStoryClick = useStoryClickLogger(story.id, story.title)
   return (
     <article
       className={`pb-4 shadow-[0_0.5px_0_0_rgba(0,9,40,0.1)] last:shadow-none ${className}`}
@@ -39,7 +39,9 @@ export default forwardRef(function StoryCard<
       <div className="flex justify-between gap-x-3 sm:gap-x-10">
         <div>
           <p className="subtitle-1 sm:title-2 mb-2 line-clamp-2 grow text-primary-700 hover-or-active:underline sm:mb-1">
-            <NextLink href={`/story/${story.id}`}>{story.title}</NextLink>
+            <NextLink href={`/story/${story.id}`} onClick={logStoryClick}>
+              {story.title}
+            </NextLink>
           </p>
           <div className="caption-1">
             <StoryMeta

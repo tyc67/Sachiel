@@ -1,9 +1,10 @@
+'use client'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
-
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
 import type { SponsoredStory } from '@/types/homepage'
+import useStoryClickLogger from '@/hooks/use-story-click-logger'
 
 const StoryCard = ({
   showImage,
@@ -12,9 +13,10 @@ const StoryCard = ({
   showImage: boolean
   story: SponsoredStory['stories'][number]
 }) => {
+  const logStoryClick = useStoryClickLogger(story.id, story.title)
   return (
     <article className="border-b-[0.5px] border-primary-200 py-3 last:border-b-0">
-      <NextLink href={`/story/${story.id}`}>
+      <NextLink href={`/story/${story.id}`} onClick={logStoryClick}>
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
             <NextImage
