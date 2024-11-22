@@ -160,25 +160,3 @@ query GetMemberCollections($creatorId: ID) {
     }
   }
 }
-
-query GetMoreCollections($customId: String, $takes: Int = 20, $start: Int = 1) {
-  picks(
-    skip: $start
-    take: $takes
-    where: {
-      AND: {
-        objective: { equals: "story" }
-        # filter out picks only left collections
-        collection: { id: { gt: 0 } }
-        kind: { equals: "read" }
-        member: { customId: { equals: $customId }, is_active: { equals: true } }
-      }
-    }
-  ) {
-    collection {
-      ...CollectionInfo
-    }
-    kind
-    objective
-  }
-}
