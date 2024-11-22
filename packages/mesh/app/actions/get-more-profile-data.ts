@@ -55,11 +55,12 @@ async function getMoreMemberData(
 export const getMoreMemberPicks = async (
   params: z.infer<typeof getMoreMemberDataArgsSchema>
 ) => {
-  return getMoreMemberData(
+  const response = await getMoreMemberData(
     GetMorePicksDocument,
     params,
     'Failed to get more member picks'
   )
+  return response.filter((item) => item.objective === 'story') ?? []
 }
 
 /**
