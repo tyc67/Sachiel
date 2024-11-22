@@ -13,15 +13,16 @@ import { useCommentClamp } from '@/hooks/use-comment-clamp'
 import type { CategoryStory } from '@/types/homepage'
 import { debounce } from '@/utils/performance'
 import { displayTimeFromNow } from '@/utils/story-display'
+import Spinner from '@/components/spinner'
 
 type NonEmptyObject<T> = T extends Record<string, never> ? never : T
 type Props = {
   comment: NonEmptyObject<Exclude<CategoryStory['comment'], undefined>>
-  activeCategoryTitle: string
 }
 
-export default function Comment({ comment, activeCategoryTitle }: Props) {
+export default function Comment({ comment }: Props) {
   const [isLikedBySelf, setIsLikedBySelf] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const { user } = useUser()
   const { addToast } = useToast()
@@ -30,16 +31,20 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   const commentId = comment.id
   useEffect(() => {
     const fetchData = async () => {
+      if (!commentId || !memberId) return
+
+      setIsLoading(true)
       const data = await fetchCommentLikes(commentId, memberId)
       if (data) {
         setLikeCount(data.likeCount || 0)
         if (data.isLikedBySelf && data.isLikedBySelf.length !== 0) {
           setIsLikedBySelf(true)
         }
+        setIsLoading(false)
       }
     }
     fetchData()
-  }, [activeCategoryTitle, commentId])
+  }, [commentId, memberId])
 
   const handleCommentLiked = debounce(async () => {
     if (!memberId) router.push('/login')
@@ -82,9 +87,9 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
   return (
     <div className="cursor-pointer rounded-md border-[0.5px] border-primary-200 bg-primary-100 p-3">
       <div className="mb-2 flex justify-between">
-        <div>
+        <div className="flex items-center">
           <Link
-            href={comment.member.customId || '/'}
+            href={`/profile/member/${comment.member?.customId}` || '/'}
             className="flex items-center"
           >
             <Avatar
@@ -104,13 +109,26 @@ export default function Comment({ comment, activeCategoryTitle }: Props) {
         </div>
 
         <div className="flex items-center">
-          <p className="caption-1 text-primary-600">{likeCount}</p>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <p className="caption-1 text-primary-600">{likeCount}</p>
+              <button onClick={handleCommentLiked}>
+                <Icon
+                  iconName={isLikedBySelf ? 'icon-liked' : 'icon-heart'}
+                  size="l"
+                />
+              </button>
+            </>
+          )}
+          {/* <p className="caption-1 text-primary-600">{likeCount}</p>
           <button onClick={handleCommentLiked}>
             <Icon
               iconName={isLikedBySelf ? 'icon-liked' : 'icon-heart'}
               size="l"
             />
-          </button>
+          </button> */}
         </div>
       </div>
 
