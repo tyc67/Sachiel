@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 
 import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { type Story } from '@/graphql/__generated__/graphql'
+import useWindowDimensions from '@/hooks/use-window-dimension'
 
 import CommentBlockItem from './comment-block-item'
 
@@ -18,7 +19,12 @@ const CommentBlock = ({
   type: EditDrawerBlockType
 }) => {
   const { state, dispatch } = useComment()
+  const openCommentBlock = () => {
+    dispatch({ type: 'TOGGLE_MOBILE_COMMENT_MODAL', payload: { isOpen: true } })
+    document.body.classList.add('overflow-hidden')
+  }
 
+  const { width } = useWindowDimensions()
   useEffect(() => {
     if (state.highlightedId) {
       const timer = setTimeout(() => {
@@ -50,9 +56,11 @@ const CommentBlock = ({
           )
         })
       ) : (
-        <p className="body-3 mx-5 text-primary-600">
-          還沒有人留言，快來搶頭香！
-        </p>
+        <button onClick={openCommentBlock} disabled={width > 768}>
+          <p className="body-3 mx-5 text-primary-600">
+            還沒有人留言，快來搶頭香！
+          </p>
+        </button>
       )}
     </ul>
   )
