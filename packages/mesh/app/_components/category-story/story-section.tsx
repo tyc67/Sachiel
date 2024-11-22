@@ -44,7 +44,7 @@ export default function StorySection({ activeTitle, stories, slug }: Props) {
               Object.keys(stories[0].comment).length !== 0 && (
                 <Comment
                   comment={stories[0].comment as CommentType}
-                  activeCategoryTitle={activeTitle}
+                  key={stories[0].id}
                 />
               )}
           </div>
