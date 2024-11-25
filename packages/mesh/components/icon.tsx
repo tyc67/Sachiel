@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-type SizeCode = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl'
+type SizeCode = 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl'
 type CustomSize = { width: number; height: number }
 export type Size = SizeCode | CustomSize
 export type IconName =
@@ -159,6 +159,7 @@ export type IconProps = {
   className?: string
 }
 export const sizeVariant = {
+  xxs: 8,
   xs: 10,
   s: 16,
   m: 20,

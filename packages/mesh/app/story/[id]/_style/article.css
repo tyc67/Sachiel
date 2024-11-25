@@ -123,9 +123,8 @@
         font-weight: 400;
         line-height: 24px;
       }
-      span[style^='background'] {
+      span[style^='background']:not([style*='background:white']) {
         background-color: unset;
-        display: inline-block;
         position: relative;
         background: linear-gradient(
           to top,
