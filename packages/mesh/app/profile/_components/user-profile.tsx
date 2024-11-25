@@ -1,5 +1,8 @@
+import { useState } from 'react'
+
 import Avatar from '@/components/story-card/avatar'
 import { type UserType } from '@/types/profile'
+import { debounce } from '@/utils/performance'
 
 type UserProfileProps = {
   name: string
@@ -17,6 +20,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
   userType,
   pickedCount,
 }) => {
+  const [showMore, setShowMore] = useState(false)
+  const toggleShowMore = () => setShowMore((prev) => !prev)
+  const handleOnClickShowMore = debounce(toggleShowMore)
   const userPickOrPickedSubtitle = (userType: string) => {
     if (userType === 'publisher') {
       return (
@@ -44,7 +50,12 @@ const UserProfile: React.FC<UserProfileProps> = ({
           {userPickOrPickedSubtitle(userType)}
         </div>
       </section>
-      <p className="body-3 sm:body-2 mt-3 line-clamp-6 w-full whitespace-pre text-primary-500 sm:mt-4">
+      <p
+        className={`body-3 sm:body-2 mt-3 w-full whitespace-normal text-primary-500 sm:mt-4 ${
+          showMore ? '' : 'line-clamp-6'
+        }`}
+        onClick={handleOnClickShowMore}
+      >
         {intro}
       </p>
     </>
