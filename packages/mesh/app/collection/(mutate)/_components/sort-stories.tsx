@@ -39,7 +39,7 @@ class SmartPointerSensor extends PointerSensor {
   ]
 }
 
-export default function SortStoryList() {
+export default function SortStories() {
   const { collectionPickStories, setCollectionPickStories } =
     useEditCollection()
   const sensors = useSensors(useSensor(SmartPointerSensor))

@@ -1,5 +1,5 @@
-import SortStoryList from '../../sort-story-list'
+import SortStories from '../../sort-stories'
 
 export default function DesktopStep2SortStories() {
-  return <SortStoryList />
+  return <SortStories />
 }
