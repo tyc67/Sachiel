@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
 import CollectionsCarousel from '@/app/profile/_components/collections-carousel'
@@ -32,6 +32,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const router = useRouter()
   const pathName = usePathname()
   const currentUrl = pathName
+  const hasMoreData = useRef({
+    [TabCategory.PICKS]: true,
+    [TabCategory.BOOKMARKS]: true,
+    [TabCategory.COLLECTIONS]: true,
+  })
   const category = useMemo(() => {
     // NOTE: 如果tab 非預期，使用精選替代
     const tab = queryTab as TabCategoryType
@@ -183,6 +188,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         customId={customId}
         avatar={avatar}
         name={name}
+        hasMoreData={hasMoreData}
       />
     </>
   )

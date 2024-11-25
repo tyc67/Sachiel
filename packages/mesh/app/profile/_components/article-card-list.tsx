@@ -1,5 +1,6 @@
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import { useEffect, useRef } from 'react'
+import type { MutableRefObject } from 'react'
+import { useEffect } from 'react'
 
 import {
   getMoreMemberBookmarks,
@@ -24,6 +25,11 @@ interface ArticleCardListProps {
   name?: string
   shouldShowComment: boolean
   customId?: string
+  hasMoreData?: MutableRefObject<{
+    PICKS: boolean
+    BOOKMARKS: boolean
+    COLLECTIONS: boolean
+  }>
 }
 
 const FETCH_FUNCTIONS = {
@@ -42,14 +48,18 @@ function ArticleCardList({
   name,
   customId,
   tabCategory,
+  hasMoreData,
 }: ArticleCardListProps) {
   const PAGINATION_CONFIG = {
     PAGE_SIZE: 40,
     MAX_ELEMENTS: 200,
   } as const
-  const hasMoreData = useRef(true)
   const updateHasMoreData = (hasMore: boolean) => {
-    hasMoreData.current = hasMore
+    if (!hasMoreData) return
+    if (!tabCategory) return
+    // TODO: publisher do not have infinite scroll
+    if (tabCategory === profile.TabCategory.PUBLISH) return
+    hasMoreData.current[tabCategory] = hasMore
   }
   useEffect(() => {
     updateHasMoreData(true)
@@ -70,6 +80,10 @@ function ArticleCardList({
 
   const fetchMorePicksInProfile = async (pageIndex: number) => {
     if (!hasMoreData) return []
+    if (!tabCategory) return []
+    // TODO: publisher do not have infinite scroll
+    if (tabCategory === profile.TabCategory.PUBLISH) return []
+    if (!hasMoreData.current[tabCategory]) return []
 
     const fetchFunction =
       FETCH_FUNCTIONS[tabCategory as keyof typeof FETCH_FUNCTIONS] ??
