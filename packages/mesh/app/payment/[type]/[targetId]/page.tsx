@@ -36,12 +36,18 @@ export default async function Page({
   switch (type) {
     case PaymentType.SubscriptionStory: {
       const unlockPolicy = await getStoryUnlockPolicy(targetId)
-      if (!unlockPolicy.length) notFound()
+      const publisherAddress = unlockPolicy[0].publisher?.wallet
+      if (!unlockPolicy.length || !isHexAddress(publisherAddress)) notFound()
+
       return (
         <AlchemyAuth
           hasAlchemyAccount={hasAlchemyAccount}
           renderComponent={
-            <PaymentInfo unlockPolicy={unlockPolicy} storyId={targetId} />
+            <PaymentInfo
+              unlockPolicy={unlockPolicy}
+              storyId={targetId}
+              recipientAddress={publisherAddress}
+            />
           }
         />
       )
@@ -51,12 +57,17 @@ export default async function Page({
       const publisher = allPublishers?.find(
         (publisher) => publisher.id === targetId
       )
-      if (!publisher) notFound()
+      const publisherAddress = publisher?.wallet
+      if (!publisher || !isHexAddress(publisherAddress)) notFound()
       return (
         <AlchemyAuth
           hasAlchemyAccount={hasAlchemyAccount}
           renderComponent={
-            <SponsorshipInfo publisher={publisher} balance={balance} />
+            <SponsorshipInfo
+              publisher={publisher}
+              balance={balance}
+              recipientAddress={publisherAddress}
+            />
           }
         />
       )
@@ -68,4 +79,11 @@ export default async function Page({
     default:
       return <p>Invalid payment type</p>
   }
+}
+
+function isHexAddress(
+  address: string | null | undefined
+): address is `0x${string}` {
+  if (!address) return false
+  return /^0x[a-fA-F0-9]{40}$/.test(address)
 }

@@ -8,5 +8,9 @@ query GetPublisherPolicy($customId: String) {
     id
     charge
     duration
+    publisher {
+      id
+      wallet
+    }
   }
 }
