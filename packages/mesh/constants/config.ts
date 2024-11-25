@@ -94,7 +94,8 @@ switch (ENV) {
     API_ORIGIN =
       'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
-    PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
+    PAYMENT_ORIGIN =
+      'https://mesh-payment-chain-prod-1075249966777.asia-east1.run.app'
     PAYMENT_CHAIN = optimism
     FIREBASE_DOMAIN = 'mesh-app.readr.tw'
     FIREBASE_CONFIG = {
