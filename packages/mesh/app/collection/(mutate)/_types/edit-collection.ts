@@ -19,7 +19,7 @@ export type Collection = NonNullable<GetCollectionToEditQuery['collection']>
 export type CollectionPick = NonNullable<Collection['collectionpicks']>[number]
 
 export type PickOrBookmark = NonNullable<
-  NonNullable<GetMemberPickAndBookmarkQuery['member']>['picksAndBookmarks']
+  NonNullable<GetMemberPickAndBookmarkQuery['member']>['picks']
 >[number]
 export type CollectionPickStory = NonNullable<PickOrBookmark['story']>
 

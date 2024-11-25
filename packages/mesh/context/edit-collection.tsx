@@ -39,6 +39,12 @@ const desktopStepNames = [
   DesktopEditCollectionStep.DesktopStep2SortStories,
 ]
 
+type StoryCandidates = {
+  list: PickOrBookmark[]
+  maxCount: number
+  usedAsFilter: boolean
+}
+
 type EditCollectionContextValue = {
   step: number
   setStep: React.Dispatch<React.SetStateAction<number>>
@@ -48,8 +54,10 @@ type EditCollectionContextValue = {
   setSummary: React.Dispatch<React.SetStateAction<string>>
   heroImage: File | null
   setHeroImage: React.Dispatch<React.SetStateAction<File | null>>
-  candidates: PickOrBookmark[]
-  setCandidates: React.Dispatch<React.SetStateAction<PickOrBookmark[]>>
+  pickCandidates: StoryCandidates
+  bookmarkCandidates: StoryCandidates
+  setPickCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
+  setBookmarkCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
   collectionPickStories: CollectionPickStory[]
   setCollectionPickStories: React.Dispatch<
     React.SetStateAction<CollectionPickStory[]>
@@ -67,6 +75,12 @@ const EditCollectionContext = createContext<
   EditCollectionContextValue | undefined
 >(undefined)
 
+const initialStoryCandidate: StoryCandidates = {
+  list: [],
+  maxCount: 0,
+  usedAsFilter: true,
+}
+
 export default function EditCollectionProvider({
   children,
 }: {
@@ -76,7 +90,12 @@ export default function EditCollectionProvider({
   const [title, setTitle] = useState('')
   const [summary, setSummary] = useState('')
   const [heroImage, setHeroImage] = useState<File | null>(null)
-  const [candidates, setCandidates] = useState<PickOrBookmark[]>([])
+  const [pickCandidates, setPickCandidates] = useState<StoryCandidates>(
+    initialStoryCandidate
+  )
+  const [bookmarkCandidates, setBookmarkCandidates] = useState<StoryCandidates>(
+    initialStoryCandidate
+  )
   const [collectionPickStories, setCollectionPickStories] = useState<
     CollectionPickStory[]
   >([])
@@ -206,8 +225,10 @@ export default function EditCollectionProvider({
         setSummary,
         heroImage,
         setHeroImage,
-        candidates,
-        setCandidates,
+        pickCandidates,
+        setPickCandidates,
+        bookmarkCandidates,
+        setBookmarkCandidates,
         collectionPickStories,
         setCollectionPickStories,
         createCollection,

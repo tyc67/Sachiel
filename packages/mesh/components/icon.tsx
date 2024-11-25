@@ -155,6 +155,8 @@ export type IconName =
   | 'icon-refresh'
   | 'icon-delete-story'
   | 'icon-sort-story'
+  | 'icon-expand'
+  | 'icon-fold'
 
 export type IconProps = {
   size: Size

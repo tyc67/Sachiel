@@ -1,15 +1,5 @@
-'use client'
-
-import { useCallback, useEffect, useState } from 'react'
-
-import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
-import Spinner from '@/components/spinner'
-import { useEditCollection } from '@/context/edit-collection'
-import { useUser } from '@/context/user'
-
-import { picksAndBookmarksPageCount } from '../../../_const/edit-collection'
 import type { CollectionPickStory } from '../../../_types/edit-collection'
-import InfiniteCollectionPicks from '../../infinite-collection-picks'
+import PickStories from '../../pick-stories'
 import PickStoryCard from '../../pick-story-card'
 import TabletGoNextButton from '../../tablet/tablet-go-next-button'
 
@@ -37,52 +27,7 @@ export default function MobileStep1SelectStories({
 }
 
 const Step1PickStories = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [shouldLoadMore, setShouldLoadMore] = useState(true)
-
-  const { candidates, setCandidates } = useEditCollection()
-  const { user } = useUser()
-
-  const loadMorePicksAndBookmarks = useCallback(async () => {
-    const response = await getMemberPickAndBookmark({
-      memberId: user.memberId,
-      pickSkip: candidates.length,
-      pickTake: picksAndBookmarksPageCount,
-    })
-    if (!response) return
-    const picksAndBookmarks = response?.member?.picksAndBookmarks ?? []
-    const picksAndBookmarksCount = response?.member?.picksAndBookmarksCount ?? 0
-    const newCandidates = candidates.concat(picksAndBookmarks)
-    setCandidates(newCandidates)
-
-    if (newCandidates.length === picksAndBookmarksCount) {
-      setShouldLoadMore(false)
-    }
-  }, [candidates, setCandidates, user.memberId])
-
-  useEffect(() => {
-    const fetchPicksAndBookmarks = async () => {
-      setIsLoading(true)
-      await loadMorePicksAndBookmarks()
-      setIsLoading(false)
-    }
-    if (!mounted) {
-      fetchPicksAndBookmarks()
-    }
-    setMounted(true)
-  }, [loadMorePicksAndBookmarks, mounted])
-
-  return isLoading ? (
-    <Spinner />
-  ) : (
-    <InfiniteCollectionPicks
-      key={candidates.length}
-      candidates={candidates}
-      loadMore={loadMorePicksAndBookmarks}
-      shouldLoadMore={shouldLoadMore}
-    />
-  )
+  return <PickStories />
 }
 
 const Step1FixedStory = ({

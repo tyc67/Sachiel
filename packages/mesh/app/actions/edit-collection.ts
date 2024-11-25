@@ -8,10 +8,14 @@ export async function getMemberPickAndBookmark({
   memberId,
   pickTake,
   pickSkip,
+  bookmarkTake,
+  bookmarkSkip,
 }: {
   memberId: string
   pickTake: number
   pickSkip: number
+  bookmarkTake: number
+  bookmarkSkip: number
 }) {
   const globalLogFields = getLogTraceObjectFromHeaders()
   return await queryGraphQL(
@@ -20,6 +24,8 @@ export async function getMemberPickAndBookmark({
       memberId,
       pickTake,
       pickSkip,
+      bookmarkTake,
+      bookmarkSkip,
     },
     globalLogFields
   )

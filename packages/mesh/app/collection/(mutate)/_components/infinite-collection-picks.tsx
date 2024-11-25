@@ -73,7 +73,7 @@ export default function InfiniteCollectionPicks({
               candidate.story,
               isStoryPicked
             )}
-            ref={i === candidates.length - 1 ? triggerLoadmoreRef : undefined}
+            ref={i === candidates.length - 10 ? triggerLoadmoreRef : undefined}
           />
         )
       })}
