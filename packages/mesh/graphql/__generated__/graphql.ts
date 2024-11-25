@@ -5542,6 +5542,11 @@ export type GetPublisherPolicyQuery = {
     id: string
     charge?: number | null
     duration?: number | null
+    publisher?: {
+      __typename?: 'Publisher'
+      id: string
+      wallet?: string | null
+    } | null
   }> | null
 }
 
@@ -5556,6 +5561,7 @@ export type PublishersQuery = {
     logo?: string | null
     rss?: string | null
     official_site?: string | null
+    wallet?: string | null
     sponsorCount?: number | null
   }> | null
 }
@@ -15414,6 +15420,20 @@ export const GetPublisherPolicyDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'charge' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'duration' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publisher' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -15454,6 +15474,7 @@ export const PublishersDocument = {
                   alias: { kind: 'Name', value: 'sponsorCount' },
                   name: { kind: 'Name', value: 'followerCount' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'wallet' } },
               ],
             },
           },
