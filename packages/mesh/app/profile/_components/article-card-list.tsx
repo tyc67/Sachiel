@@ -38,6 +38,11 @@ const FETCH_FUNCTIONS = {
   [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
 } as const
 
+const PAGINATION_CONFIG = {
+  PAGE_SIZE: 40,
+  MAX_ELEMENTS: 200,
+} as const
+
 function ArticleCardList({
   items,
   shouldShowComment,
@@ -50,10 +55,6 @@ function ArticleCardList({
   tabCategory,
   hasMoreData,
 }: ArticleCardListProps) {
-  const PAGINATION_CONFIG = {
-    PAGE_SIZE: 40,
-    MAX_ELEMENTS: 200,
-  } as const
   const updateHasMoreData = (hasMore: boolean) => {
     if (!hasMoreData) return
     if (!tabCategory) return
