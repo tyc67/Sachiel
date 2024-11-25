@@ -21,9 +21,11 @@ import SponsorOption from './sponsor-option'
 export default function SponsorshipInfo({
   publisher,
   balance,
+  recipientAddress,
 }: {
   publisher: PublisherData
   balance: number | undefined
+  recipientAddress: Hex
 }) {
   const { user } = useUser()
   const router = useRouter()
@@ -35,8 +37,6 @@ export default function SponsorshipInfo({
   const [isSyncing, setIsSyncing] = useState(false)
   const [isSponsored, setIsSponsored] = useState(false)
   const { addToast } = useToast()
-  //TODO: replace with media sca
-  const recipientAddress = '0xABD79306a5bD03B667F24a7013Af63238288a0aE'
 
   const handleUserOperationSuccess = async (hash: Hex) => {
     setIsSyncing(true)

@@ -21,19 +21,20 @@ import { type StoryUnlockPolicy } from '../page'
 export default function PaymentInfo({
   unlockPolicy,
   storyId,
+  recipientAddress,
 }: {
   unlockPolicy: StoryUnlockPolicy
   storyId: string
+  recipientAddress: Hex
 }) {
   const { user } = useUser()
   const router = useRouter()
   const [email, setEmail] = useState(user.email)
   const [isChecked, setIsChecked] = useState(false)
-  const isValid = isValidEmail(email)
+  const [isFocused, setIsFocused] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { addToast } = useToast()
-  //TODO: replace with media sca
-  const recipientAddress = '0xABD79306a5bD03B667F24a7013Af63238288a0aE'
+  const isValid = isValidEmail(email)
 
   const handleUserOperationSuccess = async (hash: Hex) => {
     setIsLoading(true)
@@ -97,13 +98,27 @@ export default function PaymentInfo({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`${
-                isValid ? 'border-primary-500' : 'border-custom-red'
-              } w-full border-b pb-2`}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className={`w-full border-b pb-2 ${
+                isFocused ? 'border-primary-600' : 'border-primary-200'
+              }`}
             />
-            {isValid ? null : (
-              <p className="body-3 text-custom-red">請輸入正確的 Email 格式</p>
-            )}
+            <div className="flex flex-row items-center gap-[6px]">
+              <Icon
+                iconName={
+                  isValid ? 'icon-check-circle-blue' : 'icon-check-circle-gray'
+                }
+                size="m"
+              />
+              <p
+                className={`body-3 ${
+                  isValid ? 'text-custom-blue' : 'text-primary-500'
+                }`}
+              >
+                Email 符合格式
+              </p>
+            </div>
           </div>
         </div>
         <label className="flex flex-row items-center">

@@ -6,7 +6,7 @@ import { alchemyConfig } from '@/utils/alchemy'
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const initialState = cookieToInitialState(
-    alchemyConfig,
+    alchemyConfig(),
     headers().get('cookie') ?? undefined
   )
   return (

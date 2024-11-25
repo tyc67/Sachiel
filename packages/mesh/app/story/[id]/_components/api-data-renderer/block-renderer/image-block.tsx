@@ -30,7 +30,9 @@ export default function ImageBlock({
           alt={image.name}
         />
       </div>
-      {image.desc && <figcaption>{image.desc}</figcaption>}
+      {image.desc && (
+        <figcaption dangerouslySetInnerHTML={{ __html: image.desc }} />
+      )}
     </figure>
   )
 }

@@ -6,6 +6,7 @@ import { STATIC_FILE_ENDPOINTS } from '@/constants/config'
 import {
   GetAllCategoriesDocument,
   GetCategoryInformationDocument,
+  GetCommentLikesDocument,
 } from '@/graphql/__generated__/graphql'
 import type {
   CategoryStory,
@@ -271,10 +272,24 @@ export default async function fetchMostSponsoredPublishersByCategory(
   }
 }
 
+async function fetchCommentLikes(commentId: string, memberId: string) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const data = await queryGraphQL(
+    GetCommentLikesDocument,
+    { commentId, memberId },
+    globalLogFields
+  )
+
+  if (!data || !data.comment) return null
+  return data.comment
+}
+
 export {
   fetchAllCategory,
   fetchCategoryInformation,
   fetchCategoryStory,
+  fetchCommentLikes,
   fetchDailyHighlightGroup,
   fetchDailyHighlightNoGroup,
   fetchGroupAndOtherStories,
