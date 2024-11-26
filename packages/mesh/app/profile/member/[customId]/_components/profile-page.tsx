@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef } from 'react'
 
 import ArticleCardList from '@/app/profile/_components/article-card-list'
 import CollectionsCarousel from '@/app/profile/_components/collections-carousel'
@@ -15,17 +15,8 @@ import { useEditProfile } from '@/context/edit-profile'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
 import { PickObjective } from '@/types/objective'
-import type {
-  Collections,
-  PickCollections,
-  TabCategoryType,
-} from '@/types/profile'
-import {
-  type Bookmarks,
-  type PickList,
-  TabCategory,
-  TabKey,
-} from '@/types/profile'
+import type { PickCollections, TabCategoryType } from '@/types/profile'
+import { type PickList, TabCategory, TabKey } from '@/types/profile'
 
 import Loading from './loading'
 
@@ -41,6 +32,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
   const router = useRouter()
   const pathName = usePathname()
   const currentUrl = pathName
+  const hasMoreData = useRef({
+    [TabCategory.PICKS]: true,
+    [TabCategory.BOOKMARKS]: true,
+    [TabCategory.COLLECTIONS]: true,
+  })
   const category = useMemo(() => {
     // NOTE: 如果tab 非預期，使用精選替代
     const tab = queryTab as TabCategoryType
@@ -51,28 +47,24 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
     // NOTE: 透過url 控制tab內容，移除state
     router.push(`${pathName}?tab=${newCategory}`, { scroll: false })
   }
-  const [tabData, setTabData] = useState<PickList | Bookmarks | Collections>([])
 
   const profileData = isMember ? user : visitorProfile
   const { handleClickFollow, isFollowing } = useFollow(
     String(profileData.memberId)
   )
 
-  useEffect(() => {
+  const tabData = useMemo(() => {
     switch (category) {
       case TabCategory.PICKS:
-        setTabData(profileData.picksData ?? [])
-        break
+        return profileData.picksData ?? []
       case TabCategory.BOOKMARKS:
-        setTabData(profileData.bookmarks ?? [])
-        break
+        return profileData.bookmarks ?? []
       case TabCategory.COLLECTIONS:
-        setTabData(profileData.collections ?? [])
-        break
+        return profileData.collections ?? []
       default:
-        setTabData(profileData.picksData ?? [])
+        return profileData.picksData ?? []
     }
-  }, [category, isMember, profileData])
+  }, [category, profileData])
 
   const isCollection = tabData.some((item) => item.__typename === 'Collection')
 
@@ -193,8 +185,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isMember }) => {
         emptyMessage={getMessage(category)}
         elementForEmpty={emptyElement(category)}
         memberId={memberId}
+        customId={customId}
         avatar={avatar}
         name={name}
+        hasMoreData={hasMoreData}
       />
     </>
   )

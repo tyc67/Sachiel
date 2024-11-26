@@ -41,7 +41,7 @@ export default function StoryPickInfo({
         <div className="flex -space-x-1">
           {displayPicks?.slice(0, maxCount).map((data, index) => (
             <div
-              key={data.member?.id ?? ''}
+              key={data.member?.id + data.member?.customId + index}
               style={{ zIndex: socialPageAvatarLayer[index] }}
             >
               <Avatar
