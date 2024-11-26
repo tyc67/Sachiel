@@ -9,7 +9,8 @@ import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import type { CategoryStory } from '@/types/homepage'
-import useStoryClickLogger from '@/hooks/use-story-click-logger'
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 
 type Props = {
   story: CategoryStory
@@ -17,7 +18,8 @@ type Props = {
 
 export default function MainCard({ story }: Props) {
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
-  const logStoryClick = useStoryClickLogger(story.id, story.title)
+  const userPayload = useUserPayload()
+
   return (
     <div className="flex flex-col gap-y-3 pb-4 shadow-[0_0.5px_0_0_rgba(0,9,40,0.1)] lg:max-w-[500px] lg:shadow-none">
       <NextLink href={`story/${story.id}`}>
@@ -46,7 +48,10 @@ export default function MainCard({ story }: Props) {
             />
           </div>
 
-          <NextLink href={`story/${story.id}`} onClick={logStoryClick}>
+          <NextLink
+            href={`story/${story.id}`}
+            onClick={() => logStoryClick(userPayload, story.id, story.title)}
+          >
             <h3 className="title-2 mb-2 text-primary-700 hover-or-active:underline sm:mb-3">
               {story.title}
             </h3>

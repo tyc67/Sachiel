@@ -2,14 +2,14 @@
 
 import type { MouseEventHandler } from 'react'
 import { useEffect, useRef, useState } from 'react'
-
+import useUserPayload from '@/hooks/use-user-payload'
+import { logCategoryClick } from '@/utils/event-logs'
 import { fetchCategoryStory } from '@/app/actions/get-homepage'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
 import type { GetAllCategoriesQuery } from '@/graphql/__generated__/graphql'
 import useInView from '@/hooks/use-in-view'
 import type { CategoryStory } from '@/types/homepage'
-
 import StorySection from './story-section'
 
 const scrollDistance = 200
@@ -36,6 +36,7 @@ type Props = {
 export default function NavList({ categories, initialStories }: Props) {
   const [activeCategory, setActiveCategory] = useState(categories?.[0])
   const [data, setData] = useState<CategoryStory[] | null>(initialStories)
+  const userPayload = useUserPayload()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +80,7 @@ export default function NavList({ categories, initialStories }: Props) {
                   }}
                   onClick={() => {
                     setActiveCategory(category)
+                    logCategoryClick(userPayload, category?.title ?? '')
                   }}
                 />
               </div>

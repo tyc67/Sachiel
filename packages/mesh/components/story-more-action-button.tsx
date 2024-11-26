@@ -5,7 +5,8 @@ import type { ForwardedRef, MouseEventHandler, RefObject } from 'react'
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
-
+import useUserPayload from '@/hooks/use-user-payload'
+import { logBookmarkClick } from '@/utils/event-logs'
 import { addBookmark, removeBookmark } from '@/app/actions/bookmark'
 import { removeFollowPublisher } from '@/app/actions/follow-publisher'
 import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/edit-collection'
@@ -113,6 +114,11 @@ export default function StoryMoreActionButton({
     }
   }, [closeActionSheet, nestedScrollContainerRef])
 
+  const storyInfo = {
+    storyId: story.id,
+    storyTitle: story?.title ?? '',
+  }
+
   return (
     <div className="relative">
       <button
@@ -144,7 +150,11 @@ export default function StoryMoreActionButton({
       )}
       {shouldShowShareSheet &&
         createPortal(
-          <ShareSheet onClose={closeShareSheet} url={getStoryUrl(story.id)} />,
+          <ShareSheet
+            onClose={closeShareSheet}
+            url={getStoryUrl(story.id)}
+            storyInfo={storyInfo}
+          />,
           document.body
         )}
       {shouldShowAddCollection &&
@@ -210,7 +220,7 @@ const ActionSheet = forwardRef(function ActionSheet(
 ) {
   const router = useRouter()
   const { user, setUser } = useUser()
-
+  const userPayload = useUserPayload()
   const isStoryAddedBookmark = user.bookmarkStoryIds.has(storyId)
   const hasPosition = isPositionValid(position)
   const { addToast } = useToast()
@@ -271,6 +281,7 @@ const ActionSheet = forwardRef(function ActionSheet(
               ...oldUser,
               bookmarkStoryIds: new Set([...oldUser.bookmarkStoryIds, storyId]),
             }))
+            logBookmarkClick(userPayload, storyId)
           } else {
             addToast({
               status: 'fail',

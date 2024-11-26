@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
@@ -18,6 +19,7 @@ export default function MostPickedStoryCard({
   isDesktop: boolean
 }) {
   const { user } = useUser()
+  const userPayload = useUserPayload()
   const displayPicks = getDisplayPicks(story.picks, user.followingMemberIds)
 
   return (
@@ -68,7 +70,14 @@ export default function MostPickedStoryCard({
                   isDesktop ? 'title-1' : 'title-2'
                 } mt-1 text-primary-700 hover-or-active:underline`}
               >
-                <Link href={`/story/${story.id}`}>{story.title}</Link>
+                <Link
+                  href={`/story/${story.id}`}
+                  onClick={() =>
+                    logStoryClick(userPayload, story.id, story?.title ?? '')
+                  }
+                >
+                  {story.title}
+                </Link>
               </div>
               <div className="footnote mt-2">
                 <StoryMeta

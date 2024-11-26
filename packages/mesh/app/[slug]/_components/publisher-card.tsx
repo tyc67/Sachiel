@@ -1,6 +1,9 @@
+'use client'
+
 import NextImage from 'next/image'
 import NextLink from 'next/link'
-
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
 import type { SponsoredStoryByCategory } from '@/types/homepage'
@@ -12,6 +15,8 @@ const StoryCard = ({
   showImage: boolean
   story: SponsoredStoryByCategory['stories'][number]
 }) => {
+  const userPayload = useUserPayload()
+
   return (
     <article className="border-b-[0.5px] border-primary-200 py-3 last:border-b-0 ">
       <NextLink href={`/story/${story.id}`}>
@@ -27,7 +32,10 @@ const StoryCard = ({
         )}
 
         <div>
-          <h3 className="subtitle-2 mb-1 text-primary-700 hover-or-active:underline">
+          <h3
+            className="subtitle-2 mb-1 text-primary-700 hover-or-active:underline"
+            onClick={() => logStoryClick(userPayload, story.id, story.title)}
+          >
             {story.title}
           </h3>
           <div className="caption-1">

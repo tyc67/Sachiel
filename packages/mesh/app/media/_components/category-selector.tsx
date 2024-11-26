@@ -1,6 +1,7 @@
 import type { Dispatch, MouseEventHandler, SetStateAction } from 'react'
 import { useRef, useState } from 'react'
-
+import useUserPayload from '@/hooks/use-user-payload'
+import { logCategoryClick } from '@/utils/event-logs'
 import { addCategory, removeCategory } from '@/app/actions/edit-category'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
@@ -46,6 +47,7 @@ export default function CategorySelector({
   const { user, setUser } = useUser()
   const displayCategories = user.followingCategories
   const { addToast } = useToast()
+  const userPayoload = useUserPayload()
 
   const [showCategoryEditor, setShowCategoryEditor] = useState(false)
   const { memberId } = user
@@ -134,6 +136,7 @@ export default function CategorySelector({
                   }}
                   onClick={() => {
                     setCurrentCategory(category)
+                    logCategoryClick(userPayoload, category?.title ?? '')
                   }}
                 />
               </div>

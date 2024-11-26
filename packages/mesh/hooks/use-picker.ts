@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-
+import useUserPayload from './use-user-payload'
+import { logPickClick } from '@/utils/event-logs'
 import {
   addPick as sendAddPick,
   addPickAndComment as sendAddPickAndComment,
@@ -15,6 +16,7 @@ import { addPickToUser, removePickFromUser } from '@/utils/mutate-user-pick-ids'
 
 export default function usePicker() {
   const { user, setUser } = useUser()
+  const userPayload = useUserPayload()
   const [isLoading, setIsLoading] = useState(false)
   const memberId = user.memberId
   const { addToast } = useToast()
@@ -40,10 +42,10 @@ export default function usePicker() {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
         reverseMutation()
       }
-
+      logPickClick(userPayload, targetId)
       setIsLoading(false)
     },
-    [memberId, user, setUser, addToast]
+    [memberId, user, setUser, addToast, userPayload]
   )
 
   const removePick = useCallback(
@@ -77,7 +79,6 @@ export default function usePicker() {
         addToast({ status: 'fail', text: TOAST_MESSAGE.deletePickFailed })
         reverseMutation()
       }
-
       setIsLoading(false)
     },
     [memberId, user, setUser, addToast]
@@ -104,10 +105,10 @@ export default function usePicker() {
         addToast({ status: 'fail', text: TOAST_MESSAGE.pickStoryFailed })
         reverseMutation()
       }
-
+      logPickClick(userPayload, targetId)
       setIsLoading(false)
     },
-    [memberId, user, setUser, addToast]
+    [memberId, user, setUser, addToast, userPayload]
   )
 
   return {

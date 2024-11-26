@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import useStoryClickLogger from '@/hooks/use-story-click-logger'
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
@@ -20,10 +21,7 @@ export default function MostLikedCommentCard({ comment, rank }: Props) {
     String(comment.member.id)
   )
   const { user } = useUser()
-  const logStoryClick = useStoryClickLogger(
-    comment.story?.id || '',
-    comment.story?.title || ''
-  )
+  const userPayload = useUserPayload()
 
   return (
     <div className="flex items-start gap-x-3">
@@ -83,7 +81,16 @@ export default function MostLikedCommentCard({ comment, rank }: Props) {
         {comment.story && (
           <div className="border-t-[0.5px] border-[rgba(0,9,40,0.1)]  pt-3">
             <h2 className="subtitle-2 mb-2 text-primary-700 hover-or-active:underline">
-              <Link href={`/story/${comment.story.id}`} onClick={logStoryClick}>
+              <Link
+                href={`/story/${comment.story.id}`}
+                onClick={() =>
+                  logStoryClick(
+                    userPayload,
+                    comment.story?.id ?? '',
+                    comment.story?.title ?? ''
+                  )
+                }
+              >
                 {comment.story.title}
               </Link>
             </h2>

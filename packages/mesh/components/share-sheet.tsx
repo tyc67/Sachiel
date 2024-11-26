@@ -1,8 +1,8 @@
 import { type MouseEventHandler } from 'react'
-
+import useUserPayload from '@/hooks/use-user-payload'
 import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 import { getShareUrl } from '@/utils/get-url'
-
+import { logShareClick } from '@/utils/event-logs'
 import Icon from './icon'
 
 const shareMedia = [
@@ -32,12 +32,19 @@ const shareMedia = [
   },
 ] as const
 
+export type SharePlatform = typeof shareMedia[number]['id']
+
 export default function ShareSheet({
   url,
   onClose,
+  storyInfo,
 }: {
   url: string
   onClose: () => void
+  storyInfo: {
+    storyId: string
+    storyTitle: string
+  }
 }) {
   useBlockBodyScroll()
   const onShareSheetContainerClicked: MouseEventHandler<HTMLDivElement> = (
@@ -45,6 +52,7 @@ export default function ShareSheet({
   ) => {
     evt.stopPropagation()
   }
+  const userPayload = useUserPayload()
 
   return (
     <div
@@ -76,6 +84,14 @@ export default function ShareSheet({
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full"
+              onClick={() =>
+                logShareClick(userPayload, {
+                  shareActions: {
+                    ...storyInfo,
+                    sharePlatform: media.id,
+                  },
+                })
+              }
             >
               <div className="flex flex-col items-center gap-2 sm:flex-1">
                 <Icon iconName={media.icon} size={{ width: 40, height: 40 }} />

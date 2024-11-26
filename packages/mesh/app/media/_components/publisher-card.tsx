@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
@@ -14,9 +15,14 @@ const PublisherStory = ({
   story: Story
   showImage: boolean
 }) => {
+  const userPayload = useUserPayload()
+
   return (
     <article className="border-b py-3 last-of-type:border-b-0">
-      <Link href={`/story/${story.id}`}>
+      <Link
+        href={`/story/${story.id}`}
+        onClick={() => logStoryClick(userPayload, story.id, story.title)}
+      >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1]">
             <Image

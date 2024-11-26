@@ -57,7 +57,7 @@ export const getDisplayPicks = (
   return displayPicks
 }
 
-export const displayTime = (date: string) => {
+export const displayTime = (date: string | Date) => {
   if (!date) return
   const targetDate = new Date(date)
   const year = targetDate.getFullYear()

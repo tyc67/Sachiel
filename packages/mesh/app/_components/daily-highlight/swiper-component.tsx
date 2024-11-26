@@ -3,7 +3,8 @@
 import NextLink from 'next/link'
 import type { RefObject } from 'react'
 import { useRef } from 'react'
-import useStoryClickLogger from '@/hooks/use-story-click-logger'
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import type { DailyStory } from '@/types/homepage'
@@ -18,7 +19,7 @@ type Story = {
 
 function StoryCard({ story }: Story) {
   const scrollContainerRef = useRef<HTMLElement>(null)
-  const logStoryClick = useStoryClickLogger(story.id, story.title)
+  const userPayload = useUserPayload()
 
   return (
     <div
@@ -40,7 +41,10 @@ function StoryCard({ story }: Story) {
       </div>
 
       <h3 className="subtitle-2 mb-2 line-clamp-2 text-primary-700 hover-or-active:underline">
-        <NextLink href={`story/${story.id}`} onClick={logStoryClick}>
+        <NextLink
+          href={`story/${story.id}`}
+          onClick={() => logStoryClick(userPayload, story.id, story.title)}
+        >
           {story.title}
         </NextLink>
       </h3>

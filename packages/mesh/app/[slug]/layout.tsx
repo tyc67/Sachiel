@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-
+import UserBehaviorLogger from '@/components/user-behavior-logger'
 import LayoutTemplate from '@/components/layout-template'
 import GoBackButton from '@/components/navigation/go-back-button'
 
@@ -39,6 +39,7 @@ export default function SubpageLayout({
       mobileNavigation={navigationData}
       nonMobileNavigation={navigationData}
     >
+      <UserBehaviorLogger />
       {children}
     </LayoutTemplate>
   )

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { logStoryClick } from '@/utils/event-logs'
+import useUserPayload from '@/hooks/use-user-payload'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
@@ -13,6 +14,7 @@ import { type Story } from './media-stories'
 // only used in desktop width
 export default function HeroStoryCard({ story }: { story: Story }) {
   const { user } = useUser()
+  const userPayload = useUserPayload()
   const displayPicks = getDisplayPicks(story.picks, user.followingMemberIds)
 
   return (
@@ -45,7 +47,12 @@ export default function HeroStoryCard({ story }: { story: Story }) {
                 canUnFollowPublisher={true}
               />
             </div>
-            <Link href={`/story/${story.id}`}>
+            <Link
+              href={`/story/${story.id}`}
+              onClick={() =>
+                logStoryClick(userPayload, story.id, story?.title ?? '')
+              }
+            >
               <div className="hero-title mt-1 text-primary-700 hover-or-active:underline">
                 {story.title ?? ''}
               </div>
