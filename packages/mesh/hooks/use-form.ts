@@ -4,7 +4,7 @@ type ValidationErrors<T> = Partial<Record<keyof T, string>>
 
 export const useForm = <T extends Record<string, unknown>>(
   initialState: T,
-  validateFormFn: (form: T) => ValidationErrors<T>
+  validateFormFn: (form: T) => Promise<ValidationErrors<T>>
 ) => {
   const originalState = useRef(initialState)
   const [form, setForm] = useState<T>(initialState)
@@ -23,8 +23,8 @@ export const useForm = <T extends Record<string, unknown>>(
     setForm(initialState)
   }
 
-  const validateForm = () => {
-    const newErrors = validateFormFn(form)
+  const validateForm = async () => {
+    const newErrors = await validateFormFn(form)
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }

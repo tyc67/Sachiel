@@ -81,6 +81,7 @@ export default function FeaturedCard({
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
               ringColor="primary-100"
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} color="transparent" />
           </div>

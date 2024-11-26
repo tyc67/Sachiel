@@ -1,22 +1,47 @@
+import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
+import type { MutableRefObject } from 'react'
+import { useEffect } from 'react'
+
+import {
+  getMoreMemberBookmarks,
+  getMoreMemberCollections,
+  getMoreMemberPicks,
+} from '@/app/actions/get-more-profile-data'
 import ArticleCard from '@/app/profile/_components/article-card'
-import type {
-  BookmarkItem,
-  Bookmarks,
-  Collections,
-  PickList,
-  PickListItem,
-} from '@/types/profile'
+import * as profile from '@/types/profile'
 import type { PublisherProfile } from '@/utils/data-schema'
 
 interface ArticleCardListProps {
-  items: PickList | Bookmarks | Collections | PublisherProfile['stories']
+  tabCategory?: profile.TabCategoryType
+  items:
+    | profile.PickList
+    | profile.Bookmarks
+    | profile.Collections
+    | PublisherProfile['stories']
   emptyMessage: string
   elementForEmpty?: React.ReactNode
   memberId?: string
   avatar?: string
   name?: string
   shouldShowComment: boolean
+  customId?: string
+  hasMoreData?: MutableRefObject<{
+    PICKS: boolean
+    BOOKMARKS: boolean
+    COLLECTIONS: boolean
+  }>
 }
+
+const FETCH_FUNCTIONS = {
+  [profile.TabCategory.PICKS]: getMoreMemberPicks,
+  [profile.TabCategory.BOOKMARKS]: getMoreMemberBookmarks,
+  [profile.TabCategory.COLLECTIONS]: getMoreMemberCollections,
+} as const
+
+const PAGINATION_CONFIG = {
+  PAGE_SIZE: 40,
+  MAX_ELEMENTS: 200,
+} as const
 
 function ArticleCardList({
   items,
@@ -26,7 +51,21 @@ function ArticleCardList({
   memberId,
   avatar,
   name,
+  customId,
+  tabCategory,
+  hasMoreData,
 }: ArticleCardListProps) {
+  const updateHasMoreData = (hasMore: boolean) => {
+    if (!hasMoreData) return
+    if (!tabCategory) return
+    // TODO: publisher do not have infinite scroll
+    if (tabCategory === profile.TabCategory.PUBLISH) return
+    hasMoreData.current[tabCategory] = hasMore
+  }
+  useEffect(() => {
+    updateHasMoreData(true)
+  }, [tabCategory, items])
+
   if (!items?.length) {
     return (
       <div className="flex grow flex-col">
@@ -37,51 +76,106 @@ function ArticleCardList({
       </div>
     )
   }
+
   const isCollection = items.some((item) => item.__typename === 'Collection')
 
+  const fetchMorePicksInProfile = async (pageIndex: number) => {
+    if (!hasMoreData) return []
+    if (!tabCategory) return []
+    // TODO: publisher do not have infinite scroll
+    if (tabCategory === profile.TabCategory.PUBLISH) return []
+    if (!hasMoreData.current[tabCategory]) return []
+
+    const fetchFunction =
+      FETCH_FUNCTIONS[tabCategory as keyof typeof FETCH_FUNCTIONS] ??
+      FETCH_FUNCTIONS[profile.TabCategory.PICKS]
+
+    const moreItems = await fetchFunction({
+      customId: customId ?? '',
+      takes: PAGINATION_CONFIG.PAGE_SIZE * pageIndex,
+      start: PAGINATION_CONFIG.PAGE_SIZE * (pageIndex - 1),
+    })
+
+    updateHasMoreData(moreItems.length === PAGINATION_CONFIG.PAGE_SIZE)
+    return moreItems
+  }
   return (
     <>
-      <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
-        精選文章
-      </p>
-      <div className="bg-multi-layer-light">
-        <ul
-          className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
-            isCollection
-              ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
-              : ''
-          }`}
-        >
-          {items.map((item, index) => {
-            const isLast = index === items.length - 1
-            if (!item) return
-            if ('story' in item && !item.story) return
-            return (
-              <li
-                key={index}
-                className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+      {tabCategory === profile.TabCategory.PICKS && (
+        <p className="list-title bg-white px-5 pt-4 text-primary-700 md:bg-primary-700-dark md:p-10 md:pb-1 md:pt-9">
+          精選文章
+        </p>
+      )}
+      <InfiniteScrollList
+        key={tabCategory}
+        initialList={items as profile.PickList}
+        pageSize={PAGINATION_CONFIG.PAGE_SIZE}
+        amountOfElements={PAGINATION_CONFIG.MAX_ELEMENTS}
+        fetchListInPage={fetchMorePicksInProfile}
+        isAutoFetch={true}
+      >
+        {(renderList) => {
+          return (
+            <div className="bg-multi-layer-light">
+              <ul
+                className={`max-w-[theme(width.maxMain)] bg-primary-700-dark md:grid md:grid-cols-2 md:items-center md:gap-5 md:p-10 md:pt-3 lg:grid-cols-3 ${
+                  isCollection
+                    ? 'sm:grid sm:grid-cols-2 sm:items-center sm:gap-5 sm:px-10 sm:py-5'
+                    : ''
+                }`}
               >
-                {'story' in item ? (
-                  <ArticleCard
-                    storyData={item.story as NonNullable<PickListItem>}
-                    isLast={isLast}
-                    memberId={memberId}
-                    avatar={avatar}
-                    name={name}
-                    shouldShowComment={shouldShowComment}
-                  />
-                ) : (
-                  <ArticleCard
-                    storyData={item as NonNullable<BookmarkItem>}
-                    isLast={isLast}
-                    shouldShowComment={shouldShowComment}
-                  />
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+                {renderList.map((item, index) => {
+                  const isLast = index === items.length - 1
+                  if (!item) return null
+                  if ('story' in item && !item.story) return null
+
+                  if ('story' in item) {
+                    return (
+                      <li
+                        key={
+                          index +
+                          (item.story?.id || 'id') +
+                          (item.story?.title || 'story title') +
+                          item.story?.createdAt
+                        }
+                        className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+                      >
+                        <ArticleCard
+                          storyData={
+                            item.story as NonNullable<profile.PickListItem>
+                          }
+                          isLast={isLast}
+                          memberId={memberId}
+                          avatar={avatar}
+                          name={name}
+                          shouldShowComment={shouldShowComment}
+                        />
+                      </li>
+                    )
+                  }
+                  return (
+                    <li
+                      key={
+                        index +
+                        (item as NonNullable<profile.BookmarkItem>).id +
+                        (item as NonNullable<profile.BookmarkItem>).title +
+                        (item as NonNullable<profile.BookmarkItem>).createdAt
+                      }
+                      className="relative flex size-full grow bg-white md:h-full md:flex-col md:rounded-md md:drop-shadow"
+                    >
+                      <ArticleCard
+                        storyData={item as NonNullable<profile.BookmarkItem>}
+                        isLast={isLast}
+                        shouldShowComment={shouldShowComment}
+                      />
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          )
+        }}
+      </InfiniteScrollList>
     </>
   )
 }

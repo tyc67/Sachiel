@@ -1,5 +1,6 @@
 'use server'
 
+import { RESTFUL_ENDPOINTS } from '@/constants/config'
 import type { CollectionPickCreateInput } from '@/graphql/__generated__/graphql'
 import {
   AddStoryToCollectionDocument,
@@ -10,6 +11,7 @@ import {
   RemoveCollectionDocument,
 } from '@/graphql/__generated__/graphql'
 import queryGraphQL, { mutateGraphQL } from '@/utils/fetch-graphql'
+import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 
 import type { CollectionFormat } from '../collection/(mutate)/_types/edit-collection'
@@ -85,7 +87,7 @@ export async function createCollection({
 }: CreateCollectionParams) {
   const globalLogFields = getLogTraceObjectFromHeaders()
 
-  return await mutateGraphQL(
+  const response = await mutateGraphQL(
     CreateCollectionDocument,
     {
       title,
@@ -101,6 +103,9 @@ export async function createCollection({
     },
     globalLogFields
   )
+  if (response?.createCollection?.id)
+    await updateCollectinInMeilisearch(response.createCollection.id, memberId)
+  return response
 }
 
 export async function addStoryToCollection({
@@ -117,7 +122,7 @@ export async function addStoryToCollection({
   pickDate: string
 }) {
   const globalLogFields = getLogTraceObjectFromHeaders()
-  return await mutateGraphQL(
+  const response = await mutateGraphQL(
     AddStoryToCollectionDocument,
     {
       id: collectionId,
@@ -128,17 +133,21 @@ export async function addStoryToCollection({
     },
     globalLogFields
   )
+  if (response) await updateCollectinInMeilisearch(collectionId, memberId)
+  return response
 }
 
 export async function removeCollection({
   collectionId,
   heroImageId,
+  memberId,
 }: {
   collectionId: string
   heroImageId: string
+  memberId: string
 }) {
   const globalLogFields = getLogTraceObjectFromHeaders()
-  return await mutateGraphQL(
+  const response = await mutateGraphQL(
     RemoveCollectionDocument,
     {
       collectionId,
@@ -146,4 +155,28 @@ export async function removeCollection({
     },
     globalLogFields
   )
+  if (response) await deleteCollectionInMeilisearch(collectionId, memberId)
+  return response
+}
+
+async function updateCollectinInMeilisearch(
+  collectionId: string,
+  memberId: string
+) {
+  return await fetchRestfulPost(RESTFUL_ENDPOINTS.pubsub, {
+    action: 'add_collection',
+    collectionId,
+    memberId,
+  })
+}
+
+async function deleteCollectionInMeilisearch(
+  collectionId: string,
+  memberId: string
+) {
+  return await fetchRestfulPost(RESTFUL_ENDPOINTS.pubsub, {
+    action: 'remove_collection',
+    collectionId,
+    memberId,
+  })
 }

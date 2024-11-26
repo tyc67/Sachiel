@@ -51,7 +51,7 @@ export default function Feed({
         </div>
       ) : null}
       <div className="px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-4">
-        <Link href={`/publisher/${story.publisher.customId}}`}>
+        <Link href={`/profile/publisher/${story.publisher.customId}`}>
           <h4 className="body-3 mb-1 text-primary-500 hover-or-active:text-primary-700">
             {story.publisher.title}
           </h4>
@@ -79,6 +79,7 @@ export default function Feed({
             <StoryPickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
+              storyId={story.id}
             />
             <StoryPickButton storyId={story.id} />
           </div>
@@ -103,19 +104,50 @@ function processStoryActions(storyAction: StoryActions) {
   let picksData: StoryActions = []
   let commentsData: StoryActions = []
 
-  const isPickAndComment =
-    storyAction.filter((action) => action.member.id === latestAction.member.id)
-      .length > 1
+  const isPick = storyAction.some(
+    (action) =>
+      action.kind === 'read' && action.member.id === latestAction.member.id
+  )
+  const isComment = storyAction.some(
+    (action) =>
+      action.kind === 'comment' && action.member.id === latestAction.member.id
+  )
+  const isPickAndComment = isPick && isComment
 
-  const filterActions = (kind: 'read' | 'comment', sortByMember = false) =>
-    storyAction
-      .filter((action) => action.kind === kind)
-      .sort((a, _b) =>
-        sortByMember && a.member.id === latestAction.member.id ? -1 : 1
+  const filterActions = (
+    kind: 'read' | 'comment',
+    prioritizeLatestMember = false
+  ) => {
+    const filtered = storyAction.filter((action) => action.kind === kind)
+
+    const isMultipleComments =
+      storyAction.filter(
+        (action) =>
+          action.kind === 'comment' &&
+          action.member.id === latestAction.member.id
+      ).length >= 2
+
+    if (kind === 'comment' && isMultipleComments) {
+      const latestActionMemberComment = filtered.find(
+        (action) => action.member.id === latestAction.member.id
       )
+      const otherMembersComments = filtered.filter(
+        (action) => action.member.id !== latestAction.member.id
+      )
+      return latestActionMemberComment
+        ? [latestActionMemberComment, ...otherMembersComments]
+        : otherMembersComments
+    }
+
+    return prioritizeLatestMember
+      ? filtered.sort((a, _b) =>
+          a.member.id === latestAction.member.id ? -1 : 1
+        )
+      : filtered
+  }
 
   if (latestActionType === 'comment') {
-    picksData = isPickAndComment ? filterActions('read', isPickAndComment) : []
+    picksData = isPickAndComment ? filterActions('read', true) : []
     picksNum = isPickAndComment ? picksNum : 0
     commentsData = filterActions('comment')
   } else {

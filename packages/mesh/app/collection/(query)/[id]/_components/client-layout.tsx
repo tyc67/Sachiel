@@ -4,14 +4,14 @@ import CollectionPickButton from '@/components/collection-card/collection-pick-b
 import LayoutTemplate from '@/components/layout-template'
 import GoBackButton from '@/components/navigation/go-back-button'
 import ShareButton from '@/components/navigation/share-button'
+// import { BookmarkObjective } from '@/types/objective'
+import { useUser } from '@/context/user'
 import type { GetCollectionQuery } from '@/graphql/__generated__/graphql'
 // import AddBookMarkButton from '@/components/navigation/add-bookmark-button'
 import { getCollectionUrl } from '@/utils/get-url'
 
 import CollectionMoreActionButton from './collection-more-action-button'
 import Loading from './loading'
-// import { BookmarkObjective } from '@/types/objective'
-
 type Collection = NonNullable<GetCollectionQuery['collections']>[number]
 
 export default function ClientLayout({
@@ -21,6 +21,10 @@ export default function ClientLayout({
   collection: Collection
   children: React.ReactNode
 }) {
+  const { user } = useUser()
+  const isSinglePickByCurrentUser =
+    collection.picks?.length === 1 &&
+    collection.picks[0].member?.id === user.memberId
   return (
     <LayoutTemplate
       type="default"
@@ -53,11 +57,13 @@ export default function ClientLayout({
         ],
       }}
       mobileActionBar={{
+        storyId: collection.id,
         picksCount: collection.picksCount ?? 0,
         commentsCount: collection.commentsCount ?? 0,
         actions: [
           <CollectionPickButton key={0} collectionId={collection.id} />,
         ],
+        isSinglePickByCurrentUser,
       }}
       suspenseFallback={<Loading />}
     >

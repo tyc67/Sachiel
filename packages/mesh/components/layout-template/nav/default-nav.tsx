@@ -80,10 +80,15 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path) && !searchParams.size}
+                    isOn={
+                      matchPath(iconInfo.href, path) &&
+                      searchParams.get('tab') === TabCategory.PICKS
+                    }
                     iconInfo={{
                       ...iconInfo,
-                      href: iconInfo.href + `/member/${userCustomId}`,
+                      href:
+                        iconInfo.href +
+                        `/member/${userCustomId}?tab=${TabCategory.PICKS}`,
                     }}
                     avatarUrl={avatarUrl}
                   />
@@ -92,7 +97,10 @@ const NonMobileNav = ({
                 return (
                   <NonMobileNavIcon
                     key={iconInfo.text}
-                    isOn={matchPath(iconInfo.href, path) && !!searchParams.size}
+                    isOn={
+                      matchPath(iconInfo.href, path) &&
+                      searchParams.get('tab') === TabCategory.BOOKMARKS
+                    }
                     iconInfo={{
                       ...iconInfo,
                       href:
@@ -181,6 +189,7 @@ const MobileNav = ({
   avatarUrl: string
   userCustomId: string
 }) => {
+  const searchParams = useSearchParams()
   return (
     <nav className="fixed inset-x-0 bottom-0 z-layout h-[theme(height.nav.default)] border-t bg-white sm:hidden">
       <div className="flex h-full items-center">
@@ -189,10 +198,15 @@ const MobileNav = ({
             return (
               <MobileNavIcon
                 key={iconInfo.icon.default}
-                isOn={matchPath(iconInfo.href, path)}
+                isOn={
+                  matchPath(iconInfo.href, path) &&
+                  searchParams.get('tab') === TabCategory.PICKS
+                }
                 iconInfo={{
                   ...iconInfo,
-                  href: iconInfo.href + `/member/${userCustomId}`,
+                  href:
+                    iconInfo.href +
+                    `/member/${userCustomId}?tab=${TabCategory.PICKS}`,
                 }}
                 avatarUrl={avatarUrl}
               />
@@ -240,16 +254,14 @@ const MobileNavIcon = ({
   const textJsx = isOn ? (
     <span className="caption-1 text-primary-700">{iconInfo.text}</span>
   ) : (
-    <span className="caption-1 text-primary-600 group-active:text-primary-700">
-      {iconInfo.text}
-    </span>
+    <span className="caption-1 text-primary-600">{iconInfo.text}</span>
   )
 
   return (
     <Link
       key={iconInfo.icon.default}
       href={iconInfo.href}
-      className="group flex h-full flex-1 flex-col items-center justify-center"
+      className="flex h-full flex-1 flex-col items-center justify-center"
     >
       {iconJsx}
       {textJsx}

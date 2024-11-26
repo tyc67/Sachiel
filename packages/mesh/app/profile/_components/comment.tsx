@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
+import { useUser } from '@/context/user'
 import { useCommentClamp } from '@/hooks/use-comment-clamp'
 import { useCommentLike } from '@/hooks/use-comment-like'
 import useWindowDimensions from '@/hooks/use-window-dimension'
@@ -15,7 +16,7 @@ type CommentProps = {
   clampLineCount?: number
   avatar: string
   canToggle?: boolean
-  storyId?: string
+  redirectUrl?: string
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -24,9 +25,13 @@ const Comment: React.FC<CommentProps> = ({
   avatar,
   canToggle = false,
   //TODO: 之後有文章再更改成slug或id傳入做跳轉功能。
-  storyId = '',
+  redirectUrl = '',
 }) => {
   const { width } = useWindowDimensions()
+  const { user } = useUser()
+  const { memberId } = user
+  const { member } = data
+  const isOwnComment = memberId === member?.id
   const router = useRouter()
   const { needClamp, commentRef, handleToggleClamp } = useCommentClamp(
     clampLineCount,
@@ -37,7 +42,7 @@ const Comment: React.FC<CommentProps> = ({
   })
   const handleCommentClick = () => {
     if (width > getTailwindConfigBreakpointNumber('md')) {
-      router.push(`/story/${storyId}`)
+      router.push(`${redirectUrl}`)
     } else {
       handleToggleClamp()
     }
@@ -51,7 +56,7 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <section
       className="mt-4 flex w-full flex-col gap-2 rounded-md border border-primary-200 bg-primary-100 p-3"
-      onClick={(evt) => evt.preventDefault()}
+      onClick={(evt) => evt.stopPropagation()}
     >
       <div className="flex items-center justify-between md:hidden">
         <div className="flex items-center">
@@ -63,9 +68,12 @@ const Comment: React.FC<CommentProps> = ({
           <p className="caption-1 text-primary-500">
             {displayTimeFromNow(commentData.createdAt)}
           </p>
-          <Icon iconName="icon-dot" size="s" />
-
-          <button className="caption-1 text-primary-500">編輯留言</button>
+          {isOwnComment && (
+            <>
+              <Icon iconName="icon-dot" size="s" />
+              <button className="caption-1 text-primary-500">編輯留言</button>
+            </>
+          )}
         </div>
         <div className="flex items-center justify-end">
           <p className="caption-1 text-primary-600">{commentData.likeCount}</p>
@@ -91,7 +99,7 @@ const Comment: React.FC<CommentProps> = ({
           ringColor="primary-100"
         />
         <p
-          className={`body-3 line-clamp-3 size-full ${
+          className={`body-3 line-clamp-3 h-fit w-full cursor-pointer ${
             commentData.content ? 'text-primary-600' : 'text-primary-400'
           } sm:line-clamp-1`}
           ref={commentRef}

@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -5,6 +7,7 @@ import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { type CommentType } from '@/types/profile'
 
 import type { CollectionPick } from '../../_types/collection'
@@ -23,6 +26,7 @@ type ArticleCardProps = {
 const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
   const commentList = story?.comments || []
   const creatorComment = commentList[0]
+  const { displayPicks, displayPicksCount } = useDisplayPicks(story)
   return (
     <Link href={`/story/${story?.id}`}>
       <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
@@ -74,9 +78,10 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
         </section>
         <section className="mt-4 flex justify-between">
           <StoryPickInfo
-            displayPicks={story?.picks}
-            pickCount={story?.picksCount || 0}
+            displayPicks={displayPicks}
+            pickCount={displayPicksCount}
             maxCount={4}
+            storyId={story?.id ?? ''}
           />
           <StoryPickButton storyId={story?.id ?? ''} />
         </section>

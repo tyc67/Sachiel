@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
-import SearchBar from '@/components/search-bar'
+// import SearchBar from '@/components/search-bar'
 import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
 
@@ -33,7 +33,7 @@ export default function DefaultHeader() {
         <div className="flex gap-10">
           <Link
             href={LOGO_ICONS.mobile.href}
-            className="flex items-center justify-center"
+            className="GTM-header_click_mesh_logo flex items-center justify-center"
           >
             <Icon
               size={LOGO_ICONS.mobile.size}
@@ -46,7 +46,8 @@ export default function DefaultHeader() {
               className="hidden sm:block"
             />
           </Link>
-          <SearchBar className="hidden sm:flex" />
+          {/* TODO: implement search UI */}
+          {/* <SearchBar className="hidden sm:flex" /> */}
         </div>
         {/* right side block */}
         <div className="flex">

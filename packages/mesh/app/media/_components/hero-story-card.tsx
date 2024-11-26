@@ -6,16 +6,14 @@ import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
-import { useUser } from '@/context/user'
-import { getDisplayPicks } from '@/utils/story-display'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
 
 import { type Story } from './media-stories'
 
 // only used in desktop width
 export default function HeroStoryCard({ story }: { story: Story }) {
-  const { user } = useUser()
   const userPayload = useUserPayload()
-  const displayPicks = getDisplayPicks(story.picks, user.followingMemberIds)
+  const { displayPicks, displayPicksCount } = useDisplayPicks(story)
 
   return (
     <article className="col-span-2 border-b pb-5 pt-3">
@@ -74,7 +72,8 @@ export default function HeroStoryCard({ story }: { story: Story }) {
             <div className="mt-4 flex h-8 flex-row justify-between">
               <StoryPickInfo
                 displayPicks={displayPicks}
-                pickCount={story.picksCount ?? 0}
+                pickCount={displayPicksCount}
+                storyId={story.id}
               />
               <StoryPickButton storyId={story.id} />
             </div>

@@ -6,6 +6,7 @@ import { Noto_Sans_TC } from 'next/font/google'
 
 import { GTM_ID } from '@/constants/config'
 import { PickModalProvider } from '@/context/pick-modal'
+import { PickersModalProvider } from '@/context/pickers-modal'
 import { ToastProvider } from '@/context/toast'
 import { UserProvider } from '@/context/user'
 
@@ -31,13 +32,17 @@ export default async function RootLayout({
   return (
     <html lang="zh-Hant" className={notoSans.className}>
       <GoogleTagManager gtmId={GTM_ID} />
-      <UserProvider user={user}>
-        <ToastProvider>
-          <PickModalProvider>
-            <RootLayoutWrapper>{children}</RootLayoutWrapper>
-          </PickModalProvider>
-        </ToastProvider>
-      </UserProvider>
+      <body>
+        <UserProvider user={user}>
+          <ToastProvider>
+            <PickModalProvider>
+              <PickersModalProvider>
+                <RootLayoutWrapper>{children}</RootLayoutWrapper>
+              </PickersModalProvider>
+            </PickModalProvider>
+          </ToastProvider>
+        </UserProvider>
+      </body>
     </html>
   )
 }

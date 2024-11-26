@@ -37,7 +37,6 @@ const PublisherPage: React.FC<PublisherPageProps> = ({
     publisherId,
     publisherName: name,
   })
-
   const userStatusList = [
     { tabName: TabKey.SPONSORED, count: `${sponsoredCount}次` },
     {

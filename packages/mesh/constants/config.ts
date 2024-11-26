@@ -9,6 +9,7 @@ const FIREBASE_CLIENT_EMAIL =
 const FIREBASE_PRIVATE_KEY =
   process.env.FIREBASE_PRIVATE_KEY || 'admin-sdk-service-account-keys'
 
+let GTM_ENV = ''
 let API_ORIGIN = ''
 let STATIC_FILE_ORIGIN = ''
 let GCP_LOG_NAME = ''
@@ -88,6 +89,7 @@ switch (ENV) {
       media: 1 * 60 * 1000,
       story: 1 * 60 * 1000,
     }
+    GTM_ENV = 'GTM-MKLVHSGJ'
 
     break
 
@@ -97,6 +99,8 @@ switch (ENV) {
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
     GCP_LOG_NAME = 'mesh-next-userlog-prod'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
+    PAYMENT_ORIGIN =
+      'https://mesh-payment-chain-prod-1075249966777.asia-east1.run.app'
     PAYMENT_CHAIN = optimism
     FIREBASE_DOMAIN = 'mesh-app.readr.tw'
     FIREBASE_CONFIG = {
@@ -117,18 +121,19 @@ switch (ENV) {
       media: 10 * 60 * 1000,
       story: 20 * 60 * 1000,
     }
+    GTM_ENV = 'GTM-WPC2M99H'
 
     break
 
   default:
     break
 }
-const GTM_ID = 'GTM-MKLVHSGJ'
+const GTM_ID = GTM_ENV
 const GQL_ENDPOINT = `${API_ORIGIN}/gql`
 const RESTFUL_ENDPOINTS = {
   latestStories: `${API_ORIGIN}/latest_stories`,
   pubsub: `${API_ORIGIN}/pubsub`,
-  relatedStories: `${API_ORIGIN}/search/`,
+  search: `${API_ORIGIN}/search`,
   accessToken: `${API_ORIGIN}/accesstoken`,
   paymentBalance: `${PAYMENT_ORIGIN}/balance/`,
   socialPage: `${API_ORIGIN}/socialpage`,

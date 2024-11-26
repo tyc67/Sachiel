@@ -55,9 +55,6 @@ export default function MainCard({ story }: Props) {
             <h3 className="title-2 mb-2 text-primary-700 hover-or-active:underline sm:mb-3">
               {story.title}
             </h3>
-            <p className="body-3 mb-3 hidden text-primary-600 sm:line-clamp-1">
-              {story.og_description}
-            </p>
           </NextLink>
 
           <div className="footnote">
@@ -74,6 +71,7 @@ export default function MainCard({ story }: Props) {
           <StoryPickInfo
             displayPicks={displayPicks}
             pickCount={displayPicksCount}
+            storyId={story.id}
           />
           <StoryPickButton storyId={story.id} />
         </div>
