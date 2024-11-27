@@ -301,3 +301,37 @@ export const mostSponsorPublishersSchema = z.array(
 export type MostSponsorPublisher = z.infer<
   typeof mostSponsorPublishersSchema
 >[number]
+
+export const SearchResultsSchema = z.object({
+  member: z.array(
+    z.object({
+      id: z.string(),
+      customId: z.string(),
+      name: z.string(),
+      nickname: z.string(),
+      avatar: z.string(),
+      is_active: z.boolean(),
+    })
+  ),
+  collection: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      status: z.string(),
+      creator: z.object({
+        id: z.string(),
+        customId: z.string(),
+        nickname: z.string(),
+      }),
+      heroImage: z.object({
+        resized: z.object({
+          original: z.string(),
+        }),
+        urlOriginal: z.string(),
+      }),
+      readsCount: z.number(),
+    })
+  ),
+})
+
+export type SearchResults = z.infer<typeof SearchResultsSchema>
