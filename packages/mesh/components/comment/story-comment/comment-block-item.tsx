@@ -90,7 +90,7 @@ const CommentBlockItem = ({
       state.commentEditState.commentId === commentData.id ? (
         <CommentEditor />
       ) : (
-        <div className="flex max-w-full grow flex-col">
+        <div className="flex max-w-full grow flex-col" id={commentData.id}>
           <section className="flex w-full max-w-full grow items-center justify-between gap-[2px]">
             {/* meta data */}
             <div className="flex max-w-full grow items-center justify-between">
