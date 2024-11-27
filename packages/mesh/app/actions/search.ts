@@ -6,8 +6,6 @@ import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { logServerSideError } from '@/utils/log'
 
 export async function search(queryText: string) {
-  console.log('searching:', queryText)
-
   const data = await fetchRestfulPost<SearchResults>(
     RESTFUL_ENDPOINTS.search,
     {
@@ -20,7 +18,7 @@ export async function search(queryText: string) {
   )
 
   const result = SearchResultsSchema.safeParse(data)
-  console.log(result)
+
   if (result.success) {
     return result.data
   } else {
