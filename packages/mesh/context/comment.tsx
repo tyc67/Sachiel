@@ -410,7 +410,6 @@ export function CommentProvider({
   const handleEditComment = (
     e: React.MouseEvent<HTMLLIElement | HTMLButtonElement>
   ) => {
-    console.log('heer')
     e.stopPropagation()
     dispatch({ type: 'TOGGLE_COMMENT_EDITOR', payload: { isEditing: true } })
     dispatch({
