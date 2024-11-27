@@ -150,7 +150,10 @@ query GetMemberProfile($customId: String, $takes: Int!) {
         ...StoryInfo
         comment(
           orderBy: { createdAt: desc }
-          where: { member: { customId: { equals: $customId } } }
+          where: {
+            is_active: { equals: true }
+            member: { customId: { equals: $customId } }
+          }
           take: 1
         ) {
           ...AuthenticatedCommentInfo

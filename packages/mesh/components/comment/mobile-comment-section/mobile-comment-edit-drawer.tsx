@@ -23,12 +23,11 @@ const MobileCommentEditDrawer = () => {
     })
     dispatch({ type: 'RESET_EDIT_DRAWER' })
   })
-
   if (!commentEditState.isVisible) return null
   return (
     <ul
       ref={editDrawerRef}
-      className="fixed bottom-0 z-30 flex min-h-16 w-screen flex-col gap-6 bg-white p-5 shadow-[0_-8px_20px_0px_rgba(0,0,0,0.1)]"
+      className="fixed inset-x-0 bottom-0 z-30 flex min-h-16 w-screen flex-col gap-6 bg-white p-5 shadow-[0_-8px_20px_0px_rgba(0,0,0,0.1)]"
     >
       {commentEditState.mode === EditDrawerShowType.Other ? (
         <li

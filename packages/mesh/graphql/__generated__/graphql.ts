@@ -11695,6 +11695,29 @@ export const GetMemberProfileDocument = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'is_active',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'equals',
+                                              },
+                                              value: {
+                                                kind: 'BooleanValue',
+                                                value: true,
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                      {
+                                        kind: 'ObjectField',
                                         name: { kind: 'Name', value: 'member' },
                                         value: {
                                           kind: 'ObjectValue',
