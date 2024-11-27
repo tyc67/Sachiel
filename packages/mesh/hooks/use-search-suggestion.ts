@@ -35,8 +35,8 @@ export default function useSearchSuggestion(
   const fetchSuggestions = useCallback(
     async (query: string, searchSuggestionMax: number) => {
       if (!query) return null
-      const data = await search(query)
-      if (data) {
+      const data = await search(query, ['member'])
+      if (data && data.member) {
         return data.member.slice(0, searchSuggestionMax)
       }
       return null

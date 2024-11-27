@@ -5,12 +5,13 @@ import { type SearchResults, SearchResultsSchema } from '@/utils/data-schema'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { logServerSideError } from '@/utils/log'
 
-export async function search(queryText: string) {
+type SearchOption = 'member' | 'story' | 'collection'
+export async function search(queryText: string, objectives: SearchOption[]) {
   const data = await fetchRestfulPost<SearchResults>(
     RESTFUL_ENDPOINTS.search,
     {
       text: queryText,
-      objectives: ['member', 'collection'],
+      objectives,
     },
     {
       cache: 'no-cache',
