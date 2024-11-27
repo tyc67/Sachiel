@@ -8,7 +8,9 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
 import { type CommentType } from '@/types/profile'
+import { logStoryClick } from '@/utils/event-logs'
 
 import type { CollectionPick } from '../../_types/collection'
 import Comment from './comment'
@@ -27,8 +29,14 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
   const commentList = story?.comments || []
   const creatorComment = commentList[0]
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
+  const userPayload = useUserPayload()
   return (
-    <Link href={`/story/${story?.id}`}>
+    <Link
+      href={`/story/${story?.id}`}
+      onClick={() =>
+        logStoryClick(userPayload, story?.id ?? '', story?.title ?? '')
+      }
+    >
       <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">
         <Image
           src={story?.og_image || '/images/default-story-image.webP'}

@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect } from 'react'
+
 import useUserPayload from '@/hooks/use-user-payload'
-import { generateUserBehaviorLogInfo } from '@/utils/generate-user-behavior-log-info'
-import { sendUserBehaviorLog } from '@/utils/send-user-behavior-log'
 import { isPageReload } from '@/utils/common'
+import { generateUserBehaviorLogInfo } from '@/utils/generate-user-behavior-log-info'
 import { debounce } from '@/utils/performance'
+import { sendUserBehaviorLog } from '@/utils/send-user-behavior-log'
 
 export default function UserBehaviorLogger() {
   const userPayload = useUserPayload()
@@ -15,8 +16,9 @@ export default function UserBehaviorLogger() {
     if (isPageReload()) return
 
     const info = generateUserBehaviorLogInfo('pageview', userPayload)
-
-    sendUserBehaviorLog(info)
+    if (info) {
+      sendUserBehaviorLog(info)
+    }
   }, [userPayload])
 
   //exit event
@@ -41,29 +43,39 @@ export default function UserBehaviorLogger() {
     }
   }, [userPayload])
 
-  //scroll-to-80% event
+  // scroll event (50%、80%)
   useEffect(() => {
-    let ignore = false
+    let hasScrolledTo50 = false
+    let hasScrolledTo80 = false
 
-    function detectIsScrollTo80Percent() {
+    function detectScrollPercentage() {
       const totalPageHeight = document.body.scrollHeight
       const scrollPoint = window.scrollY + window.innerHeight
-      return scrollPoint >= totalPageHeight * 0.8
+      const scrollPercent = scrollPoint / totalPageHeight
+
+      return scrollPercent
     }
 
-    const scrollToBottomEvent = debounce(() => {
-      if (ignore) {
-        return
+    const handleScroll = debounce(() => {
+      const scrollPercent = detectScrollPercentage()
+
+      if (!hasScrolledTo50 && scrollPercent >= 0.5) {
+        hasScrolledTo50 = true
+        const info50 = generateUserBehaviorLogInfo('scroll-to-50%', userPayload)
+        sendUserBehaviorLog(info50)
       }
-      const isScrollToBottom = detectIsScrollTo80Percent()
-      if (isScrollToBottom) {
-        const info = generateUserBehaviorLogInfo('scroll-to-80%', userPayload)
-        sendUserBehaviorLog(info)
+
+      if (!hasScrolledTo80 && scrollPercent >= 0.8) {
+        hasScrolledTo80 = true
+        const info80 = generateUserBehaviorLogInfo('scroll-to-80%', userPayload)
+        sendUserBehaviorLog(info80)
       }
     }, 500)
-    window.addEventListener('scroll', scrollToBottomEvent)
+
+    window.addEventListener('scroll', handleScroll)
+
     return () => {
-      window.removeEventListener('scroll', scrollToBottomEvent)
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [userPayload])
 

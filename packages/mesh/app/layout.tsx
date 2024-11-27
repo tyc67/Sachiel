@@ -4,6 +4,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { Noto_Sans_TC } from 'next/font/google'
 
+import UserBehaviorLogger from '@/components/user-behavior-logger'
 import { GTM_ID } from '@/constants/config'
 import { PickModalProvider } from '@/context/pick-modal'
 import { PickersModalProvider } from '@/context/pickers-modal'
@@ -37,7 +38,11 @@ export default async function RootLayout({
           <ToastProvider>
             <PickModalProvider>
               <PickersModalProvider>
-                <RootLayoutWrapper>{children}</RootLayoutWrapper>
+                <RootLayoutWrapper>
+                  {' '}
+                  <UserBehaviorLogger />
+                  {children}
+                </RootLayoutWrapper>
               </PickersModalProvider>
             </PickModalProvider>
           </ToastProvider>

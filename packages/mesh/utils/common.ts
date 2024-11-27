@@ -10,7 +10,7 @@ export function getDeviceInfo(userAgent = '') {
   const browser = Bowser.getParser(userAgent)
   const deviceInfo = browser.getOS()
 
-  return { name: deviceInfo?.name, version: deviceInfo?.version }
+  return { name: deviceInfo?.name ?? '', version: deviceInfo?.version ?? '' }
 }
 
 export function getBrowserInfo(userAgent = '') {

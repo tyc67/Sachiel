@@ -1,13 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
 import { type MongoDBResponse } from '@/utils/data-schema'
+import { logStoryActionClick, logStoryClick } from '@/utils/event-logs'
 
 import FeedComment from './feed-comment'
 import FeedLatestAction from './feed-latest-action'
@@ -60,6 +61,11 @@ export default function Feed({
           href={`/story/${story.id}`}
           onClick={() => {
             logStoryClick(userPayload, story.id, story.og_title)
+            logStoryActionClick(
+              userPayload,
+              storyActions.actionType,
+              storyActions.memberIds
+            )
           }}
         >
           <h2 className="title-1 mb-2 line-clamp-2 break-words hover-or-active:underline">
@@ -155,7 +161,15 @@ function processStoryActions(storyAction: StoryActions) {
     commentsData = isPickAndComment ? filterActions('comment') : []
   }
 
+  const memberIds = [...new Set(storyAction.map((action) => action.member.id))]
+
   return {
+    memberIds,
+    actionType: {
+      isPick,
+      isComment,
+      isPickAndComment,
+    },
     picksNum,
     commentsNum,
     picksData,

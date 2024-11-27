@@ -1,9 +1,11 @@
+import type { PageInfo } from '@/types/user-behavior-log'
+
 import {
-  isServer,
-  getBrowserInfo,
-  getWindowSizeInfo,
-  getDeviceInfo,
   detectIsInApp,
+  getBrowserInfo,
+  getDeviceInfo,
+  getWindowSizeInfo,
+  isServer,
 } from './common'
 import { displayTime } from './story-display'
 
@@ -25,7 +27,7 @@ const generateUserBehaviorLogInfo = (
 
   const triggerEvent = {
     'event-type': eventType,
-    datetime: displayTime(new Date()),
+    datetime: displayTime(new Date()) ?? '',
   }
 
   const clientInfo = {
@@ -41,14 +43,20 @@ const generateUserBehaviorLogInfo = (
     screenSize: getWindowSizeInfo(),
   }
 
-  const pageInfo = {
+  const pageInfo: PageInfo = {
     referrer: document.referrer,
     pageUrl: window.location.href,
     pageName: pathname,
   }
 
   if (pathname.startsWith('/story/')) {
-    pageInfo['pageName'] = pathname.split('/story/')?.[1] ?? ''
+    pageInfo['pageName'] = { storyId: pathname.split('/story/')?.[1] ?? '' }
+  }
+
+  if (pathname.startsWith('/collection/')) {
+    pageInfo['pageName'] = {
+      collectionId: pathname.split('/story/')?.[1] ?? '',
+    }
   }
 
   return { triggerEvent, clientInfo, pageInfo }
