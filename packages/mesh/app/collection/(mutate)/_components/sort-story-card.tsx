@@ -10,7 +10,7 @@ import { ImageCategory } from '@/constants/fallback-src'
 import { useEditCollection } from '@/context/edit-collection'
 import { displayTimeFromNow } from '@/utils/story-display'
 
-import type { CollectionPickStory } from '../_types/edit-collection'
+import type { CollectionPickStory } from '../_types/collection'
 
 export default function SortStoryCard({
   story,

@@ -7,7 +7,7 @@ import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
 import { displayTimeFromNow } from '@/utils/story-display'
 
-import type { CollectionPickStory } from '../_types/edit-collection'
+import type { CollectionPickStory } from '../_types/collection'
 import Checkbox from './checkbox'
 
 export default forwardRef(function PickStoryCard(

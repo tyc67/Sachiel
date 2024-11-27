@@ -5,10 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { useEditCollection } from '@/context/edit-collection'
 import useInView from '@/hooks/use-in-view'
 
-import type {
-  CollectionPickStory,
-  PickOrBookmark,
-} from '../_types/edit-collection'
+import type { CollectionPickStory, PickOrBookmark } from '../_types/collection'
 import PickStoryCard from './pick-story-card'
 
 export default function InfiniteCollectionPicks({

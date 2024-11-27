@@ -1,4 +1,4 @@
-import type { PickOrBookmark } from '../_types/edit-collection'
+import type { PickOrBookmark } from '../_types/collection'
 
 export function mergePickAndBookmarkStories(
   picks: PickOrBookmark[],

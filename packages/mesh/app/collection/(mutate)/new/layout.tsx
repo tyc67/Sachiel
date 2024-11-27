@@ -3,9 +3,9 @@
 import LayoutTemplate from '@/components/layout-template'
 import EditCollectionProvider from '@/context/edit-collection'
 
-import MobileGoBackButton from '../_components/mobile/mobile-go-back-button'
-import MobileGoNextButton from '../_components/mobile/mobile-go-next-button'
-import MobileTitle from '../_components/mobile/mobile-title'
+import MobileGoBackButton from './_components/mobile/go-back-button'
+import MobileGoNextButton from './_components/mobile/go-next-button'
+import MobileTitle from './_components/mobile/title'
 
 export default function NewCollectionLayout({
   children,

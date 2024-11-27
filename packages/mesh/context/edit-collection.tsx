@@ -14,9 +14,11 @@ import {
   type CollectionPickStory,
   type PickOrBookmark,
   CollectionFormat,
-  DesktopEditCollectionStep,
-  MobielEditCollectionStep,
-} from '@/app/collection/(mutate)/_types/edit-collection'
+} from '@/app/collection/(mutate)/_types/collection'
+import {
+  DesktopCreateCollectionStep,
+  MobielCreateCollectionStep,
+} from '@/app/collection/(mutate)/new/_types/create-collection'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { clearCreateCollectionStoryLS } from '@/utils/cross-page-create-collection'
 import { setCrossPageToast } from '@/utils/cross-page-toast'
@@ -28,15 +30,15 @@ import {
 import { useUser } from './user'
 
 const mobileStepNames = [
-  MobielEditCollectionStep.MobileStep1SelectStories,
-  MobielEditCollectionStep.MobileStep2SetTitle,
-  MobielEditCollectionStep.MobileStep3SetSummary,
-  MobielEditCollectionStep.MobileStep4SortStories,
+  MobielCreateCollectionStep.Step1SelectStories,
+  MobielCreateCollectionStep.Step2SetTitle,
+  MobielCreateCollectionStep.Step3SetSummary,
+  MobielCreateCollectionStep.Step4SortStories,
 ]
 
 const desktopStepNames = [
-  DesktopEditCollectionStep.DesktopStep1EditAll,
-  DesktopEditCollectionStep.DesktopStep2SortStories,
+  DesktopCreateCollectionStep.Step1EditAll,
+  DesktopCreateCollectionStep.Step2SortStories,
 ]
 
 type StoryCandidates = {
@@ -67,8 +69,8 @@ type EditCollectionContextValue = {
   checkDesktopStepFullfilled: () => boolean
   mobileTitle: string
   desktopTitle: string
-  mobileStepName: MobielEditCollectionStep
-  desktopStepName: DesktopEditCollectionStep
+  mobileStepName: MobielCreateCollectionStep
+  desktopStepName: DesktopCreateCollectionStep
 }
 
 const EditCollectionContext = createContext<
@@ -107,13 +109,13 @@ export default function EditCollectionProvider({
 
   const checkMobileStepFullfilled = () => {
     switch (mobileStepName) {
-      case MobielEditCollectionStep.MobileStep1SelectStories:
+      case MobielCreateCollectionStep.Step1SelectStories:
         return Boolean(collectionPickStories.length)
-      case MobielEditCollectionStep.MobileStep2SetTitle:
+      case MobielCreateCollectionStep.Step2SetTitle:
         return Boolean(heroImage) && Boolean(title)
-      case MobielEditCollectionStep.MobileStep3SetSummary:
+      case MobielCreateCollectionStep.Step3SetSummary:
         return !summary || summary.length <= maxSummaryLength
-      case MobielEditCollectionStep.MobileStep4SortStories:
+      case MobielCreateCollectionStep.Step4SortStories:
         return true
       default:
         return false
@@ -122,14 +124,14 @@ export default function EditCollectionProvider({
 
   const checkDesktopStepFullfilled = () => {
     switch (desktopStepName) {
-      case DesktopEditCollectionStep.DesktopStep1EditAll:
+      case DesktopCreateCollectionStep.Step1EditAll:
         return (
           Boolean(heroImage) &&
           Boolean(collectionPickStories.length) &&
           Boolean(title) &&
           (!summary || summary.length <= maxSummaryLength)
         )
-      case DesktopEditCollectionStep.DesktopStep2SortStories:
+      case DesktopCreateCollectionStep.Step2SortStories:
         return true
       default:
         return false
@@ -138,15 +140,15 @@ export default function EditCollectionProvider({
 
   const getMobileTitle = useCallback(() => {
     switch (mobileStepName) {
-      case MobielEditCollectionStep.MobileStep1SelectStories: {
+      case MobielCreateCollectionStep.Step1SelectStories: {
         const pickedStoryCount = collectionPickStories.length
         return pickedStoryCount ? `已選${pickedStoryCount}篇` : '選擇文章'
       }
-      case MobielEditCollectionStep.MobileStep2SetTitle:
+      case MobielCreateCollectionStep.Step2SetTitle:
         return '標題'
-      case MobielEditCollectionStep.MobileStep3SetSummary:
+      case MobielCreateCollectionStep.Step3SetSummary:
         return '敘述'
-      case MobielEditCollectionStep.MobileStep4SortStories:
+      case MobielCreateCollectionStep.Step4SortStories:
         return '排序'
       default:
         return '建立集錦'
@@ -155,9 +157,9 @@ export default function EditCollectionProvider({
 
   const getDesktopTitle = useCallback(() => {
     switch (desktopStepName) {
-      case DesktopEditCollectionStep.DesktopStep1EditAll:
+      case DesktopCreateCollectionStep.Step1EditAll:
         return '建立集錦'
-      case DesktopEditCollectionStep.DesktopStep2SortStories:
+      case DesktopCreateCollectionStep.Step2SortStories:
         return '排序'
       default:
         return '建立集錦'
