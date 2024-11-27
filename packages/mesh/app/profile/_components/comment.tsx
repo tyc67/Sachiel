@@ -1,6 +1,5 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
 import MobileCommentEditDrawer from '@/components/comment/mobile-comment-section/mobile-comment-edit-drawer'
 import MobileCommentEditor from '@/components/comment/mobile-comment-section/mobile-comment-editor'
@@ -84,10 +83,6 @@ const Comment: React.FC<CommentProps> = ({
       handleToggleClamp()
     }
   }
-
-  useEffect(() => {
-    console.log(state.commentList)
-  })
   {
     /* mobile has no default comment UI; instead desktop has. */
   }
