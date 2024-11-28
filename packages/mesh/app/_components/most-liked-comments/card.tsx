@@ -1,14 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import Button from '@/components/button'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
 import { useUser } from '@/context/user'
 import { useFollow } from '@/hooks/use-follow'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { Comment } from '@/types/homepage'
+import { logStoryClick } from '@/utils/event-logs'
 import { displayTimeFromNow } from '@/utils/story-display'
 
 type Props = {
@@ -87,7 +88,8 @@ export default function MostLikedCommentCard({ comment, rank }: Props) {
                   logStoryClick(
                     userPayload,
                     comment.story?.id ?? '',
-                    comment.story?.title ?? ''
+                    comment.story?.title ?? '',
+                    comment.story?.source.title ?? ''
                   )
                 }
               >

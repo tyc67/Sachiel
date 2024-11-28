@@ -1,19 +1,22 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
+import { logStoryClick } from '@/utils/event-logs'
 
 type Story = MostSponsorPublisher['stories'][number]
 
 const PublisherStory = ({
   story,
   showImage,
+  publisherName,
 }: {
   story: Story
   showImage: boolean
+  publisherName: string
 }) => {
   const userPayload = useUserPayload()
 
@@ -21,7 +24,9 @@ const PublisherStory = ({
     <article className="border-b py-3 last-of-type:border-b-0">
       <Link
         href={`/story/${story.id}`}
-        onClick={() => logStoryClick(userPayload, story.id, story.title)}
+        onClick={() =>
+          logStoryClick(userPayload, story.id, story.title, publisherName)
+        }
       >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1]">
@@ -88,7 +93,12 @@ export default function PublisherCard({
         <PublisherDonateButton publisherId={publisherAndStories.publisher.id} />
       </div>
       {publisherAndStories.stories.map((story, i) => (
-        <PublisherStory key={story.id} story={story} showImage={i === 0} />
+        <PublisherStory
+          key={story.id}
+          story={story}
+          showImage={i === 0}
+          publisherName={publisherAndStories.publisher.title}
+        />
       ))}
     </section>
   )

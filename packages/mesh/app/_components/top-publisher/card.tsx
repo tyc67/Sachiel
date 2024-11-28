@@ -1,18 +1,21 @@
 'use client'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
+
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { SponsoredStory } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
 
 const StoryCard = ({
   showImage,
   story,
+  publisherName,
 }: {
   showImage: boolean
   story: SponsoredStory['stories'][number]
+  publisherName: string
 }) => {
   const userPayload = useUserPayload()
 
@@ -20,7 +23,9 @@ const StoryCard = ({
     <article className="border-b-[0.5px] border-primary-200 py-3 last:border-b-0">
       <NextLink
         href={`/story/${story.id}`}
-        onClick={() => logStoryClick(userPayload, story.id, story.title)}
+        onClick={() =>
+          logStoryClick(userPayload, story.id, story.title, publisherName)
+        }
       >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
@@ -82,7 +87,12 @@ export default function TopPublisherCard({ publisher }: Props) {
         <PublisherDonateButton publisherId={publisher.id} />
       </div>
       {publisher.stories.map((story, index) => (
-        <StoryCard showImage={index === 0} story={story} key={story.id} />
+        <StoryCard
+          showImage={index === 0}
+          story={story}
+          key={story.id}
+          publisherName={publisher.title}
+        />
       ))}
     </div>
   )

@@ -8,9 +8,9 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory, Story } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
 
 type Props = {
   isReadrStory?: boolean
@@ -61,7 +61,9 @@ export default function FeaturedCard({
           <h3 className="title-2 lg:title-1 mb-2 text-primary-700 hover-or-active:underline lg:mb-3">
             <NextLink
               href={`/story/${story.id}`}
-              onClick={() => logStoryClick(userPayload, story.id, story.title)}
+              onClick={() =>
+                logStoryClick(userPayload, story.id, story.title, publisher)
+              }
             >
               {story.title}
             </NextLink>

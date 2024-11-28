@@ -60,7 +60,12 @@ export default function Feed({
         <Link
           href={`/story/${story.id}`}
           onClick={() => {
-            logStoryClick(userPayload, story.id, story.og_title)
+            logStoryClick(
+              userPayload,
+              story.id,
+              story.og_title,
+              story.publisher.title
+            )
             logStoryActionClick(
               userPayload,
               storyActions.actionType,

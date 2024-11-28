@@ -34,7 +34,12 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
     <Link
       href={`/story/${story?.id}`}
       onClick={() =>
-        logStoryClick(userPayload, story?.id ?? '', story?.title ?? '')
+        logStoryClick(
+          userPayload,
+          story?.id ?? '',
+          story?.title ?? '',
+          story?.source?.title ?? ''
+        )
       }
     >
       <section className="relative hidden md:block md:aspect-[2/1] md:w-full md:overflow-hidden md:rounded-t-md">

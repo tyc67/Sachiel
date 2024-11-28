@@ -2,18 +2,21 @@
 
 import NextImage from 'next/image'
 import NextLink from 'next/link'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { SponsoredStoryByCategory } from '@/types/homepage'
+import { logStoryClick } from '@/utils/event-logs'
 
 const StoryCard = ({
   showImage,
   story,
+  publisherName,
 }: {
   showImage: boolean
   story: SponsoredStoryByCategory['stories'][number]
+  publisherName: string
 }) => {
   const userPayload = useUserPayload()
 
@@ -34,7 +37,9 @@ const StoryCard = ({
         <div>
           <h3
             className="subtitle-2 mb-1 text-primary-700 hover-or-active:underline"
-            onClick={() => logStoryClick(userPayload, story.id, story.title)}
+            onClick={() =>
+              logStoryClick(userPayload, story.id, story.title, publisherName)
+            }
           >
             {story.title}
           </h3>
@@ -87,7 +92,12 @@ export default function PublisherCard({ data }: Props) {
         <PublisherDonateButton publisherId={data.publisher.id} />
       </div>
       {data.stories.map((story, index) => (
-        <StoryCard showImage={index === 0} story={story} key={story.id} />
+        <StoryCard
+          showImage={index === 0}
+          story={story}
+          key={story.id}
+          publisherName={data.publisher.title}
+        />
       ))}
     </div>
   )

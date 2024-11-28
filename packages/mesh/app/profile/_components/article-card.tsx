@@ -189,7 +189,12 @@ const ArticleCard = ({
             className="flex grow flex-col"
             href={redirectLink()}
             onClick={() =>
-              logStoryClick(userPayload, storyData.id, storyData?.title ?? '')
+              logStoryClick(
+                userPayload,
+                storyData.id,
+                storyData?.title ?? '',
+                storyGetters.source(storyData)
+              )
             }
           >
             {shouldShowSource && (

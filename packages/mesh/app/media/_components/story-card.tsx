@@ -4,13 +4,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
+import { logStoryClick } from '@/utils/event-logs'
 
 import { type Story } from './media-stories'
 
@@ -70,7 +71,13 @@ export default forwardRef(function StoryCard(
         <Link
           href={`/story/${story.id}`}
           onClick={() =>
-            logStoryClick(userPayload, story.id, story?.title ?? '', true)
+            logStoryClick(
+              userPayload,
+              story.id,
+              story?.title ?? '',
+              story.source?.title ?? '',
+              true
+            )
           }
         >
           <div className="mt-1 flex flex-row justify-between gap-3 sm:gap-10">

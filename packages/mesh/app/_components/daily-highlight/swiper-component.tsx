@@ -3,11 +3,12 @@
 import NextLink from 'next/link'
 import type { RefObject } from 'react'
 import { useRef } from 'react'
-import { logStoryClick } from '@/utils/event-logs'
-import useUserPayload from '@/hooks/use-user-payload'
+
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { DailyStory } from '@/types/homepage'
+import { logStoryClick } from '@/utils/event-logs'
 
 type Props = {
   stories: DailyStory[]
@@ -43,7 +44,14 @@ function StoryCard({ story }: Story) {
       <h3 className="subtitle-2 mb-2 line-clamp-2 text-primary-700 hover-or-active:underline">
         <NextLink
           href={`story/${story.id}`}
-          onClick={() => logStoryClick(userPayload, story.id, story.title)}
+          onClick={() =>
+            logStoryClick(
+              userPayload,
+              story.id,
+              story.title,
+              story.source.title
+            )
+          }
         >
           {story.title}
         </NextLink>

@@ -6,6 +6,7 @@ export function logStoryClick(
   userPayload: UserPayload,
   storyId: string,
   storyTitle: string,
+  publisher: string,
   isRelatedStory = false
 ) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
@@ -22,6 +23,7 @@ export function logStoryClick(
           story: {
             storyId,
             storyTitle,
+            publisher,
           },
         }
 
