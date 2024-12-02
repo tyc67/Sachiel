@@ -10,12 +10,18 @@ import Button from '@/components/button'
 import Icon from '@/components/icon'
 import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
-const SearchBar = dynamic(() => import('@/components/search-bar'), {
-  ssr: false,
-})
-const SearchModal = dynamic(() => import('@/components/search-modal'), {
-  ssr: false,
-})
+const DesktopSearchBar = dynamic(
+  () => import('@/components/desktop-search-bar'),
+  {
+    ssr: false,
+  }
+)
+const MobileSearchWrapper = dynamic(
+  () => import('@/components/mobile-search-wrapper'),
+  {
+    ssr: false,
+  }
+)
 
 export default function DefaultHeader() {
   // TODO: implement notification system
@@ -25,7 +31,6 @@ export default function DefaultHeader() {
   const { user } = useUser()
   const isLoggedIn = isUserLoggedIn(user)
   const newNotification = true
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
 
   const handleLoginButton = () => {
     localStorage.setItem('login-redirect', pathname)
@@ -54,14 +59,12 @@ export default function DefaultHeader() {
                 className="hidden sm:block"
               />
             </Link>
-            <SearchBar className="hidden sm:flex" />
+            <DesktopSearchBar className="hidden sm:flex" />
           </div>
           {/* right side block */}
           <div className="flex">
             <HeaderIconWrapper className="sm:hidden">
-              <button onClick={() => setIsSearchModalOpen(true)}>
-                <Icon size="2xl" iconName="icon-search" />
-              </button>
+              <MobileSearchWrapper />
             </HeaderIconWrapper>
             {isLoggedIn ? (
               <HeaderIconWrapper className="">
@@ -114,10 +117,6 @@ export default function DefaultHeader() {
           </div>
         </div>
       </header>
-      <SearchModal
-        isOpen={isSearchModalOpen}
-        onClose={() => setIsSearchModalOpen(false)}
-      />
     </>
   )
 }

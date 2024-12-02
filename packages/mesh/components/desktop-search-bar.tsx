@@ -1,3 +1,5 @@
+'use client'
+
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
@@ -8,15 +10,18 @@ import useSearchSuggestion from '@/hooks/use-search-suggestion'
 import Icon from './icon'
 import Avatar from './story-card/avatar'
 
-export default function SearchBar({ className = '' }: { className?: string }) {
+export default function DesktopSearchBar({
+  className = '',
+}: {
+  className?: string
+}) {
   const inputRef = useRef<HTMLInputElement>(null)
   const {
     searchText,
     searchSuggestion,
-    recentSearchViewData,
+    recentSearch,
     handleSearchTextChange,
     handleRemoveRecentSearch,
-    handleToggleShowAll,
   } = useSearchSuggestion(inputRef)
   const [isFocused, setIsFocused] = useState(false)
   const preventBlurRef = useRef(false)
@@ -24,9 +29,9 @@ export default function SearchBar({ className = '' }: { className?: string }) {
   const activeDropdown = useMemo(() => {
     if (!isFocused) return null
     if (searchSuggestion) return 'suggestion'
-    if (recentSearchViewData.length > 0) return 'recent'
+    if (recentSearch.length > 0) return 'recent'
     return null
-  }, [isFocused, recentSearchViewData.length, searchSuggestion])
+  }, [isFocused, recentSearch.length, searchSuggestion])
 
   useEffect(() => {
     if (isFocused) {
@@ -98,30 +103,14 @@ export default function SearchBar({ className = '' }: { className?: string }) {
         autoComplete="off"
       />
       {activeDropdown === 'recent' && (
-        <div className="absolute left-0 top-full mt-1 w-full rounded-md bg-white shadow-md">
-          <li className="flex flex-row justify-between px-5 pb-3 pt-4">
-            <p className="list-title">搜尋歷史</p>
-            <button
-              className="button text-primary-500"
-              onMouseDown={() => {
-                preventBlurRef.current = true
-              }}
-              onMouseUp={() => {
-                preventBlurRef.current = false
-              }}
-              onClick={handleToggleShowAll}
-            >
-              查看全部
-            </button>
-          </li>
+        <div className="absolute left-0 top-full z-modal mt-1 w-full rounded-md bg-white shadow-md">
+          <p className="list-title px-5 pb-3 pt-4">搜尋歷史</p>
           <ul className="max-h-[520px] overflow-y-auto">
-            {recentSearchViewData.map((record, index) => (
+            {recentSearch.map((record, index) => (
               <Fragment key={index}>
                 <li
                   className={`flex cursor-pointer flex-row p-5 hover:bg-primary-100 ${
-                    index === recentSearchViewData.length - 1
-                      ? 'rounded-b-md'
-                      : '`'
+                    index === recentSearch.length - 1 ? 'rounded-b-md' : '`'
                   }`}
                   onMouseDown={() => {
                     preventBlurRef.current = true
@@ -143,7 +132,7 @@ export default function SearchBar({ className = '' }: { className?: string }) {
         </div>
       )}
       {activeDropdown === 'suggestion' && (
-        <ul className="absolute left-0 top-full mt-1 w-full rounded-md bg-white shadow-md">
+        <ul className="absolute left-0 top-full z-modal mt-1 w-full rounded-md bg-white shadow-md">
           <li
             className="flex cursor-pointer flex-row items-center rounded-t-md px-5 py-[10px] hover:bg-primary-100"
             onClick={() => router.push(`/search?q=${searchText}`)}

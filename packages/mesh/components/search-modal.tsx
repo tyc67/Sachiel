@@ -20,16 +20,15 @@ export default function SearchModal({
   const {
     searchText,
     searchSuggestion,
-    recentSearchViewData,
+    recentSearch,
     handleSearchTextChange,
     handleRemoveRecentSearch,
-    handleToggleShowAll,
   } = useSearchSuggestion(inputRef)
   const activeRender = useMemo(() => {
     if (searchSuggestion) return 'suggestion'
-    if (recentSearchViewData.length > 0) return 'recent'
+    if (recentSearch.length > 0) return 'recent'
     return null
-  }, [recentSearchViewData.length, searchSuggestion])
+  }, [recentSearch.length, searchSuggestion])
 
   useEffect(() => {
     if (isOpen) {
@@ -72,17 +71,9 @@ export default function SearchModal({
         </div>
         {activeRender === 'recent' && (
           <div className="h-[calc(100vh-60px)] bg-white">
-            <li className="flex flex-row justify-between px-5 pb-1 pt-4">
-              <p className="list-title">搜尋歷史</p>
-              <button
-                className="button text-primary-500"
-                onClick={handleToggleShowAll}
-              >
-                查看全部
-              </button>
-            </li>
+            <p className="list-title px-5 pb-1 pt-4">搜尋歷史</p>
             <ul className="h-[calc(100vh-112px)] overflow-y-auto">
-              {recentSearchViewData.map((record, index) => (
+              {recentSearch.map((record, index) => (
                 <Fragment key={index}>
                   <li
                     className="flex flex-row p-5"

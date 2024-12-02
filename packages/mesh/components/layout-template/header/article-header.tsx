@@ -7,7 +7,17 @@ import { twMerge } from 'tailwind-merge'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
-// import SearchBar from '@/components/search-bar'
+const DesktopSearchBar = dynamic(
+  () => import('@/components/desktop-search-bar'),
+  { ssr: false }
+)
+
+const MobileSearchWrapper = dynamic(
+  () => import('@/components/mobile-search-wrapper'),
+  { ssr: false }
+)
+import dynamic from 'next/dynamic'
+
 import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
 
@@ -45,16 +55,12 @@ export default function ArticleHeader({ showNav }: { showNav: () => void }) {
               />
             </Link>
           </div>
-          {/* TODO: implement search UI */}
-          {/* <SearchBar className="hidden sm:flex" /> */}
+          <DesktopSearchBar className="hidden sm:flex" />
         </div>
         {/* right side block */}
         <div className="flex">
           <HeaderIconWrapper className="sm:hidden">
-            {/* TODO: replace with correct path */}
-            <Link href="/">
-              <Icon size="2xl" iconName="icon-search" />
-            </Link>
+            <MobileSearchWrapper />
           </HeaderIconWrapper>
           {isLoggedIn ? (
             newNotification ? (

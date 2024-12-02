@@ -14,7 +14,6 @@ import { debounce } from '@/utils/performance'
 
 const recentSearchMax = 20
 const searchSuggestionMax = 7
-const defaultVisibleCount = 10
 
 export default function useSearchSuggestion(
   inputRef: RefObject<HTMLInputElement>
@@ -24,7 +23,6 @@ export default function useSearchSuggestion(
     SearchResults['member'] | null
   >(null)
   const [recentSearch, setRecentSearch] = useState<string[]>(getRecentSearch)
-  const [visibleCount, setVisibleCount] = useState(defaultVisibleCount)
 
   useEffect(() => {
     if (!searchText.trim()) {
@@ -44,26 +42,6 @@ export default function useSearchSuggestion(
     []
   )
 
-  const updateRecentSearch = useCallback(
-    (
-      action: 'add' | 'remove',
-      recentSearchMax: number,
-      query: string,
-      prev: string[]
-    ) => {
-      let updated = [...prev]
-      if (action === 'remove') {
-        updated = updated.filter((item) => item !== query)
-      } else if (action === 'add' && query) {
-        updated = [query, ...updated.filter((item) => item !== query)]
-      }
-      updated = updated.slice(0, recentSearchMax)
-      localStorage.setItem('recent-search', JSON.stringify(updated))
-      return updated
-    },
-    []
-  )
-
   const debouncedFetch = useMemo(
     () =>
       debounce(async (query: string) => {
@@ -75,7 +53,7 @@ export default function useSearchSuggestion(
           )
         }
       }, 500),
-    [fetchSuggestions, updateRecentSearch]
+    [fetchSuggestions]
   )
 
   const handleSearchTextChange = useCallback(
@@ -96,30 +74,42 @@ export default function useSearchSuggestion(
       )
       inputRef.current?.focus()
     },
-    [inputRef, updateRecentSearch]
+    [inputRef]
   )
-
-  const handleToggleShowAll = () => {
-    setVisibleCount((prev) =>
-      prev === defaultVisibleCount ? recentSearch.length : defaultVisibleCount
-    )
-    inputRef.current?.focus()
-  }
-
-  const recentSearchViewData = recentSearch.slice(0, visibleCount)
 
   return {
     searchText,
     searchSuggestion,
     recentSearch,
-    recentSearchViewData,
     handleSearchTextChange,
     handleRemoveRecentSearch,
-    handleToggleShowAll,
   }
 }
 
 const getRecentSearch = () => {
   const storedSearches = localStorage.getItem('recent-search')
-  return storedSearches ? JSON.parse(storedSearches) : []
+  try {
+    return storedSearches ? JSON.parse(storedSearches) : []
+  } catch (error) {
+    console.error('Failed to parse recent searches from localStorage:', error)
+    localStorage.removeItem('recent-search')
+    return []
+  }
+}
+
+const updateRecentSearch = (
+  action: 'add' | 'remove',
+  recentSearchMax: number,
+  query: string,
+  prev: string[]
+) => {
+  let updated = [...prev]
+  if (action === 'remove') {
+    updated = updated.filter((item) => item !== query)
+  } else if (action === 'add' && query) {
+    updated = [query, ...updated.filter((item) => item !== query)]
+  }
+  updated = updated.slice(0, recentSearchMax)
+  localStorage.setItem('recent-search', JSON.stringify(updated))
+  return updated
 }
