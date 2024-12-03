@@ -38,7 +38,7 @@ export default function StorySection({ activeTitle, stories, slug }: Props) {
 
       {stories && stories.length > 0 ? (
         <div className="flex flex-col gap-y-5 lg:flex-row lg:gap-x-10">
-          <div>
+          <div className="lg:max-w-[500px]">
             <MainCard story={stories[0]} />
             {stories[0].comment &&
               Object.keys(stories[0].comment).length !== 0 && (
