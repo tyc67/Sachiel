@@ -17,6 +17,7 @@ export function logStoryClick(
           relatedStories: {
             relatedStoryId: storyId,
             relatedTitle: storyTitle,
+            publisher,
           },
         }
       : {
@@ -177,6 +178,45 @@ export function logVideoPlay(userPayload: UserPayload) {
     const interaction = {
       media: {
         videoPlay: true,
+      },
+    }
+
+    const info = {
+      ...basicInfo,
+      interaction,
+    }
+
+    sendUserBehaviorLog(info)
+  }
+}
+
+export function logSponsor(userPayload: UserPayload, publisher: string) {
+  const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
+
+  if (basicInfo) {
+    const interaction = {
+      sponsorAction: {
+        sponsor: publisher,
+      },
+    }
+
+    const info = {
+      ...basicInfo,
+      interaction,
+    }
+
+    sendUserBehaviorLog(info)
+  }
+}
+
+export function logPayment(userPayload: UserPayload, storyId: string) {
+  const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
+
+  if (basicInfo) {
+    const interaction = {
+      unlock: {
+        unlockAction: true,
+        storyId,
       },
     }
 

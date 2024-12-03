@@ -43,6 +43,7 @@ const generateUserBehaviorLogInfo = (
     screenSize: getWindowSizeInfo(),
   }
 
+  // TODO: add pageType if pageType is defined
   const pageInfo: PageInfo = {
     referrer: document.referrer,
     pageUrl: window.location.href,
