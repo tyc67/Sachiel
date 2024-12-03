@@ -32,6 +32,7 @@ export enum EditDrawerBlockType {
   Empty = '',
   Popular = 'popular',
   All = 'all',
+  Profile = 'profile',
 }
 
 interface CommentEditState {
@@ -169,7 +170,6 @@ function commentReducer(state: State, action: Action): State {
         ...state,
         commentList: state.commentList.map((comment) => {
           if (comment.id !== action.payload.commentId) return comment
-
           // 檢查評論類型並相應更新
           if ('isMemberLiked' in comment) {
             const currentLikes =
@@ -227,7 +227,9 @@ interface CommentContextType {
     targetId: string
   }) => Promise<void>
   handleDeleteComment: (e: React.MouseEvent<HTMLLIElement>) => void
-  handleEditComment: (e: React.MouseEvent<HTMLLIElement>) => void
+  handleEditComment: (
+    e: React.MouseEvent<HTMLLIElement | HTMLButtonElement>
+  ) => void
   handleReport: (e: React.MouseEvent<HTMLLIElement>) => void
   updateCommentLikeStatus: (
     commentId: string,
@@ -405,7 +407,9 @@ export function CommentProvider({
       payload: { isVisible: true },
     })
   }
-  const handleEditComment = (e: React.MouseEvent<HTMLLIElement>) => {
+  const handleEditComment = (
+    e: React.MouseEvent<HTMLLIElement | HTMLButtonElement>
+  ) => {
     e.stopPropagation()
     dispatch({ type: 'TOGGLE_COMMENT_EDITOR', payload: { isEditing: true } })
     dispatch({

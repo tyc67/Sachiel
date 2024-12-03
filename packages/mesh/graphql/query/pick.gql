@@ -1,0 +1,78 @@
+query GetMorePicks($customId: String, $takes: Int = 20, $start: Int = 1) {
+  picks(
+    skip: $start
+    take: $takes
+    where: {
+      AND: {
+        objective: { equals: "story" }
+        kind: { equals: "read" }
+        member: { customId: { equals: $customId }, is_active: { equals: true } }
+      }
+    }
+  ) {
+    story {
+      ...StoryInfo
+      comment(
+        orderBy: { createdAt: desc }
+        where: { member: { customId: { equals: $customId } } }
+        take: 1
+      ) {
+        ...AuthenticatedCommentInfo
+      }
+    }
+    collection {
+      ...CollectionInfo
+    }
+    kind
+    objective
+  }
+}
+
+query GetMoreBookmarks($customId: String, $takes: Int = 20, $start: Int = 1) {
+  picks(
+    skip: $start
+    take: $takes
+    where: {
+      AND: {
+        objective: { equals: "story" }
+        kind: { equals: "bookmark" }
+        member: { customId: { equals: $customId }, is_active: { equals: true } }
+      }
+    }
+  ) {
+    story {
+      ...StoryInfo
+      comment(
+        orderBy: { createdAt: desc }
+        where: { member: { customId: { equals: $customId } } }
+        take: 1
+      ) {
+        ...AuthenticatedCommentInfo
+      }
+    }
+    kind
+    objective
+  }
+}
+
+query GetMoreCollections($customId: String, $takes: Int = 20, $start: Int = 1) {
+  picks(
+    skip: $start
+    take: $takes
+    where: {
+      AND: {
+        objective: { equals: "story" }
+        # filter out picks only left collections
+        collection: { id: { gt: 0 } }
+        kind: { equals: "read" }
+        member: { customId: { equals: $customId }, is_active: { equals: true } }
+      }
+    }
+  ) {
+    collection {
+      ...CollectionInfo
+    }
+    kind
+    objective
+  }
+}

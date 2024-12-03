@@ -160,7 +160,6 @@ const ArticleCard = ({
       <CommentProvider
         initialComments={storyData?.comment || []}
         commentObjective={CommentObjective.Story}
-        // TODO: check what it use
         commentObjectiveData={storyData}
       >
         <Link className="md:flex md:w-full" href={redirectLink()}>
@@ -263,7 +262,11 @@ const ArticleCard = ({
               avatar={avatar}
               clampLineCount={3}
               canToggle={false}
-              redirectUrl={storyGetters.redirectUrl(storyData)}
+              redirectUrl={
+                // NOTE: 目前只有story有留言，因此沒有條件
+                storyGetters.redirectUrl(storyData) +
+                `#${(authorComment as CommentType).id}`
+              }
             />
           )}
         </div>

@@ -44,7 +44,7 @@ const CollectionsCarouselElement = ({
           </div>
           <p className="footnote pb-2 text-primary-600">
             <span className="font-medium text-primary-700">{picksCount}</span>
-            精選
+            人精選
           </p>
         </Link>
         {shouldShowCollectionPickButton ? (
