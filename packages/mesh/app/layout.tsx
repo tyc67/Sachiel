@@ -39,7 +39,6 @@ export default async function RootLayout({
             <PickModalProvider>
               <PickersModalProvider>
                 <RootLayoutWrapper>
-                  {' '}
                   <UserBehaviorLogger />
                   {children}
                 </RootLayoutWrapper>

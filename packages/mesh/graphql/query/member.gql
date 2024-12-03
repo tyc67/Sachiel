@@ -75,7 +75,6 @@ query GetCurrentUserMemberId($uid: String!) {
     name
     customId
     email
-    firebaseId
     avatar
     avatar_image {
       id

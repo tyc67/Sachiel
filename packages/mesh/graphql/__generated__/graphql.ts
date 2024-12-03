@@ -4788,7 +4788,6 @@ export type GetCurrentUserMemberIdQuery = {
     name?: string | null
     customId?: string | null
     email?: string | null
-    firebaseId?: string | null
     avatar?: string | null
     intro?: string | null
     wallet?: string | null
@@ -11095,7 +11094,6 @@ export const GetCurrentUserMemberIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'firebaseId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
                 {
                   kind: 'Field',

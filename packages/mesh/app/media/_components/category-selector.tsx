@@ -1,7 +1,6 @@
 import type { MouseEventHandler } from 'react'
 import { useRef, useState } from 'react'
-import useUserPayload from '@/hooks/use-user-payload'
-import { logCategoryClick } from '@/utils/event-logs'
+
 import { addCategory, removeCategory } from '@/app/actions/edit-category'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
@@ -10,12 +9,14 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useInView from '@/hooks/use-in-view'
+import useUserPayload from '@/hooks/use-user-payload'
 import {
   getAddedCategoryIds,
   getDeletedCategoryIds,
   undoAddCategories,
   undoDeleteCategroies,
 } from '@/utils/edit-category'
+import { logCategoryClick } from '@/utils/event-logs'
 import { setSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'

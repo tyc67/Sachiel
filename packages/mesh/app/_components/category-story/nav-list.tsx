@@ -3,15 +3,16 @@
 import { useSearchParams } from 'next/navigation'
 import type { MouseEventHandler } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import useUserPayload from '@/hooks/use-user-payload'
-import { logCategoryClick } from '@/utils/event-logs'
+
 import { fetchCategoryStory } from '@/app/actions/get-homepage'
 import Button from '@/components/button'
 import InteractiveIcon, { type Icon } from '@/components/interactive-icon'
 import { categorySearchParamName } from '@/constants/search-param-names'
 import type { GetAllCategoriesQuery } from '@/graphql/__generated__/graphql'
 import useInView from '@/hooks/use-in-view'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory } from '@/types/homepage'
+import { logCategoryClick } from '@/utils/event-logs'
 import { replaceSearchParams, setSearchParams } from '@/utils/search-params'
 
 import StorySection from './story-section'

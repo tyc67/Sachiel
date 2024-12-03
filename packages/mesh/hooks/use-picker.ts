@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
-import useUserPayload from './use-user-payload'
-import { logPickClick } from '@/utils/event-logs'
+
 import {
   addPick as sendAddPick,
   addPickAndComment as sendAddPickAndComment,
@@ -12,7 +11,10 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import type { PickObjective } from '@/types/objective'
+import { logPickClick } from '@/utils/event-logs'
 import { addPickToUser, removePickFromUser } from '@/utils/mutate-user-pick-ids'
+
+import useUserPayload from './use-user-payload'
 
 export default function usePicker() {
   const { user, setUser } = useUser()

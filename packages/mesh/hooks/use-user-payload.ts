@@ -1,5 +1,6 @@
-import { useUser } from '@/context/user'
 import { useMemo } from 'react'
+
+import { useUser } from '@/context/user'
 
 export default function useUserPayload() {
   const { user } = useUser()

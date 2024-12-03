@@ -146,15 +146,15 @@ export function logStoryActionClick(
 ) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
   if (basicInfo) {
-    let type = ''
-
-    if (actionType.isPickAndComment) {
-      type = 'pick-comment'
-    } else if (actionType.isPick) {
-      type = 'pick'
-    } else if (actionType.isComment) {
-      type = 'comment'
+    const typeMap = {
+      'pick-comment': actionType.isPickAndComment,
+      pick: actionType.isPick,
+      comment: actionType.isComment,
     }
+
+    const type = (Object.keys(typeMap) as Array<keyof typeof typeMap>).find(
+      (key) => typeMap[key]
+    )
 
     const userActivity = {
       activityType: type,

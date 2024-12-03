@@ -1,11 +1,11 @@
 'use client'
 
+import throttle from 'raf-throttle'
 import { useEffect } from 'react'
 
 import useUserPayload from '@/hooks/use-user-payload'
 import { isPageReload } from '@/utils/common'
 import { generateUserBehaviorLogInfo } from '@/utils/generate-user-behavior-log-info'
-import { debounce } from '@/utils/performance'
 import { sendUserBehaviorLog } from '@/utils/send-user-behavior-log'
 
 export default function UserBehaviorLogger() {
@@ -56,7 +56,7 @@ export default function UserBehaviorLogger() {
       return scrollPercent
     }
 
-    const handleScroll = debounce(() => {
+    const handleScroll = throttle(() => {
       const scrollPercent = detectScrollPercentage()
 
       if (!hasScrolledTo50 && scrollPercent >= 0.5) {
@@ -70,7 +70,7 @@ export default function UserBehaviorLogger() {
         const info80 = generateUserBehaviorLogInfo('scroll-to-80%', userPayload)
         sendUserBehaviorLog(info80)
       }
-    }, 500)
+    })
 
     window.addEventListener('scroll', handleScroll)
 
