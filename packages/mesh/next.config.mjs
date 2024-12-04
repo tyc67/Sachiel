@@ -4,7 +4,7 @@ const { FIREBASE_DOMAIN } = await tsImport.load('./constants/config.ts')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   poweredByHeader: false,
   output: 'standalone',
   images: {
