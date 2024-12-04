@@ -108,8 +108,8 @@ const storyGetters = {
     default: [],
   }),
   redirectUrl: createGetter<string>({
-    story: (data) => `/story/${data.id}` ?? '',
-    collection: (data) => `/collection/${data.id}` ?? '',
+    story: (data) => `/story/${data.id}`,
+    collection: (data) => `/collection/${data.id}`,
     default: '',
   }),
 } as const
