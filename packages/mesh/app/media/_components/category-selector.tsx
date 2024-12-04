@@ -9,12 +9,14 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useInView from '@/hooks/use-in-view'
+import useUserPayload from '@/hooks/use-user-payload'
 import {
   getAddedCategoryIds,
   getDeletedCategoryIds,
   undoAddCategories,
   undoDeleteCategroies,
 } from '@/utils/edit-category'
+import { logCategoryClick } from '@/utils/event-logs'
 import { setSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'
@@ -46,6 +48,7 @@ export default function CategorySelector({
   const { user, setUser } = useUser()
   const displayCategories = user.followingCategories
   const { addToast } = useToast()
+  const userPayoload = useUserPayload()
 
   const [showCategoryEditor, setShowCategoryEditor] = useState(false)
   const { memberId } = user
@@ -133,6 +136,7 @@ export default function CategorySelector({
                     isActive: category.slug === currentCategory?.slug,
                   }}
                   onClick={() => {
+                    logCategoryClick(userPayoload, category?.title ?? '')
                     setSearchParams(
                       categorySearchParamName,
                       category.slug ?? ''

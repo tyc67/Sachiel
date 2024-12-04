@@ -4,7 +4,7 @@ const { FIREBASE_DOMAIN } = await tsImport.load('./constants/config.ts')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   poweredByHeader: false,
   output: 'standalone',
   images: {
@@ -17,7 +17,8 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
-    }},
+    },
+  },
   eslint: {
     dirs: [
       'app',

@@ -10,7 +10,9 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory, DailyStory } from '@/types/homepage'
+import { logStoryClick } from '@/utils/event-logs'
 
 type Props<T> = {
   story: T
@@ -20,6 +22,7 @@ type Props<T> = {
 export default forwardRef(function StoryCard<
   T extends CategoryStory | DailyStory
 >({ story, className }: Props<T>, ref: ForwardedRef<unknown>) {
+  const userPayload = useUserPayload()
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
 
   return (
@@ -39,7 +42,19 @@ export default forwardRef(function StoryCard<
       <div className="flex justify-between gap-x-3 sm:gap-x-10">
         <div>
           <p className="subtitle-1 sm:title-2 mb-2 line-clamp-2 grow text-primary-700 hover-or-active:underline sm:mb-1">
-            <NextLink href={`/story/${story.id}`}>{story.title}</NextLink>
+            <NextLink
+              href={`/story/${story.id}`}
+              onClick={() =>
+                logStoryClick(
+                  userPayload,
+                  story.id,
+                  story.title,
+                  story.source.title
+                )
+              }
+            >
+              {story.title}
+            </NextLink>
           </p>
           <div className="caption-1">
             <StoryMeta
