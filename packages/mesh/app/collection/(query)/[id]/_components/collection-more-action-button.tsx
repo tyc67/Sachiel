@@ -13,6 +13,7 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
+import useWindowDimensions from '@/hooks/use-window-dimension'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 import type { Collection } from '../../_types/collection'
@@ -26,6 +27,7 @@ enum ActionType {
   EditTitle = 'edit-title',
   EditDescription = 'edit-description',
   EditStories = 'edit-stories',
+  EditAll = 'edit-all',
   Delete = 'delete',
   Report = 'report',
 }
@@ -59,6 +61,7 @@ export default function CollectionMoreActionButton({
 
   const { user } = useUser()
   const { addToast } = useToast()
+  const { width } = useWindowDimensions()
 
   useClickOutside(actionSheetRef, () => {
     closeActionSheet()
@@ -150,6 +153,10 @@ export default function CollectionMoreActionButton({
     }
   }, [closeActionSheet, nestedScrollContainerRef])
 
+  useEffect(() => {
+    closeActionSheet()
+  }, [closeActionSheet, width])
+
   return (
     <>
       <div className="relative">
@@ -187,28 +194,45 @@ export default function CollectionMoreActionButton({
 }
 
 const creatorActions = [
-  // TODO: implement in phase 2
-  // {
-  //   type: ActionType.EditTitle,
-  //   text: '修改標題',
-  //   icon: 'icon-collection-edit',
-  // },
-  // {
-  //   type: ActionType.EditDescription,
-  //   text: '修改敘述',
-  //   icon: 'icon-collection-edit',
-  // },
-  // {
-  //   type: ActionType.EditStories,
-  //   text: '編輯內容與排序',
-  //   icon: 'icon-collection-edit-stories',
-  // },
-  { type: ActionType.Delete, text: '刪除集錦', icon: 'icon-collection-delete' },
-  { type: ActionType.Report, text: '檢舉', icon: 'icon-collection-report' },
+  {
+    type: ActionType.EditTitle,
+    text: '修改標題',
+    icon: 'icon-collection-edit',
+    style: 'text-primary-700 lg:hidden',
+  },
+  {
+    type: ActionType.EditDescription,
+    text: '修改敘述',
+    icon: 'icon-collection-edit',
+    style: 'text-primary-700 lg:hidden',
+  },
+  {
+    type: ActionType.EditStories,
+    text: '編輯內容與排序',
+    icon: 'icon-collection-edit-stories',
+    style: 'text-primary-700 lg:hidden',
+  },
+  {
+    type: ActionType.EditAll,
+    text: '編輯集錦',
+    icon: 'icon-collection-edit',
+    style: 'text-primary-700 hidden lg:flex',
+  },
+  {
+    type: ActionType.Delete,
+    text: '刪除集錦',
+    icon: 'icon-collection-delete',
+    style: 'text-custom-red-text',
+  },
 ] as const
 
 const visitorActions = [
-  { type: ActionType.Report, text: '檢舉', icon: 'icon-collection-report' },
+  {
+    type: ActionType.Report,
+    text: '檢舉',
+    icon: 'icon-collection-report',
+    style: 'text-primary-700',
+  },
 ] as const
 
 const ActionSheet = forwardRef(function ActionSheet(
@@ -225,6 +249,7 @@ const ActionSheet = forwardRef(function ActionSheet(
   },
   ref: ForwardedRef<HTMLDivElement>
 ) {
+  const router = useRouter()
   const { user } = useUser()
   const { addToast } = useToast()
 
@@ -241,22 +266,23 @@ const ActionSheet = forwardRef(function ActionSheet(
     }
     switch (type) {
       case ActionType.EditTitle: {
-        // TODO: enter edit title
-        onClose()
+        router.push(`${window.location.pathname}/edit-title`)
         break
       }
       case ActionType.EditDescription: {
-        // TODO: enter edit description
-        onClose()
+        router.push(`${window.location.pathname}/edit-summary`)
         break
       }
       case ActionType.EditStories: {
-        // TODO: enter edit stories
+        router.push(`${window.location.pathname}/edit-stories`)
         onClose()
         break
       }
+      case ActionType.EditAll: {
+        router.push(`${window.location.pathname}/edit`)
+        break
+      }
       case ActionType.Delete: {
-        // TODO: double check to delete collection
         onOpenDialog(ActionType.Delete)
         break
       }
@@ -289,19 +315,11 @@ const ActionSheet = forwardRef(function ActionSheet(
             return (
               <button
                 key={action.type}
-                className="flex w-full cursor-pointer gap-1 px-5 py-3 hover:bg-primary-100 sm:w-auto sm:min-w-max sm:py-[9px]"
+                className={`flex w-full cursor-pointer gap-1 px-5 py-3 hover:bg-primary-100 sm:w-auto sm:min-w-max sm:py-[9px] ${action.style}`}
                 onClick={onAction.bind(null, action.type)}
               >
                 <Icon iconName={action.icon} size="l" />
-                <span
-                  className={`button-large shrink-0  ${
-                    action.type === ActionType.Delete
-                      ? 'text-custom-red-text'
-                      : 'text-primary-700'
-                  }`}
-                >
-                  {action.text}
-                </span>
+                <span className="button-large shrink-0">{action.text}</span>
               </button>
             )
           })}
