@@ -22,3 +22,10 @@ export function getMemberProfileUrl(customId: string) {
   }
   return ''
 }
+
+export function getPolicyUrl(pathName: string) {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}${pathName}`
+  }
+  return ''
+}

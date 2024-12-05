@@ -6,7 +6,8 @@ export default async function fetchStatic<T>(
   url: string | URL | Request,
   init?: RequestInit,
   traceObject?: TraceObject,
-  errorMessage?: string
+  errorMessage?: string,
+  responseType: 'json' | 'text' = 'json'
 ) {
   try {
     const response = await fetch(url, init)
@@ -14,7 +15,14 @@ export default async function fetchStatic<T>(
       throw new Error(`Failed to fetch: ${response.statusText}`)
     }
 
-    const data: T = await response.json()
+    let data: T
+
+    if (responseType === 'text') {
+      data = (await response.text()) as T
+    } else {
+      data = await response.json()
+    }
+
     return data
   } catch (error) {
     const fallbackErrorMessage =
