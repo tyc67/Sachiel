@@ -53,11 +53,3 @@ export function getWindowSizeInfo() {
 export function isServer() {
   return typeof window === 'undefined'
 }
-
-export function isPageReload() {
-  const perfEntries = performance.getEntriesByType(
-    'navigation'
-  ) as PerformanceNavigationTiming[]
-
-  return perfEntries && perfEntries[0] && perfEntries[0].type === 'reload'
-}
