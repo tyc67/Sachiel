@@ -6,7 +6,9 @@ import CollectionPickButton from '@/components/collection-card/collection-pick-b
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
 import { useEditProfile } from '@/context/edit-profile'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { PickCollections } from '@/types/profile'
+import { logCollectionClick } from '@/utils/event-logs'
 
 type CollectionsCarouselElementProps = {
   data: NonNullable<PickCollections>[number]
@@ -16,12 +18,16 @@ const CollectionsCarouselElement = ({
   data,
 }: CollectionsCarouselElementProps) => {
   const { visitorProfile } = useEditProfile()
+  const userPayload = useUserPayload()
   if (!data) return <></>
   const { heroImage, title, creator, picksCount, id } = data
   const shouldShowCollectionPickButton = visitorProfile.customId
   return (
     <div className="flex h-full w-[150px] flex-col rounded border bg-white md:w-full">
-      <Link href={`/collection/${id}`}>
+      <Link
+        href={`/collection/${id}`}
+        onClick={() => logCollectionClick(userPayload, title ?? '')}
+      >
         <div className="relative aspect-[2] w-full">
           <ImageWithFallback
             alt={`${title}'s cover image`}
@@ -37,7 +43,11 @@ const CollectionsCarouselElement = ({
         </div>
       </Link>
       <section className="flex h-auto grow flex-col px-3 py-2">
-        <Link className="flex grow flex-col" href={`/collection/${id}`}>
+        <Link
+          className="flex grow flex-col"
+          href={`/collection/${id}`}
+          onClick={() => logCollectionClick(userPayload, title ?? '')}
+        >
           <div className="h-full flex-col justify-between">
             <p className="caption-1 text-primary-500">@{creator?.customId}</p>
             <p className="subtitle-2 pb-3 text-primary-700">{title}</p>
