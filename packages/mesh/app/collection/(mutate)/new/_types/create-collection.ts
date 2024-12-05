@@ -1,4 +1,4 @@
-export enum MobielCreateCollectionStep {
+export enum MobileCreateCollectionStep {
   Step1SelectStories = 'mobile-step-1-select-stories',
   Step2SetTitle = 'mobile-step-2-set-title',
   Step3SetSummary = 'mobile-step-3-set-summary',

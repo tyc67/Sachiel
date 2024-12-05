@@ -4,18 +4,23 @@ import { useState } from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import { ImageCategory } from '@/constants/fallback-src'
-import { useEditCollection } from '@/context/edit-collection'
 
+import type { UseCollection } from '../_types/collection'
 import ImageSelector from './image-selector'
 
-const getHeroImageSrc = (image: File | null) => {
+const getHeroImageSrc = (image: File | null | string) => {
+  if (typeof image === 'string') return image
   if (!image || !image.type.startsWith('image/')) return ''
   return URL.createObjectURL(image)
 }
 
-export default function EditHeroImage() {
+export default function EditHeroImage({
+  useCollection,
+}: {
+  useCollection: UseCollection
+}) {
   const [showImageSelector, setShowImageSelector] = useState(false)
-  const { heroImage, collectionPickStories } = useEditCollection()
+  const { heroImage, collectionPickStories } = useCollection()
 
   const heroImageSrc = getHeroImageSrc(heroImage)
   const openImageSelector = () => {
@@ -52,6 +57,7 @@ export default function EditHeroImage() {
         <ImageSelector
           imageSrcs={collectionPickStories.map((story) => story.og_image ?? '')}
           onClose={closeImageSelector}
+          useCollection={useCollection}
         />
       )}
     </>

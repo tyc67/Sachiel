@@ -16,8 +16,7 @@ import {
 import type { PointerEvent } from 'react'
 import React from 'react'
 
-import { useEditCollection } from '@/context/edit-collection'
-
+import type { UseCollection } from '../_types/collection'
 import SortStoryCard from './sort-story-card'
 
 class SmartPointerSensor extends PointerSensor {
@@ -39,9 +38,12 @@ class SmartPointerSensor extends PointerSensor {
   ]
 }
 
-export default function SortStories() {
-  const { collectionPickStories, setCollectionPickStories } =
-    useEditCollection()
+export default function SortStories({
+  useCollection,
+}: {
+  useCollection: UseCollection
+}) {
+  const { collectionPickStories, setCollectionPickStories } = useCollection()
   const sensors = useSensors(useSensor(SmartPointerSensor))
 
   function handleDragEnd(event: DragEndEvent) {
@@ -68,7 +70,11 @@ export default function SortStories() {
         strategy={verticalListSortingStrategy}
       >
         {collectionPickStories.map((story) => (
-          <SortStoryCard key={story.id} story={story} />
+          <SortStoryCard
+            key={story.id}
+            story={story}
+            useCollection={useCollection}
+          />
         ))}
       </SortableContext>
     </DndContext>

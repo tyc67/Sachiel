@@ -1,7 +1,7 @@
 'use client'
 
 import LayoutTemplate from '@/components/layout-template'
-import EditCollectionProvider from '@/context/edit-collection'
+import CreateCollectionProvider from '@/context/create-collection'
 
 import MobileGoBackButton from './_components/mobile/go-back-button'
 import MobileGoNextButton from './_components/mobile/go-next-button'
@@ -13,7 +13,7 @@ export default function NewCollectionLayout({
   children: React.ReactNode
 }) {
   return (
-    <EditCollectionProvider>
+    <CreateCollectionProvider>
       <LayoutTemplate
         type="collection"
         mobileNavigation={{
@@ -24,6 +24,6 @@ export default function NewCollectionLayout({
       >
         {children}
       </LayoutTemplate>
-    </EditCollectionProvider>
+    </CreateCollectionProvider>
   )
 }

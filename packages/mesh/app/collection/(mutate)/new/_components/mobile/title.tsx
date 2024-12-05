@@ -1,8 +1,8 @@
 'use client'
 
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 
 export default function MobileTitle() {
-  const { mobileTitle } = useEditCollection()
+  const { mobileTitle } = useCreateCollection()
   return <>{mobileTitle}</>
 }

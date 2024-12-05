@@ -1,53 +1,47 @@
 'use client'
 
 import Button from '@/components/button'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 
-import { MobielCreateCollectionStep } from '../../_types/create-collection'
+import { MobileCreateCollectionStep } from '../../_types/create-collection'
 
 export default function TabletGoNextButton() {
-  const {
-    mobileStepName,
-    setStep,
-    checkMobileStepFullfilled,
-    createCollection,
-  } = useEditCollection()
-
-  const isStepFullfilled = checkMobileStepFullfilled()
+  const { mobileStepName, setStep, isMobileStepFullfilled, createCollection } =
+    useCreateCollection()
 
   const goNextStep = () => {
     setStep((step) => step + 1)
   }
 
   switch (mobileStepName) {
-    case MobielCreateCollectionStep.Step1SelectStories:
-    case MobielCreateCollectionStep.Step2SetTitle:
+    case MobileCreateCollectionStep.Step1SelectStories:
+    case MobileCreateCollectionStep.Step2SetTitle:
       return (
         <Button
           text="下一步"
           size="lg"
           color="primary"
-          disabled={!isStepFullfilled}
+          disabled={!isMobileStepFullfilled}
           onClick={goNextStep}
         />
       )
-    case MobielCreateCollectionStep.Step3SetSummary:
+    case MobileCreateCollectionStep.Step3SetSummary:
       return (
         <Button
           text="下一步"
           size="lg"
           color="primary"
-          disabled={!isStepFullfilled}
+          disabled={!isMobileStepFullfilled}
           onClick={goNextStep}
         />
       )
-    case MobielCreateCollectionStep.Step4SortStories:
+    case MobileCreateCollectionStep.Step4SortStories:
       return (
         <Button
           text="建立"
           size="lg"
           color="primary"
-          disabled={!isStepFullfilled}
+          disabled={!isMobileStepFullfilled}
           onClick={createCollection}
         />
       )

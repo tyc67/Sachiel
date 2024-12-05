@@ -1,16 +1,19 @@
 'use client'
 
-import { useEditCollection } from '@/context/edit-collection'
 import useAutoFocus from '@/hooks/use-auto-focus'
+
+import type { UseCollection } from '../_types/collection'
 
 export const maxSummaryLength = 3000
 
 export default function EditSummary({
   autoFocus = true,
+  useCollection,
 }: {
   autoFocus?: boolean
+  useCollection: UseCollection
 }) {
-  const { summary, setSummary } = useEditCollection()
+  const { summary, setSummary } = useCollection()
   const textareaRef = useAutoFocus<HTMLTextAreaElement>({ disable: !autoFocus })
 
   const tooManyWords = summary.length > maxSummaryLength

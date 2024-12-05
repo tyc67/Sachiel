@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collection'
 
 import { DesktopCreateCollectionStep } from '../../../_types/create-collection'
@@ -14,7 +14,7 @@ export default function DesktopCollectionPicks() {
   const [fixedStory, setFixedStory] = useState<CollectionPickStory | null>(null)
 
   const { desktopStepName, collectionPickStories, setCollectionPickStories } =
-    useEditCollection()
+    useCreateCollection()
 
   useEffect(() => {
     if (!collectionPickStories.length) {
@@ -26,8 +26,8 @@ export default function DesktopCollectionPicks() {
     }
   }, [collectionPickStories.length, setCollectionPickStories])
 
-  const getStepJsx = (stepName: DesktopCreateCollectionStep) => {
-    switch (stepName) {
+  const stepJsx = useMemo(() => {
+    switch (desktopStepName) {
       case DesktopCreateCollectionStep.Step1EditAll:
         return <DesktopStep1FullEdit fixedStory={fixedStory} />
       case DesktopCreateCollectionStep.Step2SortStories:
@@ -35,12 +35,12 @@ export default function DesktopCollectionPicks() {
       default:
         return null
     }
-  }
+  }, [desktopStepName, fixedStory])
 
   return (
     <div className="relative left-[320px] flex w-maxDesktopNavigation grow flex-col">
       <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
-        {getStepJsx(desktopStepName)}
+        {stepJsx}
       </div>
     </div>
   )

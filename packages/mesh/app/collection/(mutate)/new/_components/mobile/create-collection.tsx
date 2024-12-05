@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 import { getCrossPageCollectinPickStory } from '@/utils/cross-page-create-collection'
 
-import { MobielCreateCollectionStep } from '../../_types/create-collection'
+import { MobileCreateCollectionStep } from '../../_types/create-collection'
 import TabletNavigation from '../tablet/navigation'
 import MobileStep4SortStories from './steps/step-four-sort-stories'
 import MobileStep1SelectStories from './steps/step-one-select-stories'
@@ -17,7 +17,7 @@ export default function MobileNewCollection() {
   const [fixedStory, setFixedStory] = useState<CollectionPickStory | null>(null)
 
   const { mobileStepName, collectionPickStories, setCollectionPickStories } =
-    useEditCollection()
+    useCreateCollection()
 
   useEffect(() => {
     if (!collectionPickStories.length) {
@@ -29,25 +29,25 @@ export default function MobileNewCollection() {
     }
   }, [collectionPickStories.length, setCollectionPickStories])
 
-  const getStepJsx = (stepName: MobielCreateCollectionStep) => {
-    switch (stepName) {
-      case MobielCreateCollectionStep.Step1SelectStories:
+  const stepJsx = useMemo(() => {
+    switch (mobileStepName) {
+      case MobileCreateCollectionStep.Step1SelectStories:
         return <MobileStep1SelectStories fixedStory={fixedStory} />
-      case MobielCreateCollectionStep.Step2SetTitle:
+      case MobileCreateCollectionStep.Step2SetTitle:
         return <MobileStep2SetTitle />
-      case MobielCreateCollectionStep.Step3SetSummary:
+      case MobileCreateCollectionStep.Step3SetSummary:
         return <MobileStep3SetSummary />
-      case MobielCreateCollectionStep.Step4SortStories:
+      case MobileCreateCollectionStep.Step4SortStories:
         return <MobileStep4SortStories />
       default:
         return null
     }
-  }
+  }, [fixedStory, mobileStepName])
 
   return (
     <div className="flex w-full grow flex-col sm:mx-auto sm:max-w-screen-sm md:max-w-[740px] lg:hidden">
       <TabletNavigation />
-      {getStepJsx(mobileStepName)}
+      {stepJsx}
     </div>
   )
 }

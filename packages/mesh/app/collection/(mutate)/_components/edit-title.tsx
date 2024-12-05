@@ -1,14 +1,17 @@
 'use client'
 
-import { useEditCollection } from '@/context/edit-collection'
 import useAutoFocus from '@/hooks/use-auto-focus'
+
+import type { UseCollection } from '../_types/collection'
 
 export default function EditTitle({
   autoFocus = true,
+  useCollection,
 }: {
   autoFocus?: boolean
+  useCollection: UseCollection
 }) {
-  const { title, setTitle } = useEditCollection()
+  const { title, setTitle } = useCollection()
   const inputRef = useAutoFocus<HTMLInputElement>({ disable: !autoFocus })
 
   return (

@@ -1,6 +1,7 @@
 import PickStories from '@/app/collection/(mutate)/_components/pick-stories'
 import PickStoryCard from '@/app/collection/(mutate)/_components/pick-story-card'
 import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
+import { useCreateCollection } from '@/context/create-collection'
 
 export default function DesktopStep1FullEdit({
   fixedStory,
@@ -15,7 +16,7 @@ export default function DesktopStep1FullEdit({
 }
 
 const Step1PickStories = () => {
-  return <PickStories />
+  return <PickStories useCollection={useCreateCollection} />
 }
 
 const Step1FixedStory = ({

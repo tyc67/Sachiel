@@ -1,6 +1,7 @@
 import PickStories from '@/app/collection/(mutate)/_components/pick-stories'
 import PickStoryCard from '@/app/collection/(mutate)/_components/pick-story-card'
 import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
+import { useCreateCollection } from '@/context/create-collection'
 
 import TabletGoNextButton from '../../tablet/go-next-button'
 
@@ -28,7 +29,7 @@ export default function MobileStep1SelectStories({
 }
 
 const Step1PickStories = () => {
-  return <PickStories />
+  return <PickStories useCollection={useCreateCollection} />
 }
 
 const Step1FixedStory = ({

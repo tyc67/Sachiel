@@ -2,14 +2,18 @@ import { useState } from 'react'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
-import { useEditCollection } from '@/context/edit-collection'
 
+import type { UseCollection } from '../_types/collection'
 import Checkbox from './checkbox'
 
-export default function StoryFilter() {
+export default function StoryFilter({
+  useCollection,
+}: {
+  useCollection: UseCollection
+}) {
   const [showFilter, setShowFilter] = useState(false)
 
-  const { pickCandidates, bookmarkCandidates } = useEditCollection()
+  const { pickCandidates, bookmarkCandidates } = useCollection()
 
   const closeFilter = () => {
     setShowFilter(false)
@@ -49,21 +53,33 @@ export default function StoryFilter() {
           />
         </button>
       </div>
-      {showFilter && <Filter onClose={closeFilter} />}
+      {showFilter && (
+        <Filter onClose={closeFilter} useCollection={useCollection} />
+      )}
     </>
   )
 }
 
-const Filter = ({ onClose }: { onClose: () => void }) => {
+const Filter = ({
+  onClose,
+  useCollection,
+}: {
+  onClose: () => void
+  useCollection: UseCollection
+}) => {
   return (
     <>
-      <DestktopFilter />
-      <MobileFilter onClose={onClose} />
+      <DestktopFilter useCollection={useCollection} />
+      <MobileFilter onClose={onClose} useCollection={useCollection} />
     </>
   )
 }
 
-const DestktopFilter = () => {
+const DestktopFilter = ({
+  useCollection,
+}: {
+  useCollection: UseCollection
+}) => {
   const [showError, setShowError] = useState(false)
 
   const {
@@ -71,7 +87,7 @@ const DestktopFilter = () => {
     bookmarkCandidates,
     setPickCandidates,
     setBookmarkCandidates,
-  } = useEditCollection()
+  } = useCollection()
   const isPickSelected = pickCandidates.usedAsFilter
   const isBookmarkSelected = bookmarkCandidates.usedAsFilter
 
@@ -120,13 +136,19 @@ const DestktopFilter = () => {
   )
 }
 
-const MobileFilter = ({ onClose }: { onClose: () => void }) => {
+const MobileFilter = ({
+  onClose,
+  useCollection,
+}: {
+  onClose: () => void
+  useCollection: UseCollection
+}) => {
   const {
     pickCandidates,
     bookmarkCandidates,
     setPickCandidates,
     setBookmarkCandidates,
-  } = useEditCollection()
+  } = useCollection()
 
   const [isPickSelected, setIsPickSelected] = useState(
     pickCandidates.usedAsFilter

@@ -5,14 +5,14 @@ import { useRef } from 'react'
 
 import Dialog from '@/components/dialog'
 import GoBackButton from '@/components/navigation/go-back-button'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 
 import { DesktopCreateCollectionStep } from '../../_types/create-collection'
 
 export default function DesktopGoBackButton() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
-  const { setStep, desktopStepName } = useEditCollection()
+  const { setStep, desktopStepName } = useCreateCollection()
 
   const onGoBackClicked = () => {
     if (desktopStepName === DesktopCreateCollectionStep.Step1EditAll) {

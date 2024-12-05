@@ -7,15 +7,16 @@ import type { MouseEventHandler } from 'react'
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
-import { useEditCollection } from '@/context/edit-collection'
 import { displayTimeFromNow } from '@/utils/story-display'
 
-import type { CollectionPickStory } from '../_types/collection'
+import type { CollectionPickStory, UseCollection } from '../_types/collection'
 
 export default function SortStoryCard({
   story,
+  useCollection,
 }: {
   story: CollectionPickStory
+  useCollection: UseCollection
 }) {
   const {
     attributes,
@@ -26,7 +27,7 @@ export default function SortStoryCard({
     isDragging,
   } = useSortable({ id: story.id })
 
-  const { setCollectionPickStories } = useEditCollection()
+  const { setCollectionPickStories } = useCollection()
 
   const style = {
     transform: CSS.Transform.toString(transform),

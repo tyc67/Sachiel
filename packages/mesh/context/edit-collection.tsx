@@ -1,45 +1,32 @@
 import { useRouter } from 'next/navigation'
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-import type { CreateCollectionParams } from '@/app/actions/collection'
-import { createCollection as sendCreateCollection } from '@/app/actions/collection'
+import {
+  updateCollectionPicks as sendUpdateCollectionPicks,
+  updateCollectionSummary as sendUpdateCollectionSummary,
+  updateCollectionTitle as sendUpdateCollectionTitle,
+  updateWholeCollection as sendUpdateWholeCollection,
+} from '@/app/actions/edit-collection'
 import { maxSummaryLength } from '@/app/collection/(mutate)/_components/edit-summary'
+import type { Collection } from '@/app/collection/(mutate)/_types/collection'
 import {
   type CollectionPickStory,
   type PickOrBookmark,
-  CollectionFormat,
 } from '@/app/collection/(mutate)/_types/collection'
 import {
-  DesktopCreateCollectionStep,
-  MobielCreateCollectionStep,
-} from '@/app/collection/(mutate)/new/_types/create-collection'
-import useWindowDimensions from '@/hooks/use-window-dimension'
-import { clearCreateCollectionStoryLS } from '@/utils/cross-page-create-collection'
-import { setCrossPageToast } from '@/utils/cross-page-toast'
+  prepareUpdateCollectionPicks,
+  prepareUpdateCollectionTitle,
+  prepareUpdateeCollectionSummary,
+} from '@/app/collection/(mutate)/_utils/prepare-update-collection'
 import {
-  generateUniqueTimestamp,
-  getCurrentTimeInISOFormat,
-} from '@/utils/date'
+  DesktopEditCollectionType,
+  MobileEditCollectionType,
+} from '@/app/collection/(mutate)/(edit)/_types/edit-collection'
+import useWindowDimensions from '@/hooks/use-window-dimension'
+import { setCrossPageToast } from '@/utils/cross-page-toast'
+import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 import { useUser } from './user'
-
-const mobileStepNames = [
-  MobielCreateCollectionStep.Step1SelectStories,
-  MobielCreateCollectionStep.Step2SetTitle,
-  MobielCreateCollectionStep.Step3SetSummary,
-  MobielCreateCollectionStep.Step4SortStories,
-]
-
-const desktopStepNames = [
-  DesktopCreateCollectionStep.Step1EditAll,
-  DesktopCreateCollectionStep.Step2SortStories,
-]
 
 type StoryCandidates = {
   list: PickOrBookmark[]
@@ -47,15 +34,21 @@ type StoryCandidates = {
   usedAsFilter: boolean
 }
 
-type EditCollectionContextValue = {
-  step: number
-  setStep: React.Dispatch<React.SetStateAction<number>>
+export type EditCollectionContextValue = {
+  mobileEditType: MobileEditCollectionType
+  setMobileEditType: React.Dispatch<
+    React.SetStateAction<MobileEditCollectionType>
+  >
+  desktopEditType: DesktopEditCollectionType
+  setDesktopEditType: React.Dispatch<
+    React.SetStateAction<DesktopEditCollectionType>
+  >
   title: string
   setTitle: React.Dispatch<React.SetStateAction<string>>
   summary: string
   setSummary: React.Dispatch<React.SetStateAction<string>>
-  heroImage: File | null
-  setHeroImage: React.Dispatch<React.SetStateAction<File | null>>
+  heroImage: File | string | null
+  setHeroImage: React.Dispatch<React.SetStateAction<File | string | null>>
   pickCandidates: StoryCandidates
   bookmarkCandidates: StoryCandidates
   setPickCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
@@ -64,13 +57,14 @@ type EditCollectionContextValue = {
   setCollectionPickStories: React.Dispatch<
     React.SetStateAction<CollectionPickStory[]>
   >
-  createCollection: () => void
-  checkMobileStepFullfilled: () => boolean
-  checkDesktopStepFullfilled: () => boolean
+  isMobileEditTypeFullfilled: boolean
+  isDesktopEditTypeFullfilled: boolean
   mobileTitle: string
   desktopTitle: string
-  mobileStepName: MobielCreateCollectionStep
-  desktopStepName: DesktopCreateCollectionStep
+  updateCollectionTitleAndHeroImage: () => void
+  updateCollectionSummary: () => void
+  updateCollectionPicks: () => void
+  updateWholeCollection: () => void
 }
 
 const EditCollectionContext = createContext<
@@ -85,142 +79,240 @@ const initialStoryCandidate: StoryCandidates = {
 
 export default function EditCollectionProvider({
   children,
+  initialDesktopEditType,
+  initialMobileEditType,
+  initialCollection,
 }: {
   children: React.ReactNode
+  initialDesktopEditType?: DesktopEditCollectionType
+  initialMobileEditType?: MobileEditCollectionType
+  initialCollection: Collection
 }) {
-  const [step, setStep] = useState(0)
-  const [title, setTitle] = useState('')
-  const [summary, setSummary] = useState('')
-  const [heroImage, setHeroImage] = useState<File | null>(null)
+  const [desktopEditType, setDesktopEditType] = useState(
+    initialDesktopEditType ?? DesktopEditCollectionType.EditAll
+  )
+  const [mobileEditType, setMobileEditType] = useState(
+    initialMobileEditType ?? MobileEditCollectionType.TypeEditTitle
+  )
+  const [title, setTitle] = useState(initialCollection.title ?? '')
+  const [summary, setSummary] = useState(initialCollection.summary ?? '')
+  const [heroImage, setHeroImage] = useState<File | string | null>(
+    initialCollection.heroImage?.resized?.original ?? null
+  )
   const [pickCandidates, setPickCandidates] = useState<StoryCandidates>(
     initialStoryCandidate
   )
   const [bookmarkCandidates, setBookmarkCandidates] = useState<StoryCandidates>(
     initialStoryCandidate
   )
+
   const [collectionPickStories, setCollectionPickStories] = useState<
     CollectionPickStory[]
-  >([])
+  >(
+    initialCollection.collectionpicks?.reduce((acc, curr) => {
+      if (curr && curr.story) {
+        acc.push(curr.story)
+      }
+      return acc
+    }, [] as CollectionPickStory[]) ?? []
+  )
+
   const router = useRouter()
   const { user } = useUser()
   const { width } = useWindowDimensions()
-  const mobileStepName = mobileStepNames[step]
-  const desktopStepName = desktopStepNames[step]
 
-  const checkMobileStepFullfilled = () => {
-    switch (mobileStepName) {
-      case MobielCreateCollectionStep.Step1SelectStories:
-        return Boolean(collectionPickStories.length)
-      case MobielCreateCollectionStep.Step2SetTitle:
-        return Boolean(heroImage) && Boolean(title)
-      case MobielCreateCollectionStep.Step3SetSummary:
+  const isMobileEditTypeFullfilled = useMemo(() => {
+    switch (mobileEditType) {
+      case MobileEditCollectionType.TypeEditTitle:
+        return Boolean(title) && Boolean(heroImage)
+      case MobileEditCollectionType.TypeEditSummary:
         return !summary || summary.length <= maxSummaryLength
-      case MobielCreateCollectionStep.Step4SortStories:
-        return true
+      case MobileEditCollectionType.TypeEditStories:
+        return Boolean(collectionPickStories.length)
+      case MobileEditCollectionType.TypeAddStories:
+        return Boolean(collectionPickStories.length)
       default:
         return false
     }
-  }
+  }, [collectionPickStories.length, heroImage, mobileEditType, summary, title])
 
-  const checkDesktopStepFullfilled = () => {
-    switch (desktopStepName) {
-      case DesktopCreateCollectionStep.Step1EditAll:
+  const isDesktopEditTypeFullfilled = useMemo(() => {
+    switch (desktopEditType) {
+      case DesktopEditCollectionType.EditAll:
         return (
-          Boolean(heroImage) &&
-          Boolean(collectionPickStories.length) &&
           Boolean(title) &&
-          (!summary || summary.length <= maxSummaryLength)
+          Boolean(heroImage) &&
+          (!summary || summary.length <= maxSummaryLength) &&
+          Boolean(collectionPickStories.length)
         )
-      case DesktopCreateCollectionStep.Step2SortStories:
-        return true
+      case DesktopEditCollectionType.TypeAddStories:
+        return Boolean(collectionPickStories.length)
       default:
         return false
     }
-  }
+  }, [collectionPickStories.length, desktopEditType, heroImage, summary, title])
 
-  const getMobileTitle = useCallback(() => {
-    switch (mobileStepName) {
-      case MobielCreateCollectionStep.Step1SelectStories: {
-        const pickedStoryCount = collectionPickStories.length
-        return pickedStoryCount ? `已選${pickedStoryCount}篇` : '選擇文章'
+  const mobileTitle = useMemo(() => {
+    switch (mobileEditType) {
+      case MobileEditCollectionType.TypeEditTitle:
+        return '修改標題'
+      case MobileEditCollectionType.TypeEditSummary:
+        return '修改敘述'
+      case MobileEditCollectionType.TypeEditStories:
+        return '編輯排序'
+      case MobileEditCollectionType.TypeAddStories:
+        return '加入新文章'
+      default:
+        return ''
+    }
+  }, [mobileEditType])
+
+  const desktopTitle = useMemo(() => {
+    switch (desktopEditType) {
+      case DesktopEditCollectionType.EditAll:
+        return '編輯集錦'
+      case DesktopEditCollectionType.TypeAddStories:
+        return '加入新文章'
+      default:
+        return ''
+    }
+  }, [desktopEditType])
+
+  const updateCollectionTitleAndHeroImage = async () => {
+    const collectionId = initialCollection.id
+    const { isTitleUpdated, newTitle, isHeroImageUpdated, imageUpload } =
+      prepareUpdateCollectionTitle({
+        newTitle: title,
+        oldTitle: initialCollection.title ?? '',
+        heroImage,
+      })
+
+    if (isTitleUpdated || isHeroImageUpdated) {
+      const response = await sendUpdateCollectionTitle({
+        collectionId,
+        title: newTitle,
+        imageUpload,
+      })
+      if (!response) {
+        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
       }
-      case MobielCreateCollectionStep.Step2SetTitle:
-        return '標題'
-      case MobielCreateCollectionStep.Step3SetSummary:
-        return '敘述'
-      case MobielCreateCollectionStep.Step4SortStories:
-        return '排序'
-      default:
-        return '建立集錦'
     }
-  }, [collectionPickStories.length, mobileStepName])
-
-  const getDesktopTitle = useCallback(() => {
-    switch (desktopStepName) {
-      case DesktopCreateCollectionStep.Step1EditAll:
-        return '建立集錦'
-      case DesktopCreateCollectionStep.Step2SortStories:
-        return '排序'
-      default:
-        return '建立集錦'
-    }
-  }, [desktopStepName])
-
-  const mobileTitle = getMobileTitle()
-  const desktopTitle = getDesktopTitle()
-
-  const createCollection = async () => {
-    const formData = new FormData()
-    if (heroImage) {
-      formData.append('heroImage', heroImage)
-    }
-    const newCollectionData: CreateCollectionParams = {
-      title,
-      slug: generateUniqueTimestamp(),
-      summary,
-      format: CollectionFormat.Folder,
-      imageName: `集錦首圖_${title}`,
-      imageUpload: formData,
-      collectionpicks: collectionPickStories.map((story, i) => ({
-        story: {
-          connect: {
-            id: story.id,
-          },
-        },
-        sort_order: i,
-        creator: {
-          connect: {
-            id: user.memberId,
-          },
-        },
-        picked_date: getCurrentTimeInISOFormat(),
-      })),
-      memberId: user.memberId,
-    }
-    const response = await sendCreateCollection(newCollectionData)
-    if (response) {
-      // clear localstorage data once collection created
-      clearCreateCollectionStoryLS()
-      const collectionId = response.createCollection?.id
-      router.push(`/collection/${collectionId}`)
-    } else {
-      setCrossPageToast({ status: 'fail', text: '建立集錦失敗，請重新嘗試' })
-      router.push(`/profile/member/${user.customId}`)
-    }
+    router.push(`/collection/${collectionId}`)
   }
 
-  // reset steps when window width change
+  const updateCollectionSummary = async () => {
+    const collectionId = initialCollection.id
+    const { isSummaryUpdated, newSummary } = prepareUpdateeCollectionSummary({
+      newSummary: summary,
+      oldSummary: initialCollection.summary ?? '',
+    })
+
+    if (isSummaryUpdated) {
+      const response = await sendUpdateCollectionSummary({
+        collectionId,
+        summary: newSummary,
+      })
+      if (!response) {
+        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+      }
+    }
+    router.push(`/collection/${collectionId}`)
+  }
+
+  const updateCollectionPicks = async () => {
+    const collectionId = initialCollection.id
+
+    const {
+      isCollectionPicksUpdated,
+      createCollectionPicksData,
+      updateCollectionPicksData,
+      deleteCollectionPicksData,
+    } = prepareUpdateCollectionPicks({
+      newCollectionPickStories: collectionPickStories,
+      oldCollectionPicks: initialCollection.collectionpicks ?? [],
+      memberId: user.memberId,
+    })
+
+    if (isCollectionPicksUpdated) {
+      const response = await sendUpdateCollectionPicks({
+        collectionId,
+        createCollectionPicksData,
+        updateCollectionPicksData,
+        deleteCollectionPicksData,
+      })
+      if (!response) {
+        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+      }
+    }
+    router.push(`/collection/${collectionId}`)
+  }
+
+  const updateWholeCollection = async () => {
+    const collectionId = initialCollection.id
+    const { isTitleUpdated, newTitle, isHeroImageUpdated, imageUpload } =
+      prepareUpdateCollectionTitle({
+        newTitle: title,
+        oldTitle: initialCollection.title ?? '',
+        heroImage,
+      })
+    const { isSummaryUpdated, newSummary } = prepareUpdateeCollectionSummary({
+      newSummary: summary,
+      oldSummary: initialCollection.summary ?? '',
+    })
+    const {
+      isCollectionPicksUpdated,
+      createCollectionPicksData,
+      updateCollectionPicksData,
+      deleteCollectionPicksData,
+    } = prepareUpdateCollectionPicks({
+      newCollectionPickStories: collectionPickStories,
+      oldCollectionPicks: initialCollection.collectionpicks ?? [],
+      memberId: user.memberId,
+    })
+
+    const isCollectionUpdated =
+      isTitleUpdated ||
+      isHeroImageUpdated ||
+      isSummaryUpdated ||
+      isCollectionPicksUpdated
+
+    if (isCollectionUpdated) {
+      const response = await sendUpdateWholeCollection({
+        collectionId,
+        title: newTitle,
+        imageUpload,
+        summary: newSummary,
+        createCollectionPicksData,
+        updateCollectionPicksData,
+        deleteCollectionPicksData,
+      })
+      if (!response) {
+        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+      }
+    }
+    router.push(`/collection/${collectionId}`)
+  }
+
+  // go back to collection page when mobile page render in desktop and vice versa change
   useEffect(() => {
     if (width) {
-      setStep(0)
+      const desktopBreakpoint = getTailwindConfigBreakpointNumber('lg')
+      const isPageRenderedInWrongDimension =
+        (initialDesktopEditType && width < desktopBreakpoint) ||
+        (initialMobileEditType && width >= desktopBreakpoint)
+      if (isPageRenderedInWrongDimension) {
+        router.back()
+      }
     }
-  }, [width])
+  }, [initialDesktopEditType, initialMobileEditType, router, width])
 
   return (
     <EditCollectionContext.Provider
       value={{
-        step,
-        setStep,
+        mobileEditType,
+        setMobileEditType,
+        desktopEditType,
+        setDesktopEditType,
         title,
         setTitle,
         summary,
@@ -233,13 +325,14 @@ export default function EditCollectionProvider({
         setBookmarkCandidates,
         collectionPickStories,
         setCollectionPickStories,
-        createCollection,
-        checkMobileStepFullfilled,
-        checkDesktopStepFullfilled,
+        isMobileEditTypeFullfilled,
+        isDesktopEditTypeFullfilled,
         mobileTitle,
         desktopTitle,
-        mobileStepName,
-        desktopStepName,
+        updateCollectionTitleAndHeroImage,
+        updateCollectionSummary,
+        updateCollectionPicks,
+        updateWholeCollection,
       }}
     >
       {children}

@@ -4,15 +4,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
 import Spinner from '@/components/spinner'
-import { useEditCollection } from '@/context/edit-collection'
 import { useUser } from '@/context/user'
 
 import { picksAndBookmarksPageCount } from '../_const/edit-collection'
+import type { UseCollection } from '../_types/collection'
 import { mergePickAndBookmarkStories } from '../_utils/merge-pick-and-bookmark-stories'
 import InfiniteCollectionPicks from './infinite-collection-picks'
 import StoryFilter from './story-filter'
 
-export default function PickStories() {
+export default function PickStories({
+  useCollection,
+}: {
+  useCollection: UseCollection
+}) {
   const [isLoading, setIsLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [shouldLoadMore, setShouldLoadMore] = useState(true)
@@ -23,7 +27,7 @@ export default function PickStories() {
     setPickCandidates,
     bookmarkCandidates,
     setBookmarkCandidates,
-  } = useEditCollection()
+  } = useCollection()
   const usePick = pickCandidates.usedAsFilter
   const useBookmark = bookmarkCandidates.usedAsFilter
   const usePickAndBookmark = usePick && useBookmark
@@ -132,7 +136,7 @@ export default function PickStories() {
 
   return (
     <>
-      <StoryFilter />
+      <StoryFilter useCollection={useCollection} />
       {isLoading ? (
         <Spinner />
       ) : (
@@ -141,6 +145,7 @@ export default function PickStories() {
           candidates={candidates}
           loadMore={loadMorePicksAndBookmarks}
           shouldLoadMore={shouldLoadMore}
+          useCollection={useCollection}
         />
       )}
     </>

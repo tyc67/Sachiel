@@ -5,17 +5,17 @@ import { useRef } from 'react'
 
 import Dialog from '@/components/dialog'
 import GoBackButton from '@/components/navigation/go-back-button'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 
-import { MobielCreateCollectionStep } from '../../_types/create-collection'
+import { MobileCreateCollectionStep } from '../../_types/create-collection'
 
 export default function MobileGoBackButton() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
-  const { setStep, mobileStepName } = useEditCollection()
+  const { setStep, mobileStepName } = useCreateCollection()
 
   const onGoBackClicked = () => {
-    if (mobileStepName === MobielCreateCollectionStep.Step1SelectStories) {
+    if (mobileStepName === MobileCreateCollectionStep.Step1SelectStories) {
       dialogRef.current?.showModal()
     } else {
       setStep((step) => step - 1)

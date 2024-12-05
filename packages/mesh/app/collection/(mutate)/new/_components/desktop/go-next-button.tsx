@@ -1,7 +1,7 @@
 'use client'
 
 import Button from '@/components/button'
-import { useEditCollection } from '@/context/edit-collection'
+import { useCreateCollection } from '@/context/create-collection'
 
 import { DesktopCreateCollectionStep } from '../../_types/create-collection'
 
@@ -9,11 +9,9 @@ export default function DesktopGoNextButton() {
   const {
     setStep,
     desktopStepName,
-    checkDesktopStepFullfilled,
+    isDesktopStepFullfilled,
     createCollection,
-  } = useEditCollection()
-
-  const isStepFullfilled = checkDesktopStepFullfilled()
+  } = useCreateCollection()
 
   const goNextStep = () => {
     setStep((step) => step + 1)
@@ -24,7 +22,7 @@ export default function DesktopGoNextButton() {
       return (
         <Button
           onClick={goNextStep}
-          disabled={!isStepFullfilled}
+          disabled={!isDesktopStepFullfilled}
           size="lg"
           color="primary"
           text="下一步"
@@ -34,7 +32,7 @@ export default function DesktopGoNextButton() {
       return (
         <Button
           onClick={createCollection}
-          disabled={!isStepFullfilled}
+          disabled={!isDesktopStepFullfilled}
           size="lg"
           color="primary"
           text="建立"

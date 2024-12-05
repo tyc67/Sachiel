@@ -1,3 +1,5 @@
+import type { CreateCollectionContextValue } from '@/context/create-collection'
+import type { EditCollectionContextValue } from '@/context/edit-collection'
 import type {
   GetCollectionToEditQuery,
   GetMemberPickAndBookmarkQuery,
@@ -15,3 +17,7 @@ export enum CollectionFormat {
   Folder = 'folder',
   Timeline = 'timeline',
 }
+
+export type UseCollection =
+  | (() => CreateCollectionContextValue)
+  | (() => EditCollectionContextValue)
