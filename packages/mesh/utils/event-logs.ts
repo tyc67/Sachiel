@@ -79,7 +79,7 @@ export function logCategoryClick(
   }
 }
 
-export function logAddStoryToPick(userPayload: UserPayload, storyId: string) {
+export function logStoryAddedToPick(userPayload: UserPayload, storyId: string) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
 
   if (basicInfo) {
@@ -98,7 +98,7 @@ export function logAddStoryToPick(userPayload: UserPayload, storyId: string) {
   }
 }
 
-export function logAddStoryToBookmark(
+export function logStoryAddedToBookmark(
   userPayload: UserPayload,
   storyId: string
 ) {
@@ -120,7 +120,7 @@ export function logAddStoryToBookmark(
   }
 }
 
-export function logAddStoryToCollection(
+export function logStoryAddedToCollection(
   userPayload: UserPayload,
   storyId: string
 ) {
