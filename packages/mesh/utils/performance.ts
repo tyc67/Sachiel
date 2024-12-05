@@ -1,4 +1,5 @@
-function debounce<T extends (...args: unknown[]) => void | Promise<void>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debounce<T extends (...args: any[]) => void | Promise<void>>(
   func: T,
   timeout = 300
 ): (...args: Parameters<T>) => void {

@@ -38,3 +38,6 @@ next-env.d.ts
 #graphql
 introspection.json
 certificates
+
+# Google cloud service account key
+service-account-file.json

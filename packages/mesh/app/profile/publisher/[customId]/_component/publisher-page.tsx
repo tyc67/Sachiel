@@ -4,6 +4,7 @@ import ProfileButtonList from '@/app/profile/_components/profile-button-list'
 import Tab from '@/app/profile/_components/tab'
 import UserProfile from '@/app/profile/_components/user-profile'
 import UserStatusList from '@/app/profile/_components/user-status-list'
+import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import useFollowPublisher from '@/hooks/use-publisher-follow'
 import { type UserType, TabCategory, TabKey } from '@/types/profile'
 import type { PublisherProfile } from '@/utils/data-schema'
@@ -37,7 +38,6 @@ const PublisherPage: React.FC<PublisherPageProps> = ({
     publisherId,
     publisherName: name,
   })
-
   const userStatusList = [
     { tabName: TabKey.SPONSORED, count: `${sponsoredCount}次` },
     {
@@ -57,6 +57,7 @@ const PublisherPage: React.FC<PublisherPageProps> = ({
       text: { default: '贊助/訂閱媒體', isActive: '' },
       primary: true,
       isActive: false,
+      component: <PublisherDonateButton key={0} publisherId={publisherId} />,
     },
   ]
 

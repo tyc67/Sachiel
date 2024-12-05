@@ -3,6 +3,9 @@
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 
+import useUserPayload from '@/hooks/use-user-payload'
+import { logVideoPlay } from '@/utils/event-logs'
+
 import type {
   ApiDataBlockBase,
   ApiDataBlockType,
@@ -50,6 +53,7 @@ type VideoProps = {
 const Video = ({ video }: VideoProps) => {
   const [showCover, setShowCover] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const userPayload = useUserPayload()
 
   const onCoverClicked = () => {
     if (videoRef.current) {
@@ -60,7 +64,13 @@ const Video = ({ video }: VideoProps) => {
 
   return (
     <div className="video-block">
-      <video src={video.url} loop controls ref={videoRef} />
+      <video
+        src={video.url}
+        loop
+        controls
+        ref={videoRef}
+        onPlay={() => logVideoPlay(userPayload)}
+      />
       {showCover && (
         <div className="cover" onClick={onCoverClicked}>
           <Image

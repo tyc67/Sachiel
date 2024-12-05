@@ -10,6 +10,7 @@ import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
 import { CommentObjective } from '@/types/objective'
 import {
   type BookmarkItem,
@@ -17,6 +18,7 @@ import {
   type CommentType,
   type PickListItem,
 } from '@/types/profile'
+import { logStoryClick } from '@/utils/event-logs'
 
 type StoryDataTypes =
   | NonNullable<PickListItem>
@@ -106,8 +108,8 @@ const storyGetters = {
     default: [],
   }),
   redirectUrl: createGetter<string>({
-    story: (data) => `/story/${data.id}` ?? '',
-    collection: (data) => `/collection/${data.id}` ?? '',
+    story: (data) => `/story/${data.id}`,
+    collection: (data) => `/collection/${data.id}`,
     default: '',
   }),
 } as const
@@ -149,6 +151,7 @@ const ArticleCard = ({
     picks: storyGetters.pick(storyData),
     picksCount: storyGetters.pickCount(storyData),
   })
+  const userPayload = useUserPayload()
   const shouldShowSource = !isCollection(storyData)
   const redirectLink = () => {
     if (isCollection(storyData)) return `/collection/${storyData.id}`
@@ -160,7 +163,6 @@ const ArticleCard = ({
       <CommentProvider
         initialComments={storyData?.comment || []}
         commentObjective={CommentObjective.Story}
-        // TODO: check what it use
         commentObjectiveData={storyData}
       >
         <Link className="md:flex md:w-full" href={redirectLink()}>
@@ -183,7 +185,18 @@ const ArticleCard = ({
               : ''
           }`}
         >
-          <Link className="flex grow flex-col" href={redirectLink()}>
+          <Link
+            className="flex grow flex-col"
+            href={redirectLink()}
+            onClick={() =>
+              logStoryClick(
+                userPayload,
+                storyData.id,
+                storyData?.title ?? '',
+                storyGetters.source(storyData)
+              )
+            }
+          >
             {shouldShowSource && (
               <section className="mb-1 flex items-center justify-between">
                 <>
@@ -263,7 +276,11 @@ const ArticleCard = ({
               avatar={avatar}
               clampLineCount={3}
               canToggle={false}
-              redirectUrl={storyGetters.redirectUrl(storyData)}
+              redirectUrl={
+                // NOTE: 目前只有story有留言，因此沒有條件
+                storyGetters.redirectUrl(storyData) +
+                `#${(authorComment as CommentType).id}`
+              }
             />
           )}
         </div>

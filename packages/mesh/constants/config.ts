@@ -12,6 +12,7 @@ const FIREBASE_PRIVATE_KEY =
 let GTM_ENV = ''
 let API_ORIGIN = ''
 let STATIC_FILE_ORIGIN = ''
+let GCP_LOG_NAME = ''
 let PAYMENT_ORIGIN = ''
 let PAYMENT_CHAIN: Chain = optimismSepolia
 let FIREBASE_DOMAIN = ''
@@ -47,6 +48,7 @@ switch (ENV) {
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
+    GCP_LOG_NAME = 'mesh-next-userlog-local'
     PAYMENT_CHAIN = optimismSepolia
     FIREBASE_DOMAIN = 'readr-dev-38eec.firebaseapp.com'
     FIREBASE_CONFIG = {
@@ -65,6 +67,7 @@ switch (ENV) {
   case 'dev':
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
+    GCP_LOG_NAME = 'mesh-next-userlog-dev'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_CHAIN = optimismSepolia
     FIREBASE_DOMAIN = 'readr-dev-38eec.firebaseapp.com'
@@ -94,6 +97,8 @@ switch (ENV) {
     API_ORIGIN =
       'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
+    GCP_LOG_NAME = 'mesh-next-userlog-prod'
+    PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     PAYMENT_ORIGIN =
       'https://mesh-payment-chain-prod-1075249966777.asia-east1.run.app'
     PAYMENT_CHAIN = optimism
@@ -164,6 +169,7 @@ export {
   FIREBASE_CONFIG,
   FIREBASE_DOMAIN,
   FIREBASE_PRIVATE_KEY,
+  GCP_LOG_NAME,
   GCP_PROJECT_ID,
   GQL_ENDPOINT,
   GTM_ID,

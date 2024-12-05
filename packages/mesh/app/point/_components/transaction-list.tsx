@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import Icon from '@/components/icon'
+import { DEFAULT_IMAGES } from '@/constants/fallback-src'
 import { displayTime } from '@/utils/story-display'
 import { transformTransactionRecord } from '@/utils/transaction-records'
 
@@ -57,9 +58,7 @@ export default function TransactionList({
                 <>
                   <Image
                     className="size-11"
-                    src={
-                      data.publisher?.logo || '/images/default-avatar-image.png'
-                    }
+                    src={data.publisher?.logo || DEFAULT_IMAGES.avatar}
                     width={44}
                     height={44}
                     alt={`${transactionTitle}-logo`}
@@ -86,8 +85,7 @@ export default function TransactionList({
                     <Image
                       className="size-11"
                       src={
-                        data.unlockStory?.source?.logo ||
-                        '/images/default-avatar-image.png'
+                        data.unlockStory?.source?.logo || DEFAULT_IMAGES.avatar
                       }
                       width={44}
                       height={44}
@@ -99,7 +97,7 @@ export default function TransactionList({
                     />
                   ) : (
                     <Icon
-                      iconName={'icon-avatar-default'}
+                      iconName={'icon-readr-logo-simple'}
                       size="2xl"
                       className="size-11"
                     />

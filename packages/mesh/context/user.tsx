@@ -22,6 +22,7 @@ type FollowingPublishers = NonNullable<Member['followingPublishers']>
 export type User = {
   memberId: string
   customId: string
+  firebaseId: string
   name: string
   email: string
   avatar: string
@@ -55,6 +56,7 @@ export const guest: User = {
   memberId: '',
   avatarImageId: '',
   customId: '',
+  firebaseId: '',
   name: '',
   email: '',
   avatar: '',

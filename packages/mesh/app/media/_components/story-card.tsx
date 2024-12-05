@@ -10,6 +10,8 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import useUserPayload from '@/hooks/use-user-payload'
+import { logStoryClick } from '@/utils/event-logs'
 
 import { type Story } from './media-stories'
 
@@ -42,6 +44,7 @@ export default forwardRef(function StoryCard(
   },
   ref
 ) {
+  const userPayload = useUserPayload()
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
 
   return (
@@ -65,7 +68,18 @@ export default forwardRef(function StoryCard(
             canUnFollowPublisher={true}
           />
         </div>
-        <Link href={`/story/${story.id}`}>
+        <Link
+          href={`/story/${story.id}`}
+          onClick={() =>
+            logStoryClick(
+              userPayload,
+              story.id,
+              story?.title ?? '',
+              story.source?.title ?? '',
+              true
+            )
+          }
+        >
           <div className="mt-1 flex flex-row justify-between gap-3 sm:gap-10">
             <div>
               <h2
