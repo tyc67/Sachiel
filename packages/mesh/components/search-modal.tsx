@@ -77,7 +77,11 @@ export default function SearchModal({
                 <Fragment key={index}>
                   <li
                     className="flex flex-row p-5"
-                    onClick={() => router.push(`/search?q=${record}`)}
+                    onClick={() =>
+                      router.push(
+                        `/search/${encodeURIComponent(record.trim())}`
+                      )
+                    }
                   >
                     <p className="subtitle-1 mr-auto">{record}</p>
                     <button
@@ -94,7 +98,12 @@ export default function SearchModal({
         )}
         {activeRender === 'suggestion' && (
           <ul className="h-[calc(100vh-60px)] bg-white">
-            <li className="flex flex-row items-center px-5 py-[10px]">
+            <li
+              className="flex flex-row items-center px-5 py-[10px]"
+              onClick={() =>
+                router.push(`/search/${encodeURIComponent(searchText.trim())}`)
+              }
+            >
               <div className="flex size-11 items-center justify-center">
                 <Icon size="l" iconName="icon-search-bar" />
               </div>

@@ -1,35 +1,42 @@
 'use client'
 
-import { notFound, useSearchParams } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { type SearchOption, search } from '@/app/actions/search'
 import { type SearchResults } from '@/utils/data-schema'
 
-import { type SearchOption, search } from '../actions/search'
-import MemberAndPublisher from './_components/member-and-publisher'
-import StoryAndCollection from './_components/story-and-collection'
+import MemberAndPublisher from '../_components/member-and-publisher'
+import StoryAndCollection from '../_components/story-and-collection'
 
-const filters: {
-  id: number
+type filterType = {
+  id: 'story-collection' | 'member-publisher'
   name: string
   objective: SearchOption[]
-}[] = [
+}
+const filters: filterType[] = [
   {
-    id: 1,
+    id: 'story-collection',
     name: '新聞',
     objective: ['story', 'collection'],
   },
   {
-    id: 2,
+    id: 'member-publisher',
     name: '個人檔案',
     objective: ['member', 'publisher'],
   },
 ]
 
-export default function SearchResultPage() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get('q')
-  const [activeFilter, setActiveFilter] = useState(filters[0].id)
+export default function SearchResultPage({
+  params,
+}: {
+  params: { query: string }
+}) {
+  const { query } = params
+  const decodedQuery = decodeURIComponent(query)
+  const [activeFilter, setActiveFilter] = useState<filterType['id']>(
+    filters[0].id
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [storyResult, setStoryResult] = useState<SearchResults['story']>([])
   const [collectionResult, setCollectionResult] = useState<
@@ -39,24 +46,28 @@ export default function SearchResultPage() {
   const [publisherResult, setPublisherResult] = useState<
     SearchResults['publisher']
   >([])
+  const [cacheKeys, setCacheKeys] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    if (!query) return
+    if (!decodedQuery) return
     const fetch = async () => {
+      const currentKey = `${decodedQuery}-${activeFilter}`
+      if (cacheKeys.has(currentKey)) return
       const currentFilter = filters.find((f) => f.id === activeFilter)
       const objectives = currentFilter?.objective ?? []
       setIsLoading(true)
-      const result = await search(query, objectives)
+      const result = await search(decodedQuery, objectives)
       setStoryResult(result?.story || [])
       setCollectionResult(result?.collection || [])
       setMemberResult(result?.member || [])
       setPublisherResult(result?.publisher || [])
+      setCacheKeys((prev) => new Set(prev).add(currentKey))
       setIsLoading(false)
     }
     fetch()
-  }, [activeFilter, query])
+  }, [activeFilter, cacheKeys, decodedQuery])
 
-  if (!query) return notFound()
+  if (!decodedQuery) return notFound()
 
   return (
     <main>
@@ -80,16 +91,16 @@ export default function SearchResultPage() {
         ))}
       </div>
       <section className="px-5 xl:px-10">
-        {activeFilter === 1 ? (
+        {activeFilter === 'story-collection' ? (
           <StoryAndCollection
-            query={query}
+            query={decodedQuery}
             storyResult={storyResult}
             collectionResult={collectionResult}
             isLoading={isLoading}
           />
         ) : (
           <MemberAndPublisher
-            query={query}
+            query={decodedQuery}
             memberResult={memberResult}
             publisherResult={publisherResult}
             isLoading={isLoading}

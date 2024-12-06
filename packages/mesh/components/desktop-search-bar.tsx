@@ -72,7 +72,7 @@ export default function DesktopSearchBar({
 
   const handleClickRecentSearch = (item: string) => {
     setIsFocused(false)
-    router.push(`/search?q=${item}`)
+    router.push(`/search/${encodeURIComponent(item.trim())}`)
   }
 
   return (
@@ -135,7 +135,9 @@ export default function DesktopSearchBar({
         <ul className="absolute left-0 top-full z-modal mt-1 w-full rounded-md bg-white shadow-md">
           <li
             className="flex cursor-pointer flex-row items-center rounded-t-md px-5 py-[10px] hover:bg-primary-100"
-            onClick={() => router.push(`/search?q=${searchText}`)}
+            onClick={() =>
+              router.push(`/search/${encodeURIComponent(searchText.trim())}`)
+            }
           >
             <div className="flex size-11 items-center justify-center">
               <Icon size="l" iconName="icon-search-bar" />

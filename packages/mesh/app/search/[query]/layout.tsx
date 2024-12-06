@@ -1,6 +1,5 @@
+import Loading from '@/app/_components/loading'
 import LayoutTemplate from '@/components/layout-template'
-
-import Loading from '../_components/loading'
 
 export default function SearchLayout({
   children,
