@@ -19,7 +19,7 @@ export default function MemberAndPublisher({
   isLoading: boolean
 }) {
   const router = useRouter()
-  const isNoResult = !memberResult?.length && !publisherResult?.length
+  const isNoResult = !memberResult.length && !publisherResult.length
 
   if (isLoading)
     return (
@@ -32,10 +32,10 @@ export default function MemberAndPublisher({
 
   return (
     <>
-      {memberResult?.length ? (
+      {memberResult.length ? (
         <>
           <h2 className="list-title pb-3 pt-4 sm:pb-4 sm:pt-5">人物</h2>
-          {memberResult?.map((m, idx) => (
+          {memberResult.map((m, idx) => (
             <div
               key={m.id}
               className={`flex flex-row border-b-[0.5px] border-primary-200 py-5 last:border-b-0 ${
@@ -61,10 +61,10 @@ export default function MemberAndPublisher({
           ))}
         </>
       ) : null}
-      {publisherResult?.length ? (
+      {publisherResult.length ? (
         <>
           <h2 className="list-title pb-3 pt-4 sm:pb-4 sm:pt-5">媒體</h2>
-          {publisherResult?.map((p, idx) => (
+          {publisherResult.map((p, idx) => (
             <div
               key={p.id}
               className={`flex flex-row border-b-[0.5px] border-primary-200 py-5 last:border-b-0 ${

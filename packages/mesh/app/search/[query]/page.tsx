@@ -1,7 +1,7 @@
 'use client'
 
 import { notFound } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { type SearchOption, search } from '@/app/actions/search'
 import { type SearchResults } from '@/utils/data-schema'
@@ -38,34 +38,47 @@ export default function SearchResultPage({
     filters[0].id
   )
   const [isLoading, setIsLoading] = useState(true)
-  const [storyResult, setStoryResult] = useState<SearchResults['story']>([])
-  const [collectionResult, setCollectionResult] = useState<
-    SearchResults['collection']
-  >([])
-  const [memberResult, setMemberResult] = useState<SearchResults['member']>([])
-  const [publisherResult, setPublisherResult] = useState<
-    SearchResults['publisher']
-  >([])
-  const [cacheKeys, setCacheKeys] = useState<Set<string>>(new Set())
+  const [resultsCache, setResultsCache] = useState<
+    Record<string, SearchResults>
+  >({})
+  const [currentResults, setCurrentResults] = useState<SearchResults>({
+    story: [],
+    collection: [],
+    member: [],
+    publisher: [],
+  })
+
+  const fetchResults = useCallback(async () => {
+    const cacheKey = `${decodedQuery}-${activeFilter}`
+
+    if (resultsCache[cacheKey]) {
+      setCurrentResults(resultsCache[cacheKey])
+      setIsLoading(false)
+      return
+    }
+
+    const currentFilter = filters.find((f) => f.id === activeFilter)
+    const objectives = currentFilter?.objective ?? []
+
+    const result = await search(decodedQuery, objectives)
+    if (!result) return
+
+    const newResults = {
+      story: result.story,
+      collection: result.collection,
+      member: result.member,
+      publisher: result.publisher,
+    }
+
+    setResultsCache((prev) => ({ ...prev, [cacheKey]: newResults }))
+    setCurrentResults(newResults)
+    setIsLoading(false)
+  }, [activeFilter, decodedQuery, resultsCache])
 
   useEffect(() => {
     if (!decodedQuery) return
-    const fetch = async () => {
-      const currentKey = `${decodedQuery}-${activeFilter}`
-      if (cacheKeys.has(currentKey)) return
-      const currentFilter = filters.find((f) => f.id === activeFilter)
-      const objectives = currentFilter?.objective ?? []
-      setIsLoading(true)
-      const result = await search(decodedQuery, objectives)
-      setStoryResult(result?.story || [])
-      setCollectionResult(result?.collection || [])
-      setMemberResult(result?.member || [])
-      setPublisherResult(result?.publisher || [])
-      setCacheKeys((prev) => new Set(prev).add(currentKey))
-      setIsLoading(false)
-    }
-    fetch()
-  }, [activeFilter, cacheKeys, decodedQuery])
+    fetchResults()
+  }, [fetchResults, decodedQuery])
 
   if (!decodedQuery) return notFound()
 
@@ -94,15 +107,15 @@ export default function SearchResultPage({
         {activeFilter === 'story-collection' ? (
           <StoryAndCollection
             query={decodedQuery}
-            storyResult={storyResult}
-            collectionResult={collectionResult}
+            storyResult={currentResults.story}
+            collectionResult={currentResults.collection}
             isLoading={isLoading}
           />
         ) : (
           <MemberAndPublisher
             query={decodedQuery}
-            memberResult={memberResult}
-            publisherResult={publisherResult}
+            memberResult={currentResults.member}
+            publisherResult={currentResults.publisher}
             isLoading={isLoading}
           />
         )}

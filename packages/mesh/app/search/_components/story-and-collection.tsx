@@ -16,7 +16,7 @@ export default function StoryAndCollection({
   collectionResult: SearchResults['collection']
   isLoading: boolean
 }) {
-  const isNoResult = !storyResult?.length && !collectionResult?.length
+  const isNoResult = !storyResult.length && !collectionResult.length
 
   if (isLoading)
     return (
@@ -29,7 +29,7 @@ export default function StoryAndCollection({
 
   return (
     <>
-      {collectionResult?.length ? (
+      {collectionResult.length ? (
         <>
           <div className="xl:hidden">
             <div className="flex flex-row items-center justify-between">
@@ -46,10 +46,10 @@ export default function StoryAndCollection({
           </div>
         </>
       ) : null}
-      {storyResult?.length ? (
+      {storyResult.length ? (
         <>
           <h2 className="list-title pb-3 pt-4 sm:pb-4 sm:pt-5">所有新聞</h2>
-          {storyResult?.map((story, idx) => (
+          {storyResult.map((story, idx) => (
             <StoryCard
               key={story.id}
               story={story}

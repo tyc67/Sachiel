@@ -314,7 +314,7 @@ export const SearchResultsSchema = z.object({
         is_active: z.boolean(),
       })
     )
-    .optional(),
+    .default([]),
   publisher: z
     .array(
       z.object({
@@ -325,7 +325,7 @@ export const SearchResultsSchema = z.object({
         followerCount: z.number(),
       })
     )
-    .optional(),
+    .default([]),
   story: z
     .array(
       z.object({
@@ -344,7 +344,7 @@ export const SearchResultsSchema = z.object({
         }),
       })
     )
-    .optional(),
+    .default([]),
   collection: z
     .array(
       z.object({
@@ -365,7 +365,7 @@ export const SearchResultsSchema = z.object({
         readsCount: z.number(),
       })
     )
-    .optional(),
+    .default([]),
 })
 
 export type SearchResults = z.infer<typeof SearchResultsSchema>
