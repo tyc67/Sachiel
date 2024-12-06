@@ -54,6 +54,7 @@ export const rawReadrStorySchema = sourceSchema.extend({
 export const rawMostSponsoredPublisherStorySchema = z.object({
   ...sourceSchema.shape,
   sponsoredCount: z.number(),
+  logo: z.string(),
   stories: z.array(storySchema.omit({ picks: true, pickCount: true })),
 })
 
