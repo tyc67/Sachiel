@@ -22,3 +22,7 @@ export function getMemberProfileUrl(customId: string) {
   }
   return ''
 }
+
+export function getSearchUrl(text: string) {
+  return `/search/${encodeURIComponent(text.trim())}`
+}

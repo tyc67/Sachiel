@@ -314,7 +314,37 @@ export const SearchResultsSchema = z.object({
         is_active: z.boolean(),
       })
     )
-    .optional(),
+    .default([]),
+  publisher: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        customId: z.string(),
+        logo: z.string(),
+        followerCount: z.number(),
+      })
+    )
+    .default([]),
+  story: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        og_image: z.union([z.string().url(), z.literal('')]),
+        og_description: z.string(),
+        published_date: z.string(),
+        full_screen_ad: FullScreenAdEnum,
+        isMember: z.boolean(),
+        source: z.object({
+          id: z.string(),
+          customId: z.string(),
+          title: z.string(),
+          is_active: z.boolean(),
+        }),
+      })
+    )
+    .default([]),
   collection: z
     .array(
       z.object({
@@ -335,7 +365,7 @@ export const SearchResultsSchema = z.object({
         readsCount: z.number(),
       })
     )
-    .optional(),
+    .default([]),
 })
 
 export type SearchResults = z.infer<typeof SearchResultsSchema>

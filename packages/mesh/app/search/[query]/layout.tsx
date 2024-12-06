@@ -1,6 +1,5 @@
+import Loading from '@/app/_components/loading'
 import LayoutTemplate from '@/components/layout-template'
-
-import Loading from '../_components/loading'
 
 export default function SearchLayout({
   children,
@@ -11,7 +10,7 @@ export default function SearchLayout({
     <LayoutTemplate
       type="default"
       suspenseFallback={<Loading />}
-      customStyle={{ background: 'bg-multi-layer-light' }}
+      customStyle={{ background: 'bg-white' }}
     >
       {children}
     </LayoutTemplate>
