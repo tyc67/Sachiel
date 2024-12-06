@@ -1,7 +1,6 @@
 import { useRouter } from 'next/navigation'
 
 import FollowButton from '@/app/social/_components/follow-button'
-import Spinner from '@/components/spinner'
 import Avatar from '@/components/story-card/avatar'
 import { type SearchResults } from '@/utils/data-schema'
 
@@ -11,24 +10,13 @@ export default function MemberAndPublisher({
   query,
   memberResult,
   publisherResult,
-  isLoading,
 }: {
   query: string
   memberResult: SearchResults['member']
   publisherResult: SearchResults['publisher']
-  isLoading: boolean
 }) {
   const router = useRouter()
   const isNoResult = !memberResult.length && !publisherResult.length
-
-  if (isLoading)
-    return (
-      <>
-        <div className="flex h-[calc(100vh-171px)] justify-center">
-          <Spinner />
-        </div>
-      </>
-    )
 
   return (
     <>

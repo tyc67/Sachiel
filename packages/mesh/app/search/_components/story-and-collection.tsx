@@ -1,4 +1,3 @@
-import Spinner from '@/components/spinner'
 import { type SearchResults } from '@/utils/data-schema'
 
 import CarouselWrapper from './carousel-wrapper'
@@ -9,23 +8,12 @@ export default function StoryAndCollection({
   query,
   storyResult,
   collectionResult,
-  isLoading,
 }: {
   query: string
   storyResult: SearchResults['story']
   collectionResult: SearchResults['collection']
-  isLoading: boolean
 }) {
   const isNoResult = !storyResult.length && !collectionResult.length
-
-  if (isLoading)
-    return (
-      <>
-        <div className="flex h-[calc(100vh-171px)] justify-center">
-          <Spinner />
-        </div>
-      </>
-    )
 
   return (
     <>

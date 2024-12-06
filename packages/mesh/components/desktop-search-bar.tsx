@@ -6,6 +6,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import useSearchSuggestion from '@/hooks/use-search-suggestion'
+import { getSearchUrl } from '@/utils/get-url'
 
 import Icon from './icon'
 import Avatar from './story-card/avatar'
@@ -72,7 +73,7 @@ export default function DesktopSearchBar({
 
   const handleClickRecentSearch = (item: string) => {
     setIsFocused(false)
-    router.push(`/search/${encodeURIComponent(item.trim())}`)
+    router.push(getSearchUrl(item))
   }
 
   return (
@@ -135,9 +136,7 @@ export default function DesktopSearchBar({
         <ul className="absolute left-0 top-full z-modal mt-1 w-full rounded-md bg-white shadow-md">
           <li
             className="flex cursor-pointer flex-row items-center rounded-t-md px-5 py-[10px] hover:bg-primary-100"
-            onClick={() =>
-              router.push(`/search/${encodeURIComponent(searchText.trim())}`)
-            }
+            onClick={() => router.push(getSearchUrl(searchText))}
           >
             <div className="flex size-11 items-center justify-center">
               <Icon size="l" iconName="icon-search-bar" />

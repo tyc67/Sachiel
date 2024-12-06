@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import useSearchSuggestion from '@/hooks/use-search-suggestion'
+import { getSearchUrl } from '@/utils/get-url'
 
 import Icon from './icon'
 import Avatar from './story-card/avatar'
@@ -77,11 +78,7 @@ export default function SearchModal({
                 <Fragment key={index}>
                   <li
                     className="flex flex-row p-5"
-                    onClick={() =>
-                      router.push(
-                        `/search/${encodeURIComponent(record.trim())}`
-                      )
-                    }
+                    onClick={() => router.push(getSearchUrl(record))}
                   >
                     <p className="subtitle-1 mr-auto">{record}</p>
                     <button
@@ -100,9 +97,7 @@ export default function SearchModal({
           <ul className="h-[calc(100vh-60px)] bg-white">
             <li
               className="flex flex-row items-center px-5 py-[10px]"
-              onClick={() =>
-                router.push(`/search/${encodeURIComponent(searchText.trim())}`)
-              }
+              onClick={() => router.push(getSearchUrl(searchText))}
             >
               <div className="flex size-11 items-center justify-center">
                 <Icon size="l" iconName="icon-search-bar" />

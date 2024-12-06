@@ -12,6 +12,7 @@ export async function search(queryText: string, objectives: SearchOption[]) {
     {
       text: queryText,
       objectives,
+      manual: true,
     },
     {
       cache: 'no-cache',

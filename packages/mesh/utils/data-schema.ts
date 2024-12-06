@@ -331,7 +331,7 @@ export const SearchResultsSchema = z.object({
       z.object({
         id: z.string(),
         title: z.string(),
-        og_image: z.string().url(),
+        og_image: z.union([z.string().url(), z.literal('')]),
         og_description: z.string(),
         published_date: z.string(),
         full_screen_ad: FullScreenAdEnum,
