@@ -20,7 +20,7 @@ type Position = {
   top: number
   left: number
 }
-
+type TypeOfUser = 'member' | 'publisher'
 const isPositionValid = (position: Position) => {
   return Number.isFinite(position.top) && Number.isFinite(position.left)
 }
@@ -29,10 +29,12 @@ export default function ProfileMoreActionButton({
   customId,
   nestedScrollContainerRef,
   className,
+  typeOfUser,
 }: {
   customId: string
   nestedScrollContainerRef?: RefObject<HTMLElement>
   className?: string
+  typeOfUser: TypeOfUser
 }) {
   const [shouldShowShareSheet, setShouldShowShareSheet] = useState(false)
   const [shouldShowActionSheet, setShouldShowActionSheet] = useState(false)
@@ -135,12 +137,13 @@ export default function ProfileMoreActionButton({
           openReportSheet={openReportSheet}
           openBlockSheet={openBlockSheet}
           position={position}
+          typeOfUser={typeOfUser}
         />
       )}
       {shouldShowShareSheet && (
         <ShareSheet
           onClose={closeShareSheet}
-          url={getMemberProfileUrl(customId)}
+          url={getMemberProfileUrl(customId, typeOfUser)}
         />
       )}
       {shouldShowReportSheet && <ReportSheet onClose={closeReportSheet} />}
@@ -173,6 +176,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     openReportSheet,
     position,
     onClose,
+    typeOfUser,
   }: {
     customId: string
     openShareSheet: () => void
@@ -180,6 +184,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     openBlockSheet: () => void
     position: Position
     onClose: () => void
+    typeOfUser: TypeOfUser
   },
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -196,7 +201,7 @@ const ActionSheet = forwardRef(function ActionSheet(
     }
     switch (type) {
       case ActionType.CopyLink: {
-        const storyUrl = getMemberProfileUrl(customId)
+        const storyUrl = getMemberProfileUrl(customId, typeOfUser)
         navigator.clipboard
           .writeText(storyUrl)
           .then(() => {
