@@ -21,6 +21,7 @@ export default function ProfileLayout({
 }) {
   const pathName = usePathname()
   const params = useParams<{ customId?: string }>()
+  const typeOfUser = 'publisher'
 
   const pageCustomId = params.customId ?? ''
 
@@ -31,7 +32,13 @@ export default function ProfileLayout({
   const navigationData = {
     leftButtons: [<GoBackButton key={0} />],
     title: pageCustomId,
-    rightButtons: [<ProfileMoreActionButton key={0} customId={pageCustomId} />],
+    rightButtons: [
+      <ProfileMoreActionButton
+        key={0}
+        customId={pageCustomId}
+        typeOfUser={typeOfUser}
+      />,
+    ],
   }
 
   return (
