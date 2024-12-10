@@ -88,7 +88,6 @@ const Comment: React.FC<CommentProps> = ({
   }
   if (width < getTailwindConfigBreakpointNumber('md') && !commentData.content)
     return <></>
-  if (!state.commentList.length) return <></>
   return (
     <>
       <section

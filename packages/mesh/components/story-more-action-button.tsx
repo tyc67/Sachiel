@@ -13,7 +13,9 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
+import useUserPayload from '@/hooks/use-user-payload'
 import { PaymentType } from '@/types/payment'
+import { logStoryAddedToBookmark } from '@/utils/event-logs'
 import { getStoryUrl } from '@/utils/get-url'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
@@ -113,6 +115,11 @@ export default function StoryMoreActionButton({
     }
   }, [closeActionSheet, nestedScrollContainerRef])
 
+  const storyInfo = {
+    storyId: story.id,
+    storyTitle: story?.title ?? '',
+  }
+
   return (
     <div className="relative">
       <button
@@ -144,7 +151,11 @@ export default function StoryMoreActionButton({
       )}
       {shouldShowShareSheet &&
         createPortal(
-          <ShareSheet onClose={closeShareSheet} url={getStoryUrl(story.id)} />,
+          <ShareSheet
+            onClose={closeShareSheet}
+            url={getStoryUrl(story.id)}
+            storyInfo={storyInfo}
+          />,
           document.body
         )}
       {shouldShowAddCollection &&
@@ -210,7 +221,7 @@ const ActionSheet = forwardRef(function ActionSheet(
 ) {
   const router = useRouter()
   const { user, setUser } = useUser()
-
+  const userPayload = useUserPayload()
   const isStoryAddedBookmark = user.bookmarkStoryIds.has(storyId)
   const hasPosition = isPositionValid(position)
   const { addToast } = useToast()
@@ -279,6 +290,7 @@ const ActionSheet = forwardRef(function ActionSheet(
               status: 'success',
               text: TOAST_MESSAGE.addBookmarkSuccess,
             })
+            logStoryAddedToBookmark(userPayload, storyId)
           } else {
             addToast({
               status: 'fail',

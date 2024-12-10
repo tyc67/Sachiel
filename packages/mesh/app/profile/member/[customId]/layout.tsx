@@ -26,6 +26,7 @@ export default function ProfileMemberLayout({
   const params = useParams<{ customId?: string }>()
   const { user } = useUser()
   const router = useRouter()
+  const typeOfUser = 'member'
 
   const pageCustomId = params.customId ?? ''
   const isSelf = pageCustomId === user?.customId
@@ -57,14 +58,22 @@ export default function ProfileMemberLayout({
         ],
         title: pageCustomId,
         rightButtons: [
-          <ProfileMoreActionButton key={0} customId={pageCustomId} />,
+          <ProfileMoreActionButton
+            key={0}
+            customId={pageCustomId}
+            typeOfUser={typeOfUser}
+          />,
         ],
       }}
       nonMobileNavigation={{
         leftButtons: isSelf ? [] : [<GoBackButton key={0} />],
         title: pageCustomId,
         rightButtons: [
-          <ProfileMoreActionButton key={0} customId={pageCustomId} />,
+          <ProfileMoreActionButton
+            key={0}
+            customId={pageCustomId}
+            typeOfUser={typeOfUser}
+          />,
         ],
       }}
     >

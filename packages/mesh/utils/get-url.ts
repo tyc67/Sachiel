@@ -16,9 +16,16 @@ export function getCollectionUrl(collectionId: string) {
   return ''
 }
 
-export function getMemberProfileUrl(customId: string) {
+export function getMemberProfileUrl(
+  customId: string,
+  typeOfUser: 'member' | 'publisher'
+) {
   if (typeof window !== 'undefined') {
-    return `${window.location.origin}/profile/member/${customId}`
+    return `${window.location.origin}/profile/${typeOfUser}/${customId}`
   }
   return ''
+}
+
+export function getSearchUrl(text: string) {
+  return `/search/${encodeURIComponent(text.trim())}`
 }

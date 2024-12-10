@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import type { ButtonColor } from '@/components/button'
+import type { ButtonColor, ButtonSize } from '@/components/button'
 import Button from '@/components/button'
 import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
@@ -12,9 +12,11 @@ import { debounce } from '@/utils/performance'
 export default function CollectionPickButton({
   collectionId,
   color = 'white',
+  size = 'sm',
 }: {
   collectionId: string
   color?: ButtonColor
+  size?: ButtonSize
 }) {
   const router = useRouter()
   const { user } = useUser()
@@ -32,7 +34,7 @@ export default function CollectionPickButton({
 
   return (
     <Button
-      size="sm"
+      size={size}
       color={color}
       text="精選"
       icon={{ iconName: 'icon-star-primary', size: 's' }}

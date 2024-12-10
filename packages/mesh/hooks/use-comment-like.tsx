@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { likeComment, unlikeComment } from '@/app/actions/comment'
 import TOAST_MESSAGE from '@/constants/toast'
@@ -53,17 +53,19 @@ export const useCommentLike = ({
   const { addToast } = useToast()
   const { updateCommentLikeStatus } = useComment()
 
-  const memberLikedList = (): Array<MemberType> | undefined => {
+  const memberLikedList = useMemo(() => {
     if (isCommentType(commentData)) {
       return commentData.isMemberLiked || []
     }
     if (isCommentTypeFromStory(commentData)) {
       return commentData.like || []
     }
-    return undefined
-  }
+    return []
+  }, [commentData])
 
-  const isCommentLiked = !!memberLikedList()?.length
+  const isCommentLiked = !!memberLikedList.find(
+    (memberLiked) => memberLiked.id === user.memberId
+  )
 
   const handleLikeComment = debounce(async () => {
     const likeCommentArgs = {
@@ -137,6 +139,14 @@ export const useCommentLike = ({
       console.error({ error })
     }
   })
+
+  useEffect(() => {
+    /**
+     * sync like state when the prop change
+     * ex: same comment display in two section (`所有留言` and `熱門留言`)
+     */
+    setCommentData(initialComment)
+  }, [initialComment])
 
   return {
     commentData,

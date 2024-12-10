@@ -13,6 +13,8 @@ import Spinner from '@/components/spinner'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
+import useUserPayload from '@/hooks/use-user-payload'
+import { logSponsor } from '@/utils/event-logs'
 
 import SponsorInput from './sponsor-input'
 import { type SponsorshipPoints } from './sponsor-option'
@@ -37,6 +39,7 @@ export default function SponsorshipInfo({
   const [isSyncing, setIsSyncing] = useState(false)
   const [isSponsored, setIsSponsored] = useState(false)
   const { addToast } = useToast()
+  const userPayoload = useUserPayload()
 
   const handleUserOperationSuccess = async (hash: Hex) => {
     setIsSyncing(true)
@@ -49,6 +52,7 @@ export default function SponsorshipInfo({
     const response = await sponsorPublisher(txr)
     if (response) {
       setIsSponsored(true)
+      logSponsor(userPayoload, publisher.title ?? '')
     }
     setIsSyncing(false)
   }

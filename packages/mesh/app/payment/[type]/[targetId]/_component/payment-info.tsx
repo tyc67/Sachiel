@@ -14,6 +14,8 @@ import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import { auth } from '@/firebase/client'
+import useUserPayload from '@/hooks/use-user-payload'
+import { logPayment } from '@/utils/event-logs'
 import { isValidEmail } from '@/utils/validate-email'
 
 import { type StoryUnlockPolicy } from '../page'
@@ -35,6 +37,7 @@ export default function PaymentInfo({
   const [isLoading, setIsLoading] = useState(false)
   const { addToast } = useToast()
   const isValid = isValidEmail(email)
+  const userPayload = useUserPayload()
 
   const handleUserOperationSuccess = async (hash: Hex) => {
     setIsLoading(true)
@@ -46,7 +49,7 @@ export default function PaymentInfo({
     }
     await unlockSingleStory(txr)
     addToast({ status: 'success', text: TOAST_MESSAGE.unlockStorySuccess })
-
+    logPayment(userPayload, storyId)
     if (auth.currentUser) {
       const idToken = await auth.currentUser.getIdToken()
       const response = await getStoryAccess(idToken, storyId)
