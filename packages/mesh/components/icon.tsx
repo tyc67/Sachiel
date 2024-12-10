@@ -70,7 +70,6 @@ export type IconName =
   | 'icon-more-horiz-hover'
   | 'icon-chat-bubble'
   | 'icon-dot'
-  | 'icon-avatar-default'
   | 'icon-donate'
   | 'icon-user-dash'
   | 'icon-apple'
