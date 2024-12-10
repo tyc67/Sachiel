@@ -9,8 +9,7 @@ async function fetchTermsOfService() {
     STATIC_FILE_ENDPOINTS.termsOfService,
     undefined,
     globalLogFields,
-    'Error occurs while fetching terms of service',
-    'text'
+    'Error occurs while fetching terms of service'
   )
   return data
 }
@@ -21,8 +20,7 @@ async function fetchPrivacyPolicy() {
     STATIC_FILE_ENDPOINTS.privacyPolicy,
     undefined,
     globalLogFields,
-    'Error occurs while fetching privacy policy',
-    'text'
+    'Error occurs while fetching privacy policy'
   )
   return data
 }

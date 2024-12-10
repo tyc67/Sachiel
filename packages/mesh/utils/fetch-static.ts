@@ -6,8 +6,7 @@ export default async function fetchStatic<T>(
   url: string | URL | Request,
   init?: RequestInit,
   traceObject?: TraceObject,
-  errorMessage?: string,
-  responseType: 'json' | 'text' = 'json'
+  errorMessage?: string
 ) {
   try {
     const response = await fetch(url, init)
@@ -15,14 +14,16 @@ export default async function fetchStatic<T>(
       throw new Error(`Failed to fetch: ${response.statusText}`)
     }
 
+    const contentType = response.headers.get('Content-type')
     let data: T
 
-    if (responseType === 'text') {
+    if (contentType?.includes('text/html')) {
       data = (await response.text()) as T
-    } else {
+    } else if (contentType?.includes('application/json')) {
       data = await response.json()
+    } else {
+      throw new Error(`Unsupported Content-Type: ${contentType}`)
     }
-
     return data
   } catch (error) {
     const fallbackErrorMessage =
