@@ -1,7 +1,9 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react'
+import { createPortal } from 'react-dom'
 
+import PickersModal from '@/components/pickers-modal'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
 
 export type Picker = DisplayPicks[number]['member']
@@ -63,6 +65,7 @@ export function PickersModalProvider({
         closePickersModal,
       }}
     >
+      {isModalOpen && createPortal(<PickersModal />, document.body)}
       {children}
     </ModalContext.Provider>
   )

@@ -1,5 +1,6 @@
 import { useComment } from '@/context/comment'
 import useWindowDimensions from '@/hooks/use-window-dimension'
+import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 export default function StoryCommentCount({
   commentsCount,
@@ -17,10 +18,25 @@ export default function StoryCommentCount({
       ? commentsCount
       : (Math.floor(commentsCount / 1000) / 10).toFixed(1)
 
+  const contentJsx = (() => {
+    if (commentsCount) {
+      return (
+        <span>
+          <span className="pr-1 text-primary-700">{displayCount}</span>
+          {commentsCount < 10000 ? '則留言' : '萬則留言'}
+        </span>
+      )
+    } else {
+      return <span>尚無人留言</span>
+    }
+  })()
+
   return (
-    <button onClick={openCommentBlock} disabled={width > 768}>
-      <span className="pr-1 text-primary-700">{displayCount}</span>
-      <span>{commentsCount < 10000 ? '則留言' : '萬則留言'}</span>
+    <button
+      onClick={openCommentBlock}
+      disabled={width > getTailwindConfigBreakpointNumber('sm')}
+    >
+      {contentJsx}
     </button>
   )
 }
