@@ -5,18 +5,22 @@ import { createPortal } from 'react-dom'
 
 import PickersModal from '@/components/pickers-modal'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
+import { PickObjective } from '@/types/objective'
 
 export type Picker = DisplayPicks[number]['member']
 type ModalType = {
+  pickObjective: PickObjective
   isModalOpen: boolean
   pickers: Picker[]
-  storyId: string
+  objectiveId: string
   openPickersModal: ({
+    pickObjective,
     displayPicks,
-    storyId,
+    objectiveId,
   }: {
+    pickObjective: PickObjective
     displayPicks: DisplayPicks
-    storyId: string
+    objectiveId: string
   }) => void
   closePickersModal: () => void
 }
@@ -28,16 +32,21 @@ export function PickersModalProvider({
 }: {
   children: React.ReactNode
 }) {
+  const [pickObjective, setPickObjective] = useState<PickObjective>(
+    PickObjective.Story
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pickers, setPickers] = useState<Picker[]>([])
-  const [storyId, setStoryId] = useState('')
+  const [objectiveId, setObjectiveId] = useState('')
 
   const openPickersModal = ({
+    pickObjective,
     displayPicks,
-    storyId,
+    objectiveId,
   }: {
+    pickObjective: PickObjective
     displayPicks: DisplayPicks
-    storyId: string
+    objectiveId: string
   }) => {
     const newPickers = displayPicks.map((p) => ({
       id: p.member.id,
@@ -45,7 +54,8 @@ export function PickersModalProvider({
       avatar: p.member.avatar,
       customId: p.member.customId,
     }))
-    setStoryId(storyId)
+    setPickObjective(pickObjective)
+    setObjectiveId(objectiveId)
     setPickers(newPickers)
     setIsModalOpen(true)
   }
@@ -59,8 +69,9 @@ export function PickersModalProvider({
     <ModalContext.Provider
       value={{
         isModalOpen,
+        pickObjective,
         pickers,
-        storyId,
+        objectiveId,
         openPickersModal,
         closePickersModal,
       }}

@@ -128,7 +128,7 @@ export default function Article({
                 maxCount={4}
                 pickCount={displayPicksCount}
                 commentCount={story?.commentsCount ?? 0}
-                storyId={story?.id ?? ''}
+                objectiveId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
               <div className="hidden items-center gap-1 sm:flex">

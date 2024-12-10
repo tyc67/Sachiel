@@ -263,7 +263,7 @@ const ArticleCard = ({
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
               maxCount={4}
-              storyId={storyData.id}
+              objectiveId={storyData.id}
             />
             {isCollection(storyData) ? (
               <CollectionPickButton collectionId={storyData.id} />

@@ -30,7 +30,7 @@ const MobileStoryCommentMeta = ({
         <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={pickCount}
-          storyId={storyId}
+          objectiveId={storyId}
         />
         <StoryPickButton storyId={'0'} />
       </div>

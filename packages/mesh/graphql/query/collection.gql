@@ -160,3 +160,29 @@ query GetMemberCollections($creatorId: ID) {
     }
   }
 }
+
+query GetCollectionPickers(
+  $collectionId: ID
+  $picksTake: Int
+  $picksSkip: Int
+) {
+  collection(where: { id: $collectionId }) {
+    id
+    picks(
+      where: { kind: { equals: "read" }, is_active: { equals: true } }
+      orderBy: { createdAt: desc }
+      take: $picksTake
+      skip: $picksSkip
+    ) {
+      id
+      createdAt
+      kind
+      member {
+        id
+        name
+        avatar
+        customId
+      }
+    }
+  }
+}

@@ -3,23 +3,26 @@ import ObjectivePickCount from '@/components/general-objective/objective-pick-co
 import Icon from '@/components/icon'
 import { usePickersModal } from '@/context/pickers-modal'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
+import type { PickObjective } from '@/types/objective'
 
 export type MobileBottomActionBarProps = {
-  storyId: string
+  objectiveId: string
   picksCount: number
   commentsCount: number
   displayPicks?: DisplayPicks
   actions: React.ReactNode[]
   isSinglePickByCurrentUser: boolean
+  pickObjective: PickObjective
 }
 
 export default function MobileBottomActionBar({
-  storyId,
+  objectiveId,
   picksCount = 0,
   commentsCount = 0,
   displayPicks = [],
   actions,
   isSinglePickByCurrentUser,
+  pickObjective,
 }: MobileBottomActionBarProps) {
   const { openPickersModal } = usePickersModal()
 
@@ -32,7 +35,11 @@ export default function MobileBottomActionBar({
           <ObjectivePickCount
             picksCount={picksCount}
             onClickDisplayPicker={() =>
-              openPickersModal({ displayPicks, storyId })
+              openPickersModal({
+                displayPicks,
+                objectiveId,
+                pickObjective,
+              })
             }
             disabled={isSinglePickByCurrentUser}
           />

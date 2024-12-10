@@ -78,7 +78,7 @@ export default function MainCard({ story }: Props) {
           <ObjectivePickInfo
             displayPicks={displayPicks}
             pickCount={displayPicksCount}
-            storyId={story.id}
+            objectiveId={story.id}
           />
           <StoryPickButton storyId={story.id} />
         </div>

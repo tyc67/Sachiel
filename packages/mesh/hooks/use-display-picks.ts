@@ -10,7 +10,7 @@ import type {
 } from '@/types/homepage'
 
 export function useDisplayPicks(
-  story:
+  objective:
     | CategoryStory
     | DailyStory
     | HomepageStory
@@ -20,25 +20,28 @@ export function useDisplayPicks(
     | Collection
 ) {
   const { user } = useUser()
-  if (!story || !story.picks) return { displayPicks: [], displayPicksCount: 0 }
+  if (!objective || !objective.picks)
+    return { displayPicks: [], displayPicksCount: 0 }
 
   const isUserLoggedIn = !!user.memberId
-  const isStoryPicked = isUserLoggedIn ? user.pickStoryIds.has(story.id) : false
+  const isStoryPicked = isUserLoggedIn
+    ? user.pickStoryIds.has(objective.id)
+    : false
   const isUserInPicks = isUserLoggedIn
-    ? story.picks.some((pick) => pick.member?.id === user.memberId)
+    ? objective.picks.some((pick) => pick.member?.id === user.memberId)
     : false
 
   const picksCount =
-    'picksCount' in story
-      ? (story as { picksCount: number }).picksCount
-      : 'pickCount' in story
-      ? (story as { pickCount: number }).pickCount
+    'picksCount' in objective
+      ? (objective as { picksCount: number }).picksCount
+      : 'pickCount' in objective
+      ? (objective as { pickCount: number }).pickCount
       : 0
 
   const transformedData = {
-    id: story.id,
+    id: objective.id,
     picksCount,
-    picks: story.picks.map((p) => ({
+    picks: objective.picks.map((p) => ({
       member: {
         id: p.member?.id ?? '',
         name: p.member?.name ?? '',

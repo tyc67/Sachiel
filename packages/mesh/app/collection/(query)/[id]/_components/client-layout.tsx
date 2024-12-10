@@ -7,6 +7,7 @@ import ShareButton from '@/components/navigation/share-button'
 // import { BookmarkObjective } from '@/types/objective'
 import { useUser } from '@/context/user'
 import type { GetCollectionQuery } from '@/graphql/__generated__/graphql'
+import { PickObjective } from '@/types/objective'
 // import AddBookMarkButton from '@/components/navigation/add-bookmark-button'
 import { getCollectionUrl } from '@/utils/get-url'
 
@@ -57,7 +58,8 @@ export default function ClientLayout({
         ],
       }}
       mobileActionBar={{
-        storyId: collection.id,
+        pickObjective: PickObjective.Collection,
+        objectiveId: collection.id,
         picksCount: collection.picksCount ?? 0,
         commentsCount: collection.commentsCount ?? 0,
         actions: [

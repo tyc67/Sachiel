@@ -94,7 +94,7 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
             displayPicks={displayPicks}
             pickCount={displayPicksCount}
             maxCount={4}
-            storyId={story?.id ?? ''}
+            objectiveId={story?.id ?? ''}
           />
           <StoryPickButton storyId={story?.id ?? ''} />
         </section>

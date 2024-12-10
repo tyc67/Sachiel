@@ -79,7 +79,7 @@ export default function HeroStoryCard({ story }: { story: Story }) {
               <ObjectivePickInfo
                 displayPicks={displayPicks}
                 pickCount={displayPicksCount}
-                storyId={story.id}
+                objectiveId={story.id}
               />
               <StoryPickButton storyId={story.id} />
             </div>
