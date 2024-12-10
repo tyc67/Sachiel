@@ -1,20 +1,32 @@
+'use client'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
 
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import useUserPayload from '@/hooks/use-user-payload'
 import type { SponsoredStory } from '@/types/homepage'
+import { logStoryClick } from '@/utils/event-logs'
 
 const StoryCard = ({
   showImage,
   story,
+  publisherName,
 }: {
   showImage: boolean
   story: SponsoredStory['stories'][number]
+  publisherName: string
 }) => {
+  const userPayload = useUserPayload()
+
   return (
     <article className="border-b-[0.5px] border-primary-200 py-3 last:border-b-0">
-      <NextLink href={`/story/${story.id}`}>
+      <NextLink
+        href={`/story/${story.id}`}
+        onClick={() =>
+          logStoryClick(userPayload, story.id, story.title, publisherName)
+        }
+      >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
             <NextImage
@@ -53,9 +65,15 @@ export default function TopPublisherCard({ publisher }: Props) {
     <div className="flex flex-col rounded-lg border-[0.5px] border-primary-200 bg-primary-100 px-5 pb-2 pt-5 lg:self-start lg:px-8 lg:pb-3 lg:pt-6">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex gap-x-3">
-          {/* TODO: render logo of publisher */}
-          <NextLink href={`profile/publisher/${publisher.customId}`}>
-            <div>LOGO</div>
+          <NextLink
+            href={`profile/publisher/${publisher.customId}`}
+            className="relative size-11 overflow-hidden rounded-lg"
+          >
+            <NextImage
+              src={publisher.logo || '/images/default-publisher-logo.png'}
+              fill
+              alt={publisher.title}
+            />
           </NextLink>
           <div>
             <p className="subtitle-2 text-primary-700 hover-or-active:underline">
@@ -75,7 +93,12 @@ export default function TopPublisherCard({ publisher }: Props) {
         <PublisherDonateButton publisherId={publisher.id} />
       </div>
       {publisher.stories.map((story, index) => (
-        <StoryCard showImage={index === 0} story={story} key={story.id} />
+        <StoryCard
+          showImage={index === 0}
+          story={story}
+          key={story.id}
+          publisherName={publisher.title}
+        />
       ))}
     </div>
   )

@@ -54,6 +54,7 @@ export const rawReadrStorySchema = sourceSchema.extend({
 export const rawMostSponsoredPublisherStorySchema = z.object({
   ...sourceSchema.shape,
   sponsoredCount: z.number(),
+  logo: z.string(),
   stories: z.array(storySchema.omit({ picks: true, pickCount: true })),
 })
 
@@ -301,3 +302,71 @@ export const mostSponsorPublishersSchema = z.array(
 export type MostSponsorPublisher = z.infer<
   typeof mostSponsorPublishersSchema
 >[number]
+
+export const SearchResultsSchema = z.object({
+  member: z
+    .array(
+      z.object({
+        id: z.string(),
+        customId: z.string(),
+        name: z.string(),
+        nickname: z.string(),
+        avatar: z.string(),
+        is_active: z.boolean(),
+      })
+    )
+    .default([]),
+  publisher: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        customId: z.string(),
+        logo: z.string(),
+        followerCount: z.number(),
+      })
+    )
+    .default([]),
+  story: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        og_image: z.union([z.string().url(), z.literal('')]),
+        og_description: z.string(),
+        published_date: z.string(),
+        full_screen_ad: FullScreenAdEnum,
+        isMember: z.boolean(),
+        source: z.object({
+          id: z.string(),
+          customId: z.string(),
+          title: z.string(),
+          is_active: z.boolean(),
+        }),
+      })
+    )
+    .default([]),
+  collection: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        status: z.string(),
+        creator: z.object({
+          id: z.string(),
+          customId: z.string(),
+          nickname: z.string(),
+        }),
+        heroImage: z.object({
+          resized: z.object({
+            original: z.string(),
+          }),
+          urlOriginal: z.string(),
+        }),
+        readsCount: z.number(),
+      })
+    )
+    .default([]),
+})
+
+export type SearchResults = z.infer<typeof SearchResultsSchema>
