@@ -2,7 +2,7 @@ import { useComment } from '@/context/comment'
 import useWindowDimensions from '@/hooks/use-window-dimension'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
-export default function StoryCommentCount({
+export default function ObjectiveCommentCount({
   commentsCount,
 }: {
   commentsCount: number

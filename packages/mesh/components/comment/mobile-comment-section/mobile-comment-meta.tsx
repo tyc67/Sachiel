@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import React from 'react'
 
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
 
 const MobileStoryCommentMeta = ({
@@ -27,7 +27,7 @@ const MobileStoryCommentMeta = ({
         </h4>
       </Link>
       <div className="mt-4 flex h-8 flex-row justify-between">
-        <StoryPickInfo
+        <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={pickCount}
           storyId={storyId}

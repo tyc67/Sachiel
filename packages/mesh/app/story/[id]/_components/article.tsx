@@ -4,9 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import Button from '@/components/button'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
@@ -123,7 +123,7 @@ export default function Article({
               </div>
             )}
             <div className="mt-5 flex justify-between">
-              <StoryPickInfo
+              <ObjectivePickInfo
                 displayPicks={displayPicks}
                 maxCount={4}
                 pickCount={displayPicksCount}

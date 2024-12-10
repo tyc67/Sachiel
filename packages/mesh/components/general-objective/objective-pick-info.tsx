@@ -5,12 +5,12 @@ import { usePickersModal } from '@/context/pickers-modal'
 import { useUser } from '@/context/user'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
 
-import type { RingColor } from './avatar'
-import Avatar from './avatar'
-import StoryCommentCount from './story-comment-count'
-import StoryPickCount from './story-pick-count'
+import type { RingColor } from '../story-card/avatar'
+import Avatar from '../story-card/avatar'
+import ObjectiveCommentCount from './objective-comment-count'
+import ObjectivePickCount from './objective-pick-count'
 
-export default function StoryPickInfo({
+export default function ObjectivePickInfo({
   displayPicks,
   pickCount,
   maxCount = 4,
@@ -54,7 +54,7 @@ export default function StoryPickInfo({
         </div>
       )}
       <div className="flex items-center">
-        <StoryPickCount
+        <ObjectivePickCount
           picksCount={pickCount}
           onClickDisplayPicker={() =>
             openPickersModal({ displayPicks, storyId })
@@ -64,7 +64,7 @@ export default function StoryPickInfo({
       </div>
       {!!commentCount && (
         <div className="ml-[2px] flex items-center">
-          <StoryCommentCount commentsCount={commentCount} />
+          <ObjectiveCommentCount commentsCount={commentCount} />
         </div>
       )}
     </div>

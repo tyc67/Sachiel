@@ -1,4 +1,4 @@
-export default function StoryPickCount({
+export default function ObjectivePickCount({
   picksCount,
   onClickDisplayPicker,
   disabled,
