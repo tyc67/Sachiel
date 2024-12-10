@@ -4,7 +4,6 @@ import throttle from 'raf-throttle'
 import { useEffect } from 'react'
 
 import useUserPayload from '@/hooks/use-user-payload'
-import { isPageReload } from '@/utils/common'
 import { generateUserBehaviorLogInfo } from '@/utils/generate-user-behavior-log-info'
 import { sendUserBehaviorLog } from '@/utils/send-user-behavior-log'
 
@@ -13,8 +12,6 @@ export default function UserBehaviorLogger() {
 
   //pageview event
   useEffect(() => {
-    if (isPageReload()) return
-
     const info = generateUserBehaviorLogInfo('pageview', userPayload)
     if (info) {
       sendUserBehaviorLog(info)
@@ -23,8 +20,6 @@ export default function UserBehaviorLogger() {
 
   //exit event
   useEffect(() => {
-    if (isPageReload()) return
-
     const info = generateUserBehaviorLogInfo('exit', userPayload)
 
     let hasEventTriggered = false

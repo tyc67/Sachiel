@@ -221,7 +221,7 @@ const ArticleLayout = ({
         <div className="flex grow flex-col items-center bg-white">
           <div className="flex w-full grow justify-center xl:max-w-[theme(width.maxContent)]">
             <main className="flex w-full max-w-[theme(width.articleMain)] flex-col sm:pb-10">
-              <div className="sticky top-[68px] z-layout hidden size-full h-16 bg-white backdrop-blur-sm [background:linear-gradient(to_right,_rgb(255,255,255)_0%,_rgba(255,255,255,0.8)_3%,_rgba(255,255,255,0.8)_97%,_rgb(255,255,255)_100%)]  sm:flex">
+              <div className="sticky top-[68px] z-[5] hidden size-full h-16 bg-white backdrop-blur-sm [background:linear-gradient(to_right,_rgb(255,255,255)_0%,_rgba(255,255,255,0.8)_3%,_rgba(255,255,255,0.8)_97%,_rgb(255,255,255)_100%)]  sm:flex">
                 <NonMobileNavigation
                   type={NonMobileNavigationType.Article}
                   {...nonMobileNavigation}

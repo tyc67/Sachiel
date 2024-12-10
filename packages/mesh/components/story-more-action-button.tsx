@@ -15,7 +15,7 @@ import { useUser } from '@/context/user'
 import useClickOutside from '@/hooks/use-click-outside'
 import useUserPayload from '@/hooks/use-user-payload'
 import { PaymentType } from '@/types/payment'
-import { logBookmarkClick } from '@/utils/event-logs'
+import { logStoryAddedToBookmark } from '@/utils/event-logs'
 import { getStoryUrl } from '@/utils/get-url'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
@@ -290,7 +290,7 @@ const ActionSheet = forwardRef(function ActionSheet(
               status: 'success',
               text: TOAST_MESSAGE.addBookmarkSuccess,
             })
-            logBookmarkClick(userPayload, storyId)
+            logStoryAddedToBookmark(userPayload, storyId)
           } else {
             addToast({
               status: 'fail',

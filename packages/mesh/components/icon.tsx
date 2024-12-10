@@ -152,6 +152,7 @@ export type IconName =
   | 'icon-checkbox-off'
   | 'icon-select-image'
   | 'icon-collection'
+  | 'icon-remove'
 
 export type IconProps = {
   size: Size

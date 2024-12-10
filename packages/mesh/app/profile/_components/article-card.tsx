@@ -18,7 +18,7 @@ import {
   type CommentType,
   type PickListItem,
 } from '@/types/profile'
-import { logStoryClick } from '@/utils/event-logs'
+import { logCollectionClick, logStoryClick } from '@/utils/event-logs'
 
 type StoryDataTypes =
   | NonNullable<PickListItem>
@@ -108,8 +108,8 @@ const storyGetters = {
     default: [],
   }),
   redirectUrl: createGetter<string>({
-    story: (data) => `/story/${data.id}` ?? '',
-    collection: (data) => `/collection/${data.id}` ?? '',
+    story: (data) => `/story/${data.id}`,
+    collection: (data) => `/collection/${data.id}`,
     default: '',
   }),
 } as const
@@ -189,12 +189,14 @@ const ArticleCard = ({
             className="flex grow flex-col"
             href={redirectLink()}
             onClick={() =>
-              logStoryClick(
-                userPayload,
-                storyData.id,
-                storyData?.title ?? '',
-                storyGetters.source(storyData)
-              )
+              isCollection(storyData)
+                ? logCollectionClick(userPayload, storyData.title ?? '')
+                : logStoryClick(
+                    userPayload,
+                    storyData.id,
+                    storyData?.title ?? '',
+                    storyGetters.source(storyData)
+                  )
             }
           >
             {shouldShowSource && (

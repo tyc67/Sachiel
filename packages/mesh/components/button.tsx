@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes } from 'react'
 import Icon, { type IconProps } from './icon'
 
 export type ButtonColor = keyof typeof buttonColor
+export type ButtonSize = keyof typeof buttonStyles
 
 const buttonColor = {
   transparent:

@@ -65,9 +65,15 @@ export default function TopPublisherCard({ publisher }: Props) {
     <div className="flex flex-col rounded-lg border-[0.5px] border-primary-200 bg-primary-100 px-5 pb-2 pt-5 lg:self-start lg:px-8 lg:pb-3 lg:pt-6">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex gap-x-3">
-          {/* TODO: render logo of publisher */}
-          <NextLink href={`profile/publisher/${publisher.customId}`}>
-            <div>LOGO</div>
+          <NextLink
+            href={`profile/publisher/${publisher.customId}`}
+            className="relative size-11 overflow-hidden rounded-lg"
+          >
+            <NextImage
+              src={publisher.logo || '/images/default-publisher-logo.png'}
+              fill
+              alt={publisher.title}
+            />
           </NextLink>
           <div>
             <p className="subtitle-2 text-primary-700 hover-or-active:underline">

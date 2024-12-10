@@ -79,7 +79,7 @@ export function logCategoryClick(
   }
 }
 
-export function logPickClick(userPayload: UserPayload, storyId: string) {
+export function logStoryAddedToPick(userPayload: UserPayload, storyId: string) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
 
   if (basicInfo) {
@@ -98,7 +98,10 @@ export function logPickClick(userPayload: UserPayload, storyId: string) {
   }
 }
 
-export function logBookmarkClick(userPayload: UserPayload, storyId: string) {
+export function logStoryAddedToBookmark(
+  userPayload: UserPayload,
+  storyId: string
+) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
 
   if (basicInfo) {
@@ -117,7 +120,10 @@ export function logBookmarkClick(userPayload: UserPayload, storyId: string) {
   }
 }
 
-export function logCollectionClick(userPayload: UserPayload, storyId: string) {
+export function logStoryAddedToCollection(
+  userPayload: UserPayload,
+  storyId: string
+) {
   const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
 
   if (basicInfo) {
@@ -223,6 +229,26 @@ export function logPayment(userPayload: UserPayload, storyId: string) {
     const info = {
       ...basicInfo,
       interaction,
+    }
+
+    sendUserBehaviorLog(info)
+  }
+}
+
+export function logCollectionClick(
+  userPayload: UserPayload,
+  collectionTitle: string
+) {
+  const basicInfo = generateUserBehaviorLogInfo('click', userPayload)
+
+  if (basicInfo) {
+    const collectionInfo = {
+      collectionTitle,
+    }
+
+    const info = {
+      ...basicInfo,
+      collectionInfo,
     }
 
     sendUserBehaviorLog(info)
