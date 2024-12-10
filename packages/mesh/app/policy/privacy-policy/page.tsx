@@ -15,9 +15,17 @@ export default function Page() {
       const data = await fetchPrivacyPolicy()
       if (data) {
         const bodyElement = document.querySelector('body')
+        const paragraphs =
+          document.querySelectorAll<HTMLElement>('.page-body p')
+
         if (bodyElement) {
           bodyElement.style.marginTop = '0'
         }
+
+        if (paragraphs) {
+          paragraphs.forEach((p) => (p.style.margin = '0'))
+        }
+
         setHtmlContent(data)
         setIsLoading(false)
       }
@@ -29,7 +37,7 @@ export default function Page() {
   if (isLoading) return <Spinner />
 
   return (
-    <section className="px-5 pb-5 pt-6 sm:p-0">
+    <section className="body-1 px-5 pb-5 pt-6 text-primary-700 sm:p-0">
       <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
     </section>
   )
