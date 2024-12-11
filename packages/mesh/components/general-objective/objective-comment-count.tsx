@@ -10,8 +10,16 @@ export default function ObjectiveCommentCount({
   const { dispatch } = useComment()
   const { width } = useWindowDimensions()
   const openCommentBlock = () => {
-    dispatch({ type: 'TOGGLE_MOBILE_COMMENT_MODAL', payload: { isOpen: true } })
-    document.body.classList.add('overflow-hidden')
+    if (width < getTailwindConfigBreakpointNumber('sm')) {
+      dispatch({
+        type: 'TOGGLE_MOBILE_COMMENT_MODAL',
+        payload: { isOpen: true },
+      })
+      document.body.classList.add('overflow-hidden')
+    } else {
+      // toggle desktop comment modal
+      console.log('toggle desktop comment modal')
+    }
   }
   const displayCount =
     commentsCount < 10000
@@ -31,12 +39,5 @@ export default function ObjectiveCommentCount({
     }
   })()
 
-  return (
-    <button
-      onClick={openCommentBlock}
-      disabled={width > getTailwindConfigBreakpointNumber('sm')}
-    >
-      {contentJsx}
-    </button>
-  )
+  return <button onClick={openCommentBlock}>{contentJsx}</button>
 }

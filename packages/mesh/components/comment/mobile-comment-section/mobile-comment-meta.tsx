@@ -1,40 +1,74 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryPickButton from '@/components/story-card/story-pick-button'
+import { useComment } from '@/context/comment'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
+import { CommentObjective } from '@/types/objective'
 
-const MobileStoryCommentMeta = ({
-  storyId,
+const MobileCommentMeta = ({
+  objectiveId,
   title,
-  publisher,
+  source,
   displayPicks,
   pickCount,
 }: {
-  storyId: string
+  objectiveId: string
   title: string
-  publisher: string
+  source: {
+    id: string
+    name: string
+  }
   displayPicks: DisplayPicks
   pickCount: number
 }) => {
+  const { state } = useComment()
+  const { commentObjective } = state
+
+  const authorJsx = useMemo(() => {
+    switch (commentObjective) {
+      case CommentObjective.Story:
+        return (
+          <Link href={`/profile/publisher/${source.id}`}>
+            <h4 className="caption-1 mb-4 line-clamp-1 text-primary-500">
+              {source.name}
+            </h4>
+          </Link>
+        )
+
+      case CommentObjective.Collection:
+        return (
+          <Link href={`/profile/member/${source.id}`}>
+            <h4 className="caption-1 mb-4 line-clamp-1 text-primary-500">
+              {`@${source.name}`}
+            </h4>
+          </Link>
+        )
+
+      default:
+        return null
+    }
+  }, [commentObjective, source.id, source.name])
+
   return (
     <section className="px-5 pb-4 shadow-[0_0.5px_0px_0px_rgba(0,0,0,0.1)]">
       <h2 className={`subtitle-1 mb-2 text-primary-700 sm:hidden`}>{title}</h2>
-      <Link href={`/profile/publisher/${'' ?? ''}`}>
+      {authorJsx}
+      {/* <Link href={`/profile/publisher/${'' ?? ''}`}>
         <h4 className="caption-1 mb-4 line-clamp-1 text-primary-500">
-          {publisher}
+          {authorName}
         </h4>
-      </Link>
+      </Link> */}
       <div className="mt-4 flex h-8 flex-row justify-between">
         <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={pickCount}
-          objectiveId={storyId}
+          objectiveId={objectiveId}
         />
         <StoryPickButton storyId={'0'} />
       </div>
     </section>
   )
 }
-export default MobileStoryCommentMeta
+export default MobileCommentMeta

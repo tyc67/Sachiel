@@ -85,5 +85,6 @@ fragment CollectionInfo on Collection {
   createdAt
   creator {
     customId
+    id
   }
 }

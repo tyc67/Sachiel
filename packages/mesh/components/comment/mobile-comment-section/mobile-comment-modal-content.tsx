@@ -3,7 +3,10 @@ import { useMemo } from 'react'
 
 import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
-import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
+import type {
+  GetCollectionQuery,
+  GetStoryQuery,
+} from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { sortAndFilterComments, sortAuthorComments } from '@/utils/comment'
 
@@ -12,15 +15,19 @@ import CommentModal from '../story-comment/comment-modal'
 import MobileCommentEditDrawer from './mobile-comment-edit-drawer'
 import MobileCommentEditor from './mobile-comment-editor'
 import MobileCommentFooter from './mobile-comment-footer'
-import MobileStoryCommentHeader from './mobile-comment-header'
-import MobileStoryCommentMeta from './mobile-comment-meta'
+import MobileCommentHeader from './mobile-comment-header'
+import MobileCommentMeta from './mobile-comment-meta'
 
-type Story = NonNullable<GetStoryQuery>['story']
+type Story = NonNullable<NonNullable<GetStoryQuery>['story']>
+type Collection = NonNullable<
+  NonNullable<GetCollectionQuery>['collections']
+>[number]
 
 export type CommentObjectiveData = Pick<
-  NonNullable<Story>,
+  Story,
   'title' | 'source' | 'picks' | 'picksCount' | 'id'
->
+> &
+  Pick<Collection, 'title' | 'creator' | 'picks' | 'picksCount' | 'id'>
 
 export function MobileCommentModalContent({
   data,
@@ -64,14 +71,23 @@ export function MobileCommentModalContent({
     [commentList, user]
   )
 
+  console.log(
+    'data.source?.id,',
+    data.source?.id,
+    'data.creator?.customId',
+    data.creator?.customId
+  )
   return (
     <div className="fixed left-0 top-0 z-30 size-full bg-white">
-      <MobileStoryCommentHeader />
+      <MobileCommentHeader />
       <div className="max-h-[calc(100dvh_-_60px)] overflow-y-auto py-4 pb-[69px]">
-        <MobileStoryCommentMeta
-          storyId={data.id}
-          title={data?.title || ''}
-          publisher={data?.source?.title || 'publisher'}
+        <MobileCommentMeta
+          objectiveId={data.id}
+          title={data.title || ''}
+          source={{
+            id: data.source?.customId ?? data.creator?.customId ?? '',
+            name: data.source?.title ?? data.creator?.customId ?? '',
+          }}
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
         />

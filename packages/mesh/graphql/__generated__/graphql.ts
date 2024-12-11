@@ -4122,7 +4122,11 @@ export type CollectionInfoFragment = {
       avatar?: string | null
     } | null
   }> | null
-  creator?: { __typename?: 'Member'; customId?: string | null } | null
+  creator?: {
+    __typename?: 'Member'
+    customId?: string | null
+    id: string
+  } | null
 }
 
 export type UserActionStoryFragment = {
@@ -4962,7 +4966,11 @@ export type GetMemberProfileQuery = {
             avatar?: string | null
           } | null
         }> | null
-        creator?: { __typename?: 'Member'; customId?: string | null } | null
+        creator?: {
+          __typename?: 'Member'
+          customId?: string | null
+          id: string
+        } | null
       } | null
     }> | null
     books?: Array<{
@@ -5065,7 +5073,11 @@ export type GetMemberProfileQuery = {
         avatar?: string | null
       } | null
     }> | null
-    creator?: { __typename?: 'Member'; customId?: string | null } | null
+    creator?: {
+      __typename?: 'Member'
+      customId?: string | null
+      id: string
+    } | null
   }> | null
 }
 
@@ -5184,7 +5196,11 @@ export type GetVisitorProfileQuery = {
             avatar?: string | null
           } | null
         }> | null
-        creator?: { __typename?: 'Member'; customId?: string | null } | null
+        creator?: {
+          __typename?: 'Member'
+          customId?: string | null
+          id: string
+        } | null
       } | null
     }> | null
   } | null
@@ -5234,7 +5250,11 @@ export type GetVisitorProfileQuery = {
         avatar?: string | null
       } | null
     }> | null
-    creator?: { __typename?: 'Member'; customId?: string | null } | null
+    creator?: {
+      __typename?: 'Member'
+      customId?: string | null
+      id: string
+    } | null
   }> | null
 }
 
@@ -5663,7 +5683,11 @@ export type GetMorePicksQuery = {
           avatar?: string | null
         } | null
       }> | null
-      creator?: { __typename?: 'Member'; customId?: string | null } | null
+      creator?: {
+        __typename?: 'Member'
+        customId?: string | null
+        id: string
+      } | null
     } | null
   }> | null
 }
@@ -5788,7 +5812,11 @@ export type GetMoreCollectionsQuery = {
           avatar?: string | null
         } | null
       }> | null
-      creator?: { __typename?: 'Member'; customId?: string | null } | null
+      creator?: {
+        __typename?: 'Member'
+        customId?: string | null
+        id: string
+      } | null
     } | null
   }> | null
 }
@@ -6574,6 +6602,7 @@ export const CollectionInfoFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -12760,6 +12789,7 @@ export const GetMemberProfileDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -13604,6 +13634,7 @@ export const GetVisitorProfileDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -16500,6 +16531,7 @@ export const GetMorePicksDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -17497,6 +17529,7 @@ export const GetMoreCollectionsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },

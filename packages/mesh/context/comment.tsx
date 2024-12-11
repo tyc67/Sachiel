@@ -9,7 +9,7 @@ import { MobileCommentModalContent } from '@/components/comment/mobile-comment-s
 import TOAST_MESSAGE from '@/constants/toast'
 import { type User } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
-import type { CommentObjective } from '@/types/objective'
+import { CommentObjective } from '@/types/objective'
 import type { PickListItem } from '@/types/profile'
 import { sleep } from '@/utils/sleep'
 
@@ -55,6 +55,7 @@ interface State {
   commentList: Comment[]
   highlightedId: string
   isConfirmDeleteCommentModalOpen: boolean
+  commentObjective: CommentObjective
 }
 
 type Action =
@@ -102,6 +103,7 @@ const initialState: State = {
   comment: '',
   commentList: [],
   highlightedId: '',
+  commentObjective: CommentObjective.Story,
 }
 
 function commentReducer(state: State, action: Action): State {
@@ -254,6 +256,7 @@ export function CommentProvider({
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
     commentList: initialComments,
+    commentObjective,
   })
   const { addToast } = useToast()
 
