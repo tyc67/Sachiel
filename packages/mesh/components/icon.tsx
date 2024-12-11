@@ -153,6 +153,7 @@ export type IconName =
   | 'icon-select-image'
   | 'icon-collection'
   | 'icon-remove'
+  | 'icon-notification-blue'
 
 export type IconProps = {
   size: Size

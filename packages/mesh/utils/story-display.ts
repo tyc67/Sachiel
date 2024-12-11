@@ -34,6 +34,13 @@ export const displayTimeFromNow = (date: string) => {
   }
 }
 
+export const displayExpireTimeFromNow = (date: string) => {
+  const differenceInMilliseconds = Date.now() - new Date(date).getTime()
+  const differenceInDays = differenceInMilliseconds / DAY
+
+  return Math.floor(differenceInDays) + '天'
+}
+
 type Picks = UserActionStoryFragment['pick']
 
 export const getDisplayPicks = (

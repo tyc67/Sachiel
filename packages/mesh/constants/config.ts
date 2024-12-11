@@ -138,6 +138,7 @@ const RESTFUL_ENDPOINTS = {
   paymentBalance: `${PAYMENT_ORIGIN}/balance/`,
   socialPage: `${API_ORIGIN}/socialpage`,
   invitationCodes: `${API_ORIGIN}/invitation_codes`,
+  notifications: `${API_ORIGIN}/notifications`,
 }
 
 const STATIC_FILE_ENDPOINTS = {
