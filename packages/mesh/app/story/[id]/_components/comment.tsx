@@ -2,8 +2,8 @@
 import React, { useMemo } from 'react'
 
 import Button from '@/components/button'
-import CommentBlock from '@/components/comment/story-comment/comment-block'
-import CommentModal from '@/components/comment/story-comment/comment-modal'
+import CommentBlock from '@/components/comment/comment-block'
+import CommentModal from '@/components/comment/comment-modal'
 import Dots from '@/components/dots'
 import Avatar from '@/components/story-card/avatar'
 import { EditDrawerBlockType, useComment } from '@/context/comment'

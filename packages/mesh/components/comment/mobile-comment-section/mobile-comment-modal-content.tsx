@@ -10,8 +10,8 @@ import type {
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { sortAndFilterComments, sortAuthorComments } from '@/utils/comment'
 
-import CommentBlock from '../story-comment/comment-block'
-import CommentModal from '../story-comment/comment-modal'
+import CommentBlock from '../comment-block'
+import CommentModal from '../comment-modal'
 import MobileCommentEditDrawer from './mobile-comment-edit-drawer'
 import MobileCommentEditor from './mobile-comment-editor'
 import MobileCommentFooter from './mobile-comment-footer'
