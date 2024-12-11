@@ -17,8 +17,10 @@ export default function ObjectiveCommentCount({
       })
       document.body.classList.add('overflow-hidden')
     } else {
-      // toggle desktop comment modal
-      console.log('toggle desktop comment modal')
+      dispatch({
+        type: 'TOGGLE_DESKTOP_COMMENT_MODAL',
+        payload: { isOpen: true },
+      })
     }
   }
   const displayCount =

@@ -3,11 +3,8 @@ import { useMemo } from 'react'
 
 import { EditDrawerBlockType, useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
-import type {
-  GetCollectionQuery,
-  GetStoryQuery,
-} from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
+import type { CommentObjectiveData } from '@/types/comment'
 import { sortAndFilterComments, sortAuthorComments } from '@/utils/comment'
 
 import CommentBlock from '../comment-block'
@@ -17,17 +14,6 @@ import MobileCommentEditor from './mobile-comment-editor'
 import MobileCommentFooter from './mobile-comment-footer'
 import MobileCommentHeader from './mobile-comment-header'
 import MobileCommentMeta from './mobile-comment-meta'
-
-type Story = NonNullable<NonNullable<GetStoryQuery>['story']>
-type Collection = NonNullable<
-  NonNullable<GetCollectionQuery>['collections']
->[number]
-
-export type CommentObjectiveData = Pick<
-  Story,
-  'title' | 'source' | 'picks' | 'picksCount' | 'id'
-> &
-  Pick<Collection, 'title' | 'creator' | 'picks' | 'picksCount' | 'id'>
 
 export function MobileCommentModalContent({
   data,
@@ -71,12 +57,6 @@ export function MobileCommentModalContent({
     [commentList, user]
   )
 
-  console.log(
-    'data.source?.id,',
-    data.source?.id,
-    'data.creator?.customId',
-    data.creator?.customId
-  )
   return (
     <div className="fixed left-0 top-0 z-30 size-full bg-white">
       <MobileCommentHeader />
