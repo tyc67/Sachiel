@@ -5,6 +5,7 @@ export const LoginState = {
   Entry: 'entry',
   Email: 'email',
   EmailConfirmation: 'email-confirmation',
+  TermsConfirmation: 'terms-confirmation',
   SetName: 'set-name',
   SetCategory: 'set-category',
   SetFollowing: 'set-following',
