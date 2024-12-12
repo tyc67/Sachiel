@@ -219,7 +219,7 @@ const ArticleCard = ({
                   : 'mb-2 items-start justify-between sm:gap-10'
               }`}
             >
-              <div className="flex h-fit flex-col justify-between">
+              <div className="flex h-fit flex-col justify-between px-3">
                 <p className="body-2 mb-2 w-full sm:mb-1 sm:line-clamp-2 lg:line-clamp-3 lg:min-h-[72px]">
                   {storyData?.title || '預設標題'}
                 </p>
