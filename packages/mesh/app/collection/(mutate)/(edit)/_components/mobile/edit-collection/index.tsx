@@ -16,13 +16,13 @@ export default function MobileEditCollection() {
 
   const editTypeJsx = useMemo(() => {
     switch (mobileEditType) {
-      case MobileEditCollectionType.TypeEditTitle:
+      case MobileEditCollectionType.EditTitle:
         return <MobileEditTitle />
-      case MobileEditCollectionType.TypeEditSummary:
+      case MobileEditCollectionType.EditSummary:
         return <MobileEditSummary />
-      case MobileEditCollectionType.TypeEditStories:
+      case MobileEditCollectionType.EditStories:
         return <MobileEditStories />
-      case MobileEditCollectionType.TypeAddStories:
+      case MobileEditCollectionType.AddStories:
         return <MobileAddStories />
       default:
         return null

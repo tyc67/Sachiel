@@ -8,7 +8,7 @@ export const pageTypes: Record<
   DesktopEditCollectionType | MobileEditCollectionType
 > = {
   edit: DesktopEditCollectionType.EditAll,
-  'edit-stories': MobileEditCollectionType.TypeEditStories,
-  'edit-summary': MobileEditCollectionType.TypeEditSummary,
-  'edit-title': MobileEditCollectionType.TypeEditTitle,
+  'edit-stories': MobileEditCollectionType.EditStories,
+  'edit-summary': MobileEditCollectionType.EditSummary,
+  'edit-title': MobileEditCollectionType.EditTitle,
 }

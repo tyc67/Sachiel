@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { getMemberPickAndBookmark } from '@/app/actions/edit-collection'
 import Spinner from '@/components/spinner'
@@ -18,8 +18,8 @@ export default function PickStories({
   useCollection: UseCollection
 }) {
   const [isLoading, setIsLoading] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const [shouldLoadMore, setShouldLoadMore] = useState(true)
+  const mountedRef = useRef(false)
 
   const { user } = useUser()
   const {
@@ -128,11 +128,11 @@ export default function PickStories({
       await loadMorePicksAndBookmarks()
       setIsLoading(false)
     }
-    if (!mounted) {
+    if (!mountedRef.current) {
       fetchPicksAndBookmarks()
+      mountedRef.current = true
     }
-    setMounted(true)
-  }, [loadMorePicksAndBookmarks, mounted])
+  }, [loadMorePicksAndBookmarks])
 
   return (
     <>

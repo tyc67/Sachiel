@@ -16,11 +16,11 @@ export default function TabletGoNextButton() {
   } = useEditCollection()
 
   const finishAddingStory = () => {
-    setMobileEditType(MobileEditCollectionType.TypeEditStories)
+    setMobileEditType(MobileEditCollectionType.EditStories)
   }
 
   switch (mobileEditType) {
-    case MobileEditCollectionType.TypeEditTitle:
+    case MobileEditCollectionType.EditTitle:
       return (
         <Button
           text="儲存"
@@ -30,7 +30,7 @@ export default function TabletGoNextButton() {
           onClick={updateCollectionTitleAndHeroImage}
         />
       )
-    case MobileEditCollectionType.TypeEditSummary:
+    case MobileEditCollectionType.EditSummary:
       return (
         <Button
           text="儲存"
@@ -40,7 +40,7 @@ export default function TabletGoNextButton() {
           onClick={updateCollectionSummary}
         />
       )
-    case MobileEditCollectionType.TypeEditStories:
+    case MobileEditCollectionType.EditStories:
       return (
         <Button
           text="儲存"
@@ -50,7 +50,7 @@ export default function TabletGoNextButton() {
           onClick={updateCollectionPicks}
         />
       )
-    case MobileEditCollectionType.TypeAddStories:
+    case MobileEditCollectionType.AddStories:
       return (
         <Button
           text="完成"

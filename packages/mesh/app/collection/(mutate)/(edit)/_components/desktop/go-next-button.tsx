@@ -28,7 +28,7 @@ export default function DesktopGoNextButton() {
           text="儲存"
         />
       )
-    case DesktopEditCollectionType.TypeAddStories:
+    case DesktopEditCollectionType.AddStories:
       return (
         <Button
           onClick={finishAddingStory}

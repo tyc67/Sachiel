@@ -15,8 +15,8 @@ export default function MobileGoBackButton() {
   const { setMobileEditType, mobileEditType } = useEditCollection()
 
   const onGoBackClicked = () => {
-    if (mobileEditType === MobileEditCollectionType.TypeAddStories) {
-      setMobileEditType(MobileEditCollectionType.TypeEditStories)
+    if (mobileEditType === MobileEditCollectionType.AddStories) {
+      setMobileEditType(MobileEditCollectionType.EditStories)
     } else {
       dialogRef.current?.showModal()
     }

@@ -92,7 +92,7 @@ export default function EditCollectionProvider({
     initialDesktopEditType ?? DesktopEditCollectionType.EditAll
   )
   const [mobileEditType, setMobileEditType] = useState(
-    initialMobileEditType ?? MobileEditCollectionType.TypeEditTitle
+    initialMobileEditType ?? MobileEditCollectionType.EditTitle
   )
   const [title, setTitle] = useState(initialCollection.title ?? '')
   const [summary, setSummary] = useState(initialCollection.summary ?? '')
@@ -123,13 +123,13 @@ export default function EditCollectionProvider({
 
   const isMobileEditTypeFullfilled = useMemo(() => {
     switch (mobileEditType) {
-      case MobileEditCollectionType.TypeEditTitle:
+      case MobileEditCollectionType.EditTitle:
         return Boolean(title) && Boolean(heroImage)
-      case MobileEditCollectionType.TypeEditSummary:
+      case MobileEditCollectionType.EditSummary:
         return !summary || summary.length <= maxSummaryLength
-      case MobileEditCollectionType.TypeEditStories:
+      case MobileEditCollectionType.EditStories:
         return Boolean(collectionPickStories.length)
-      case MobileEditCollectionType.TypeAddStories:
+      case MobileEditCollectionType.AddStories:
         return Boolean(collectionPickStories.length)
       default:
         return false
@@ -145,7 +145,7 @@ export default function EditCollectionProvider({
           (!summary || summary.length <= maxSummaryLength) &&
           Boolean(collectionPickStories.length)
         )
-      case DesktopEditCollectionType.TypeAddStories:
+      case DesktopEditCollectionType.AddStories:
         return Boolean(collectionPickStories.length)
       default:
         return false
@@ -154,13 +154,13 @@ export default function EditCollectionProvider({
 
   const mobileTitle = useMemo(() => {
     switch (mobileEditType) {
-      case MobileEditCollectionType.TypeEditTitle:
+      case MobileEditCollectionType.EditTitle:
         return '修改標題'
-      case MobileEditCollectionType.TypeEditSummary:
+      case MobileEditCollectionType.EditSummary:
         return '修改敘述'
-      case MobileEditCollectionType.TypeEditStories:
+      case MobileEditCollectionType.EditStories:
         return '編輯排序'
-      case MobileEditCollectionType.TypeAddStories:
+      case MobileEditCollectionType.AddStories:
         return '加入新文章'
       default:
         return ''
@@ -171,7 +171,7 @@ export default function EditCollectionProvider({
     switch (desktopEditType) {
       case DesktopEditCollectionType.EditAll:
         return '編輯集錦'
-      case DesktopEditCollectionType.TypeAddStories:
+      case DesktopEditCollectionType.AddStories:
         return '加入新文章'
       default:
         return ''

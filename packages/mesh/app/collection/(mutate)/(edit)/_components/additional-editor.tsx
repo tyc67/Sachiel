@@ -10,8 +10,8 @@ export default function AdditionalEditor() {
   const { setMobileEditType, setDesktopEditType } = useEditCollection()
 
   const turnOnAddStoryType = () => {
-    setMobileEditType(MobileEditCollectionType.TypeAddStories)
-    setDesktopEditType(DesktopEditCollectionType.TypeAddStories)
+    setMobileEditType(MobileEditCollectionType.AddStories)
+    setDesktopEditType(DesktopEditCollectionType.AddStories)
   }
 
   return (

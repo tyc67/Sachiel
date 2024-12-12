@@ -15,7 +15,7 @@ export default function DesktopCollectionPicks() {
     switch (desktopEditType) {
       case DesktopEditCollectionType.EditAll:
         return <DesktopSortStories />
-      case DesktopEditCollectionType.TypeAddStories:
+      case DesktopEditCollectionType.AddStories:
         return <DesktopAddStories />
       default:
         return null

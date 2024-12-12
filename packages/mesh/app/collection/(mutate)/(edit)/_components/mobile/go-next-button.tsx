@@ -16,13 +16,13 @@ export default function MobileGoNextButton() {
   } = useEditCollection()
 
   const finishAddingStory = () => {
-    setMobileEditType(MobileEditCollectionType.TypeEditStories)
+    setMobileEditType(MobileEditCollectionType.EditStories)
   }
 
   if (!isMobileEditTypeFullfilled) return null
 
   switch (mobileEditType) {
-    case MobileEditCollectionType.TypeEditTitle:
+    case MobileEditCollectionType.EditTitle:
       return (
         <MobileNavigationButton
           text="儲存"
@@ -31,7 +31,7 @@ export default function MobileGoNextButton() {
           color="blue"
         />
       )
-    case MobileEditCollectionType.TypeEditSummary:
+    case MobileEditCollectionType.EditSummary:
       return (
         <MobileNavigationButton
           text="儲存"
@@ -40,7 +40,7 @@ export default function MobileGoNextButton() {
           color="blue"
         />
       )
-    case MobileEditCollectionType.TypeEditStories:
+    case MobileEditCollectionType.EditStories:
       return (
         <MobileNavigationButton
           text="儲存"
@@ -49,7 +49,7 @@ export default function MobileGoNextButton() {
           color="blue"
         />
       )
-    case MobileEditCollectionType.TypeAddStories:
+    case MobileEditCollectionType.AddStories:
       return (
         <MobileNavigationButton
           text="完成"

@@ -32,7 +32,7 @@ export default function SortStoryCard({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 999 : 'auto', // 设置拖拽中的元素在最顶层
+    zIndex: isDragging ? 999 : 'auto',
   }
 
   const onStoryDelete: MouseEventHandler<HTMLButtonElement> = () => {

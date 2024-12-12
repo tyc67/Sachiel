@@ -15,7 +15,7 @@ export default function DesktopMainAction() {
     switch (desktopEditType) {
       case DesktopEditCollectionType.EditAll:
         return <DesktopEditAll />
-      case DesktopEditCollectionType.TypeAddStories:
+      case DesktopEditCollectionType.AddStories:
         return <DesktopAddStories />
       default:
         return null
