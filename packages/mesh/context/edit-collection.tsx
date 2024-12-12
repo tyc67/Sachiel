@@ -1,3 +1,5 @@
+'use client'
+
 import { useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -109,12 +111,15 @@ export default function EditCollectionProvider({
   const [collectionPickStories, setCollectionPickStories] = useState<
     CollectionPickStory[]
   >(
-    initialCollection.collectionpicks?.reduce((acc, curr) => {
-      if (curr && curr.story) {
-        acc.push(curr.story)
-      }
-      return acc
-    }, [] as CollectionPickStory[]) ?? []
+    initialCollection.collectionpicks?.reduce(
+      (acc: CollectionPickStory[], curr) => {
+        if (curr && curr.story) {
+          acc.push(curr.story)
+        }
+        return acc
+      },
+      []
+    ) ?? []
   )
 
   const router = useRouter()
@@ -178,6 +183,14 @@ export default function EditCollectionProvider({
     }
   }, [desktopEditType])
 
+  const hintUserUpdateCollectionError = () => {
+    setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+  }
+
+  const redirectAfterUpdateCollection = () => {
+    router.push(`/collection/${initialCollection.id}`)
+  }
+
   const updateCollectionTitleAndHeroImage = async () => {
     const collectionId = initialCollection.id
     const { isTitleUpdated, newTitle, isHeroImageUpdated, imageUpload } =
@@ -194,10 +207,10 @@ export default function EditCollectionProvider({
         imageUpload,
       })
       if (!response) {
-        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+        hintUserUpdateCollectionError()
       }
     }
-    router.push(`/collection/${collectionId}`)
+    redirectAfterUpdateCollection()
   }
 
   const updateCollectionSummary = async () => {
@@ -213,10 +226,10 @@ export default function EditCollectionProvider({
         summary: newSummary,
       })
       if (!response) {
-        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+        hintUserUpdateCollectionError()
       }
     }
-    router.push(`/collection/${collectionId}`)
+    redirectAfterUpdateCollection()
   }
 
   const updateCollectionPicks = async () => {
@@ -241,10 +254,10 @@ export default function EditCollectionProvider({
         deleteCollectionPicksData,
       })
       if (!response) {
-        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+        hintUserUpdateCollectionError()
       }
     }
-    router.push(`/collection/${collectionId}`)
+    redirectAfterUpdateCollection()
   }
 
   const updateWholeCollection = async () => {
@@ -287,10 +300,10 @@ export default function EditCollectionProvider({
         deleteCollectionPicksData,
       })
       if (!response) {
-        setCrossPageToast({ status: 'fail', text: '編輯集錦失敗，請重新嘗試' })
+        hintUserUpdateCollectionError()
       }
     }
-    router.push(`/collection/${collectionId}`)
+    redirectAfterUpdateCollection()
   }
 
   // go back to collection page when mobile page render in desktop and vice versa change
