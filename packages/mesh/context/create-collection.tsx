@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import type { CreateCollectionParams } from '@/app/actions/collection'
 import { createCollection as sendCreateCollection } from '@/app/actions/collection'
 import { maxSummaryLength } from '@/app/collection/(mutate)/_components/edit-summary'
+import type { BaseMutateCollectionContextValue } from '@/app/collection/(mutate)/_types/collection'
 import {
   type CollectionPickStory,
   type PickOrBookmark,
@@ -41,30 +42,17 @@ type StoryCandidates = {
   usedAsFilter: boolean
 }
 
-export type CreateCollectionContextValue = {
+export interface CreateCollectionContextValue
+  extends BaseMutateCollectionContextValue {
   step: number
   setStep: React.Dispatch<React.SetStateAction<number>>
-  title: string
-  setTitle: React.Dispatch<React.SetStateAction<string>>
-  summary: string
-  setSummary: React.Dispatch<React.SetStateAction<string>>
-  heroImage: File | string | null
-  setHeroImage: React.Dispatch<React.SetStateAction<File | string | null>>
-  pickCandidates: StoryCandidates
-  bookmarkCandidates: StoryCandidates
-  setPickCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
-  setBookmarkCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
-  collectionPickStories: CollectionPickStory[]
-  setCollectionPickStories: React.Dispatch<
-    React.SetStateAction<CollectionPickStory[]>
-  >
-  createCollection: () => void
   isMobileStepFullfilled: boolean
   isDesktopStepFullfilled: boolean
   mobileTitle: string
   desktopTitle: string
   mobileStepName: MobileCreateCollectionStep
   desktopStepName: DesktopCreateCollectionStep
+  createCollection: () => void
 }
 
 const CreateCollectionContext = createContext<

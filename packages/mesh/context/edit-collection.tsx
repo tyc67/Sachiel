@@ -10,7 +10,10 @@ import {
   updateWholeCollection as sendUpdateWholeCollection,
 } from '@/app/actions/edit-collection'
 import { maxSummaryLength } from '@/app/collection/(mutate)/_components/edit-summary'
-import type { Collection } from '@/app/collection/(mutate)/_types/collection'
+import type {
+  BaseMutateCollectionContextValue,
+  Collection,
+} from '@/app/collection/(mutate)/_types/collection'
 import {
   type CollectionPickStory,
   type PickOrBookmark,
@@ -36,7 +39,8 @@ type StoryCandidates = {
   usedAsFilter: boolean
 }
 
-export type EditCollectionContextValue = {
+export interface EditCollectionContextValue
+  extends BaseMutateCollectionContextValue {
   mobileEditType: MobileEditCollectionType
   setMobileEditType: React.Dispatch<
     React.SetStateAction<MobileEditCollectionType>
@@ -44,20 +48,6 @@ export type EditCollectionContextValue = {
   desktopEditType: DesktopEditCollectionType
   setDesktopEditType: React.Dispatch<
     React.SetStateAction<DesktopEditCollectionType>
-  >
-  title: string
-  setTitle: React.Dispatch<React.SetStateAction<string>>
-  summary: string
-  setSummary: React.Dispatch<React.SetStateAction<string>>
-  heroImage: File | string | null
-  setHeroImage: React.Dispatch<React.SetStateAction<File | string | null>>
-  pickCandidates: StoryCandidates
-  bookmarkCandidates: StoryCandidates
-  setPickCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
-  setBookmarkCandidates: React.Dispatch<React.SetStateAction<StoryCandidates>>
-  collectionPickStories: CollectionPickStory[]
-  setCollectionPickStories: React.Dispatch<
-    React.SetStateAction<CollectionPickStory[]>
   >
   isMobileEditTypeFullfilled: boolean
   isDesktopEditTypeFullfilled: boolean

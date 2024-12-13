@@ -1,5 +1,5 @@
-import type { CreateCollectionContextValue } from '@/context/create-collection'
-import type { EditCollectionContextValue } from '@/context/edit-collection'
+import type { Dispatch, SetStateAction } from 'react'
+
 import type {
   GetCollectionToEditQuery,
   GetMemberPickAndBookmarkQuery,
@@ -18,6 +18,25 @@ export enum CollectionFormat {
   Timeline = 'timeline',
 }
 
-export type UseCollection =
-  | (() => CreateCollectionContextValue)
-  | (() => EditCollectionContextValue)
+type StoryCandidates = {
+  list: PickOrBookmark[]
+  maxCount: number
+  usedAsFilter: boolean
+}
+
+export interface BaseMutateCollectionContextValue {
+  title: string
+  setTitle: Dispatch<SetStateAction<string>>
+  summary: string
+  setSummary: Dispatch<SetStateAction<string>>
+  heroImage: File | string | null
+  setHeroImage: Dispatch<SetStateAction<File | string | null>>
+  pickCandidates: StoryCandidates
+  setPickCandidates: Dispatch<SetStateAction<StoryCandidates>>
+  bookmarkCandidates: StoryCandidates
+  setBookmarkCandidates: Dispatch<SetStateAction<StoryCandidates>>
+  collectionPickStories: CollectionPickStory[]
+  setCollectionPickStories: Dispatch<SetStateAction<CollectionPickStory[]>>
+}
+
+export type UseCollection = () => BaseMutateCollectionContextValue
