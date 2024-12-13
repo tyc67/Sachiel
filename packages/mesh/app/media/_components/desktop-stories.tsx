@@ -31,7 +31,7 @@ export default function DesktopStories({
 
   return (
     <div className="hidden lg:block">
-      <section className="grid gap-x-10 p-10 pt-0">
+      <section className="grid grid-cols-2 gap-x-10 p-10 pt-0">
         {firstSectionStories.map((story, i) =>
           i === 0 ? (
             <HeroStoryCard key={story.id} story={story} />
