@@ -208,13 +208,8 @@ export default function SideIndexContainer({
       break
     }
     default:
-      console.error(
-        `SideIndex for organization: ${organization} is not supported`
-      )
-  }
-
-  if (!sideIndexJsx) {
-    return null
+      // sideindex not supported
+      return null
   }
 
   return isInArticle ? (
