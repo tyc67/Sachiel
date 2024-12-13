@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import Spinner from '@/components/spinner'
+import { processPolicy } from '@/utils/process-policy'
 
 import { fetchTermsOfService } from '../../actions/policy'
 
@@ -14,19 +15,9 @@ export default function Page() {
     const fetchData = async () => {
       const data = await fetchTermsOfService()
       if (data) {
-        const bodyElement = document.querySelector('body')
-        const paragraphs =
-          document.querySelectorAll<HTMLElement>('.page-body p')
+        const processedHtml = processPolicy(data)
 
-        if (bodyElement) {
-          bodyElement.style.marginTop = '0'
-        }
-
-        if (paragraphs) {
-          paragraphs.forEach((p) => (p.style.margin = '0'))
-        }
-
-        setHtmlContent(data)
+        setHtmlContent(processedHtml)
         setIsLoading(false)
       }
     }
