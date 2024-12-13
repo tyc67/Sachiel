@@ -1,10 +1,11 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import { logStoryClick } from '@/utils/event-logs'
@@ -34,12 +35,13 @@ export default function MostPickedStoryCard({
         <article className="mt-3 flex flex-col gap-3 sm:flex-row sm:gap-5 lg:gap-10">
           <div className="relative aspect-[2/1] sm:aspect-square sm:size-[168px] lg:aspect-[2/1] lg:h-[178px] lg:w-[356px] xl:h-[200px] xl:w-[400px]">
             <Link href={`/story/${story.id}`} className="size-full">
-              <Image
+              <ImageWithFallback
                 className="rounded-md"
-                src={story.og_image || '/images/default-story-image.webP'}
+                src={story.og_image ?? ''}
                 alt={story.title ?? ''}
                 fill
                 style={{ objectFit: 'cover' }}
+                fallbackCategory={ImageCategory.STORY}
               />
             </Link>
           </div>

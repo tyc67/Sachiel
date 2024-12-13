@@ -1,10 +1,11 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import { type MongoDBResponse } from '@/utils/data-schema'
@@ -36,7 +37,7 @@ export default function Feed({
       {story.og_image ? (
         <div className="aspect-[2/1] overflow-hidden bg-multi-layer-light">
           <Link href={`/story/${story.id}`} className="size-full">
-            <Image
+            <ImageWithFallback
               src={story.og_image}
               alt={story.og_title}
               width={600}
@@ -47,6 +48,7 @@ export default function Feed({
                 height: '100%',
                 objectFit: 'cover',
               }}
+              fallbackCategory={ImageCategory.STORY}
             />
           </Link>
         </div>
