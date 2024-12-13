@@ -1,16 +1,18 @@
 'use client'
 
-import NextImage from 'next/image'
 import NextLink from 'next/link'
 
 import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory, Story } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
+
+import ImageWithFallback from './image-with-fallback'
 
 type Props = {
   isReadrStory?: boolean
@@ -38,11 +40,12 @@ export default function FeaturedCard({
       <article className="flex flex-col gap-y-3 sm:flex-row sm:gap-x-5 lg:gap-x-10">
         <NextLink href={`/story/${story.id}`}>
           <div className="relative aspect-[2/1] shrink-0 overflow-hidden rounded-md sm:aspect-square sm:size-[168px] lg:h-[178px] lg:w-[356px] xl:h-[200px] xl:w-[400px]">
-            <NextImage
-              src={story.og_image || '/images/default-story-image.webP'}
-              fill
+            <ImageWithFallback
+              src={story.og_image}
               alt={story.title}
+              fill
               className="object-cover"
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         </NextLink>
