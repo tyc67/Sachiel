@@ -5,9 +5,9 @@ import NextLink from 'next/link'
 import type { ForwardedRef } from 'react'
 import { forwardRef } from 'react'
 
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
@@ -79,10 +79,10 @@ export default forwardRef(function StoryCard<
       </div>
 
       <div className="mt-4 flex justify-between">
-        <StoryPickInfo
+        <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
-          storyId={story.id}
+          objectiveId={story.id}
         />
         <StoryPickButton storyId={story.id} />
       </div>

@@ -6,6 +6,7 @@ import {
   AddStoryToCollectionDocument,
   CreateCollectionDocument,
   GetCollectionDocument,
+  GetCollectionPickersDocument,
   GetCollectionStoriesDocument,
   GetMemberCollectionsDocument,
   RemoveCollectionDocument,
@@ -179,4 +180,20 @@ async function deleteCollectionInMeilisearch(
     collectionId,
     memberId,
   })
+}
+
+export async function getCollectionPickers(
+  collectionId: string,
+  picksTake: number,
+  picksSkip: number
+) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const getCollectionPickersResponse = await queryGraphQL(
+    GetCollectionPickersDocument,
+    { collectionId, picksTake, picksSkip },
+    globalLogFields,
+    'Failed to getStoryPickers'
+  )
+  return getCollectionPickersResponse?.collection
 }

@@ -10,7 +10,7 @@ import StoryMoreActionButton from '@/components/story-more-action-button'
 import { useUser } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
-import { BookmarkObjective } from '@/types/objective'
+import { BookmarkObjective, PickObjective } from '@/types/objective'
 import { getStoryUrl } from '@/utils/get-url'
 
 import Loading from './loading'
@@ -63,7 +63,8 @@ export default function ClientLayout({
         ],
       }}
       mobileActionBar={{
-        storyId: story?.id ?? '',
+        pickObjective: PickObjective.Story,
+        objectiveId: story?.id ?? '',
         commentsCount: story?.commentsCount ?? 0,
         picksCount: displayPicksCount,
         displayPicks: displayPicks,
