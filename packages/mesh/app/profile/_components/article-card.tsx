@@ -157,7 +157,6 @@ const ArticleCard = ({
     if (isCollection(storyData)) return `/collection/${storyData.id}`
     return `/story/${storyData?.id}`
   }
-
   return (
     <>
       <CommentProvider
@@ -177,7 +176,7 @@ const ArticleCard = ({
           </section>
         </Link>
         <div
-          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
+          className={`flex grow flex-col after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
             isLast ? 'after:hidden' : ''
           } ${
             isCollection(storyData)
@@ -219,7 +218,11 @@ const ArticleCard = ({
                   : 'mb-2 items-start justify-between sm:gap-10'
               }`}
             >
-              <div className="flex h-fit flex-col justify-between px-3">
+              <div
+                className={`flex h-fit flex-col justify-between ${
+                  isCollection(storyData) ? 'px-3' : ''
+                }`}
+              >
                 <p className="body-2 mb-2 w-full sm:mb-1 sm:line-clamp-2 lg:line-clamp-3 lg:min-h-[72px]">
                   {storyData?.title || '預設標題'}
                 </p>
