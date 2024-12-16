@@ -181,7 +181,7 @@ const ArticleCard = ({
           } ${
             isCollection(storyData)
               ? 'py-[10px] after:hidden sm:p-0 md:justify-between'
-              : ''
+              : 'p-5'
           }`}
         >
           <Link
