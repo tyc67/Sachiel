@@ -21,7 +21,10 @@ export default function CollectionCard({
   collection: Collection
 }) {
   const { isTooLong, isExpanded, domRef, toggleClamp } = useClamp()
-  const { displayPicks, displayPicksCount } = useDisplayPicks(collection)
+  const { displayPicks, displayPicksCount } = useDisplayPicks(
+    collection,
+    PickObjective.Collection
+  )
 
   return (
     <section className="border-b-[0.5px] border-primary-200 bg-white">
