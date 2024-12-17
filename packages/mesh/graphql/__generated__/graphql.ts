@@ -761,6 +761,120 @@ export type DateTimeNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['DateTime']['input']>>
 }
 
+export type Exchange = {
+  __typename?: 'Exchange'
+  complement?: Maybe<Scalars['String']['output']>
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  createdBy?: Maybe<User>
+  exchangeVolume?: Maybe<Scalars['Float']['output']>
+  id: Scalars['ID']['output']
+  publisher?: Maybe<Publisher>
+  status?: Maybe<ExchangeStatusType>
+  tid?: Maybe<Scalars['String']['output']>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  updatedBy?: Maybe<User>
+}
+
+export type ExchangeCreateInput = {
+  complement?: InputMaybe<Scalars['String']['input']>
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForCreateInput>
+  exchangeVolume?: InputMaybe<Scalars['Float']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForCreateInput>
+  status?: InputMaybe<ExchangeStatusType>
+  tid?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForCreateInput>
+}
+
+export type ExchangeManyRelationFilter = {
+  every?: InputMaybe<ExchangeWhereInput>
+  none?: InputMaybe<ExchangeWhereInput>
+  some?: InputMaybe<ExchangeWhereInput>
+}
+
+export type ExchangeOrderByInput = {
+  complement?: InputMaybe<OrderDirection>
+  createdAt?: InputMaybe<OrderDirection>
+  exchangeVolume?: InputMaybe<OrderDirection>
+  id?: InputMaybe<OrderDirection>
+  status?: InputMaybe<OrderDirection>
+  tid?: InputMaybe<OrderDirection>
+  updatedAt?: InputMaybe<OrderDirection>
+}
+
+export type ExchangeRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  create?: InputMaybe<Array<ExchangeCreateInput>>
+}
+
+export type ExchangeRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  create?: InputMaybe<Array<ExchangeCreateInput>>
+  disconnect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  set?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+}
+
+export enum ExchangeStatusType {
+  Failed = 'Failed',
+  Success = 'Success',
+}
+
+export type ExchangeStatusTypeNullableFilter = {
+  equals?: InputMaybe<ExchangeStatusType>
+  in?: InputMaybe<Array<ExchangeStatusType>>
+  not?: InputMaybe<ExchangeStatusTypeNullableFilter>
+  notIn?: InputMaybe<Array<ExchangeStatusType>>
+}
+
+export type ExchangeUpdateArgs = {
+  data: ExchangeUpdateInput
+  where: ExchangeWhereUniqueInput
+}
+
+export type ExchangeUpdateInput = {
+  complement?: InputMaybe<Scalars['String']['input']>
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
+  exchangeVolume?: InputMaybe<Scalars['Float']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForUpdateInput>
+  status?: InputMaybe<ExchangeStatusType>
+  tid?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>
+}
+
+export type ExchangeWhereInput = {
+  AND?: InputMaybe<Array<ExchangeWhereInput>>
+  NOT?: InputMaybe<Array<ExchangeWhereInput>>
+  OR?: InputMaybe<Array<ExchangeWhereInput>>
+  complement?: InputMaybe<StringFilter>
+  createdAt?: InputMaybe<DateTimeNullableFilter>
+  createdBy?: InputMaybe<UserWhereInput>
+  exchangeVolume?: InputMaybe<FloatFilter>
+  id?: InputMaybe<IdFilter>
+  publisher?: InputMaybe<PublisherWhereInput>
+  status?: InputMaybe<ExchangeStatusTypeNullableFilter>
+  tid?: InputMaybe<StringFilter>
+  updatedAt?: InputMaybe<DateTimeNullableFilter>
+  updatedBy?: InputMaybe<UserWhereInput>
+}
+
+export type ExchangeWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type FloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>
+  gt?: InputMaybe<Scalars['Float']['input']>
+  gte?: InputMaybe<Scalars['Float']['input']>
+  in?: InputMaybe<Array<Scalars['Float']['input']>>
+  lt?: InputMaybe<Scalars['Float']['input']>
+  lte?: InputMaybe<Scalars['Float']['input']>
+  not?: InputMaybe<FloatFilter>
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>
+}
+
 export type FloatNullableFilter = {
   equals?: InputMaybe<Scalars['Float']['input']>
   gt?: InputMaybe<Scalars['Float']['input']>
@@ -1127,6 +1241,8 @@ export type Member = {
   nickname?: Maybe<Scalars['String']['output']>
   pick?: Maybe<Array<Pick>>
   pickCount?: Maybe<Scalars['Int']['output']>
+  publisher?: Maybe<Array<Publisher>>
+  publisherCount?: Maybe<Scalars['Int']['output']>
   sponsor?: Maybe<Array<Sponsorship>>
   sponsorCount?: Maybe<Scalars['Int']['output']>
   transaction?: Maybe<Array<Transaction>>
@@ -1280,6 +1396,17 @@ export type MemberPickCountArgs = {
   where?: PickWhereInput
 }
 
+export type MemberPublisherArgs = {
+  orderBy?: Array<PublisherOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: PublisherWhereInput
+}
+
+export type MemberPublisherCountArgs = {
+  where?: PublisherWhereInput
+}
+
 export type MemberSponsorArgs = {
   orderBy?: Array<SponsorshipOrderByInput>
   skip?: Scalars['Int']['input']
@@ -1328,6 +1455,7 @@ export type MemberCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>
   nickname?: InputMaybe<Scalars['String']['input']>
   pick?: InputMaybe<PickRelateToManyForCreateInput>
+  publisher?: InputMaybe<PublisherRelateToManyForCreateInput>
   sponsor?: InputMaybe<SponsorshipRelateToManyForCreateInput>
   transaction?: InputMaybe<TransactionRelateToManyForCreateInput>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
@@ -1412,6 +1540,7 @@ export type MemberUpdateInput = {
   name?: InputMaybe<Scalars['String']['input']>
   nickname?: InputMaybe<Scalars['String']['input']>
   pick?: InputMaybe<PickRelateToManyForUpdateInput>
+  publisher?: InputMaybe<PublisherRelateToManyForUpdateInput>
   sponsor?: InputMaybe<SponsorshipRelateToManyForUpdateInput>
   transaction?: InputMaybe<TransactionRelateToManyForUpdateInput>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
@@ -1450,6 +1579,7 @@ export type MemberWhereInput = {
   name?: InputMaybe<StringFilter>
   nickname?: InputMaybe<StringFilter>
   pick?: InputMaybe<PickManyRelationFilter>
+  publisher?: InputMaybe<PublisherManyRelationFilter>
   sponsor?: InputMaybe<SponsorshipManyRelationFilter>
   transaction?: InputMaybe<TransactionManyRelationFilter>
   updatedAt?: InputMaybe<DateTimeNullableFilter>
@@ -1480,6 +1610,8 @@ export type Mutation = {
   createCollections?: Maybe<Array<Maybe<Collection>>>
   createComment?: Maybe<Comment>
   createComments?: Maybe<Array<Maybe<Comment>>>
+  createExchange?: Maybe<Exchange>
+  createExchanges?: Maybe<Array<Maybe<Exchange>>>
   createInitialUser: UserAuthenticationWithPasswordSuccess
   createInvalidName?: Maybe<InvalidName>
   createInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
@@ -1521,6 +1653,8 @@ export type Mutation = {
   deleteCollections?: Maybe<Array<Maybe<Collection>>>
   deleteComment?: Maybe<Comment>
   deleteComments?: Maybe<Array<Maybe<Comment>>>
+  deleteExchange?: Maybe<Exchange>
+  deleteExchanges?: Maybe<Array<Maybe<Exchange>>>
   deleteInvalidName?: Maybe<InvalidName>
   deleteInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   deleteInvitationCode?: Maybe<InvitationCode>
@@ -1562,6 +1696,8 @@ export type Mutation = {
   updateCollections?: Maybe<Array<Maybe<Collection>>>
   updateComment?: Maybe<Comment>
   updateComments?: Maybe<Array<Maybe<Comment>>>
+  updateExchange?: Maybe<Exchange>
+  updateExchanges?: Maybe<Array<Maybe<Exchange>>>
   updateInvalidName?: Maybe<InvalidName>
   updateInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   updateInvitationCode?: Maybe<InvitationCode>
@@ -1643,6 +1779,14 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateCommentsArgs = {
   data: Array<CommentCreateInput>
+}
+
+export type MutationCreateExchangeArgs = {
+  data: ExchangeCreateInput
+}
+
+export type MutationCreateExchangesArgs = {
+  data: Array<ExchangeCreateInput>
 }
 
 export type MutationCreateInitialUserArgs = {
@@ -1809,6 +1953,14 @@ export type MutationDeleteCommentsArgs = {
   where: Array<CommentWhereUniqueInput>
 }
 
+export type MutationDeleteExchangeArgs = {
+  where: ExchangeWhereUniqueInput
+}
+
+export type MutationDeleteExchangesArgs = {
+  where: Array<ExchangeWhereUniqueInput>
+}
+
 export type MutationDeleteInvalidNameArgs = {
   where: InvalidNameWhereUniqueInput
 }
@@ -1973,6 +2125,15 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateCommentsArgs = {
   data: Array<CommentUpdateArgs>
+}
+
+export type MutationUpdateExchangeArgs = {
+  data: ExchangeUpdateInput
+  where: ExchangeWhereUniqueInput
+}
+
+export type MutationUpdateExchangesArgs = {
+  data: Array<ExchangeUpdateArgs>
 }
 
 export type MutationUpdateInvalidNameArgs = {
@@ -2715,11 +2876,14 @@ export type PolicyWhereUniqueInput = {
 
 export type Publisher = {
   __typename?: 'Publisher'
+  admin?: Maybe<Member>
   category?: Maybe<Category>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   createdBy?: Maybe<User>
   customId?: Maybe<Scalars['String']['output']>
   description?: Maybe<Scalars['String']['output']>
+  exchange?: Maybe<Array<Exchange>>
+  exchangeCount?: Maybe<Scalars['Int']['output']>
   follower?: Maybe<Array<Member>>
   followerCount?: Maybe<Scalars['Int']['output']>
   full_content?: Maybe<Scalars['Boolean']['output']>
@@ -2741,6 +2905,17 @@ export type Publisher = {
   user?: Maybe<Array<User>>
   userCount?: Maybe<Scalars['Int']['output']>
   wallet?: Maybe<Scalars['String']['output']>
+}
+
+export type PublisherExchangeArgs = {
+  orderBy?: Array<ExchangeOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: ExchangeWhereInput
+}
+
+export type PublisherExchangeCountArgs = {
+  where?: ExchangeWhereInput
 }
 
 export type PublisherFollowerArgs = {
@@ -2777,11 +2952,13 @@ export type PublisherUserCountArgs = {
 }
 
 export type PublisherCreateInput = {
+  admin?: InputMaybe<MemberRelateToOneForCreateInput>
   category?: InputMaybe<CategoryRelateToOneForCreateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>
   customId?: InputMaybe<Scalars['String']['input']>
   description?: InputMaybe<Scalars['String']['input']>
+  exchange?: InputMaybe<ExchangeRelateToManyForCreateInput>
   follower?: InputMaybe<MemberRelateToManyForCreateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
@@ -2856,11 +3033,13 @@ export type PublisherUpdateArgs = {
 }
 
 export type PublisherUpdateInput = {
+  admin?: InputMaybe<MemberRelateToOneForUpdateInput>
   category?: InputMaybe<CategoryRelateToOneForUpdateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
   customId?: InputMaybe<Scalars['String']['input']>
   description?: InputMaybe<Scalars['String']['input']>
+  exchange?: InputMaybe<ExchangeRelateToManyForUpdateInput>
   follower?: InputMaybe<MemberRelateToManyForUpdateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
@@ -2884,11 +3063,13 @@ export type PublisherWhereInput = {
   AND?: InputMaybe<Array<PublisherWhereInput>>
   NOT?: InputMaybe<Array<PublisherWhereInput>>
   OR?: InputMaybe<Array<PublisherWhereInput>>
+  admin?: InputMaybe<MemberWhereInput>
   category?: InputMaybe<CategoryWhereInput>
   createdAt?: InputMaybe<DateTimeNullableFilter>
   createdBy?: InputMaybe<UserWhereInput>
   customId?: InputMaybe<StringFilter>
   description?: InputMaybe<StringFilter>
+  exchange?: InputMaybe<ExchangeManyRelationFilter>
   follower?: InputMaybe<MemberManyRelationFilter>
   full_content?: InputMaybe<BooleanFilter>
   full_screen_ad?: InputMaybe<StringNullableFilter>
@@ -2934,6 +3115,9 @@ export type Query = {
   comment?: Maybe<Comment>
   comments?: Maybe<Array<Comment>>
   commentsCount?: Maybe<Scalars['Int']['output']>
+  exchange?: Maybe<Exchange>
+  exchanges?: Maybe<Array<Exchange>>
+  exchangesCount?: Maybe<Scalars['Int']['output']>
   invalidName?: Maybe<InvalidName>
   invalidNames?: Maybe<Array<InvalidName>>
   invalidNamesCount?: Maybe<Scalars['Int']['output']>
@@ -3067,6 +3251,21 @@ export type QueryCommentsArgs = {
 
 export type QueryCommentsCountArgs = {
   where?: CommentWhereInput
+}
+
+export type QueryExchangeArgs = {
+  where: ExchangeWhereUniqueInput
+}
+
+export type QueryExchangesArgs = {
+  orderBy?: Array<ExchangeOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: ExchangeWhereInput
+}
+
+export type QueryExchangesCountArgs = {
+  where?: ExchangeWhereInput
 }
 
 export type QueryInvalidNameArgs = {
@@ -4426,6 +4625,7 @@ export type GetCollectionQuery = {
       createdAt?: any | null
       content?: string | null
       state?: string | null
+      likeCount?: number | null
       member?: {
         __typename?: 'Member'
         id: string
@@ -4433,6 +4633,7 @@ export type GetCollectionQuery = {
         name?: string | null
         avatar?: string | null
       } | null
+      like?: Array<{ __typename?: 'Member'; id: string }> | null
     }> | null
   }> | null
 }
@@ -8790,6 +8991,23 @@ export const GetCollectionDocument = {
                         name: { kind: 'Name', value: 'content' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'likeCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'like' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

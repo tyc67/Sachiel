@@ -49,6 +49,10 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
       }
       content
       state
+      likeCount
+      like {
+        id
+      }
     }
   }
 }
