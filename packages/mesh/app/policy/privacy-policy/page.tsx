@@ -1,35 +1,21 @@
-'use client'
+import '@/styles/policy.css'
 
-import { useEffect, useState } from 'react'
-
-import Spinner from '@/components/spinner'
 import { processPolicy } from '@/utils/process-policy'
 
 import { fetchPrivacyPolicy } from '../../actions/policy'
 
-export default function Page() {
-  const [htmlContent, setHtmlContent] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+export default async function Page() {
+  const data = await fetchPrivacyPolicy()
+  const processedHtml = data && (await processPolicy(data))
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchPrivacyPolicy()
-      if (data) {
-        const processedHtml = processPolicy(data)
-
-        setHtmlContent(processedHtml)
-        setIsLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  if (isLoading) return <Spinner />
+  if (!processedHtml) return null
 
   return (
-    <section className="body-1 px-5 pb-5 pt-6 text-primary-700 sm:p-0">
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    <section className="px-5 pb-5 pt-6 sm:p-0">
+      <div
+        className="policy-content"
+        dangerouslySetInnerHTML={{ __html: processedHtml }}
+      />
     </section>
   )
 }

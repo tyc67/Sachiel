@@ -1,5 +1,7 @@
 'use client'
 
+import '../../../styles/accept-terms.css'
+
 import { useEffect, useRef, useState } from 'react'
 
 import { fetchTermsOfService } from '@/app/actions/policy'
@@ -7,9 +9,10 @@ import Button from '@/components/button'
 import Icon from '@/components/icon'
 import Spinner from '@/components/spinner'
 import { useLogin } from '@/context/login'
+import { processPolicy } from '@/utils/process-policy'
 
 export default function LoginTermsConfirmation() {
-  const [terms, setTerms] = useState('')
+  const [terms, setTerms] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isChecked, setIsChecked] = useState(false)
   const [isAtBottom, setIsAtBottom] = useState(false)
@@ -29,31 +32,9 @@ export default function LoginTermsConfirmation() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchTermsOfService()
-      const parser = new DOMParser()
-      if (data) {
-        const doc = parser.parseFromString(data, 'text/html')
-
-        const pageBody = doc.querySelector('.page-body')
-        pageBody?.classList.add(
-          'text-primary-700',
-          'caption-1',
-          'flex',
-          'flex-col',
-          'gap-y-4'
-        )
-
-        const pageTitle = doc.querySelector('h1')
-        pageTitle?.classList.add('profile-title-2', 'text-primary-700', 'mb-2')
-
-        doc.querySelectorAll('p').forEach((p) => {
-          if (!p.textContent?.trim()) {
-            p.remove()
-          }
-        })
-
-        setTerms(doc.body.innerHTML)
-        setIsLoading(false)
-      }
+      const processedHtml = data && (await processPolicy(data))
+      setTerms(processedHtml)
+      setIsLoading(false)
     }
 
     fetchData()
@@ -92,10 +73,15 @@ export default function LoginTermsConfirmation() {
           繼續使用前，請先詳閱我們的服務條款及隱私權政策
         </p>
         <div
-          className="boder-primary-200 caption-1 mb-5 h-[410px] w-full overflow-auto rounded border p-4 text-primary-700 sm:mb-6 sm:h-[247px]"
+          className="boder-primary-200 mb-5 h-[410px] w-full overflow-auto rounded border p-4 sm:mb-6 sm:h-[247px]"
           ref={termsRef}
         >
-          <div dangerouslySetInnerHTML={{ __html: terms }} />
+          {terms && (
+            <div
+              className="terms-content"
+              dangerouslySetInnerHTML={{ __html: terms }}
+            />
+          )}
         </div>
         <div
           className={`mb-5 flex items-center gap-x-1 ${
