@@ -5,15 +5,15 @@ import type { RefObject } from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import CollectionPickButton from '@/components/collection-card/collection-pick-button'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
-import { useUser } from '@/context/user'
 import useClamp from '@/hooks/use-clamp'
-import { getDisplayPicks } from '@/utils/story-display'
+import { useDisplayPicks } from '@/hooks/use-display-picks'
+import { PickObjective } from '@/types/objective'
 
 import type { Collection } from '../../_types/collection'
 import CollectionMeta from './collection-meta'
-import CollectionPickInfo from './collection-pick-info'
 
 export default function CollectionCard({
   collection,
@@ -21,16 +21,15 @@ export default function CollectionCard({
   collection: Collection
 }) {
   const { isTooLong, isExpanded, domRef, toggleClamp } = useClamp()
-  const { user } = useUser()
-  const displayPicks = getDisplayPicks(
-    collection.picks,
-    user.followingMemberIds
+  const { displayPicks, displayPicksCount } = useDisplayPicks(
+    collection,
+    PickObjective.Collection
   )
 
   return (
     <section className="border-b-[0.5px] border-primary-200 bg-white">
-      <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 lg:px-5 xl:px-10">
-        <div className="mx-auto flex flex-col sm:max-w-[600px] lg:grid lg:max-w-[unset]  lg:grid-cols-[640px_1fr] lg:gap-10 xl:grid-cols-[600px_1fr]">
+      <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 md:px-[70px] lg:px-10 xl:px-10">
+        <div className="mx-auto flex flex-col lg:grid lg:max-w-[unset] lg:grid-cols-[640px_1fr] lg:gap-10 xl:grid-cols-[600px_1fr]">
           <div className="relative aspect-[2/1] w-full overflow-hidden sm:rounded-md lg:order-2">
             <ImageWithFallback
               fallbackCategory={ImageCategory.STORY}
@@ -79,9 +78,12 @@ export default function CollectionCard({
               />
             </div>
             <div className="mt-4 flex h-8 flex-row justify-between">
-              <CollectionPickInfo
+              <ObjectivePickInfo
                 displayPicks={displayPicks}
-                pickCount={collection.picksCount ?? 0}
+                pickCount={displayPicksCount}
+                commentCount={collection.commentsCount ?? 0}
+                objectiveId={collection.id}
+                pickObjective={PickObjective.Collection}
               />
               <CollectionPickButton collectionId={collection.id} />
             </div>

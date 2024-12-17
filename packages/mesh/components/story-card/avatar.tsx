@@ -1,8 +1,7 @@
 'use client'
 
-import Image from 'next/image'
-
-import Icon from '@/components/icon'
+import ImageWithFallback from '@/app/_components/image-with-fallback'
+import { ImageCategory } from '@/constants/fallback-src'
 
 type Size = 's' | 'm' | 'l' | 'xl' | 'xxl'
 export type RingColor = keyof typeof avatarRingColors
@@ -48,9 +47,9 @@ export default function Avatar({
   const avatarClass = avatarClasses[size]
   const ringColorClass = avatarRingColors[ringColor]
 
-  // TODO: replace with <ImageWithFallback/>
-  return src ? (
-    <Image
+  return (
+    <ImageWithFallback
+      style={{ objectFit: 'cover' }}
       className={`${avatarClass} inline-block ${
         isRound && 'rounded-full'
       } bg-white ring-2 ${ringColorClass} ${extra} object-cover`}
@@ -58,16 +57,7 @@ export default function Avatar({
       width={sideLength}
       height={sideLength}
       alt={alt ?? src}
-      onError={(e) => {
-        const target = e.target as HTMLImageElement
-        target.src = '/images/default-avatar-image.png'
-      }}
-    />
-  ) : (
-    <Icon
-      iconName="icon-avatar-default"
-      className={`${avatarClass} inline-block rounded-full bg-white ring-2 ${ringColorClass} ${extra}`}
-      size={{ width: sideLength, height: sideLength }}
+      fallbackCategory={ImageCategory.AVATAR}
     />
   )
 }

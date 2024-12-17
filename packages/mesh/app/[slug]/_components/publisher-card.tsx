@@ -1,10 +1,11 @@
 'use client'
 
-import NextImage from 'next/image'
 import NextLink from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import { ImageCategory } from '@/constants/fallback-src'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { SponsoredStoryByCategory } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
@@ -25,11 +26,12 @@ const StoryCard = ({
       <NextLink href={`/story/${story.id}`}>
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
-            <NextImage
-              alt={story.title}
+            <ImageWithFallback
               src={story.og_image}
+              alt={story.title}
               fill
               className="object-cover"
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         )}
@@ -68,10 +70,12 @@ export default function PublisherCard({ data }: Props) {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex gap-x-3">
           <div className="relative size-11 overflow-hidden rounded-lg">
-            <NextImage
-              src={data.publisher.logo || '/images/default-publisher-logo.png'}
-              fill
+            <ImageWithFallback
+              src={data.publisher.logo}
               alt={data.publisher.title}
+              fill
+              className="object-cover"
+              fallbackCategory={ImageCategory.PUBLISHER}
             />
           </div>
           <div>

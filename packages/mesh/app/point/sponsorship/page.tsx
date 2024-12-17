@@ -1,10 +1,11 @@
-import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { Fragment } from 'react'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import { getCurrentUser } from '@/app/actions/auth'
 import { getMemberSponsorRecord } from '@/app/actions/sponsorship'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
+import { ImageCategory } from '@/constants/fallback-src'
 
 export default async function Page() {
   const user = await getCurrentUser()
@@ -34,11 +35,8 @@ export default async function Page() {
                       isLastItem ? 'border-b-0' : 'border-b'
                     } p-5 `}
                   >
-                    <Image
-                      src={
-                        record.publisherLogo ||
-                        '/images/default-avatar-image.png'
-                      }
+                    <ImageWithFallback
+                      src={record.publisherLogo ?? ''}
                       width={40}
                       height={40}
                       alt={`${record.publisherTitle}-logo`}
@@ -46,6 +44,7 @@ export default async function Page() {
                         borderRadius: '8px',
                         backgroundColor: '#E0E0E0',
                       }}
+                      fallbackCategory={ImageCategory.AVATAR}
                     />
                     <div className="flex flex-col gap-0.5 pl-3">
                       <p className="subtitle-2 text-primary-700">
