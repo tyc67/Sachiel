@@ -10,6 +10,7 @@ const FIREBASE_PRIVATE_KEY =
   process.env.FIREBASE_PRIVATE_KEY || 'admin-sdk-service-account-keys'
 
 let GTM_ENV = ''
+let ADSENSE_CLIENT = ''
 let API_ORIGIN = ''
 let STATIC_FILE_ORIGIN = ''
 let GCP_LOG_NAME = ''
@@ -46,6 +47,7 @@ let NEXT_PAGES_REVALIDATE: {
 switch (ENV) {
   case 'local':
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
+    ADSENSE_CLIENT = 'ca-pub-9990785780499264'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
     GCP_LOG_NAME = 'mesh-next-userlog-local'
@@ -66,6 +68,7 @@ switch (ENV) {
     break
   case 'dev':
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
+    ADSENSE_CLIENT = 'ca-pub-9990785780499264'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
     GCP_LOG_NAME = 'mesh-next-userlog-dev'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
@@ -96,6 +99,7 @@ switch (ENV) {
   case 'prod':
     API_ORIGIN =
       'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
+    ADSENSE_CLIENT = 'ca-pub-9990785780499264'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-prod'
     GCP_LOG_NAME = 'mesh-next-userlog-prod'
     PAYMENT_ORIGIN = 'https://mesh-payment-chain-dev-4g6paft7cq-de.a.run.app'
@@ -163,6 +167,7 @@ const STATIC_FILE_ENDPOINTS = {
 }
 
 export {
+  ADSENSE_CLIENT,
   ALCHEMY_ADDRESS,
   ENV,
   FIREBASE_CLIENT_EMAIL,
