@@ -25,7 +25,7 @@ export default function CollectionCard({
 
   return (
     <section className="border-b-[0.5px] border-primary-200 bg-white">
-      <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 md:px-[70px] lg:px-5 xl:px-1">
+      <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 md:px-[70px] lg:px-10 xl:px-10">
         <div className="mx-auto flex flex-col lg:grid lg:max-w-[unset] lg:grid-cols-[640px_1fr] lg:gap-10 xl:grid-cols-[600px_1fr]">
           <div className="relative aspect-[2/1] w-full overflow-hidden sm:rounded-md lg:order-2">
             <ImageWithFallback
