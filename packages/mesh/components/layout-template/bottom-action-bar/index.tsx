@@ -30,8 +30,6 @@ export default function MobileBottomActionBar({
     <nav className="fixed inset-x-0 bottom-0 h-[theme(height.nav.default)] border-t bg-white shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] sm:hidden">
       <div className="footnote flex justify-between px-5 pt-4 text-primary-500">
         <div className="flex items-center">
-          <ObjectiveCommentCount commentsCount={commentsCount} />
-          <Icon iconName="icon-dot" size="s" />
           <ObjectivePickCount
             picksCount={picksCount}
             onClickDisplayPicker={() =>
@@ -43,6 +41,8 @@ export default function MobileBottomActionBar({
             }
             disabled={isSinglePickByCurrentUser}
           />
+          <Icon iconName="icon-dot" size="s" />
+          <ObjectiveCommentCount commentsCount={commentsCount} />
         </div>
         <div className="flex gap-2">{actions.map((action) => action)}</div>
       </div>

@@ -81,6 +81,7 @@ export default function CollectionCard({
               <ObjectivePickInfo
                 displayPicks={displayPicks}
                 pickCount={displayPicksCount}
+                showCommentCount={true}
                 commentCount={collection.commentsCount ?? 0}
                 objectiveId={collection.id}
                 pickObjective={PickObjective.Collection}

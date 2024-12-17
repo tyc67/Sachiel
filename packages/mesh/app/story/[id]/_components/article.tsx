@@ -129,6 +129,7 @@ export default function Article({
                 displayPicks={displayPicks}
                 maxCount={4}
                 pickCount={displayPicksCount}
+                showCommentCount={true}
                 commentCount={story?.commentsCount ?? 0}
                 objectiveId={story?.id ?? ''}
               />
