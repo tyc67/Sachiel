@@ -65,6 +65,7 @@ interface State {
   commentEditState: CommentEditState
   comment: string
   commentList: Comment[]
+  commentsCount: number
   highlightedId: string
   isConfirmDeleteCommentModalOpen: boolean
   commentObjective: CommentObjective
@@ -116,6 +117,7 @@ const initialState: State = {
   },
   comment: '',
   commentList: [],
+  commentsCount: 0,
   highlightedId: '',
   commentObjective: CommentObjective.Story,
 }
@@ -180,11 +182,16 @@ function commentReducer(state: State, action: Action): State {
         commentList: state.commentList.filter(
           (comment) => comment.id !== state.commentEditState.commentId
         ),
+        commentsCount: state.commentsCount - 1,
       }
     case 'UPDATE_COMMENT_TEXT':
       return { ...state, comment: action.payload }
     case 'INSERT_COMMENT':
-      return { ...state, commentList: [action.payload, ...state.commentList] }
+      return {
+        ...state,
+        commentList: [action.payload, ...state.commentList],
+        commentsCount: state.commentsCount + 1,
+      }
     case 'UPDATE_HIGHLIGHTED_COMMENT':
       return { ...state, highlightedId: action.payload }
     case 'UPDATE_COMMENT_LIKE_STATUS':
@@ -265,17 +272,20 @@ const CommentContext = createContext<CommentContextType | undefined>(undefined)
 export function CommentProvider({
   children,
   initialComments,
+  commentsCount,
   commentObjectiveData,
   commentObjective,
 }: {
   children: ReactNode
   initialComments: Comment[] | NonNullable<NonNullable<PickListItem>['comment']>
+  commentsCount: number
   commentObjectiveData: CommentObjectiveData
   commentObjective: CommentObjective
 }) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
     commentList: initialComments,
+    commentsCount,
     commentObjective,
   })
   const { addToast } = useToast()

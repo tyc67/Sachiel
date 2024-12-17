@@ -4,6 +4,7 @@ import CollectionPickButton from '@/components/collection-card/collection-pick-b
 import LayoutTemplate from '@/components/layout-template'
 import GoBackButton from '@/components/navigation/go-back-button'
 import ShareButton from '@/components/navigation/share-button'
+import { useComment } from '@/context/comment'
 // import { BookmarkObjective } from '@/types/objective'
 import { useUser } from '@/context/user'
 import type { GetCollectionQuery } from '@/graphql/__generated__/graphql'
@@ -26,6 +27,7 @@ export default function ClientLayout({
   const isSinglePickByCurrentUser =
     collection.picks?.length === 1 &&
     collection.picks[0].member?.id === user.memberId
+  const { state: comment } = useComment()
   return (
     <LayoutTemplate
       type="default"
@@ -61,7 +63,7 @@ export default function ClientLayout({
         pickObjective: PickObjective.Collection,
         objectiveId: collection.id,
         picksCount: collection.picksCount ?? 0,
-        commentsCount: collection.commentsCount ?? 0,
+        commentsCount: comment.commentsCount ?? 0,
         actions: [
           <CollectionPickButton key={0} collectionId={collection.id} />,
         ],

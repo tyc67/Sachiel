@@ -8,6 +8,7 @@ import CollectionPickButton from '@/components/collection-card/collection-pick-b
 import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
+import { useComment } from '@/context/comment'
 import useClamp from '@/hooks/use-clamp'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { PickObjective } from '@/types/objective'
@@ -25,6 +26,7 @@ export default function CollectionCard({
     collection,
     PickObjective.Collection
   )
+  const { state: comment } = useComment()
 
   return (
     <section className="border-b-[0.5px] border-primary-200 bg-white">
@@ -82,7 +84,7 @@ export default function CollectionCard({
                 displayPicks={displayPicks}
                 pickCount={displayPicksCount}
                 showCommentCount={true}
-                commentCount={collection.commentsCount ?? 0}
+                commentCount={comment.commentsCount}
                 objectiveId={collection.id}
                 pickObjective={PickObjective.Collection}
               />
