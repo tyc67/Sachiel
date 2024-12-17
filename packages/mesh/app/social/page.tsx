@@ -19,7 +19,6 @@ export default function Page() {
   const { user } = useUser()
   const feedsNumber = 10
   const firstSectionAmount = 3
-  const suggestedFollowersNumber = 10
   const memberId = user.memberId
   const [socialData, setSocialData] = useState<MongoDBResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -52,9 +51,7 @@ export default function Page() {
 
   const firstSectionStories = stories.slice(0, firstSectionAmount)
   const secondSectionStories = stories.slice(firstSectionAmount)
-  const suggestedMembers = members
-    .filter((m) => m.id !== memberId)
-    .slice(0, suggestedFollowersNumber)
+  const suggestedMembers = members.filter((m) => m.id !== memberId)
 
   return (
     <main>

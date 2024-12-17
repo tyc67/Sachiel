@@ -152,6 +152,7 @@ export type IconName =
   | 'icon-select-image'
   | 'icon-collection'
   | 'icon-remove'
+  | 'icon-refresh'
 
 export type IconProps = {
   size: Size
