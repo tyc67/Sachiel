@@ -15,10 +15,12 @@ import LoginSetFollowing from './login-set-following'
 import LoginSetName from './login-set-name'
 import LoginSetWallet from './login-set-wallet'
 import LoginStepsTitle from './login-steps-title'
+import LoginTermsConfirmation from './login-terms-confirmation'
 
 const loginStepComponents: Record<LoginStepsKey, React.FC> = {
   [LoginState.Entry]: LoginEntry,
   [LoginState.Email]: LoginEmail,
+  [LoginState.TermsConfirmation]: LoginTermsConfirmation,
   [LoginState.EmailConfirmation]: LoginEmailConfirmation,
   [LoginState.SetName]: LoginSetName,
   [LoginState.SetCategory]: LoginSetCategory,

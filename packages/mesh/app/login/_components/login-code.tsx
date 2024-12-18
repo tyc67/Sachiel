@@ -87,7 +87,7 @@ export default function LoginCode() {
         },
       }))
       setIsSubmitting(false)
-      setStep(LoginState.SetName)
+      setStep(LoginState.TermsConfirmation)
     }
   }
 

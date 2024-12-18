@@ -8,12 +8,17 @@ import { useUser } from '@/context/user'
 const chevronMap: Pick<
   Record<LoginStepsKey, { title: string; goToStep: LoginStepsKey }>,
   | typeof LoginState.Email
+  | typeof LoginState.TermsConfirmation
   | typeof LoginState.EmailConfirmation
   | typeof LoginState.SetCategory
   | typeof LoginState.SetFollowing
   | typeof LoginState.Code
 > = {
   [LoginState.Email]: { title: 'Email', goToStep: LoginState.Entry },
+  [LoginState.TermsConfirmation]: {
+    title: '服務條款',
+    goToStep: LoginState.Code,
+  },
   [LoginState.EmailConfirmation]: {
     title: '確認收件匣',
     goToStep: LoginState.Email,
@@ -60,6 +65,7 @@ export default function LoginStepsTitle() {
         </div>
       )
     case LoginState.Email:
+    case LoginState.TermsConfirmation:
     case LoginState.EmailConfirmation:
     case LoginState.SetCategory:
     case LoginState.SetFollowing: {

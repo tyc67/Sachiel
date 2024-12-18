@@ -46,7 +46,7 @@ type LayoutTemplateProps = {
       type: 'article'
       mobileNavigation: MobileNavigationProps
       nonMobileNavigation: ArticleNavigationProps
-      mobileActionBar: MobileBottomActionBarProps
+      mobileActionBar?: MobileBottomActionBarProps
     }
   | {
       type: 'stateless'
@@ -194,7 +194,7 @@ const ArticleLayout = ({
 }: {
   mobileNavigation: MobileNavigationProps
   nonMobileNavigation: ArticleNavigationProps
-  mobileActionBar: MobileBottomActionBarProps
+  mobileActionBar?: MobileBottomActionBarProps
   children: React.ReactNode
 }) => {
   const [shouldShowNav, setShouldShowNav] = useState(false)
@@ -235,7 +235,7 @@ const ArticleLayout = ({
       {/* cover on mobile header */}
       <MobileNavigation {...mobileNavigation} />
       {/* cover on mobile bottom nav */}
-      <MobileBottomActionBar {...mobileActionBar} />
+      {mobileActionBar && <MobileBottomActionBar {...mobileActionBar} />}
     </div>
   )
 }

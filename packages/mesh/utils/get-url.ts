@@ -29,3 +29,10 @@ export function getMemberProfileUrl(
 export function getSearchUrl(text: string) {
   return `/search/${encodeURIComponent(text.trim())}`
 }
+
+export function getPolicyUrl(pathName: string) {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}${pathName}`
+  }
+  return ''
+}

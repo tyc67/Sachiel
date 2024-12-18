@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .terms-content {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212944;
+
+    & h1 {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 20px;
+      margin-bottom: 8px;
+    }
+
+    & br {
+      display: none;
+    }
+
+    & strong {
+      font-weight: 400;
+    }
+
+    & p {
+      margin-bottom: 16px;
+    }
+
+    & p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
