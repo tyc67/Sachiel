@@ -1,17 +1,28 @@
+/* eslint-disable max-lines */
 'use client'
+
 import type { ReactNode } from 'react'
-import { createContext, useCallback, useContext, useReducer } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { addComment, deleteComment, editComment } from '@/app/actions/comment'
-import type { CommentObjectiveData } from '@/components/comment/mobile-comment-section/mobile-comment-modal-content'
+import DesktopCommentModal from '@/components/comment/desktop-comment-section/comment-modal'
 import { MobileCommentModalContent } from '@/components/comment/mobile-comment-section/mobile-comment-modal-content'
 import TOAST_MESSAGE from '@/constants/toast'
 import { type User } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
-import type { CommentObjective } from '@/types/objective'
+import useWindowDimensions from '@/hooks/use-window-dimension'
+import type { CommentObjectiveData } from '@/types/comment'
+import { CommentObjective } from '@/types/objective'
 import type { PickListItem } from '@/types/profile'
 import { sleep } from '@/utils/sleep'
+import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 import { useToast } from './toast'
 
@@ -46,6 +57,7 @@ interface CommentEditState {
 
 interface State {
   isMobileCommentModalOpen: boolean
+  isDesktopCommentModalOpen: boolean
   isConfirmLeavingModalOpen: boolean
   isEditingComment: boolean
   isConfirmReportingModalOpen: boolean
@@ -53,12 +65,15 @@ interface State {
   commentEditState: CommentEditState
   comment: string
   commentList: Comment[]
+  commentsCount: number
   highlightedId: string
   isConfirmDeleteCommentModalOpen: boolean
+  commentObjective: CommentObjective
 }
 
 type Action =
   | { type: 'TOGGLE_MOBILE_COMMENT_MODAL'; payload: { isOpen: boolean } }
+  | { type: 'TOGGLE_DESKTOP_COMMENT_MODAL'; payload: { isOpen: boolean } }
   | { type: 'TOGGLE_COMMENT_EDITOR'; payload: { isEditing: boolean } }
   | { type: 'UPDATE_COMMENT_DRAFT'; payload: string }
   | { type: 'TOGGLE_CONFIRM_MODAL'; payload: { isVisible: boolean } }
@@ -86,6 +101,7 @@ type Action =
 
 const initialState: State = {
   isMobileCommentModalOpen: false,
+  isDesktopCommentModalOpen: false,
   isEditingComment: false,
   isAddingComment: false,
   isConfirmLeavingModalOpen: false,
@@ -101,7 +117,9 @@ const initialState: State = {
   },
   comment: '',
   commentList: [],
+  commentsCount: 0,
   highlightedId: '',
+  commentObjective: CommentObjective.Story,
 }
 
 function commentReducer(state: State, action: Action): State {
@@ -110,6 +128,12 @@ function commentReducer(state: State, action: Action): State {
       return {
         ...state,
         isMobileCommentModalOpen: action.payload.isOpen,
+        comment: action.payload.isOpen ? '' : state.comment,
+      }
+    case 'TOGGLE_DESKTOP_COMMENT_MODAL':
+      return {
+        ...state,
+        isDesktopCommentModalOpen: action.payload.isOpen,
         comment: action.payload.isOpen ? '' : state.comment,
       }
     case 'TOGGLE_COMMENT_EDITOR':
@@ -158,11 +182,16 @@ function commentReducer(state: State, action: Action): State {
         commentList: state.commentList.filter(
           (comment) => comment.id !== state.commentEditState.commentId
         ),
+        commentsCount: state.commentsCount - 1,
       }
     case 'UPDATE_COMMENT_TEXT':
       return { ...state, comment: action.payload }
     case 'INSERT_COMMENT':
-      return { ...state, commentList: [action.payload, ...state.commentList] }
+      return {
+        ...state,
+        commentList: [action.payload, ...state.commentList],
+        commentsCount: state.commentsCount + 1,
+      }
     case 'UPDATE_HIGHLIGHTED_COMMENT':
       return { ...state, highlightedId: action.payload }
     case 'UPDATE_COMMENT_LIKE_STATUS':
@@ -243,19 +272,24 @@ const CommentContext = createContext<CommentContextType | undefined>(undefined)
 export function CommentProvider({
   children,
   initialComments,
+  commentsCount,
   commentObjectiveData,
   commentObjective,
 }: {
   children: ReactNode
   initialComments: Comment[] | NonNullable<NonNullable<PickListItem>['comment']>
+  commentsCount: number
   commentObjectiveData: CommentObjectiveData
   commentObjective: CommentObjective
 }) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
     commentList: initialComments,
+    commentsCount,
+    commentObjective,
   })
   const { addToast } = useToast()
+  const { width } = useWindowDimensions()
 
   const handleDeleteCommentModalOnConfirm = useCallback(
     async (user: User) => {
@@ -452,11 +486,34 @@ export function CommentProvider({
     updateCommentLikeStatus,
   }
 
+  useEffect(() => {
+    if (width >= getTailwindConfigBreakpointNumber('sm')) {
+      if (state.isMobileCommentModalOpen) {
+        dispatch({
+          type: 'TOGGLE_MOBILE_COMMENT_MODAL',
+          payload: { isOpen: false },
+        })
+      }
+    } else {
+      if (state.isDesktopCommentModalOpen) {
+        dispatch({
+          type: 'TOGGLE_DESKTOP_COMMENT_MODAL',
+          payload: { isOpen: false },
+        })
+      }
+    }
+  }, [state.isDesktopCommentModalOpen, state.isMobileCommentModalOpen, width])
+
   return (
     <CommentContext.Provider value={contextValue}>
       {state.isMobileCommentModalOpen &&
         createPortal(
           <MobileCommentModalContent data={commentObjectiveData} />,
+          document.body
+        )}
+      {state.isDesktopCommentModalOpen &&
+        createPortal(
+          <DesktopCommentModal targetId={commentObjectiveData.id} />,
           document.body
         )}
       {children}

@@ -1,29 +1,42 @@
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { getCollectionPickers } from '@/app/actions/collection'
 import { getStoryPickers } from '@/app/actions/story'
 import FollowButton from '@/app/social/_components/follow-button'
 import { usePickersModal } from '@/context/pickers-modal'
 import { type Picker } from '@/context/pickers-modal'
 import { useUser } from '@/context/user'
 import useInView from '@/hooks/use-in-view'
+import { PickObjective } from '@/types/objective'
 
 import Icon from './icon'
 import Avatar from './story-card/avatar'
 
 export default function PickersModal() {
   const { user } = useUser()
-  const { storyId, closePickersModal } = usePickersModal()
+  const { pickObjective, objectiveId, closePickersModal } = usePickersModal()
   const { targetRef: scrollRef, isIntersecting: isInView } = useInView()
   const router = useRouter()
   const loadingRef = useRef(false)
   const pickersTake = 5
   const [page, setPage] = useState(0)
   const [pickersData, setPickersData] = useState<Picker[]>([])
-  const isPicked = user.pickStoryIds.has(storyId)
+  const isPicked = user.pickStoryIds.has(objectiveId)
+
+  const getPickers = useMemo(() => {
+    switch (pickObjective) {
+      case PickObjective.Story:
+        return getStoryPickers
+      case PickObjective.Collection:
+        return getCollectionPickers
+      default:
+        return () => {}
+    }
+  }, [pickObjective])
 
   useEffect(() => {
-    if (storyId) {
+    if (objectiveId) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
@@ -31,7 +44,7 @@ export default function PickersModal() {
     return () => {
       document.body.style.overflow = 'auto'
     }
-  }, [storyId])
+  }, [objectiveId])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -52,7 +65,7 @@ export default function PickersModal() {
         loadingRef.current = true
 
         const startIndex = page * pickersTake
-        const data = await getStoryPickers(storyId, pickersTake, startIndex)
+        const data = await getPickers(objectiveId, pickersTake, startIndex)
 
         if (!data || !data.picks) {
           loadingRef.current = false
@@ -76,7 +89,7 @@ export default function PickersModal() {
     }
 
     fetchMorePickers()
-  }, [isInView, page, storyId])
+  }, [isInView, page, objectiveId, getPickers])
 
   return (
     <div

@@ -761,6 +761,120 @@ export type DateTimeNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['DateTime']['input']>>
 }
 
+export type Exchange = {
+  __typename?: 'Exchange'
+  complement?: Maybe<Scalars['String']['output']>
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  createdBy?: Maybe<User>
+  exchangeVolume?: Maybe<Scalars['Float']['output']>
+  id: Scalars['ID']['output']
+  publisher?: Maybe<Publisher>
+  status?: Maybe<ExchangeStatusType>
+  tid?: Maybe<Scalars['String']['output']>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  updatedBy?: Maybe<User>
+}
+
+export type ExchangeCreateInput = {
+  complement?: InputMaybe<Scalars['String']['input']>
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForCreateInput>
+  exchangeVolume?: InputMaybe<Scalars['Float']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForCreateInput>
+  status?: InputMaybe<ExchangeStatusType>
+  tid?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForCreateInput>
+}
+
+export type ExchangeManyRelationFilter = {
+  every?: InputMaybe<ExchangeWhereInput>
+  none?: InputMaybe<ExchangeWhereInput>
+  some?: InputMaybe<ExchangeWhereInput>
+}
+
+export type ExchangeOrderByInput = {
+  complement?: InputMaybe<OrderDirection>
+  createdAt?: InputMaybe<OrderDirection>
+  exchangeVolume?: InputMaybe<OrderDirection>
+  id?: InputMaybe<OrderDirection>
+  status?: InputMaybe<OrderDirection>
+  tid?: InputMaybe<OrderDirection>
+  updatedAt?: InputMaybe<OrderDirection>
+}
+
+export type ExchangeRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  create?: InputMaybe<Array<ExchangeCreateInput>>
+}
+
+export type ExchangeRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  create?: InputMaybe<Array<ExchangeCreateInput>>
+  disconnect?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+  set?: InputMaybe<Array<ExchangeWhereUniqueInput>>
+}
+
+export enum ExchangeStatusType {
+  Failed = 'Failed',
+  Success = 'Success',
+}
+
+export type ExchangeStatusTypeNullableFilter = {
+  equals?: InputMaybe<ExchangeStatusType>
+  in?: InputMaybe<Array<ExchangeStatusType>>
+  not?: InputMaybe<ExchangeStatusTypeNullableFilter>
+  notIn?: InputMaybe<Array<ExchangeStatusType>>
+}
+
+export type ExchangeUpdateArgs = {
+  data: ExchangeUpdateInput
+  where: ExchangeWhereUniqueInput
+}
+
+export type ExchangeUpdateInput = {
+  complement?: InputMaybe<Scalars['String']['input']>
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>
+  createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
+  exchangeVolume?: InputMaybe<Scalars['Float']['input']>
+  publisher?: InputMaybe<PublisherRelateToOneForUpdateInput>
+  status?: InputMaybe<ExchangeStatusType>
+  tid?: InputMaybe<Scalars['String']['input']>
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>
+  updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>
+}
+
+export type ExchangeWhereInput = {
+  AND?: InputMaybe<Array<ExchangeWhereInput>>
+  NOT?: InputMaybe<Array<ExchangeWhereInput>>
+  OR?: InputMaybe<Array<ExchangeWhereInput>>
+  complement?: InputMaybe<StringFilter>
+  createdAt?: InputMaybe<DateTimeNullableFilter>
+  createdBy?: InputMaybe<UserWhereInput>
+  exchangeVolume?: InputMaybe<FloatFilter>
+  id?: InputMaybe<IdFilter>
+  publisher?: InputMaybe<PublisherWhereInput>
+  status?: InputMaybe<ExchangeStatusTypeNullableFilter>
+  tid?: InputMaybe<StringFilter>
+  updatedAt?: InputMaybe<DateTimeNullableFilter>
+  updatedBy?: InputMaybe<UserWhereInput>
+}
+
+export type ExchangeWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type FloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>
+  gt?: InputMaybe<Scalars['Float']['input']>
+  gte?: InputMaybe<Scalars['Float']['input']>
+  in?: InputMaybe<Array<Scalars['Float']['input']>>
+  lt?: InputMaybe<Scalars['Float']['input']>
+  lte?: InputMaybe<Scalars['Float']['input']>
+  not?: InputMaybe<FloatFilter>
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>
+}
+
 export type FloatNullableFilter = {
   equals?: InputMaybe<Scalars['Float']['input']>
   gt?: InputMaybe<Scalars['Float']['input']>
@@ -1127,6 +1241,8 @@ export type Member = {
   nickname?: Maybe<Scalars['String']['output']>
   pick?: Maybe<Array<Pick>>
   pickCount?: Maybe<Scalars['Int']['output']>
+  publisher?: Maybe<Array<Publisher>>
+  publisherCount?: Maybe<Scalars['Int']['output']>
   sponsor?: Maybe<Array<Sponsorship>>
   sponsorCount?: Maybe<Scalars['Int']['output']>
   transaction?: Maybe<Array<Transaction>>
@@ -1280,6 +1396,17 @@ export type MemberPickCountArgs = {
   where?: PickWhereInput
 }
 
+export type MemberPublisherArgs = {
+  orderBy?: Array<PublisherOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: PublisherWhereInput
+}
+
+export type MemberPublisherCountArgs = {
+  where?: PublisherWhereInput
+}
+
 export type MemberSponsorArgs = {
   orderBy?: Array<SponsorshipOrderByInput>
   skip?: Scalars['Int']['input']
@@ -1328,6 +1455,7 @@ export type MemberCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>
   nickname?: InputMaybe<Scalars['String']['input']>
   pick?: InputMaybe<PickRelateToManyForCreateInput>
+  publisher?: InputMaybe<PublisherRelateToManyForCreateInput>
   sponsor?: InputMaybe<SponsorshipRelateToManyForCreateInput>
   transaction?: InputMaybe<TransactionRelateToManyForCreateInput>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
@@ -1412,6 +1540,7 @@ export type MemberUpdateInput = {
   name?: InputMaybe<Scalars['String']['input']>
   nickname?: InputMaybe<Scalars['String']['input']>
   pick?: InputMaybe<PickRelateToManyForUpdateInput>
+  publisher?: InputMaybe<PublisherRelateToManyForUpdateInput>
   sponsor?: InputMaybe<SponsorshipRelateToManyForUpdateInput>
   transaction?: InputMaybe<TransactionRelateToManyForUpdateInput>
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>
@@ -1450,6 +1579,7 @@ export type MemberWhereInput = {
   name?: InputMaybe<StringFilter>
   nickname?: InputMaybe<StringFilter>
   pick?: InputMaybe<PickManyRelationFilter>
+  publisher?: InputMaybe<PublisherManyRelationFilter>
   sponsor?: InputMaybe<SponsorshipManyRelationFilter>
   transaction?: InputMaybe<TransactionManyRelationFilter>
   updatedAt?: InputMaybe<DateTimeNullableFilter>
@@ -1480,6 +1610,8 @@ export type Mutation = {
   createCollections?: Maybe<Array<Maybe<Collection>>>
   createComment?: Maybe<Comment>
   createComments?: Maybe<Array<Maybe<Comment>>>
+  createExchange?: Maybe<Exchange>
+  createExchanges?: Maybe<Array<Maybe<Exchange>>>
   createInitialUser: UserAuthenticationWithPasswordSuccess
   createInvalidName?: Maybe<InvalidName>
   createInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
@@ -1521,6 +1653,8 @@ export type Mutation = {
   deleteCollections?: Maybe<Array<Maybe<Collection>>>
   deleteComment?: Maybe<Comment>
   deleteComments?: Maybe<Array<Maybe<Comment>>>
+  deleteExchange?: Maybe<Exchange>
+  deleteExchanges?: Maybe<Array<Maybe<Exchange>>>
   deleteInvalidName?: Maybe<InvalidName>
   deleteInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   deleteInvitationCode?: Maybe<InvitationCode>
@@ -1562,6 +1696,8 @@ export type Mutation = {
   updateCollections?: Maybe<Array<Maybe<Collection>>>
   updateComment?: Maybe<Comment>
   updateComments?: Maybe<Array<Maybe<Comment>>>
+  updateExchange?: Maybe<Exchange>
+  updateExchanges?: Maybe<Array<Maybe<Exchange>>>
   updateInvalidName?: Maybe<InvalidName>
   updateInvalidNames?: Maybe<Array<Maybe<InvalidName>>>
   updateInvitationCode?: Maybe<InvitationCode>
@@ -1643,6 +1779,14 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateCommentsArgs = {
   data: Array<CommentCreateInput>
+}
+
+export type MutationCreateExchangeArgs = {
+  data: ExchangeCreateInput
+}
+
+export type MutationCreateExchangesArgs = {
+  data: Array<ExchangeCreateInput>
 }
 
 export type MutationCreateInitialUserArgs = {
@@ -1809,6 +1953,14 @@ export type MutationDeleteCommentsArgs = {
   where: Array<CommentWhereUniqueInput>
 }
 
+export type MutationDeleteExchangeArgs = {
+  where: ExchangeWhereUniqueInput
+}
+
+export type MutationDeleteExchangesArgs = {
+  where: Array<ExchangeWhereUniqueInput>
+}
+
 export type MutationDeleteInvalidNameArgs = {
   where: InvalidNameWhereUniqueInput
 }
@@ -1973,6 +2125,15 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateCommentsArgs = {
   data: Array<CommentUpdateArgs>
+}
+
+export type MutationUpdateExchangeArgs = {
+  data: ExchangeUpdateInput
+  where: ExchangeWhereUniqueInput
+}
+
+export type MutationUpdateExchangesArgs = {
+  data: Array<ExchangeUpdateArgs>
 }
 
 export type MutationUpdateInvalidNameArgs = {
@@ -2715,11 +2876,14 @@ export type PolicyWhereUniqueInput = {
 
 export type Publisher = {
   __typename?: 'Publisher'
+  admin?: Maybe<Member>
   category?: Maybe<Category>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   createdBy?: Maybe<User>
   customId?: Maybe<Scalars['String']['output']>
   description?: Maybe<Scalars['String']['output']>
+  exchange?: Maybe<Array<Exchange>>
+  exchangeCount?: Maybe<Scalars['Int']['output']>
   follower?: Maybe<Array<Member>>
   followerCount?: Maybe<Scalars['Int']['output']>
   full_content?: Maybe<Scalars['Boolean']['output']>
@@ -2741,6 +2905,17 @@ export type Publisher = {
   user?: Maybe<Array<User>>
   userCount?: Maybe<Scalars['Int']['output']>
   wallet?: Maybe<Scalars['String']['output']>
+}
+
+export type PublisherExchangeArgs = {
+  orderBy?: Array<ExchangeOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: ExchangeWhereInput
+}
+
+export type PublisherExchangeCountArgs = {
+  where?: ExchangeWhereInput
 }
 
 export type PublisherFollowerArgs = {
@@ -2777,11 +2952,13 @@ export type PublisherUserCountArgs = {
 }
 
 export type PublisherCreateInput = {
+  admin?: InputMaybe<MemberRelateToOneForCreateInput>
   category?: InputMaybe<CategoryRelateToOneForCreateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>
   customId?: InputMaybe<Scalars['String']['input']>
   description?: InputMaybe<Scalars['String']['input']>
+  exchange?: InputMaybe<ExchangeRelateToManyForCreateInput>
   follower?: InputMaybe<MemberRelateToManyForCreateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
@@ -2856,11 +3033,13 @@ export type PublisherUpdateArgs = {
 }
 
 export type PublisherUpdateInput = {
+  admin?: InputMaybe<MemberRelateToOneForUpdateInput>
   category?: InputMaybe<CategoryRelateToOneForUpdateInput>
   createdAt?: InputMaybe<Scalars['DateTime']['input']>
   createdBy?: InputMaybe<UserRelateToOneForUpdateInput>
   customId?: InputMaybe<Scalars['String']['input']>
   description?: InputMaybe<Scalars['String']['input']>
+  exchange?: InputMaybe<ExchangeRelateToManyForUpdateInput>
   follower?: InputMaybe<MemberRelateToManyForUpdateInput>
   full_content?: InputMaybe<Scalars['Boolean']['input']>
   full_screen_ad?: InputMaybe<Scalars['String']['input']>
@@ -2884,11 +3063,13 @@ export type PublisherWhereInput = {
   AND?: InputMaybe<Array<PublisherWhereInput>>
   NOT?: InputMaybe<Array<PublisherWhereInput>>
   OR?: InputMaybe<Array<PublisherWhereInput>>
+  admin?: InputMaybe<MemberWhereInput>
   category?: InputMaybe<CategoryWhereInput>
   createdAt?: InputMaybe<DateTimeNullableFilter>
   createdBy?: InputMaybe<UserWhereInput>
   customId?: InputMaybe<StringFilter>
   description?: InputMaybe<StringFilter>
+  exchange?: InputMaybe<ExchangeManyRelationFilter>
   follower?: InputMaybe<MemberManyRelationFilter>
   full_content?: InputMaybe<BooleanFilter>
   full_screen_ad?: InputMaybe<StringNullableFilter>
@@ -2934,6 +3115,9 @@ export type Query = {
   comment?: Maybe<Comment>
   comments?: Maybe<Array<Comment>>
   commentsCount?: Maybe<Scalars['Int']['output']>
+  exchange?: Maybe<Exchange>
+  exchanges?: Maybe<Array<Exchange>>
+  exchangesCount?: Maybe<Scalars['Int']['output']>
   invalidName?: Maybe<InvalidName>
   invalidNames?: Maybe<Array<InvalidName>>
   invalidNamesCount?: Maybe<Scalars['Int']['output']>
@@ -3067,6 +3251,21 @@ export type QueryCommentsArgs = {
 
 export type QueryCommentsCountArgs = {
   where?: CommentWhereInput
+}
+
+export type QueryExchangeArgs = {
+  where: ExchangeWhereUniqueInput
+}
+
+export type QueryExchangesArgs = {
+  orderBy?: Array<ExchangeOrderByInput>
+  skip?: Scalars['Int']['input']
+  take?: InputMaybe<Scalars['Int']['input']>
+  where?: ExchangeWhereInput
+}
+
+export type QueryExchangesCountArgs = {
+  where?: ExchangeWhereInput
 }
 
 export type QueryInvalidNameArgs = {
@@ -4122,7 +4321,11 @@ export type CollectionInfoFragment = {
       avatar?: string | null
     } | null
   }> | null
-  creator?: { __typename?: 'Member'; customId?: string | null } | null
+  creator?: {
+    __typename?: 'Member'
+    customId?: string | null
+    id: string
+  } | null
 }
 
 export type UserActionStoryFragment = {
@@ -4189,16 +4392,6 @@ export type CreateCollectionMutation = {
   createCollection?: { __typename?: 'Collection'; id: string } | null
 }
 
-export type UpdateCollectionMutationVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']['input']>
-  data: CollectionUpdateInput
-}>
-
-export type UpdateCollectionMutation = {
-  __typename?: 'Mutation'
-  updateCollection?: { __typename?: 'Collection'; title?: string | null } | null
-}
-
 export type AddStoryToCollectionMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>
   storyId?: InputMaybe<Scalars['ID']['input']>
@@ -4230,6 +4423,34 @@ export type RemoveCollectionMutation = {
     status?: string | null
   } | null
   deletePhoto?: { __typename?: 'Photo'; id: string } | null
+}
+
+export type UpdateCollectionMutationVariables = Exact<{
+  collectionId?: InputMaybe<Scalars['ID']['input']>
+  updateCollectionData: CollectionUpdateInput
+  createCollectionPicksData?: InputMaybe<
+    Array<CollectionPickCreateInput> | CollectionPickCreateInput
+  >
+  updateCollectionPicksData:
+    | Array<CollectionPickUpdateArgs>
+    | CollectionPickUpdateArgs
+  deleteCollectionPicksData:
+    | Array<CollectionPickWhereUniqueInput>
+    | CollectionPickWhereUniqueInput
+}>
+
+export type UpdateCollectionMutation = {
+  __typename?: 'Mutation'
+  updateCollection?: { __typename?: 'Collection'; id: string } | null
+  createCollectionPicks?: { __typename?: 'Collection'; id: string } | null
+  updateCollectionPicks?: Array<{
+    __typename?: 'CollectionPick'
+    id: string
+  } | null> | null
+  deleteCollectionPicks?: Array<{
+    __typename?: 'CollectionPick'
+    id: string
+  } | null> | null
 }
 
 export type InvalidateInvitationCodeMutationVariables = Exact<{
@@ -4422,6 +4643,7 @@ export type GetCollectionQuery = {
       createdAt?: any | null
       content?: string | null
       state?: string | null
+      likeCount?: number | null
       member?: {
         __typename?: 'Member'
         id: string
@@ -4429,6 +4651,7 @@ export type GetCollectionQuery = {
         name?: string | null
         avatar?: string | null
       } | null
+      like?: Array<{ __typename?: 'Member'; id: string }> | null
     }> | null
   }> | null
 }
@@ -4492,7 +4715,7 @@ export type GetCollectionStoriesQuery = {
 }
 
 export type GetCollectionToEditQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']['input']>
+  collectionId?: InputMaybe<Scalars['ID']['input']>
 }>
 
 export type GetCollectionToEditQuery = {
@@ -4502,9 +4725,18 @@ export type GetCollectionToEditQuery = {
     id: string
     title?: string | null
     summary?: string | null
-    heroImage?: { __typename?: 'Photo'; urlOriginal?: string | null } | null
+    heroImage?: {
+      __typename?: 'Photo'
+      id: string
+      name?: string | null
+      resized?: {
+        __typename?: 'ResizedImages'
+        original?: string | null
+      } | null
+    } | null
     collectionpicks?: Array<{
       __typename?: 'CollectionPick'
+      id: string
       sort_order?: number | null
       picked_date?: any | null
       story?: {
@@ -4520,6 +4752,7 @@ export type GetCollectionToEditQuery = {
         } | null
       } | null
     }> | null
+    creator?: { __typename?: 'Member'; customId?: string | null } | null
   } | null
 }
 
@@ -4548,6 +4781,33 @@ export type GetMemberCollectionsQuery = {
       story?: { __typename?: 'Story'; id: string } | null
     }> | null
   }> | null
+}
+
+export type GetCollectionPickersQueryVariables = Exact<{
+  collectionId?: InputMaybe<Scalars['ID']['input']>
+  picksTake?: InputMaybe<Scalars['Int']['input']>
+  picksSkip?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GetCollectionPickersQuery = {
+  __typename?: 'Query'
+  collection?: {
+    __typename?: 'Collection'
+    id: string
+    picks?: Array<{
+      __typename?: 'Pick'
+      id: string
+      createdAt?: any | null
+      kind?: string | null
+      member?: {
+        __typename?: 'Member'
+        id: string
+        name?: string | null
+        avatar?: string | null
+        customId?: string | null
+      } | null
+    }> | null
+  } | null
 }
 
 export type GetStoryLatestAddedCommentQueryVariables = Exact<{
@@ -4935,7 +5195,11 @@ export type GetMemberProfileQuery = {
             avatar?: string | null
           } | null
         }> | null
-        creator?: { __typename?: 'Member'; customId?: string | null } | null
+        creator?: {
+          __typename?: 'Member'
+          customId?: string | null
+          id: string
+        } | null
       } | null
     }> | null
     books?: Array<{
@@ -5038,7 +5302,11 @@ export type GetMemberProfileQuery = {
         avatar?: string | null
       } | null
     }> | null
-    creator?: { __typename?: 'Member'; customId?: string | null } | null
+    creator?: {
+      __typename?: 'Member'
+      customId?: string | null
+      id: string
+    } | null
   }> | null
 }
 
@@ -5157,7 +5425,11 @@ export type GetVisitorProfileQuery = {
             avatar?: string | null
           } | null
         }> | null
-        creator?: { __typename?: 'Member'; customId?: string | null } | null
+        creator?: {
+          __typename?: 'Member'
+          customId?: string | null
+          id: string
+        } | null
       } | null
     }> | null
   } | null
@@ -5207,7 +5479,11 @@ export type GetVisitorProfileQuery = {
         avatar?: string | null
       } | null
     }> | null
-    creator?: { __typename?: 'Member'; customId?: string | null } | null
+    creator?: {
+      __typename?: 'Member'
+      customId?: string | null
+      id: string
+    } | null
   }> | null
 }
 
@@ -5503,6 +5779,8 @@ export type GetMemberPickAndBookmarkQueryVariables = Exact<{
   memberId?: InputMaybe<Scalars['ID']['input']>
   pickTake?: InputMaybe<Scalars['Int']['input']>
   pickSkip?: InputMaybe<Scalars['Int']['input']>
+  bookmarkTake?: InputMaybe<Scalars['Int']['input']>
+  bookmarkSkip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type GetMemberPickAndBookmarkQuery = {
@@ -5510,11 +5788,31 @@ export type GetMemberPickAndBookmarkQuery = {
   member?: {
     __typename?: 'Member'
     name?: string | null
-    picksAndBookmarksCount?: number | null
-    picksAndBookmarks?: Array<{
+    picksCount?: number | null
+    bookmarksCount?: number | null
+    picks?: Array<{
       __typename?: 'Pick'
       id: string
       kind?: string | null
+      picked_date?: any | null
+      story?: {
+        __typename?: 'Story'
+        id: string
+        title?: string | null
+        og_image?: string | null
+        published_date?: any | null
+        source?: {
+          __typename?: 'Publisher'
+          id: string
+          title?: string | null
+        } | null
+      } | null
+    }> | null
+    bookmarks?: Array<{
+      __typename?: 'Pick'
+      id: string
+      kind?: string | null
+      picked_date?: any | null
       story?: {
         __typename?: 'Story'
         id: string
@@ -5636,7 +5934,11 @@ export type GetMorePicksQuery = {
           avatar?: string | null
         } | null
       }> | null
-      creator?: { __typename?: 'Member'; customId?: string | null } | null
+      creator?: {
+        __typename?: 'Member'
+        customId?: string | null
+        id: string
+      } | null
     } | null
   }> | null
 }
@@ -5761,7 +6063,11 @@ export type GetMoreCollectionsQuery = {
           avatar?: string | null
         } | null
       }> | null
-      creator?: { __typename?: 'Member'; customId?: string | null } | null
+      creator?: {
+        __typename?: 'Member'
+        customId?: string | null
+        id: string
+      } | null
     } | null
   }> | null
 }
@@ -6547,6 +6853,7 @@ export const CollectionInfoFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -7018,79 +7325,6 @@ export const CreateCollectionDocument = {
   CreateCollectionMutation,
   CreateCollectionMutationVariables
 >
-export const UpdateCollectionDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'UpdateCollection' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CollectionUpdateInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'updateCollection' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'id' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  UpdateCollectionMutation,
-  UpdateCollectionMutationVariables
->
 export const AddStoryToCollectionDocument = {
   kind: 'Document',
   definitions: [
@@ -7456,6 +7690,244 @@ export const RemoveCollectionDocument = {
 } as unknown as DocumentNode<
   RemoveCollectionMutation,
   RemoveCollectionMutationVariables
+>
+export const UpdateCollectionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateCollection' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'collectionId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updateCollectionData' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CollectionUpdateInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'createCollectionPicksData' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'CollectionPickCreateInput' },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updateCollectionPicksData' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'CollectionPickUpdateArgs' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'deleteCollectionPicksData' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: {
+                    kind: 'Name',
+                    value: 'CollectionPickWhereUniqueInput',
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collectionId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updateCollectionData' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'createCollectionPicks' },
+            name: { kind: 'Name', value: 'updateCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collectionId' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'collectionpicks' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'create' },
+                            value: {
+                              kind: 'Variable',
+                              name: {
+                                kind: 'Name',
+                                value: 'createCollectionPicksData',
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateCollectionPicks' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updateCollectionPicksData' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteCollectionPicks' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'deleteCollectionPicksData' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateCollectionMutation,
+  UpdateCollectionMutationVariables
 >
 export const InvalidateInvitationCodeDocument = {
   kind: 'Document',
@@ -8734,6 +9206,23 @@ export const GetCollectionDocument = {
                         name: { kind: 'Name', value: 'content' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'likeCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'like' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -9264,7 +9753,10 @@ export const GetCollectionToEditDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'collectionId' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
         },
       ],
@@ -9286,7 +9778,7 @@ export const GetCollectionToEditDocument = {
                       name: { kind: 'Name', value: 'id' },
                       value: {
                         kind: 'Variable',
-                        name: { kind: 'Name', value: 'id' },
+                        name: { kind: 'Name', value: 'collectionId' },
                       },
                     },
                   ],
@@ -9305,9 +9797,20 @@ export const GetCollectionToEditDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'urlOriginal' },
+                        name: { kind: 'Name', value: 'resized' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'original' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -9315,9 +9818,26 @@ export const GetCollectionToEditDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'collectionpicks' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'orderBy' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'sort_order' },
+                            value: { kind: 'EnumValue', value: 'asc' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'story' },
@@ -9367,6 +9887,19 @@ export const GetCollectionToEditDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'picked_date' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'creator' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'customId' },
                       },
                     ],
                   },
@@ -9558,6 +10091,192 @@ export const GetMemberCollectionsDocument = {
 } as unknown as DocumentNode<
   GetMemberCollectionsQuery,
   GetMemberCollectionsQueryVariables
+>
+export const GetCollectionPickersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCollectionPickers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'collectionId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'picksTake' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'picksSkip' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'collection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'collectionId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'picks' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'kind' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'read',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'orderBy' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'createdAt' },
+                            value: { kind: 'EnumValue', value: 'desc' },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'take' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'picksTake' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'picksSkip' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'member' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'customId' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetCollectionPickersQuery,
+  GetCollectionPickersQueryVariables
 >
 export const GetStoryLatestAddedCommentDocument = {
   kind: 'Document',
@@ -12547,6 +13266,7 @@ export const GetMemberProfileDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -13391,6 +14111,7 @@ export const GetVisitorProfileDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -15382,6 +16103,22 @@ export const GetMemberPickAndBookmarkDocument = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'bookmarkTake' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'bookmarkSkip' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -15414,7 +16151,7 @@ export const GetMemberPickAndBookmarkDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'picksAndBookmarksCount' },
+                  alias: { kind: 'Name', value: 'picksCount' },
                   name: { kind: 'Name', value: 'pickCount' },
                   arguments: [
                     {
@@ -15443,6 +16180,24 @@ export const GetMemberPickAndBookmarkDocument = {
                           },
                           {
                             kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'kind' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'read',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
                             name: { kind: 'Name', value: 'is_active' },
                             value: {
                               kind: 'ObjectValue',
@@ -15462,7 +16217,7 @@ export const GetMemberPickAndBookmarkDocument = {
                 },
                 {
                   kind: 'Field',
-                  alias: { kind: 'Name', value: 'picksAndBookmarks' },
+                  alias: { kind: 'Name', value: 'picks' },
                   name: { kind: 'Name', value: 'pick' },
                   arguments: [
                     {
@@ -15483,6 +16238,24 @@ export const GetMemberPickAndBookmarkDocument = {
                                   value: {
                                     kind: 'StringValue',
                                     value: 'story',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'kind' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'read',
                                     block: false,
                                   },
                                 },
@@ -15542,6 +16315,225 @@ export const GetMemberPickAndBookmarkDocument = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'picked_date' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'story' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'og_image' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'published_date' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'source' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'bookmarksCount' },
+                  name: { kind: 'Name', value: 'pickCount' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'objective' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'story',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'kind' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'bookmark',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'bookmarks' },
+                  name: { kind: 'Name', value: 'pick' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'objective' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'story',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'kind' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: {
+                                    kind: 'StringValue',
+                                    value: 'bookmark',
+                                    block: false,
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'is_active' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'equals' },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'orderBy' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'picked_date' },
+                            value: { kind: 'EnumValue', value: 'desc' },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'take' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'bookmarkTake' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'bookmarkSkip' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'kind' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'picked_date' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'story' },
@@ -16287,6 +17279,7 @@ export const GetMorePicksDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },
@@ -17284,6 +18277,7 @@ export const GetMoreCollectionsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'customId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
               ],
             },
           },

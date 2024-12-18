@@ -26,6 +26,7 @@ export default async function CollectionLayout({
   return (
     <CommentProvider
       initialComments={collection.comments ?? []}
+      commentsCount={collection.commentsCount ?? 0}
       commentObjectiveData={collection}
       commentObjective={CommentObjective.Collection}
     >

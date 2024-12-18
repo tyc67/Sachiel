@@ -70,7 +70,6 @@ export type IconName =
   | 'icon-more-horiz-hover'
   | 'icon-chat-bubble'
   | 'icon-dot'
-  | 'icon-avatar-default'
   | 'icon-donate'
   | 'icon-user-dash'
   | 'icon-apple'
@@ -153,6 +152,12 @@ export type IconName =
   | 'icon-select-image'
   | 'icon-collection'
   | 'icon-remove'
+  | 'icon-refresh'
+  | 'icon-delete-story'
+  | 'icon-sort-story'
+  | 'icon-expand'
+  | 'icon-fold'
+  | 'icon-add-article'
 
 export type IconProps = {
   size: Size

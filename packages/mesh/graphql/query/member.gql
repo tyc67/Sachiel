@@ -495,20 +495,66 @@ query GetMemberPickCollectionComment($memberId: ID, $collectionId: ID) {
   }
 }
 
-query GetMemberPickAndBookmark($memberId: ID, $pickTake: Int, $pickSkip: Int) {
+query GetMemberPickAndBookmark(
+  $memberId: ID
+  $pickTake: Int
+  $pickSkip: Int
+  $bookmarkTake: Int
+  $bookmarkSkip: Int
+) {
   member(where: { id: $memberId }) {
     name
-    picksAndBookmarksCount: pickCount(
-      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    picksCount: pickCount(
+      where: {
+        objective: { equals: "story" }
+        kind: { equals: "read" }
+        is_active: { equals: true }
+      }
     )
-    picksAndBookmarks: pick(
-      where: { objective: { equals: "story" }, is_active: { equals: true } }
+    picks: pick(
+      where: {
+        objective: { equals: "story" }
+        kind: { equals: "read" }
+        is_active: { equals: true }
+      }
       orderBy: { picked_date: desc }
       take: $pickTake
       skip: $pickSkip
     ) {
       id
       kind
+      picked_date
+      story {
+        id
+        title
+        og_image
+        published_date
+        source {
+          id
+          title
+        }
+      }
+    }
+    bookmarksCount: pickCount(
+      where: {
+        objective: { equals: "story" }
+        kind: { equals: "bookmark" }
+        is_active: { equals: true }
+      }
+    )
+    bookmarks: pick(
+      where: {
+        objective: { equals: "story" }
+        kind: { equals: "bookmark" }
+        is_active: { equals: true }
+      }
+      orderBy: { picked_date: desc }
+      take: $bookmarkTake
+      skip: $bookmarkSkip
+    ) {
+      id
+      kind
+      picked_date
       story {
         id
         title

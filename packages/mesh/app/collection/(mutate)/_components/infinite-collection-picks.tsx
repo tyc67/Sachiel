@@ -2,26 +2,27 @@
 
 import { useEffect, useMemo } from 'react'
 
-import { useEditCollection } from '@/context/edit-collection'
 import useInView from '@/hooks/use-in-view'
 
 import type {
   CollectionPickStory,
   PickOrBookmark,
-} from '../_types/edit-collection'
+  UseCollection,
+} from '../_types/collection'
 import PickStoryCard from './pick-story-card'
 
 export default function InfiniteCollectionPicks({
   candidates,
   loadMore,
   shouldLoadMore,
+  useCollection,
 }: {
   candidates: PickOrBookmark[]
   loadMore: () => Promise<void>
   shouldLoadMore: boolean
+  useCollection: UseCollection
 }) {
-  const { collectionPickStories, setCollectionPickStories } =
-    useEditCollection()
+  const { collectionPickStories, setCollectionPickStories } = useCollection()
   const { targetRef: triggerLoadmoreRef, isIntersecting: shouldStartLoadMore } =
     useInView()
 
@@ -57,7 +58,7 @@ export default function InfiniteCollectionPicks({
   }, [loadMore, shouldLoadMore, shouldStartLoadMore])
 
   return (
-    <div className="flex grow flex-col pl-2 pr-5 sm:px-5 md:px-[70px] lg:pl-10 lg:pr-0">
+    <>
       {candidates.map((candidate, i) => {
         if (!candidate.story) return null
         const isStoryPicked = collectionPickStoryIds.has(
@@ -73,10 +74,10 @@ export default function InfiniteCollectionPicks({
               candidate.story,
               isStoryPicked
             )}
-            ref={i === candidates.length - 1 ? triggerLoadmoreRef : undefined}
+            ref={i === candidates.length - 10 ? triggerLoadmoreRef : undefined}
           />
         )
       })}
-    </div>
+    </>
   )
 }
