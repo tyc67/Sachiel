@@ -225,7 +225,7 @@ export default forwardRef<ImageEditorCanvasRef, ImageEditorCanvasProps>(
           canvas.removeEventListener('mouseleave', onCanvasMouseUpOrLeave)
         }
       }
-    }, [])
+    }, [draw])
     return (
       <div className="grow">
         <canvas className="size-full " ref={canvasRef} />

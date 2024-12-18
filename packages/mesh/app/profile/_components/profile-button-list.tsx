@@ -24,7 +24,7 @@ const ProfileButtonList: React.FC<ProfileButtonListProps> = ({
         // NOTE: 如果有自帶component優先使用
         if (button.component)
           return (
-            <div key={index} className="flex *:flex-1 sm:w-[180px]">
+            <div key={index} className="flex *:h-full *:flex-1 sm:w-[180px]">
               {button.component}
             </div>
           )

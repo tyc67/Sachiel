@@ -1,12 +1,10 @@
 'use client'
 
 import NextLink from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import useSearchSuggestion from '@/hooks/use-search-suggestion'
-import { getSearchUrl } from '@/utils/get-url'
 
 import Icon from './icon'
 import Avatar from './story-card/avatar'
@@ -23,10 +21,10 @@ export default function DesktopSearchBar({
     recentSearch,
     handleSearchTextChange,
     handleRemoveRecentSearch,
+    handleClickSearch,
   } = useSearchSuggestion(inputRef)
   const [isFocused, setIsFocused] = useState(false)
   const preventBlurRef = useRef(false)
-  const router = useRouter()
   const activeDropdown = useMemo(() => {
     if (!isFocused) return null
     if (searchSuggestion) return 'suggestion'
@@ -63,18 +61,17 @@ export default function DesktopSearchBar({
       if (e.key === 'Escape' && document.activeElement === inputRef.current) {
         inputRef.current.blur()
       }
+      if (e.key === 'Enter' && document.activeElement === inputRef.current) {
+        e.preventDefault()
+        handleClickSearch()
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
-
-  const handleClickRecentSearch = (item: string) => {
-    setIsFocused(false)
-    router.push(getSearchUrl(item))
-  }
+  }, [handleClickSearch])
 
   return (
     <div
@@ -89,6 +86,7 @@ export default function DesktopSearchBar({
       <input
         id="search"
         aria-label="search"
+        type="text"
         className="button grow bg-transparent"
         value={searchText}
         onChange={handleSearchTextChange}
@@ -119,7 +117,7 @@ export default function DesktopSearchBar({
                   onMouseUp={() => {
                     preventBlurRef.current = false
                   }}
-                  onClick={() => handleClickRecentSearch(record)}
+                  onClick={() => handleClickSearch(record)}
                 >
                   <p className="subtitle-1 mr-auto">{record}</p>
                   <button onClick={(e) => handleRemoveRecentSearch(e, record)}>
@@ -136,7 +134,7 @@ export default function DesktopSearchBar({
         <ul className="absolute left-0 top-full z-modal mt-1 w-full rounded-md bg-white shadow-md">
           <li
             className="flex cursor-pointer flex-row items-center rounded-t-md px-5 py-[10px] hover:bg-primary-100"
-            onClick={() => router.push(getSearchUrl(searchText))}
+            onClick={() => handleClickSearch()}
           >
             <div className="flex size-11 items-center justify-center">
               <Icon size="l" iconName="icon-search-bar" />

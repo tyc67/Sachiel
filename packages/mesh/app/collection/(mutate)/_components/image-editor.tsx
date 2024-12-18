@@ -3,8 +3,8 @@
 import { useRef } from 'react'
 
 import Icon from '@/components/icon'
-import { useEditCollection } from '@/context/edit-collection'
 
+import type { UseCollection } from '../_types/collection'
 import type { ImageEditorCanvasRef } from './image-editor-canvas'
 import ImageEditorCanvas from './image-editor-canvas'
 
@@ -12,14 +12,16 @@ export default function CustomImageEditor({
   imageFile,
   onClose,
   onFinish,
+  useCollection,
 }: {
   imageFile?: File
   onClose: () => void
   onFinish: () => void
+  useCollection: UseCollection
 }) {
   const editorRef = useRef<ImageEditorCanvasRef>(null)
 
-  const { setHeroImage } = useEditCollection()
+  const { setHeroImage } = useCollection()
 
   const onPanelClose = async () => {
     if (!editorRef.current) return

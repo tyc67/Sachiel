@@ -1,12 +1,12 @@
 'use client'
 
-import DesktopEditCollection from '../_components/desktop/desktop-edit-collection'
-import MobileNewCollection from '../_components/mobile/new-collection'
+import DesktopCreateCollection from './_components/desktop/create-collection'
+import MobileNewCollection from './_components/mobile/create-collection'
 
 export default function NewCollectionPage() {
   return (
     <main className="flex w-full max-w-[theme(width.maxContent)] grow flex-col">
-      <DesktopEditCollection />
+      <DesktopCreateCollection />
       <MobileNewCollection />
     </main>
   )

@@ -1,16 +1,18 @@
 'use client'
 
-import NextImage from 'next/image'
 import NextLink from 'next/link'
 
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { DailyStory } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
+
+import ImageWithFallback from '../image-with-fallback'
 
 type Props = {
   story: DailyStory
@@ -24,11 +26,12 @@ export default function MainCard({ story }: Props) {
     <div className="flex flex-col gap-y-3 lg:flex-row lg:gap-x-10">
       <NextLink href={`story/${story.id}`}>
         <div className="relative aspect-[2/1] shrink-0 overflow-hidden rounded-md lg:h-[250px] lg:w-[500px]">
-          <NextImage
-            src={story.og_image || '/images/default-story-image.webP'}
+          <ImageWithFallback
+            src={story.og_image}
             alt={story.title}
             fill
             className="object-cover"
+            fallbackCategory={ImageCategory.STORY}
           />
         </div>
       </NextLink>
@@ -77,10 +80,10 @@ export default function MainCard({ story }: Props) {
         </div>
 
         <div className="mt-4 flex justify-between">
-          <StoryPickInfo
+          <ObjectivePickInfo
             displayPicks={displayPicks}
             pickCount={displayPicksCount}
-            storyId={story.id}
+            objectiveId={story.id}
           />
           <StoryPickButton storyId={story.id} />
         </div>

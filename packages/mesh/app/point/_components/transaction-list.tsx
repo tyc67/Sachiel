@@ -1,11 +1,11 @@
 'use client'
 
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Icon from '@/components/icon'
-import { DEFAULT_IMAGES } from '@/constants/fallback-src'
+import { ImageCategory } from '@/constants/fallback-src'
 import { displayTime } from '@/utils/story-display'
 import { transformTransactionRecord } from '@/utils/transaction-records'
 
@@ -56,9 +56,9 @@ export default function TransactionList({
             >
               {data.__typename === 'Sponsorship' ? (
                 <>
-                  <Image
+                  <ImageWithFallback
                     className="size-11"
-                    src={data.publisher?.logo || DEFAULT_IMAGES.avatar}
+                    src={data.publisher?.logo ?? ''}
                     width={44}
                     height={44}
                     alt={`${transactionTitle}-logo`}
@@ -66,6 +66,7 @@ export default function TransactionList({
                       borderRadius: '8px',
                       backgroundColor: '#E0E0E0',
                     }}
+                    fallbackCategory={ImageCategory.AVATAR}
                   />
                   <div className="flex w-full flex-col gap-1">
                     <div className="subtitle-2 flex justify-between gap-4">
@@ -82,11 +83,9 @@ export default function TransactionList({
               ) : data.__typename === 'Transaction' ? (
                 <>
                   {data.policy?.unlockSingle ? (
-                    <Image
+                    <ImageWithFallback
                       className="size-11"
-                      src={
-                        data.unlockStory?.source?.logo || DEFAULT_IMAGES.avatar
-                      }
+                      src={data.unlockStory?.source?.logo ?? ''}
                       width={44}
                       height={44}
                       alt={`${data.unlockStory?.title}-logo`}
@@ -94,6 +93,7 @@ export default function TransactionList({
                         borderRadius: '8px',
                         backgroundColor: '#E0E0E0',
                       }}
+                      fallbackCategory={ImageCategory.AVATAR}
                     />
                   ) : (
                     <Icon

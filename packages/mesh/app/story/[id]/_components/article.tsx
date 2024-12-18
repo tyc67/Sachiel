@@ -1,13 +1,15 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Button from '@/components/button'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
+import { useComment } from '@/context/comment'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
@@ -36,6 +38,7 @@ export default function Article({
   hasPayed: boolean
   policy: PublisherPolicy
 }) {
+  const { state: comment } = useComment()
   const getArticleContent = (story: Story, sourceCustomId: string) => {
     const shouldUseApiData = inHousePublisherCustomIds.includes(sourceCustomId)
 
@@ -98,11 +101,12 @@ export default function Article({
       <div>
         {story?.og_image && (
           <div className="relative mb-6 aspect-[2/1]">
-            <Image
+            <ImageWithFallback
               src={story.og_image}
               alt="hero image"
               style={{ objectFit: 'cover' }}
               fill
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         )}
@@ -123,12 +127,13 @@ export default function Article({
               </div>
             )}
             <div className="mt-5 flex justify-between">
-              <StoryPickInfo
+              <ObjectivePickInfo
                 displayPicks={displayPicks}
                 maxCount={4}
                 pickCount={displayPicksCount}
-                commentCount={story?.commentsCount ?? 0}
-                storyId={story?.id ?? ''}
+                showCommentCount={true}
+                commentCount={comment.commentsCount ?? 0}
+                objectiveId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
               <div className="hidden items-center gap-1 sm:flex">
