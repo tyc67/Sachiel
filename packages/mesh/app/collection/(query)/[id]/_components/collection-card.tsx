@@ -27,7 +27,6 @@ export default function CollectionCard({
     PickObjective.Collection
   )
   const { state: comment } = useComment()
-
   return (
     <section className="border-b-[0.5px] border-primary-200 bg-white">
       <div className="max-w-[theme(width.maxMain)] pb-5 sm:px-5 md:px-[70px] lg:px-10 xl:px-10">
@@ -63,14 +62,17 @@ export default function CollectionCard({
             <div
               className={`body-3 relative mt-3 select-none text-primary-600 ${
                 isTooLong ? 'cursor-pointer' : ''
-              } ${
-                isTooLong && !isExpanded
-                  ? `after:absolute after:bottom-0 after:right-0 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...展開更多']`
-                  : ''
               } ${isExpanded ? 'line-clamp-none' : 'line-clamp-3'}`}
               ref={domRef as RefObject<HTMLDivElement>}
               onClick={toggleClamp}
             >
+              <span
+                className={`absolute bottom-0 right-0 bg-gradient-to-r from-transparent from-0% to-white to-25% pl-6 text-primary-400 ${
+                  isTooLong && !isExpanded ? '' : 'hidden'
+                }`}
+              >
+                ...展開更多
+              </span>
               {collection.summary ?? ''}
             </div>
             <div className="footnote mt-3">
