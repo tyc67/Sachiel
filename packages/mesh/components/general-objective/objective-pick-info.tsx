@@ -4,26 +4,30 @@ import { socialPageAvatarLayer } from '@/constants/z-index'
 import { usePickersModal } from '@/context/pickers-modal'
 import { useUser } from '@/context/user'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
+import { PickObjective } from '@/types/objective'
 
-import type { RingColor } from './avatar'
-import Avatar from './avatar'
-import StoryCommentCount from './story-comment-count'
-import StoryPickCount from './story-pick-count'
+import Icon from '../icon'
+import type { RingColor } from '../story-card/avatar'
+import Avatar from '../story-card/avatar'
+import ObjectiveCommentCount from './objective-comment-count'
+import ObjectivePickCount from './objective-pick-count'
 
-export default function StoryPickInfo({
+export default function ObjectivePickInfo({
   displayPicks,
   pickCount,
   maxCount = 4,
   commentCount = 0,
   ringColor = 'white',
-  storyId,
+  objectiveId,
+  pickObjective = PickObjective.Story,
 }: {
   displayPicks: DisplayPicks
   pickCount: number
   maxCount?: number
   commentCount?: number
   ringColor?: RingColor
-  storyId: string
+  objectiveId: string
+  pickObjective?: PickObjective
 }) {
   const { openPickersModal } = usePickersModal()
   const { user } = useUser()
@@ -53,20 +57,29 @@ export default function StoryPickInfo({
           ))}
         </div>
       )}
-      <div className="flex items-center">
-        <StoryPickCount
-          picksCount={pickCount}
-          onClickDisplayPicker={() =>
-            openPickersModal({ displayPicks, storyId })
-          }
-          disabled={isSinglePickByCurrentUser}
-        />
-      </div>
-      {!!commentCount && (
-        <div className="ml-[2px] flex items-center">
-          <StoryCommentCount commentsCount={commentCount} />
+      <div className="flex flex-row">
+        <div className="flex items-center">
+          <ObjectivePickCount
+            picksCount={pickCount}
+            onClickDisplayPicker={() =>
+              openPickersModal({
+                displayPicks,
+                objectiveId: objectiveId,
+                pickObjective,
+              })
+            }
+            disabled={isSinglePickByCurrentUser}
+          />
         </div>
-      )}
+        {!!commentCount && (
+          <>
+            <Icon iconName="icon-dot" size="xs" />
+            <div className="flex items-center">
+              <ObjectiveCommentCount commentsCount={commentCount} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,9 +1,9 @@
 'use client'
 import { useRouter } from 'next/navigation'
 
+import CommentModal from '@/components/comment/comment-modal'
 import MobileCommentEditDrawer from '@/components/comment/mobile-comment-section/mobile-comment-edit-drawer'
 import MobileCommentEditor from '@/components/comment/mobile-comment-section/mobile-comment-editor'
-import CommentModal from '@/components/comment/story-comment/comment-modal'
 import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
 import {

@@ -3,9 +3,9 @@ import Link from 'next/link'
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Comment from '@/app/profile/_components/comment'
 import CollectionPickButton from '@/components/collection-card/collection-pick-button'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { CommentProvider } from '@/context/comment'
@@ -157,7 +157,6 @@ const ArticleCard = ({
     if (isCollection(storyData)) return `/collection/${storyData.id}`
     return `/story/${storyData?.id}`
   }
-
   return (
     <>
       <CommentProvider
@@ -177,12 +176,12 @@ const ArticleCard = ({
           </section>
         </Link>
         <div
-          className={`flex grow flex-col p-5 after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
+          className={`flex grow flex-col after:absolute after:bottom-1 after:h-px after:w-[calc(100%-40px)] after:bg-primary-200 md:line-clamp-3 md:flex md:flex-col md:pt-[12px] md:after:hidden ${
             isLast ? 'after:hidden' : ''
           } ${
             isCollection(storyData)
-              ? 'py-[10px] after:hidden sm:p-0 md:justify-between'
-              : ''
+              ? 'p-5 py-[10px] after:hidden sm:p-0 md:justify-between'
+              : 'p-5'
           }`}
         >
           <Link
@@ -219,7 +218,11 @@ const ArticleCard = ({
                   : 'mb-2 items-start justify-between sm:gap-10'
               }`}
             >
-              <div className="flex h-fit flex-col justify-between">
+              <div
+                className={`flex h-fit flex-col justify-between ${
+                  isCollection(storyData) ? 'px-3' : ''
+                }`}
+              >
                 <p className="body-2 mb-2 w-full sm:mb-1 sm:line-clamp-2 lg:line-clamp-3 lg:min-h-[72px]">
                   {storyData?.title || '預設標題'}
                 </p>
@@ -259,11 +262,11 @@ const ArticleCard = ({
                 }
               `}
           >
-            <StoryPickInfo
+            <ObjectivePickInfo
               displayPicks={displayPicks}
               pickCount={displayPicksCount}
               maxCount={4}
-              storyId={storyData.id}
+              objectiveId={storyData.id}
             />
             {isCollection(storyData) ? (
               <CollectionPickButton collectionId={storyData.id} />

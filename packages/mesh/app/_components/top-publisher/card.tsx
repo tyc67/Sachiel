@@ -4,9 +4,12 @@ import NextLink from 'next/link'
 
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import { ImageCategory } from '@/constants/fallback-src'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { SponsoredStory } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
+
+import ImageWithFallback from '../image-with-fallback'
 
 const StoryCard = ({
   showImage,
@@ -29,11 +32,12 @@ const StoryCard = ({
       >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1] overflow-hidden rounded">
-            <NextImage
+            <ImageWithFallback
+              src={story.og_image}
               alt={story.title}
-              src={story.og_image || '/images/default-story-image.webP'}
               fill
               className="object-cover"
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         )}

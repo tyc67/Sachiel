@@ -1,11 +1,12 @@
 'use client'
 
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import { getMemberUnlockStories } from '@/app/actions/subscribe-stories'
+import { ImageCategory } from '@/constants/fallback-src'
 import { displayTime } from '@/utils/story-display'
 
 import { type SubscribeStories } from '../subscribe-stories/page'
@@ -61,25 +62,23 @@ export default function SubscribeStoriesList({
                       </p>
                     </div>
                     <div className="w-24 shrink-0 sm:w-40">
-                      <Image
-                        src={
-                          story?.og_image || '/images/default-story-image.webP'
-                        }
+                      <ImageWithFallback
+                        src={story?.og_image ?? ''}
                         width={96}
                         height={48}
                         alt={`${story?.id}-image`}
                         style={{ objectFit: 'cover' }}
                         className="aspect-[2/1] overflow-hidden rounded sm:hidden"
+                        fallbackCategory={ImageCategory.STORY}
                       />
-                      <Image
-                        src={
-                          story?.og_image || '/images/default-story-image.webP'
-                        }
+                      <ImageWithFallback
+                        src={story?.og_image ?? ''}
                         width={160}
                         height={80}
                         alt={`${story?.id}-image`}
                         style={{ objectFit: 'cover' }}
                         className="hidden aspect-[2/1] overflow-hidden rounded sm:block"
+                        fallbackCategory={ImageCategory.STORY}
                       />
                     </div>
                   </div>
@@ -95,14 +94,13 @@ export default function SubscribeStoriesList({
               >
                 <Link href={`/story/${story?.id}`}>
                   <div className="relative h-[167px]">
-                    <Image
-                      src={
-                        story?.og_image || '/images/default-story-image.webP'
-                      }
+                    <ImageWithFallback
+                      src={story?.og_image ?? ''}
                       fill
                       alt={`${story?.id}-image`}
                       style={{ objectFit: 'cover' }}
                       className="rounded-t-md"
+                      fallbackCategory={ImageCategory.STORY}
                     />
                   </div>
                   <div className="flex grow flex-col justify-between gap-2 px-5 pb-5 pt-4">

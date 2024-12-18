@@ -4,6 +4,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { Noto_Sans_TC } from 'next/font/google'
 
+import AdsenseScript from '@/components/adsense-script'
 import UserBehaviorLogger from '@/components/user-behavior-logger'
 import { GTM_ID } from '@/constants/config'
 import { PickModalProvider } from '@/context/pick-modal'
@@ -33,6 +34,7 @@ export default async function RootLayout({
   return (
     <html lang="zh-Hant" className={notoSans.className}>
       <GoogleTagManager gtmId={GTM_ID} />
+      <AdsenseScript />
       <body>
         <UserProvider user={user}>
           <ToastProvider>

@@ -1,14 +1,15 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import { logStoryClick } from '@/utils/event-logs'
@@ -96,11 +97,12 @@ export default forwardRef(function StoryCard(
             </div>
             {story.og_image && (
               <div className="relative h-[48px] w-[96px] shrink-0  sm:h-[80px] sm:w-[160px]">
-                <Image
+                <ImageWithFallback
                   className="rounded-[4px] object-cover "
                   src={story.og_image}
                   alt={story.title ?? ''}
                   fill
+                  fallbackCategory={ImageCategory.STORY}
                 />
               </div>
             )}
@@ -109,10 +111,10 @@ export default forwardRef(function StoryCard(
         <StoryMetaWrapper story={story} className="sm:hidden" />
       </div>
       <div className="mt-4 flex h-8 flex-row justify-between">
-        <StoryPickInfo
+        <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
-          storyId={story.id}
+          objectiveId={story.id}
         />
         <StoryPickButton storyId={story.id} />
       </div>

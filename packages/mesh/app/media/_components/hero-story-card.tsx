@@ -1,10 +1,11 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import { logStoryClick } from '@/utils/event-logs'
@@ -23,11 +24,12 @@ export default function HeroStoryCard({ story }: { story: Story }) {
 
         <div className="relative h-0 w-[calc((100%-40px)/2)] flex-1 pt-[calc((100%-40px)/4)]">
           <Link href={`/story/${story.id}`} className="size-full">
-            <Image
+            <ImageWithFallback
               className="rounded-md object-cover"
-              src={story.og_image || '/images/default-story-image.webP'}
+              src={story.og_image ?? ''}
               alt={story.title ?? ''}
               fill
+              fallbackCategory={ImageCategory.STORY}
             />
           </Link>
         </div>
@@ -76,10 +78,10 @@ export default function HeroStoryCard({ story }: { story: Story }) {
           {/* right bottom section */}
           <div>
             <div className="mt-4 flex h-8 flex-row justify-between">
-              <StoryPickInfo
+              <ObjectivePickInfo
                 displayPicks={displayPicks}
                 pickCount={displayPicksCount}
-                storyId={story.id}
+                objectiveId={story.id}
               />
               <StoryPickButton storyId={story.id} />
             </div>
