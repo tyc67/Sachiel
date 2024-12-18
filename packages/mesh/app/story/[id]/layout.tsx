@@ -23,6 +23,7 @@ export default async function StoryLayout({
   return (
     <CommentProvider
       initialComments={storyData.story?.comments || []}
+      commentsCount={storyData.story.commentsCount ?? 0}
       commentObjectiveData={storyData.story}
       commentObjective={CommentObjective.Story}
     >

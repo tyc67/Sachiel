@@ -23,7 +23,7 @@ export async function getCollection({
   collectionId: string
 }) {
   const picksTake = 5
-  const commentsTake = 10
+  const commentsTake = 30
 
   const globalLogFields = getLogTraceObjectFromHeaders()
   return await queryGraphQL(
