@@ -153,6 +153,11 @@ export type IconName =
   | 'icon-collection'
   | 'icon-remove'
   | 'icon-refresh'
+  | 'icon-delete-story'
+  | 'icon-sort-story'
+  | 'icon-expand'
+  | 'icon-fold'
+  | 'icon-add-article'
 
 export type IconProps = {
   size: Size

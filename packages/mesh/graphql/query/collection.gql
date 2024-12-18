@@ -114,15 +114,20 @@ query GetCollectionStories(
   }
 }
 
-query GetCollectionToEdit($id: ID) {
-  collection(where: { id: $id }) {
+query GetCollectionToEdit($collectionId: ID) {
+  collection(where: { id: $collectionId }) {
     id
     title
     summary
     heroImage {
-      urlOriginal
+      id
+      name
+      resized {
+        original
+      }
     }
-    collectionpicks {
+    collectionpicks(orderBy: { sort_order: asc }) {
+      id
       story {
         id
         title
@@ -135,6 +140,9 @@ query GetCollectionToEdit($id: ID) {
       }
       sort_order
       picked_date
+    }
+    creator {
+      customId
     }
   }
 }

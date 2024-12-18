@@ -7,7 +7,8 @@ import Icon from '@/components/icon'
 import { ImageCategory } from '@/constants/fallback-src'
 import { displayTimeFromNow } from '@/utils/story-display'
 
-import type { CollectionPickStory } from '../_types/edit-collection'
+import type { CollectionPickStory } from '../_types/collection'
+import Checkbox from './checkbox'
 
 export default forwardRef(function PickStoryCard(
   {
@@ -28,11 +29,7 @@ export default forwardRef(function PickStoryCard(
       ref={ref as React.RefObject<HTMLDivElement>}
     >
       <div className="flex size-12 items-center justify-center sm:h-14">
-        {isPicked ? (
-          <Icon iconName="icon-checkbox-on" size="l" />
-        ) : (
-          <Icon iconName="icon-checkbox-off" size="l" />
-        )}
+        <Checkbox isChecked={isPicked} />
       </div>
       <div className="flex grow flex-col gap-2 border-b pb-4 sm:pb-5">
         <div className="flex justify-between gap-3">

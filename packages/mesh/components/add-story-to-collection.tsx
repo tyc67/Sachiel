@@ -9,7 +9,7 @@ import {
   addStoryToCollection as updateCollectionWithStory,
   getMemberCollections,
 } from '@/app/actions/collection'
-import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/edit-collection'
+import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
 import { ImageCategory } from '@/constants/fallback-src'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
