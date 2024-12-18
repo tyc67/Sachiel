@@ -1,12 +1,15 @@
 import Link from 'next/link'
 
+import Icon from '@/components/icon'
 import Avatar from '@/components/story-card/avatar'
 import {
   type MongoDBResponse,
   type MostFollowersMember,
 } from '@/utils/data-schema'
 
+import useSuggestedFollowers from '../_hooks/use-suggested-followers'
 import FollowButton from './follow-button'
+
 export default function FollowSuggestionFeed({
   suggestedFollowers,
   isNoFollowings,
@@ -14,6 +17,9 @@ export default function FollowSuggestionFeed({
   suggestedFollowers: MongoDBResponse['members'] | MostFollowersMember[]
   isNoFollowings: boolean
 }) {
+  const { displaySuggestedFollowers, setPage, hasNextPage } =
+    useSuggestedFollowers(suggestedFollowers)
+
   return (
     <div
       className={`flex w-screen min-w-[375px] flex-col bg-white px-5 py-4 ${
@@ -22,15 +28,20 @@ export default function FollowSuggestionFeed({
           : 'max-w-[600px] drop-shadow'
       } sm:rounded-md lg:hidden`}
     >
-      {isNoFollowings ? (
-        <h2 className="list-title hidden pb-3 text-primary-700 sm:block sm:pb-1">
-          推薦追蹤
-        </h2>
-      ) : (
-        <h2 className="list-title pb-3 text-primary-700 sm:pb-1">推薦追蹤</h2>
-      )}
+      <div className=" flex items-center justify-between pb-3 sm:pb-1">
+        <h2 className="list-title text-primary-700">推薦追蹤</h2>
+        <button
+          className={`button flex h-6 items-center text-primary-500 ${
+            !hasNextPage ? 'hidden' : ''
+          }`}
+          onClick={() => setPage((page) => page + 1)}
+        >
+          <Icon iconName="icon-refresh" size="l" />
+          重新推薦
+        </button>
+      </div>
       <div className="flex h-[210px] flex-row gap-3 overflow-x-auto sm:h-[345px] sm:flex-col sm:gap-0">
-        {suggestedFollowers.map((member, index) => {
+        {displaySuggestedFollowers.map((member, index) => {
           return (
             <div
               key={member.id}
@@ -64,7 +75,7 @@ export default function FollowSuggestionFeed({
                   <FollowButton followingId={member.id} />
                 </div>
               </div>
-              {index !== suggestedFollowers.length - 1 ? (
+              {index !== displaySuggestedFollowers.length - 1 ? (
                 <div className="hidden border-t-[0.5px] sm:block"></div>
               ) : null}
             </div>
