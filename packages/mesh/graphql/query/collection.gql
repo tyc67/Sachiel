@@ -49,6 +49,10 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
       }
       content
       state
+      likeCount
+      like {
+        id
+      }
     }
   }
 }
@@ -110,15 +114,20 @@ query GetCollectionStories(
   }
 }
 
-query GetCollectionToEdit($id: ID) {
-  collection(where: { id: $id }) {
+query GetCollectionToEdit($collectionId: ID) {
+  collection(where: { id: $collectionId }) {
     id
     title
     summary
     heroImage {
-      urlOriginal
+      id
+      name
+      resized {
+        original
+      }
     }
-    collectionpicks {
+    collectionpicks(orderBy: { sort_order: asc }) {
+      id
       story {
         id
         title
@@ -131,6 +140,9 @@ query GetCollectionToEdit($id: ID) {
       }
       sort_order
       picked_date
+    }
+    creator {
+      customId
     }
   }
 }
@@ -156,6 +168,32 @@ query GetMemberCollections($creatorId: ID) {
       sort_order
       story {
         id
+      }
+    }
+  }
+}
+
+query GetCollectionPickers(
+  $collectionId: ID
+  $picksTake: Int
+  $picksSkip: Int
+) {
+  collection(where: { id: $collectionId }) {
+    id
+    picks(
+      where: { kind: { equals: "read" }, is_active: { equals: true } }
+      orderBy: { createdAt: desc }
+      take: $picksTake
+      skip: $picksSkip
+    ) {
+      id
+      createdAt
+      kind
+      member {
+        id
+        name
+        avatar
+        customId
       }
     }
   }

@@ -6,25 +6,27 @@ import { useRef, useState } from 'react'
 
 import Icon from '@/components/icon'
 import { IMAGE_SIZE_LIMITATION } from '@/constants/profile'
-import { useEditCollection } from '@/context/edit-collection'
 import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 import useClickOutside from '@/hooks/use-click-outside'
 import { getImageFileFromImageElement } from '@/utils/image-blob'
 
+import type { UseCollection } from '../_types/collection'
 import CustomImageEditor from './image-editor'
 
 export default function ImageSelector({
   imageSrcs,
   onClose,
+  useCollection,
 }: {
   imageSrcs: string[]
   onClose: () => void
+  useCollection: UseCollection
 }) {
   const [showImageEditor, setShowImageEditor] = useState(false)
   const [rawCustomImageFile, setRawCustomImageFile] = useState<
     File | undefined
   >()
-  const { setHeroImage } = useEditCollection()
+  const { setHeroImage } = useCollection()
   useBlockBodyScroll()
 
   const onImageEditorOpen = () => {
@@ -97,6 +99,7 @@ export default function ImageSelector({
             imageFile={rawCustomImageFile}
             onClose={onImageEditorClose}
             onFinish={onImageEditorFinish}
+            useCollection={useCollection}
           />
         )}
       </div>

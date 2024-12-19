@@ -1,10 +1,8 @@
 import NextLink from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import useSearchSuggestion from '@/hooks/use-search-suggestion'
-import { getSearchUrl } from '@/utils/get-url'
 
 import Icon from './icon'
 import Avatar from './story-card/avatar'
@@ -17,13 +15,13 @@ export default function SearchModal({
   onClose: () => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
   const {
     searchText,
     searchSuggestion,
     recentSearch,
     handleSearchTextChange,
     handleRemoveRecentSearch,
+    handleClickSearch,
   } = useSearchSuggestion(inputRef)
   const activeRender = useMemo(() => {
     if (searchSuggestion) return 'suggestion'
@@ -49,7 +47,7 @@ export default function SearchModal({
     <div className="fixed inset-0 z-modal sm:hidden">
       <div
         className="size-full bg-multi-layer-light"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row items-center border-b-[0.5px] bg-white px-5 py-[10px]">
           <button className="shrink-0" onClick={onClose}>
@@ -62,6 +60,7 @@ export default function SearchModal({
             <input
               aria-label="search"
               type="text"
+              inputMode="text"
               value={searchText}
               onChange={handleSearchTextChange}
               className="grow bg-transparent p-2"
@@ -78,7 +77,7 @@ export default function SearchModal({
                 <Fragment key={index}>
                   <li
                     className="flex flex-row p-5"
-                    onClick={() => router.push(getSearchUrl(record))}
+                    onClick={() => handleClickSearch(record)}
                   >
                     <p className="subtitle-1 mr-auto">{record}</p>
                     <button
@@ -97,7 +96,7 @@ export default function SearchModal({
           <ul className="h-[calc(100vh-60px)] bg-white">
             <li
               className="flex flex-row items-center px-5 py-[10px]"
-              onClick={() => router.push(getSearchUrl(searchText))}
+              onClick={() => handleClickSearch()}
             >
               <div className="flex size-11 items-center justify-center">
                 <Icon size="l" iconName="icon-search-bar" />

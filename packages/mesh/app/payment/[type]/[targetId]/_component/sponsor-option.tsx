@@ -117,7 +117,7 @@ export default function SponsorOption({
             <span className="pr-3">4</span>
             <div className="flex flex-col gap-1">
               <p>
-                紀錄查詢：您可以在個人帳戶的【讀選點數】頁面中查看已完成的贊助詳情，隨時掌握您的支持情況。
+                紀錄查詢：您可以在個人帳戶的【讀選點數】頁面中查看已完成的贊助詳情，隨時掌握您的支付狀態。
               </p>
               <p>
                 若有任何疑問或遇到贊助問題，歡迎聯繫我們的客服團隊。我們將隨時為您提供協助。

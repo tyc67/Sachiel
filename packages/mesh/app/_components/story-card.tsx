@@ -1,18 +1,20 @@
 'use client'
 
-import NextImage from 'next/image'
 import NextLink from 'next/link'
 import type { ForwardedRef } from 'react'
 import { forwardRef } from 'react'
 
+import ObjectivePickInfo from '@/components/general-objective/objective-pick-info'
 import StoryMeta from '@/components/story-card/story-meta'
 import StoryPickButton from '@/components/story-card/story-pick-button'
-import StoryPickInfo from '@/components/story-card/story-pick-info'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { ImageCategory } from '@/constants/fallback-src'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory, DailyStory } from '@/types/homepage'
 import { logStoryClick } from '@/utils/event-logs'
+
+import ImageWithFallback from './image-with-fallback'
 
 type Props<T> = {
   story: T
@@ -68,21 +70,22 @@ export default forwardRef(function StoryCard<
 
         <NextLink href={`/story/${story.id}`}>
           <div className="relative h-[48px] w-[96px] shrink-0 overflow-hidden rounded sm:h-[80px] sm:w-[160px]">
-            <NextImage
-              src={story.og_image || '/images/default-story-image.webP'}
-              fill
+            <ImageWithFallback
+              src={story.og_image}
               alt={story.title}
+              fill
               className="object-cover"
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         </NextLink>
       </div>
 
       <div className="mt-4 flex justify-between">
-        <StoryPickInfo
+        <ObjectivePickInfo
           displayPicks={displayPicks}
           pickCount={displayPicksCount}
-          storyId={story.id}
+          objectiveId={story.id}
         />
         <StoryPickButton storyId={story.id} />
       </div>

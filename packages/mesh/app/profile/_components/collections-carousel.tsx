@@ -37,7 +37,7 @@ const CollectionsCarousel = ({ pickCollections }: CollectionsCarouselProps) => {
   }
   return (
     <>
-      <section className="flex items-center justify-between bg-white md:bg-primary-700-dark md:p-10 md:pb-1">
+      <section className="flex items-center justify-between bg-white md:bg-primary-700-dark md:p-10 md:px-[70px] md:pb-1 lg:px-10">
         <p className="list-title px-5 pt-4 text-primary-700 md:p-0">精選集錦</p>
         <div className="hidden items-center md:flex md:gap-1">
           <button
@@ -62,7 +62,7 @@ const CollectionsCarousel = ({ pickCollections }: CollectionsCarouselProps) => {
           </button>
         </div>
       </section>
-      <div className="flex h-fit w-full flex-col justify-center bg-white pl-5 pt-3 sm:px-10 md:bg-primary-700-dark">
+      <div className="flex h-fit w-full flex-col justify-center bg-white pl-5 pt-3 sm:px-5 md:bg-primary-700-dark md:px-[70px] lg:px-10">
         <Swiper
           spaceBetween={20}
           slidesPerView="auto"

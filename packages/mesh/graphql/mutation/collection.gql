@@ -29,12 +29,6 @@ mutation CreateCollection(
   }
 }
 
-mutation UpdateCollection($id: ID, $data: CollectionUpdateInput!) {
-  updateCollection(where: { id: $id }, data: $data) {
-    title
-  }
-}
-
 mutation AddStoryToCollection(
   $id: ID
   $storyId: ID
@@ -73,6 +67,30 @@ mutation RemoveCollection($collectionId: ID, $heroImageId: ID) {
     status
   }
   deletePhoto(where: { id: $heroImageId }) {
+    id
+  }
+}
+
+mutation UpdateCollection(
+  $collectionId: ID
+  $updateCollectionData: CollectionUpdateInput!
+  $createCollectionPicksData: [CollectionPickCreateInput!]
+  $updateCollectionPicksData: [CollectionPickUpdateArgs!]!
+  $deleteCollectionPicksData: [CollectionPickWhereUniqueInput!]!
+) {
+  updateCollection(where: { id: $collectionId }, data: $updateCollectionData) {
+    id
+  }
+  createCollectionPicks: updateCollection(
+    where: { id: $collectionId }
+    data: { collectionpicks: { create: $createCollectionPicksData } }
+  ) {
+    id
+  }
+  updateCollectionPicks(data: $updateCollectionPicksData) {
+    id
+  }
+  deleteCollectionPicks(where: $deleteCollectionPicksData) {
     id
   }
 }

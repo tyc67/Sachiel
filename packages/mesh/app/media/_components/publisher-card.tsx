@@ -1,8 +1,9 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
+import ImageWithFallback from '@/app/_components/image-with-fallback'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryMeta from '@/components/story-card/story-meta'
+import { ImageCategory } from '@/constants/fallback-src'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
 import { logStoryClick } from '@/utils/event-logs'
@@ -30,11 +31,12 @@ const PublisherStory = ({
       >
         {showImage && story.og_image && (
           <div className="relative mb-3 aspect-[2/1]">
-            <Image
+            <ImageWithFallback
               className="object-cover"
               src={story.og_image}
               alt={story.title}
               fill
+              fallbackCategory={ImageCategory.STORY}
             />
           </div>
         )}
@@ -64,13 +66,11 @@ export default function PublisherCard({
       <div className="flex h-[68px] items-center justify-between gap-1">
         <div className="flex gap-3">
           <div className="relative size-11 overflow-hidden rounded-lg">
-            <Image
-              src={
-                publisherAndStories.publisher.logo ||
-                '/images/default-publisher-logo.png'
-              }
+            <ImageWithFallback
+              src={publisherAndStories.publisher.logo ?? ''}
               fill
               alt={publisherAndStories.publisher.title}
+              fallbackCategory={ImageCategory.PUBLISHER}
             />
           </div>
           <div>

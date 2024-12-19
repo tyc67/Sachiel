@@ -6,6 +6,7 @@ import {
   AddStoryToCollectionDocument,
   CreateCollectionDocument,
   GetCollectionDocument,
+  GetCollectionPickersDocument,
   GetCollectionStoriesDocument,
   GetMemberCollectionsDocument,
   RemoveCollectionDocument,
@@ -14,7 +15,7 @@ import queryGraphQL, { mutateGraphQL } from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 
-import type { CollectionFormat } from '../collection/(mutate)/_types/edit-collection'
+import type { CollectionFormat } from '../collection/(mutate)/_types/collection'
 
 export async function getCollection({
   collectionId,
@@ -22,7 +23,7 @@ export async function getCollection({
   collectionId: string
 }) {
   const picksTake = 5
-  const commentsTake = 10
+  const commentsTake = 30
 
   const globalLogFields = getLogTraceObjectFromHeaders()
   return await queryGraphQL(
@@ -179,4 +180,20 @@ async function deleteCollectionInMeilisearch(
     collectionId,
     memberId,
   })
+}
+
+export async function getCollectionPickers(
+  collectionId: string,
+  picksTake: number,
+  picksSkip: number
+) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+
+  const getCollectionPickersResponse = await queryGraphQL(
+    GetCollectionPickersDocument,
+    { collectionId, picksTake, picksSkip },
+    globalLogFields,
+    'Failed to getStoryPickers'
+  )
+  return getCollectionPickersResponse?.collection
 }

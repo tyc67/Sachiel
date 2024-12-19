@@ -1,11 +1,20 @@
 'use client'
 
-import { useEditCollection } from '@/context/edit-collection'
+import useAutoFocus from '@/hooks/use-auto-focus'
+
+import type { UseCollection } from '../_types/collection'
 
 export const maxSummaryLength = 3000
 
-export default function EditSummary() {
-  const { summary, setSummary } = useEditCollection()
+export default function EditSummary({
+  autoFocus = true,
+  useCollection,
+}: {
+  autoFocus?: boolean
+  useCollection: UseCollection
+}) {
+  const { summary, setSummary } = useCollection()
+  const textareaRef = useAutoFocus<HTMLTextAreaElement>({ disable: !autoFocus })
 
   const tooManyWords = summary.length > maxSummaryLength
   return (
@@ -33,6 +42,7 @@ export default function EditSummary() {
         onChange={(evt) => {
           setSummary(evt.target.value.trim())
         }}
+        ref={textareaRef}
       />
       {tooManyWords && (
         <div className="body-3 mt-2 text-custom-red-text">

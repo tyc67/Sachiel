@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import {
   type ChangeEvent,
   type MouseEvent,
@@ -10,6 +11,7 @@ import {
 
 import { search } from '@/app/actions/search'
 import { type SearchResults } from '@/utils/data-schema'
+import { getSearchUrl } from '@/utils/get-url'
 import { debounce } from '@/utils/performance'
 
 const recentSearchMax = 20
@@ -18,6 +20,7 @@ const searchSuggestionMax = 7
 export default function useSearchSuggestion(
   inputRef: RefObject<HTMLInputElement>
 ) {
+  const router = useRouter()
   const [searchText, setSearchText] = useState('')
   const [searchSuggestion, setSearchSuggestion] = useState<
     SearchResults['member'] | null
@@ -48,9 +51,6 @@ export default function useSearchSuggestion(
         const suggestions = await fetchSuggestions(query, searchSuggestionMax)
         if (suggestions) {
           setSearchSuggestion(suggestions)
-          setRecentSearch((prev) =>
-            updateRecentSearch('add', recentSearchMax, query, prev)
-          )
         }
       }, 500),
     [fetchSuggestions]
@@ -64,6 +64,21 @@ export default function useSearchSuggestion(
       debouncedFetch(trimmedValue)
     },
     [debouncedFetch]
+  )
+
+  const handleClickSearch = useCallback(
+    (recentSearchText?: string) => {
+      if (recentSearchText) {
+        router.push(getSearchUrl(recentSearchText))
+      } else {
+        if (!searchText) return
+        setRecentSearch((prev) =>
+          updateRecentSearch('add', recentSearchMax, searchText, prev)
+        )
+        router.push(getSearchUrl(searchText))
+      }
+    },
+    [router, searchText]
   )
 
   const handleRemoveRecentSearch = useCallback(
@@ -83,6 +98,7 @@ export default function useSearchSuggestion(
     recentSearch,
     handleSearchTextChange,
     handleRemoveRecentSearch,
+    handleClickSearch,
   }
 }
 

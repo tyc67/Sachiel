@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { type Story as LatestStory } from '@/app/actions/get-latest-stories-in-category'
 import { type Collection } from '@/app/collection/(query)/_types/collection'
 import type { SocialStoryPicks } from '@/app/social/_components/feed'
@@ -8,37 +10,56 @@ import type {
   DailyStory,
   Story as HomepageStory,
 } from '@/types/homepage'
+import { PickObjective } from '@/types/objective'
 
 export function useDisplayPicks(
-  story:
+  objective:
     | CategoryStory
     | DailyStory
     | HomepageStory
     | SocialStoryPicks
     | ArticleStory
     | LatestStory
-    | Collection
+    | Collection,
+  objectiveType: PickObjective = PickObjective.Story
 ) {
   const { user } = useUser()
-  if (!story || !story.picks) return { displayPicks: [], displayPicksCount: 0 }
 
   const isUserLoggedIn = !!user.memberId
-  const isStoryPicked = isUserLoggedIn ? user.pickStoryIds.has(story.id) : false
+
+  const isObjectivePicked = useMemo(() => {
+    if (!isUserLoggedIn) return false
+    const userPickObjectiveIds =
+      objectiveType === PickObjective.Story
+        ? user.pickStoryIds
+        : user.pickCollectionIds
+    return userPickObjectiveIds.has(objective?.id ?? '')
+  }, [
+    isUserLoggedIn,
+    objective?.id,
+    objectiveType,
+    user.pickCollectionIds,
+    user.pickStoryIds,
+  ])
+
+  if (!objective || !objective.picks)
+    return { displayPicks: [], displayPicksCount: 0 }
+
   const isUserInPicks = isUserLoggedIn
-    ? story.picks.some((pick) => pick.member?.id === user.memberId)
+    ? objective.picks.some((pick) => pick.member?.id === user.memberId)
     : false
 
   const picksCount =
-    'picksCount' in story
-      ? (story as { picksCount: number }).picksCount
-      : 'pickCount' in story
-      ? (story as { pickCount: number }).pickCount
+    'picksCount' in objective
+      ? (objective as { picksCount: number }).picksCount
+      : 'pickCount' in objective
+      ? (objective as { pickCount: number }).pickCount
       : 0
 
   const transformedData = {
-    id: story.id,
+    id: objective.id,
     picksCount,
-    picks: story.picks.map((p) => ({
+    picks: objective.picks.map((p) => ({
       member: {
         id: p.member?.id ?? '',
         name: p.member?.name ?? '',
@@ -56,7 +77,7 @@ export function useDisplayPicks(
     ? transformedData.picksCount - 1
     : transformedData.picksCount
 
-  if (isStoryPicked) {
+  if (isObjectivePicked) {
     const currentUserPick = {
       member: {
         id: user.memberId,
