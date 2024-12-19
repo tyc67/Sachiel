@@ -15,6 +15,11 @@ import { useUser } from '@/context/user'
 import Icon from './icon'
 import NotificationDropdown from './notification-dropdown'
 
+export type SplitNotificationResult = {
+  current: NonNullable<NotificationData>['notifies']
+  prev: NonNullable<NotificationData>['notifies']
+}
+
 export default function NotificationWrapper() {
   const { user } = useUser()
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false)
@@ -25,17 +30,6 @@ export default function NotificationWrapper() {
     useState<AnnouncementData>(null)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const memberId = user.memberId
-
-  useEffect(() => {
-    if (isNotificationModalOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isNotificationModalOpen])
 
   const fetchData = useCallback(async () => {
     if (!memberId) return
@@ -101,11 +95,6 @@ export default function NotificationWrapper() {
       />
     </>
   )
-}
-
-export type SplitNotificationResult = {
-  current: NonNullable<NotificationData>['notifies']
-  prev: NonNullable<NotificationData>['notifies']
 }
 
 const splitNotification = (notification: NotificationData) => {

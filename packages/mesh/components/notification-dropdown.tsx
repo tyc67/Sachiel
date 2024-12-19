@@ -10,6 +10,7 @@ import {
 } from '@/app/actions/notification'
 import { DEFAULT_IMAGES } from '@/constants/fallback-src'
 import { useUser } from '@/context/user'
+import useBlockBodyScroll from '@/hooks/use-block-body-scroll'
 import {
   type ContentSchemaMapKey,
   contentSchemaMap,
@@ -36,41 +37,24 @@ export default function NotificationDropdown({
   notification: SplitNotificationResult | null
   announcement: AnnouncementData
 }) {
+  useBlockBodyScroll(isOpen)
   if (!isOpen || !buttonRef.current) return null
 
-  const buttonRect = buttonRef.current.getBoundingClientRect()
-  const isMobile = window.innerWidth < 768
-  const modalStyle = isMobile
-    ? {}
-    : {
-        top: `${buttonRect.bottom + window.scrollY + 4}px`,
-        right: `${window.innerWidth - buttonRect.right}px`,
-      }
-
   return createPortal(
-    <div
-      className={`fixed inset-0 z-modal bg-white transition-transform duration-300 sm:inset-auto ${
-        isMobile
-          ? 'size-full'
-          : 'absolute h-auto w-[400px] rounded-md border shadow-lg'
-      }`}
-      style={modalStyle}
-    >
-      <div className="h-max-[calc(95vh-60px)] flex flex-col overflow-y-scroll">
-        {isMobile ? (
-          <div className="flex h-15 flex-row items-center border-b-[0.5px] p-2">
-            <div className="size-11"></div>
-            <h2 className="list-title mx-auto text-primary-800">通知</h2>
-            <button
-              className="flex size-11 items-center justify-center"
-              onClick={onClose}
-            >
-              <Icon iconName="icon-close" size="l" />
-            </button>
-          </div>
-        ) : null}
+    <div className="fixed inset-0 z-modal size-full bg-white transition-transform duration-300 sm:inset-auto sm:right-[40px] sm:top-[60px] sm:h-fit sm:w-[400px] sm:rounded-md sm:shadow-lg">
+      <div className="flex h-dvh flex-col overflow-y-scroll sm:h-auto sm:max-h-[calc(95vh-60px)]">
+        <div className="flex h-15 flex-row items-center border-b-[0.5px] p-2 sm:hidden">
+          <div className="size-11"></div>
+          <h2 className="list-title mx-auto text-primary-800">通知</h2>
+          <button
+            className="flex size-11 items-center justify-center"
+            onClick={onClose}
+          >
+            <Icon iconName="icon-close" size="l" />
+          </button>
+        </div>
         {announcement ? (
-          <div className="flex flex-col gap-1 bg-highlight-red p-5">
+          <div className="flex flex-col gap-1 rounded-t-md bg-highlight-red p-5">
             <p className="subtitle-2 text-primary-700">系統維修公告</p>
             <p className="body-3 max-w-[335px] text-primary-600">
               {announcement[0].name}

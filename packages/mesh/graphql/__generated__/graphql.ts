@@ -8744,20 +8744,6 @@ export const GetAnnouncementsDocument = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'id' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'gt' },
-                            value: { kind: 'IntValue', value: '0' },
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      kind: 'ObjectField',
                       name: { kind: 'Name', value: 'status' },
                       value: {
                         kind: 'ObjectValue',
