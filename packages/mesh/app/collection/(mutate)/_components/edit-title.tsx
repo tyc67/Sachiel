@@ -1,9 +1,19 @@
 'use client'
 
-import { useEditCollection } from '@/context/edit-collection'
+import useAutoFocus from '@/hooks/use-auto-focus'
 
-export default function EditTitle() {
-  const { title, setTitle } = useEditCollection()
+import type { UseCollection } from '../_types/collection'
+
+export default function EditTitle({
+  autoFocus = true,
+  useCollection,
+}: {
+  autoFocus?: boolean
+  useCollection: UseCollection
+}) {
+  const { title, setTitle } = useCollection()
+  const inputRef = useAutoFocus<HTMLInputElement>({ disable: !autoFocus })
+
   return (
     <div className="px-5 md:px-[70px] lg:px-0">
       <label htmlFor="title" className="profile-subtitle  hidden px-1 lg:block">
@@ -19,6 +29,7 @@ export default function EditTitle() {
           setTitle(evt.target.value.trim())
         }}
         placeholder="輸入集錦標題"
+        ref={inputRef}
       />
     </div>
   )

@@ -1,11 +1,14 @@
 import { useComment } from '@/context/comment'
 import useWindowDimensions from '@/hooks/use-window-dimension'
+import { CommentObjective } from '@/types/objective'
 import { getTailwindConfigBreakpointNumber } from '@/utils/tailwind'
 
 export default function ObjectiveCommentCount({
   commentsCount,
+  commentObjective,
 }: {
   commentsCount: number
+  commentObjective?: CommentObjective
 }) {
   const { dispatch } = useComment()
   const { width } = useWindowDimensions()
@@ -17,10 +20,16 @@ export default function ObjectiveCommentCount({
       })
       document.body.classList.add('overflow-hidden')
     } else {
-      dispatch({
-        type: 'TOGGLE_DESKTOP_COMMENT_MODAL',
-        payload: { isOpen: true },
-      })
+      if (commentObjective === CommentObjective.Story) {
+        document
+          .getElementById('comment')
+          ?.scrollIntoView({ behavior: 'smooth' })
+      } else {
+        dispatch({
+          type: 'TOGGLE_DESKTOP_COMMENT_MODAL',
+          payload: { isOpen: true },
+        })
+      }
     }
   }
   const displayCount =

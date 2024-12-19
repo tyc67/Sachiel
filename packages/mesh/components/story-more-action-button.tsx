@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge'
 
 import { addBookmark, removeBookmark } from '@/app/actions/bookmark'
 import { removeFollowPublisher } from '@/app/actions/follow-publisher'
-import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/edit-collection'
+import type { CollectionPickStory } from '@/app/collection/(mutate)/_types/collection'
 import TOAST_MESSAGE from '@/constants/toast'
 import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'

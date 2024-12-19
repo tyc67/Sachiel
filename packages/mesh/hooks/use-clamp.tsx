@@ -6,13 +6,13 @@ function checkIfDomIsTooLong(dom: HTMLElement) {
   const lineHeight = parseInt(window.getComputedStyle(dom).lineHeight, 10)
   const realContentLines = Math.floor(dom.scrollHeight / lineHeight)
   const renderingContentLines = Math.floor(dom.clientHeight / lineHeight)
-
   return realContentLines > renderingContentLines
 }
 
 export default function useClamp() {
   const [isTooLong, setIsTooLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const moutedRef = useRef(false)
   const { width } = useWindowDimensions()
   const domRef = useRef<HTMLElement>(null)
 
@@ -22,11 +22,12 @@ export default function useClamp() {
 
   useEffect(() => {
     const dom = domRef.current
-    if (dom) {
+    if (dom && !moutedRef.current) {
+      moutedRef.current = true
       setIsExpanded(false)
       setIsTooLong(checkIfDomIsTooLong(dom))
     }
   }, [width])
 
-  return { domRef, isTooLong, isExpanded, toggleClamp }
+  return { domRef, isExpanded, isTooLong, toggleClamp }
 }

@@ -133,7 +133,7 @@ export default function PaymentInfo({
           />
           <p className="body-2 text-primary-500">
             我接受與同意鏡傳媒的
-            <Link href={'/'}>
+            <Link href={'/policy/terms-of-service'}>
               <span className="text-primary-700 underline underline-offset-2">
                 《服務條款》
               </span>

@@ -34,7 +34,7 @@ type SearchedResult = {
 
 export async function getStory({ storyId }: { storyId: string }) {
   const picksTake = 5
-  const commentsTake = 10
+  const commentsTake = 30
   const globalLogFields = getLogTraceObjectFromHeaders()
 
   const response = await queryGraphQL(

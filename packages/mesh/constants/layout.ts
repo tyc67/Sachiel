@@ -30,8 +30,8 @@ const FOOTER_NAV_LINKS = [
   // TODO: Uncomment it when page is complete
   // { text: '關於我們', href: '/' },
   { text: '聯絡我們', href: '/contact' },
-  { text: '隱私政策', href: '/' },
-  { text: '服務條款', href: '/' },
+  { text: '隱私政策', href: '/policy/privacy-policy' },
+  { text: '服務條款', href: '/policy/terms-of-service' },
 ] as const
 
 // TODO: update path

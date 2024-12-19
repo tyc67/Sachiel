@@ -42,7 +42,7 @@ export default function DesktopCommentModal({
             <Icon iconName="icon-close" size="l" />
           </button>
         </div>
-        <div className="overflow-auto px-10 py-5">
+        <div className="overflow-auto px-10 pb-10 pt-5">
           <CommentBlocks targetId={targetId} />
         </div>
       </div>

@@ -147,7 +147,7 @@ const CommentBlockItem = ({
             {needClamp ? (
               <p
                 onClick={handleToggleClamp}
-                className="body-3 relative max-h-10 overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-1 after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
+                className="body-3 relative max-h-[42px] overflow-y-hidden whitespace-pre text-wrap break-words text-primary-600 after:absolute after:bottom-0 after:right-0 after:cursor-pointer after:bg-gradient-to-r after:from-transparent after:from-0% after:to-white after:to-25% after:pl-6 after:text-primary-400 after:content-['...顯示更多']"
               >
                 {comment.content}
               </p>

@@ -9,6 +9,7 @@ import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
+import { useComment } from '@/context/comment'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
@@ -37,6 +38,7 @@ export default function Article({
   hasPayed: boolean
   policy: PublisherPolicy
 }) {
+  const { state: comment } = useComment()
   const getArticleContent = (story: Story, sourceCustomId: string) => {
     const shouldUseApiData = inHousePublisherCustomIds.includes(sourceCustomId)
 
@@ -129,7 +131,8 @@ export default function Article({
                 displayPicks={displayPicks}
                 maxCount={4}
                 pickCount={displayPicksCount}
-                commentCount={story?.commentsCount ?? 0}
+                showCommentCount={true}
+                commentCount={comment.commentsCount ?? 0}
                 objectiveId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
