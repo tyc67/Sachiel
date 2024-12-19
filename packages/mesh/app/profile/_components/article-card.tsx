@@ -161,6 +161,7 @@ const ArticleCard = ({
     <>
       <CommentProvider
         initialComments={storyData?.comment || []}
+        commentsCount={storyData?.commentCount ?? 0}
         commentObjective={CommentObjective.Story}
         commentObjectiveData={storyData}
       >

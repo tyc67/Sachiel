@@ -7,6 +7,7 @@ import ShareButton from '@/components/navigation/share-button'
 import PublisherDonateButton from '@/components/publisher-card/donate-button'
 import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
+import { useComment } from '@/context/comment'
 import { useUser } from '@/context/user'
 import type { GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
@@ -28,6 +29,8 @@ export default function ClientLayout({
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
   const isSinglePickByCurrentUser =
     displayPicks.length === 1 && displayPicks[0].member.id === user.memberId
+  const { state: comment } = useComment()
+
   return (
     <LayoutTemplate
       type="article"
@@ -65,7 +68,7 @@ export default function ClientLayout({
       mobileActionBar={{
         pickObjective: PickObjective.Story,
         objectiveId: story?.id ?? '',
-        commentsCount: story?.commentsCount ?? 0,
+        commentsCount: comment.commentsCount,
         picksCount: displayPicksCount,
         displayPicks: displayPicks,
         actions: [

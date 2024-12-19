@@ -1,10 +1,12 @@
 'use client'
 
+import { useMemo } from 'react'
+
 import { socialPageAvatarLayer } from '@/constants/z-index'
 import { usePickersModal } from '@/context/pickers-modal'
 import { useUser } from '@/context/user'
 import { type DisplayPicks } from '@/hooks/use-display-picks'
-import { PickObjective } from '@/types/objective'
+import { CommentObjective, PickObjective } from '@/types/objective'
 
 import Icon from '../icon'
 import type { RingColor } from '../story-card/avatar'
@@ -16,6 +18,7 @@ export default function ObjectivePickInfo({
   displayPicks,
   pickCount,
   maxCount = 4,
+  showCommentCount = false,
   commentCount = 0,
   ringColor = 'white',
   objectiveId,
@@ -24,6 +27,7 @@ export default function ObjectivePickInfo({
   displayPicks: DisplayPicks
   pickCount: number
   maxCount?: number
+  showCommentCount?: boolean
   commentCount?: number
   ringColor?: RingColor
   objectiveId: string
@@ -32,6 +36,18 @@ export default function ObjectivePickInfo({
   const { openPickersModal } = usePickersModal()
   const { user } = useUser()
   const designedMaxCount = 4
+
+  const commentObjective = useMemo(() => {
+    switch (pickObjective) {
+      case PickObjective.Story:
+        return CommentObjective.Story
+      case PickObjective.Collection:
+        return CommentObjective.Collection
+      default:
+        return CommentObjective.Story
+    }
+  }, [pickObjective])
+
   if (!Array.isArray(displayPicks)) return <></>
   if (displayPicks?.length < designedMaxCount) {
     maxCount = displayPicks?.length || 0
@@ -71,11 +87,14 @@ export default function ObjectivePickInfo({
             disabled={isSinglePickByCurrentUser}
           />
         </div>
-        {!!commentCount && (
+        {showCommentCount && (
           <>
             <Icon iconName="icon-dot" size="xs" />
             <div className="flex items-center">
-              <ObjectiveCommentCount commentsCount={commentCount} />
+              <ObjectiveCommentCount
+                commentsCount={commentCount}
+                commentObjective={commentObjective}
+              />
             </div>
           </>
         )}
