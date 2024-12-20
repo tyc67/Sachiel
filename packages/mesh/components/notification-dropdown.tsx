@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import { type ReactNode, type RefObject, Fragment } from 'react'
+import { type ReactNode, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import type { z } from 'zod'
 
@@ -27,18 +27,16 @@ import Avatar from './story-card/avatar'
 export default function NotificationDropdown({
   isOpen,
   onClose,
-  buttonRef,
   notification,
   announcement,
 }: {
   isOpen: boolean
   onClose: () => void
-  buttonRef: RefObject<HTMLButtonElement>
   notification: SplitNotificationResult | null
   announcement: AnnouncementData
 }) {
   useBlockBodyScroll(isOpen)
-  if (!isOpen || !buttonRef.current) return null
+  if (!isOpen) return null
 
   return createPortal(
     <div className="fixed inset-0 z-modal size-full bg-white transition-transform duration-300 sm:inset-auto sm:right-[40px] sm:top-[60px] sm:h-fit sm:w-[400px] sm:rounded-md sm:shadow-lg">

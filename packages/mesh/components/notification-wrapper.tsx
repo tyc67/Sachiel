@@ -28,7 +28,6 @@ export default function NotificationWrapper() {
     useState<SplitNotificationResult | null>(null)
   const [announcementData, setAnnouncementData] =
     useState<AnnouncementData>(null)
-  const buttonRef = useRef<HTMLButtonElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const memberId = user.memberId
 
@@ -83,7 +82,6 @@ export default function NotificationWrapper() {
         aria-label="Open notification modal"
         aria-haspopup="dialog"
         aria-expanded={isNotificationModalOpen}
-        ref={buttonRef}
       >
         <Icon
           size="2xl"
@@ -94,7 +92,6 @@ export default function NotificationWrapper() {
       </button>
       <NotificationDropdown
         isOpen={isNotificationModalOpen}
-        buttonRef={buttonRef}
         onClose={() => setIsNotificationModalOpen(false)}
         notification={notificationData}
         announcement={announcementData}
