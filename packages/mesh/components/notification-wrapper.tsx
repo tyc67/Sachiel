@@ -29,6 +29,7 @@ export default function NotificationWrapper() {
   const [announcementData, setAnnouncementData] =
     useState<AnnouncementData>(null)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const memberId = user.memberId
 
   const fetchData = useCallback(async () => {
@@ -52,19 +53,24 @@ export default function NotificationWrapper() {
   }, [memberId])
 
   useEffect(() => {
-    if (!memberId) return
+    if (!memberId || isNotificationModalOpen) return
     fetchData()
 
-    const interval = setInterval(fetchData, MINUTE)
+    intervalRef.current = setInterval(fetchData, MINUTE)
 
     return () => {
-      clearInterval(interval)
+      if (intervalRef.current) clearInterval(intervalRef.current)
     }
-  }, [fetchData, memberId])
+  }, [fetchData, isNotificationModalOpen, memberId])
 
   const handleToggleModal = async () => {
     if (!isNotificationModalOpen) {
       await readNotification(memberId)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      } else {
+        intervalRef.current = setInterval(fetchData, MINUTE)
+      }
     }
     setIsNotificationModalOpen((prev) => !prev)
   }

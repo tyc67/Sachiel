@@ -35,10 +35,13 @@ export const displayTimeFromNow = (date: string) => {
 }
 
 export const displayExpireTimeFromNow = (date: string) => {
-  const differenceInMilliseconds = Date.now() - new Date(date).getTime()
+  const differenceInMilliseconds = new Date(date).getTime() - Date.now()
   const differenceInDays = differenceInMilliseconds / DAY
+  const daysToExpire = Math.max(1, Math.ceil(differenceInDays))
+  const chineseNumbers = ['', '一', '二', '三']
+  const dayInChinese = daysToExpire > 3 ? '三' : chineseNumbers[daysToExpire]
 
-  return Math.floor(differenceInDays) + '天'
+  return `${dayInChinese}天`
 }
 
 type Picks = UserActionStoryFragment['pick']
