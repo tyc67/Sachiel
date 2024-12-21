@@ -39,7 +39,8 @@ export const displayExpireTimeFromNow = (date: string) => {
   const differenceInDays = differenceInMilliseconds / DAY
   const daysToExpire = Math.max(1, Math.ceil(differenceInDays))
   const chineseNumbers = ['', '一', '二', '三']
-  const dayInChinese = daysToExpire > 3 ? '三' : chineseNumbers[daysToExpire]
+  const dayInChinese =
+    chineseNumbers[daysToExpire] ?? chineseNumbers[chineseNumbers.length - 1]
 
   return `${dayInChinese}天`
 }

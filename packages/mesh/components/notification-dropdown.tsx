@@ -25,18 +25,15 @@ import { type SplitNotificationResult } from './notification-wrapper'
 import Avatar from './story-card/avatar'
 
 export default function NotificationDropdown({
-  isOpen,
   onClose,
   notification,
   announcement,
 }: {
-  isOpen: boolean
   onClose: () => void
   notification: SplitNotificationResult | null
   announcement: AnnouncementData
 }) {
-  useBlockBodyScroll(isOpen)
-  if (!isOpen) return null
+  useBlockBodyScroll(true)
 
   return createPortal(
     <div className="fixed inset-0 z-modal size-full bg-white transition-transform duration-300 sm:inset-auto sm:right-[40px] sm:top-[60px] sm:h-fit sm:w-[400px] sm:rounded-md sm:shadow-lg">

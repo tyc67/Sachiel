@@ -28,7 +28,7 @@ export default function NotificationWrapper() {
     useState<SplitNotificationResult | null>(null)
   const [announcementData, setAnnouncementData] =
     useState<AnnouncementData>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<number | null>(null)
   const memberId = user.memberId
 
   const fetchData = useCallback(async () => {
@@ -52,24 +52,24 @@ export default function NotificationWrapper() {
   }, [memberId])
 
   useEffect(() => {
-    if (!memberId || isNotificationModalOpen) return
-    fetchData()
+    if (!memberId) return
 
-    intervalRef.current = setInterval(fetchData, MINUTE)
+    if (!isNotificationModalOpen) {
+      fetchData()
+      intervalRef.current = window.setInterval(fetchData, MINUTE)
+    }
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
     }
   }, [fetchData, isNotificationModalOpen, memberId])
 
   const handleToggleModal = async () => {
     if (!isNotificationModalOpen) {
       await readNotification(memberId)
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      } else {
-        intervalRef.current = setInterval(fetchData, MINUTE)
-      }
     }
     setIsNotificationModalOpen((prev) => !prev)
   }
@@ -90,12 +90,13 @@ export default function NotificationWrapper() {
           }
         />
       </button>
-      <NotificationDropdown
-        isOpen={isNotificationModalOpen}
-        onClose={() => setIsNotificationModalOpen(false)}
-        notification={notificationData}
-        announcement={announcementData}
-      />
+      {isNotificationModalOpen ? (
+        <NotificationDropdown
+          onClose={() => setIsNotificationModalOpen(false)}
+          notification={notificationData}
+          announcement={announcementData}
+        />
+      ) : null}
     </>
   )
 }
