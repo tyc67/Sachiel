@@ -817,6 +817,7 @@ export type ExchangeRelateToManyForUpdateInput = {
 
 export enum ExchangeStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -3561,6 +3562,7 @@ export type SponsorshipRelateToManyForUpdateInput = {
 
 export enum SponsorshipStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -4051,6 +4053,7 @@ export type TransactionRelateToManyForUpdateInput = {
 
 export enum TransactionStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -4617,6 +4620,18 @@ export type GetCollectionQuery = {
         __typename?: 'ResizedImages'
         original?: string | null
       } | null
+      file?:
+        | {
+            __typename?: 'CloudImageFieldOutput'
+            width: number
+            height: number
+          }
+        | {
+            __typename?: 'LocalImageFieldOutput'
+            width: number
+            height: number
+          }
+        | null
     } | null
     creator?: {
       __typename?: 'Member'
@@ -8898,6 +8913,23 @@ export const GetCollectionDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'original' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'file' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'width' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'height' },
                             },
                           ],
                         },
