@@ -6,14 +6,17 @@ import { SITE_TITLE, SITE_URL } from '@/constants/config'
 
 import Loading from './_components/loading'
 
+const pageTitle = `最新 | ${SITE_TITLE}`
+const pageDescription = '追蹤你感興趣的媒體，查看他們最新發布的各類文章。'
+
 export const metadata: Metadata = {
   ...rootMetadata,
-  title: `最新 | ${SITE_TITLE}`,
-  description: '追蹤你感興趣的媒體，查看他們最新發布的各類文章。',
+  title: pageTitle,
+  description: pageDescription,
   openGraph: {
     url: SITE_URL + '/media',
-    title: `最新 | ${SITE_TITLE}`,
-    description: '追蹤你感興趣的媒體，查看他們最新發布的各類文章。',
+    title: pageTitle,
+    description: pageDescription,
   },
 }
 
