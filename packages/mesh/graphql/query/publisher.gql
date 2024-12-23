@@ -24,3 +24,9 @@ query GetPublisherFollowerList($publisherId: String, $takes: Int!) {
     }
   }
 }
+
+query GetPublisherName($publisherCustomId: String) {
+  publishers(where: { customId: { equals: $publisherCustomId } }) {
+    title
+  }
+}

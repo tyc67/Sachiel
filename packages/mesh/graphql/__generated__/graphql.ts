@@ -5844,6 +5844,15 @@ export type GetMemberPickAndBookmarkQuery = {
   } | null
 }
 
+export type GetMemberNameQueryVariables = Exact<{
+  memberCustomId?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetMemberNameQuery = {
+  __typename?: 'Query'
+  member?: { __typename?: 'Member'; name?: string | null } | null
+}
+
 export type GetMorePicksQueryVariables = Exact<{
   customId?: InputMaybe<Scalars['String']['input']>
   takes?: InputMaybe<Scalars['Int']['input']>
@@ -6143,6 +6152,15 @@ export type GetPublisherFollowerListQuery = {
       avatar?: string | null
     }> | null
   }> | null
+}
+
+export type GetPublisherNameQueryVariables = Exact<{
+  publisherCustomId?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetPublisherNameQuery = {
+  __typename?: 'Query'
+  publishers?: Array<{ __typename?: 'Publisher'; title?: string | null }> | null
 }
 
 export type LatestStoriesQueryVariables = Exact<{
@@ -16622,6 +16640,60 @@ export const GetMemberPickAndBookmarkDocument = {
   GetMemberPickAndBookmarkQuery,
   GetMemberPickAndBookmarkQueryVariables
 >
+export const GetMemberNameDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetMemberName' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberCustomId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'member' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'customId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'memberCustomId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetMemberNameQuery, GetMemberNameQueryVariables>
 export const GetMorePicksDocument = {
   kind: 'Document',
   definitions: [
@@ -18575,6 +18647,75 @@ export const GetPublisherFollowerListDocument = {
 } as unknown as DocumentNode<
   GetPublisherFollowerListQuery,
   GetPublisherFollowerListQueryVariables
+>
+export const GetPublisherNameDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPublisherName' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publisherCustomId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publishers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'customId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'Variable',
+                              name: {
+                                kind: 'Name',
+                                value: 'publisherCustomId',
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPublisherNameQuery,
+  GetPublisherNameQueryVariables
 >
 export const LatestStoriesDocument = {
   kind: 'Document',
