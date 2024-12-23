@@ -27,7 +27,7 @@ export default function ImageSelector({
     File | undefined
   >()
   const { setHeroImage } = useCollection()
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
 
   const onImageEditorOpen = () => {
     setShowImageEditor(true)

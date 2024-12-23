@@ -9,7 +9,7 @@ export default function DesktopCommentModal({
 }: {
   targetId: string
 }) {
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
 
   const { dispatch } = useComment()
 

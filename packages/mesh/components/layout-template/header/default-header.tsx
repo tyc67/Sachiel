@@ -3,11 +3,11 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import Button from '@/components/button'
 import Icon from '@/components/icon'
+import NotificationWrapper from '@/components/notification-wrapper'
 import { LOGO_ICONS } from '@/constants/layout'
 import { isUserLoggedIn, useUser } from '@/context/user'
 const DesktopSearchBar = dynamic(
@@ -24,13 +24,10 @@ const MobileSearchWrapper = dynamic(
 )
 
 export default function DefaultHeader() {
-  // TODO: implement notification system
-  const [showNotification, setShowNotification] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const { user } = useUser()
   const isLoggedIn = isUserLoggedIn(user)
-  const newNotification = true
 
   const handleLoginButton = () => {
     localStorage.setItem('login-redirect', pathname)
@@ -74,36 +71,7 @@ export default function DefaultHeader() {
               </HeaderIconWrapper>
             ) : null}
             {isLoggedIn ? (
-              newNotification ? (
-                // TODO: replace with correct path
-                <div>
-                  {/* TODO: uncomment the code after notification has been implemented  */}
-                  {/* <HeaderIconWrapper
-                  onClick={async () => {
-                    // TODO: show notification panel
-                    setShowNotification(!showNotification)
-                  }}
-                  className={
-                    showNotification ? 'rounded-[50%] bg-primary-100' : ''
-                  }
-                >
-                  <Icon size="2xl" iconName="icon-notifications-new" />
-                </HeaderIconWrapper> */}
-                </div>
-              ) : (
-                // TODO: replace with correct path
-                <HeaderIconWrapper
-                  onClick={() => {
-                    // TODO: show notification panel
-                    setShowNotification(!showNotification)
-                  }}
-                  className={
-                    showNotification ? 'rounded-[50%] bg-primary-100' : ''
-                  }
-                >
-                  <Icon size="2xl" iconName="icon-notifications" />
-                </HeaderIconWrapper>
-              )
+              <NotificationWrapper />
             ) : (
               <div className="mx-3 my-1 flex items-center">
                 <Button
