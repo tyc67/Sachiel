@@ -43,9 +43,14 @@ let NEXT_PAGES_REVALIDATE: {
   media: 0,
   story: 0,
 }
+let SITE_HOST = ''
+const SITE_TITLE = 'READr Mesh 讀選'
+const SITE_DESCRIPTION =
+  '在READr Mesh 讀選上瀏覽多元的新聞媒體內容。盡情精選、分享和製作新聞集錦，將你認為有意義的新聞資訊傳播出去。'
 
 switch (ENV) {
   case 'local':
+    SITE_HOST = 'localhost:3000'
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
     ADSENSE_CLIENT = 'ca-pub-9990785780499264'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
@@ -67,6 +72,7 @@ switch (ENV) {
     }
     break
   case 'dev':
+    SITE_HOST = 'dev.mmesh.news'
     API_ORIGIN = 'https://mesh-proxy-server-dev-4g6paft7cq-de.a.run.app'
     ADSENSE_CLIENT = 'ca-pub-9990785780499264'
     STATIC_FILE_ORIGIN = 'https://storage.googleapis.com/statics-mesh-tw-dev'
@@ -97,6 +103,7 @@ switch (ENV) {
     break
 
   case 'prod':
+    SITE_HOST = 'www.mmesh.news'
     API_ORIGIN =
       'https://mesh-proxy-server-prod-1075249966777.asia-east1.run.app'
     ADSENSE_CLIENT = 'ca-pub-9990785780499264'
@@ -169,6 +176,9 @@ const STATIC_FILE_ENDPOINTS = {
   privacyPolicy: `${STATIC_FILE_ORIGIN}/policies/privacy-policy.html`,
 }
 
+const SITE_URL = `https://${SITE_HOST}`
+const SITE_OG_IMAGE = `${SITE_URL}/images/default-og-img.png`
+
 export {
   ADSENSE_CLIENT,
   ALCHEMY_ADDRESS,
@@ -184,5 +194,10 @@ export {
   NEXT_PAGES_REVALIDATE,
   PAYMENT_CHAIN,
   RESTFUL_ENDPOINTS,
+  SITE_DESCRIPTION,
+  SITE_HOST,
+  SITE_OG_IMAGE,
+  SITE_TITLE,
+  SITE_URL,
   STATIC_FILE_ENDPOINTS,
 }
