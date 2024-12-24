@@ -72,6 +72,7 @@ export default function NotificationWrapper() {
       await readNotification(memberId)
     }
     setIsNotificationModalOpen((prev) => !prev)
+    setHasNewNotification(false)
   }
 
   return (

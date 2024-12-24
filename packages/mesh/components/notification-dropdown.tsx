@@ -98,7 +98,7 @@ const renderNotification = (
 ) => {
   const { action, objective, ts, content, notifiers, uuid } = notification
   const notificationType = `${action}:${objective}` as ContentSchemaMapKey
-  const time = displayTimeFromNow(new Date(ts * 1000).toDateString())
+  const time = displayTimeFromNow(new Date(ts * 1000))
 
   const schema = contentSchemaMap[notificationType]
   const parsedContent = content as z.infer<typeof schema>
@@ -218,7 +218,7 @@ const renderNotification = (
             你已收到 {parsedContent.depositVolume} 讀選點數的空投
           </p>,
           time,
-          `point/record/${notification.tid}}`,
+          `point/record/${notification.tid}`,
           uuid
         )
       }
