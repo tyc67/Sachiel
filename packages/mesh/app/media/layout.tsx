@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
   openGraph: {
+    ...rootMetadata.openGraph,
     url: SITE_URL + '/media',
     title: pageTitle,
     description: pageDescription,
