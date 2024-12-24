@@ -257,8 +257,8 @@ export async function updateMemberWallet(id: string, wallet: Hex) {
 export async function getStoryAccess(idToken: string, storyId: string) {
   let isMatch = false
   let attempt = 0
-
-  while (!isMatch && attempt < 5) {
+  //TODO: integrate with new api later
+  while (!isMatch && attempt < 20) {
     const accessToken = await getAccessToken(idToken)
     if (!accessToken) break
 

@@ -86,7 +86,7 @@ export default function SponsorshipInfo({
               color="white"
               text="完成"
               onClick={() => {
-                router.back()
+                router.push('/point')
               }}
             />
           </div>
