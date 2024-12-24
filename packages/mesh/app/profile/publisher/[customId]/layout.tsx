@@ -9,9 +9,9 @@ import ClientLayout from './_component/client-layout'
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ customId: string }>
+  params: { customId: string }
 }): Promise<Metadata> {
-  const publisherCustomId = (await params).customId
+  const publisherCustomId = params.customId
 
   const publisherData = await getPublisherName(publisherCustomId)
   const publisherName = publisherData?.publishers?.[0].title

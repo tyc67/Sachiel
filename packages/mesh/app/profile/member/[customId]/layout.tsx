@@ -9,9 +9,9 @@ import ClientLayout from './_components/client-layout'
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ customId: string }>
+  params: { customId: string }
 }): Promise<Metadata> {
-  const memberCustomId = (await params).customId
+  const memberCustomId = params.customId
 
   const memberData = await getMemberName(memberCustomId)
   const memberName = memberData?.member?.name
