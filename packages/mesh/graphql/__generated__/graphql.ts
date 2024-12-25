@@ -6126,7 +6126,11 @@ export type GetPublisherPolicyQuery = {
     publisher?: {
       __typename?: 'Publisher'
       id: string
-      wallet?: string | null
+      admin?: {
+        __typename?: 'Member'
+        id: string
+        wallet?: string | null
+      } | null
     } | null
   }> | null
 }
@@ -6177,6 +6181,20 @@ export type GetPublisherNameQueryVariables = Exact<{
 export type GetPublisherNameQuery = {
   __typename?: 'Query'
   publishers?: Array<{ __typename?: 'Publisher'; title?: string | null }> | null
+}
+
+export type GetPublisherWalletQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type GetPublisherWalletQuery = {
+  __typename?: 'Query'
+  publisher?: {
+    __typename?: 'Publisher'
+    id: string
+    title?: string | null
+    admin?: { __typename?: 'Member'; id: string; wallet?: string | null } | null
+  } | null
 }
 
 export type LatestStoriesQueryVariables = Exact<{
@@ -18593,7 +18611,20 @@ export const GetPublisherPolicyDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'wallet' },
+                        name: { kind: 'Name', value: 'admin' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'wallet' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -18827,6 +18858,75 @@ export const GetPublisherNameDocument = {
 } as unknown as DocumentNode<
   GetPublisherNameQuery,
   GetPublisherNameQueryVariables
+>
+export const GetPublisherWalletDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPublisherWallet' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publisher' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'id' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'admin' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPublisherWalletQuery,
+  GetPublisherWalletQueryVariables
 >
 export const LatestStoriesDocument = {
   kind: 'Document',

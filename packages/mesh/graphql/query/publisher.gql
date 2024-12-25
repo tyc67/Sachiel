@@ -30,3 +30,14 @@ query GetPublisherName($publisherCustomId: String) {
     title
   }
 }
+
+query GetPublisherWallet($id: ID) {
+  publisher(where: { id: $id }) {
+    id
+    title
+    admin {
+      id
+      wallet
+    }
+  }
+}
