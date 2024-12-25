@@ -136,7 +136,7 @@ const renderNotification = (
             」{parsedContent.fee} 讀選點數
           </p>,
           time,
-          `point/record/${notification.tid}}`,
+          `point/record/${notification.tid}`,
           uuid
         )
       }
@@ -348,7 +348,7 @@ const CommonContainer = (
   }
   return (
     <div
-      className="mx-5 flex flex-row gap-2 border-b-[0.5px] py-5"
+      className="mx-5 flex cursor-pointer flex-row gap-2 border-b-[0.5px] py-5"
       onClick={handleClickNotification}
     >
       <div className="shrink-0">{icon}</div>
