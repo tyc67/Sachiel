@@ -1,13 +1,13 @@
 import { DAY, HOUR, MINUTE } from '@/constants/time-unit'
 import { type UserActionStoryFragment } from '@/graphql/__generated__/graphql'
 
-export const displayTimeFromNow = (date: string) => {
+export const displayTimeFromNow = (date: string | Date) => {
   const differenceInMilliseconds = Date.now() - new Date(date).getTime()
   const differenceInMinutes = differenceInMilliseconds / MINUTE
   const differenceInHours = differenceInMilliseconds / HOUR
   const differenceInDays = differenceInMilliseconds / DAY
 
-  const fullDisplayTime = (date: string) => {
+  const fullDisplayTime = (date: string | Date) => {
     const targetDate = new Date(date)
     const currentYear = new Date().getFullYear()
     const year = targetDate.getFullYear()
