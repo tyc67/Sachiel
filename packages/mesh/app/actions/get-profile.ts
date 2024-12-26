@@ -1,7 +1,9 @@
 'use server'
 
 import {
+  GetMemberNameDocument,
   GetMemberProfileDocument,
+  GetPublisherNameDocument,
   GetVisitorProfileDocument,
 } from '@/graphql/__generated__/graphql'
 import { PickObjective } from '@/types/objective'
@@ -49,6 +51,40 @@ export async function getVisitorProfile(visitorId: string, takes: number) {
     })
     // if visitor data not found bubble this error to nextjs error handling
     if (!result?.member) {
+      return null
+    }
+    return result
+  } catch (error) {
+    logServerSideError(error, 'Failed to get visitor profile', globalLogFields)
+    throw error
+  }
+}
+
+export async function getMemberName(customId: string) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+  try {
+    const result = await queryGraphQL(GetMemberNameDocument, {
+      memberCustomId: customId,
+    })
+    // if visitor data not found bubble this error to nextjs error handling
+    if (!result?.member) {
+      return null
+    }
+    return result
+  } catch (error) {
+    logServerSideError(error, 'Failed to get visitor profile', globalLogFields)
+    throw error
+  }
+}
+
+export async function getPublisherName(customId: string) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+  try {
+    const result = await queryGraphQL(GetPublisherNameDocument, {
+      publisherCustomId: customId,
+    })
+    // if visitor data not found bubble this error to nextjs error handling
+    if (!result?.publishers || !result.publishers[0]) {
       return null
     }
     return result

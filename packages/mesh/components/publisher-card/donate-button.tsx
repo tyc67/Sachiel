@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import getAllPublishers from '@/app/actions/get-all-publishers'
+import { getPublisherWallet } from '@/app/actions/publisher'
 import { PaymentType } from '@/types/payment'
 
 import Button from '../button'
@@ -18,12 +18,8 @@ export default function PublisherDonateButton({
 
   useEffect(() => {
     const init = async () => {
-      const allPublishers = await getAllPublishers()
-      const publisher = allPublishers?.find(
-        (publisher) => publisher.id === publisherId
-      )
-
-      setIsWalletAvailable(!!publisher?.wallet)
+      const publisher = await getPublisherWallet(publisherId)
+      setIsWalletAvailable(!!publisher?.admin?.wallet)
     }
 
     init()

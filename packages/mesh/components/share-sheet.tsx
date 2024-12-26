@@ -50,7 +50,7 @@ export default function ShareSheet({
     storyTitle: string
   }
 }) {
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
   const onShareSheetContainerClicked: MouseEventHandler<HTMLDivElement> = (
     evt
   ) => {

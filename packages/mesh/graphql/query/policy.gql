@@ -10,7 +10,10 @@ query GetPublisherPolicy($customId: String) {
     duration
     publisher {
       id
-      wallet
+      admin{
+        id
+        wallet
+      }
     }
   }
 }

@@ -1,13 +1,13 @@
 import { DAY, HOUR, MINUTE } from '@/constants/time-unit'
 import { type UserActionStoryFragment } from '@/graphql/__generated__/graphql'
 
-export const displayTimeFromNow = (date: string) => {
+export const displayTimeFromNow = (date: string | Date) => {
   const differenceInMilliseconds = Date.now() - new Date(date).getTime()
   const differenceInMinutes = differenceInMilliseconds / MINUTE
   const differenceInHours = differenceInMilliseconds / HOUR
   const differenceInDays = differenceInMilliseconds / DAY
 
-  const fullDisplayTime = (date: string) => {
+  const fullDisplayTime = (date: string | Date) => {
     const targetDate = new Date(date)
     const currentYear = new Date().getFullYear()
     const year = targetDate.getFullYear()
@@ -32,6 +32,17 @@ export const displayTimeFromNow = (date: string) => {
   } else {
     return fullDisplayTime(date)
   }
+}
+
+export const displayExpireTimeFromNow = (date: string) => {
+  const differenceInMilliseconds = new Date(date).getTime() - Date.now()
+  const differenceInDays = differenceInMilliseconds / DAY
+  const daysToExpire = Math.max(1, Math.ceil(differenceInDays))
+  const chineseNumbers = ['', '一', '二', '三']
+  const dayInChinese =
+    chineseNumbers[daysToExpire] ?? chineseNumbers[chineseNumbers.length - 1]
+
+  return `${dayInChinese}天`
 }
 
 type Picks = UserActionStoryFragment['pick']

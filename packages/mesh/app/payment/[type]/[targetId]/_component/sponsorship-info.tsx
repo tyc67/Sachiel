@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { type Hex } from 'viem'
 
-import { type PublisherData } from '@/app/actions/get-all-publishers'
 import { sponsorPublisher } from '@/app/actions/payment'
+import { type PublisherData } from '@/app/actions/publisher'
 import SendTransaction from '@/components/alchemy/send-transaction'
 import Button from '@/components/button'
 import Icon from '@/components/icon'
@@ -86,7 +86,7 @@ export default function SponsorshipInfo({
               color="white"
               text="完成"
               onClick={() => {
-                router.back()
+                router.push('/point')
               }}
             />
           </div>

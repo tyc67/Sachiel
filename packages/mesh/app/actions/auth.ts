@@ -21,9 +21,9 @@ import queryGraphQL from '@/utils/fetch-graphql'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
-import getAllPublishers from './get-all-publishers'
 import { generateInvitationCodes } from './invitation-code'
 import { invalidateInvitationCode } from './invitation-code'
+import { getAllPublishers } from './publisher'
 
 export async function validateIdToken(
   token: string
@@ -257,8 +257,8 @@ export async function updateMemberWallet(id: string, wallet: Hex) {
 export async function getStoryAccess(idToken: string, storyId: string) {
   let isMatch = false
   let attempt = 0
-
-  while (!isMatch && attempt < 5) {
+  //TODO: integrate with new api later
+  while (!isMatch && attempt < 20) {
     const accessToken = await getAccessToken(idToken)
     if (!accessToken) break
 

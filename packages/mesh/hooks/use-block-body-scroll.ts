@@ -1,10 +1,15 @@
 import { useEffect } from 'react'
 
-export default function useBlockBodyScroll() {
+export default function useBlockBodyScroll(isBlock: boolean) {
   useEffect(() => {
-    document.body.classList.add('overflow-hidden')
+    if (isBlock) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+
     return () => {
       document.body.classList.remove('overflow-hidden')
     }
-  }, [])
+  }, [isBlock])
 }

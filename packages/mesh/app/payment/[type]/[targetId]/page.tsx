@@ -2,8 +2,8 @@ import dynamic from 'next/dynamic'
 import { notFound, redirect } from 'next/navigation'
 
 import { getCurrentUser } from '@/app/actions/auth'
-import getAllPublishers from '@/app/actions/get-all-publishers'
 import { getMeshPointBalance } from '@/app/actions/mesh-point'
+import { getPublisherWallet } from '@/app/actions/publisher'
 import { getStoryUnlockPolicy } from '@/app/actions/story'
 import { PaymentType } from '@/types/payment'
 
@@ -36,7 +36,7 @@ export default async function Page({
   switch (type) {
     case PaymentType.SubscriptionStory: {
       const unlockPolicy = await getStoryUnlockPolicy(targetId)
-      const publisherAddress = unlockPolicy[0].publisher?.wallet
+      const publisherAddress = unlockPolicy[0].publisher?.admin?.wallet
       if (!unlockPolicy.length || !isHexAddress(publisherAddress)) notFound()
 
       return (
@@ -53,11 +53,8 @@ export default async function Page({
       )
     }
     case PaymentType.Sponsor: {
-      const allPublishers = await getAllPublishers()
-      const publisher = allPublishers?.find(
-        (publisher) => publisher.id === targetId
-      )
-      const publisherAddress = publisher?.wallet
+      const publisher = await getPublisherWallet(targetId)
+      const publisherAddress = publisher?.admin?.wallet
       if (!publisher || !isHexAddress(publisherAddress)) notFound()
       return (
         <AlchemyAuth

@@ -7,6 +7,10 @@ query GetCollection($collectionId: ID, $picksTake: Int, $commentsTake: Int) {
       resized {
         original
       }
+      file {
+        width
+        height
+      }
     }
     updatedAt
     summary
