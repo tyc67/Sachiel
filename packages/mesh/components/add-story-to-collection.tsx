@@ -39,7 +39,7 @@ export default function AddStoryToCollection({
   const [addedCollections, setAddedCollections] = useState<Collection[]>([])
   const router = useRouter()
   const { user } = useUser()
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
   const { addToast } = useToast()
   const userPayload = useUserPayload()
 

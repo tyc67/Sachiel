@@ -568,3 +568,9 @@ query GetMemberPickAndBookmark(
     }
   }
 }
+
+query GetMemberName($memberCustomId: String) {
+  member(where: { customId: $memberCustomId }) {
+    name
+  }
+}

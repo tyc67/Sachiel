@@ -21,7 +21,7 @@ export default function Lightbox({
   setFocusImageIndedx,
   setShowLightbox,
 }: LightboxProps) {
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
   const focusImage = images[focusImageIndex]
 
   useEffect(() => {

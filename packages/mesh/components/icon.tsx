@@ -152,6 +152,7 @@ export type IconName =
   | 'icon-select-image'
   | 'icon-collection'
   | 'icon-remove'
+  | 'icon-notification-blue'
   | 'icon-refresh'
   | 'icon-delete-story'
   | 'icon-sort-story'

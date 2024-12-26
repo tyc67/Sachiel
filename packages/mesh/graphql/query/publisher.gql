@@ -24,3 +24,20 @@ query GetPublisherFollowerList($publisherId: String, $takes: Int!) {
     }
   }
 }
+
+query GetPublisherName($publisherCustomId: String) {
+  publishers(where: { customId: { equals: $publisherCustomId } }) {
+    title
+  }
+}
+
+query GetPublisherWallet($id: ID) {
+  publisher(where: { id: $id }) {
+    id
+    title
+    admin {
+      id
+      wallet
+    }
+  }
+}

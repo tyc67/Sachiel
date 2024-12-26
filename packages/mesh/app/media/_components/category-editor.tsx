@@ -19,7 +19,7 @@ export default function CategoryEditor({
 }) {
   const [selectingCategories, setSelectingCategories] =
     useState(followingCategories)
-  useBlockBodyScroll()
+  useBlockBodyScroll(true)
 
   const selectingCategoryIds = new Set(
     selectingCategories.map((category) => category.id)

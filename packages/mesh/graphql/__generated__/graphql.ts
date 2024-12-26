@@ -817,6 +817,7 @@ export type ExchangeRelateToManyForUpdateInput = {
 
 export enum ExchangeStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -3561,6 +3562,7 @@ export type SponsorshipRelateToManyForUpdateInput = {
 
 export enum SponsorshipStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -4051,6 +4053,7 @@ export type TransactionRelateToManyForUpdateInput = {
 
 export enum TransactionStatusType {
   Failed = 'Failed',
+  Processing = 'Processing',
   Success = 'Success',
 }
 
@@ -4566,6 +4569,22 @@ export type UpdateWalletAddressMutation = {
   } | null
 }
 
+export type GetAnnouncementsQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GetAnnouncementsQuery = {
+  __typename?: 'Query'
+  announcements?: Array<{
+    __typename?: 'Announcement'
+    id: string
+    name?: string | null
+    status?: string | null
+    type?: string | null
+    createdAt?: any | null
+  }> | null
+}
+
 export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetAllCategoriesQuery = {
@@ -4617,6 +4636,18 @@ export type GetCollectionQuery = {
         __typename?: 'ResizedImages'
         original?: string | null
       } | null
+      file?:
+        | {
+            __typename?: 'CloudImageFieldOutput'
+            width: number
+            height: number
+          }
+        | {
+            __typename?: 'LocalImageFieldOutput'
+            width: number
+            height: number
+          }
+        | null
     } | null
     creator?: {
       __typename?: 'Member'
@@ -5829,6 +5860,15 @@ export type GetMemberPickAndBookmarkQuery = {
   } | null
 }
 
+export type GetMemberNameQueryVariables = Exact<{
+  memberCustomId?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetMemberNameQuery = {
+  __typename?: 'Query'
+  member?: { __typename?: 'Member'; name?: string | null } | null
+}
+
 export type GetMorePicksQueryVariables = Exact<{
   customId?: InputMaybe<Scalars['String']['input']>
   takes?: InputMaybe<Scalars['Int']['input']>
@@ -6086,7 +6126,11 @@ export type GetPublisherPolicyQuery = {
     publisher?: {
       __typename?: 'Publisher'
       id: string
-      wallet?: string | null
+      admin?: {
+        __typename?: 'Member'
+        id: string
+        wallet?: string | null
+      } | null
     } | null
   }> | null
 }
@@ -6128,6 +6172,29 @@ export type GetPublisherFollowerListQuery = {
       avatar?: string | null
     }> | null
   }> | null
+}
+
+export type GetPublisherNameQueryVariables = Exact<{
+  publisherCustomId?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetPublisherNameQuery = {
+  __typename?: 'Query'
+  publishers?: Array<{ __typename?: 'Publisher'; title?: string | null }> | null
+}
+
+export type GetPublisherWalletQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>
+}>
+
+export type GetPublisherWalletQuery = {
+  __typename?: 'Query'
+  publisher?: {
+    __typename?: 'Publisher'
+    id: string
+    title?: string | null
+    admin?: { __typename?: 'Member'; id: string; wallet?: string | null } | null
+  } | null
 }
 
 export type LatestStoriesQueryVariables = Exact<{
@@ -8699,6 +8766,101 @@ export const UpdateWalletAddressDocument = {
   UpdateWalletAddressMutation,
   UpdateWalletAddressMutationVariables
 >
+export const GetAnnouncementsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAnnouncements' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'announcements' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'status' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'StringValue',
+                              value: 'published',
+                              block: false,
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: { kind: 'IntValue', value: '0' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'take' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderBy' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'createdAt' },
+                      value: { kind: 'EnumValue', value: 'desc' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetAnnouncementsQuery,
+  GetAnnouncementsQueryVariables
+>
 export const GetAllCategoriesDocument = {
   kind: 'Document',
   definitions: [
@@ -8898,6 +9060,23 @@ export const GetCollectionDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'original' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'file' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'width' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'height' },
                             },
                           ],
                         },
@@ -16590,6 +16769,60 @@ export const GetMemberPickAndBookmarkDocument = {
   GetMemberPickAndBookmarkQuery,
   GetMemberPickAndBookmarkQueryVariables
 >
+export const GetMemberNameDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetMemberName' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'memberCustomId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'member' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'customId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'memberCustomId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetMemberNameQuery, GetMemberNameQueryVariables>
 export const GetMorePicksDocument = {
   kind: 'Document',
   definitions: [
@@ -18378,7 +18611,20 @@ export const GetPublisherPolicyDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'wallet' },
+                        name: { kind: 'Name', value: 'admin' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'wallet' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -18543,6 +18789,144 @@ export const GetPublisherFollowerListDocument = {
 } as unknown as DocumentNode<
   GetPublisherFollowerListQuery,
   GetPublisherFollowerListQueryVariables
+>
+export const GetPublisherNameDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPublisherName' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publisherCustomId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publishers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'customId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'equals' },
+                            value: {
+                              kind: 'Variable',
+                              name: {
+                                kind: 'Name',
+                                value: 'publisherCustomId',
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPublisherNameQuery,
+  GetPublisherNameQueryVariables
+>
+export const GetPublisherWalletDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPublisherWallet' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publisher' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'id' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'id' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'admin' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPublisherWalletQuery,
+  GetPublisherWalletQueryVariables
 >
 export const LatestStoriesDocument = {
   kind: 'Document',
