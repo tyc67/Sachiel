@@ -136,7 +136,7 @@ const renderNotification = (
             」{parsedContent.fee} 讀選點數
           </p>,
           time,
-          `point/record/${notification.tid}`,
+          `/point/record/${notification.tid}`,
           uuid
         )
       }
@@ -218,7 +218,7 @@ const renderNotification = (
             你已收到 {parsedContent.depositVolume} 讀選點數的空投
           </p>,
           time,
-          `point/record/${notification.tid}`,
+          `/point/record/${notification.tid}`,
           uuid
         )
       }
