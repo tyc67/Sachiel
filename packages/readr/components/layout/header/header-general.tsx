@@ -112,10 +112,10 @@ const ProgressBar = styled.progress`
     background-color: hsla(0, 0%, 84.7%, 0.5);
   }
   &::-webkit-progress-value {
-    background-image: linear-gradient(180deg, #ebf02c 0%, #cef3ee 497.8%);
+    background-image: linear-gradient(180deg, #eee500 0%, #cef3ee 497.8%);
   }
   &::-moz-progress-bar {
-    background-image: linear-gradient(180deg, #ebf02c 0%, #cef3ee 497.8%);
+    background-image: linear-gradient(180deg, #eee500 0%, #cef3ee 497.8%);
   }
 `
 
