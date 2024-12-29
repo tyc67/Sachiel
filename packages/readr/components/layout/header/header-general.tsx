@@ -34,12 +34,12 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  padding: 12px 12px 12px 20px;
+  padding: 12px 12px 12px 8px;
   ${({ theme }) => theme.breakpoint.sm} {
-    padding: 16px 36px 16px 24px;
+    padding: 16px 36px 16px 16px;
   }
   ${({ theme }) => theme.breakpoint.lg} {
-    padding: 16px 24px 0;
+    padding: 16px 24px 0 16px;
   }
 `
 
@@ -48,11 +48,12 @@ const LeftPart = styled.div`
     padding-bottom: 16px;
   }
   .header-logo {
+    position: relative;
     display: block;
-    width: 42px;
-    height: 42px;
+    width: 139.41px;
+    height: 40px;
     ${({ theme }) => theme.breakpoint.sm} {
-      width: 48px;
+      width: 161.89px;
       height: 48px;
     }
   }
