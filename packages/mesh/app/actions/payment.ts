@@ -1,65 +1,81 @@
 'use server'
 
 import { type Abi } from '@alchemy/aa-core'
+import { type Hex } from 'viem'
 
 import { RESTFUL_ENDPOINTS, STATIC_FILE_ENDPOINTS } from '@/constants/config'
+import { SECOND } from '@/constants/time-unit'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import fetchStatic from '@/utils/fetch-static'
+import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
 
 export async function getMeshPointContract() {
   return await fetchStatic<{ abi: Abi }>(STATIC_FILE_ENDPOINTS.contract)
 }
 
-export async function unlockSingleStory({
-  memberId,
-  policyId,
-  tid,
-  storyId,
-}: {
+export type CreatePaymentProps = {
+  action:
+    | 'unlock_story_single'
+    | 'unlock_story_media'
+    | 'unlock_all'
+    | 'sponsor_media'
+    | 'exchange_media'
   memberId: string
-  policyId: string
-  tid: string
-  storyId: string
-}) {
-  const payload = {
-    action: 'unlock_story_single',
-    memberId,
-    policyId,
-    tid,
-    storyId,
-  }
+  policyId?: string
+  storyId?: string
+  publisherId?: string
+  fee?: string
+}
 
-  return await fetchRestfulPost(
-    RESTFUL_ENDPOINTS.pubsub,
-    payload,
+export async function createPayment(paymentPayload: CreatePaymentProps) {
+  return await fetchRestfulPost<{ id: string; status: string }>(
+    RESTFUL_ENDPOINTS.paymentCreate,
+    paymentPayload,
     { cache: 'no-cache' },
-    'Failed to unlock single story state via pub/sub'
+    'Failed to create payment'
   )
 }
 
-export async function sponsorPublisher({
-  memberId,
-  publisherId,
-  tid,
-  fee,
-}: {
+export type UpdatePaymentProps = {
+  action:
+    | 'unlock_story_single'
+    | 'unlock_story_media'
+    | 'unlock_all'
+    | 'sponsor_media'
+    | 'exchange_media'
   memberId: string
-  publisherId: string
-  tid: string
-  fee: string
-}) {
-  const payload = {
-    action: 'sponsor_media',
-    memberId,
-    publisherId,
-    tid,
-    fee,
+  objective: 'transaction' | 'sponsorship' | 'exchange'
+  targetId: string
+  tid: Hex
+}
+
+export async function updatePayment(paymentPayload: UpdatePaymentProps) {
+  const globalLogFields = getLogTraceObjectFromHeaders()
+  const maxRetries = 3
+  let attempt = 0
+
+  while (attempt < maxRetries) {
+    const paymentAuthResponse = await fetchRestfulPost(
+      RESTFUL_ENDPOINTS.paymentAuth,
+      paymentPayload,
+      { cache: 'no-cache' },
+      'Failed to update payment'
+    )
+
+    if (paymentAuthResponse === 'success') {
+      return paymentAuthResponse
+    }
+
+    attempt += 1
+
+    if (attempt < maxRetries) {
+      await new Promise((resolve) => setTimeout(resolve, SECOND))
+    }
   }
 
-  return await fetchRestfulPost(
-    RESTFUL_ENDPOINTS.pubsub,
-    payload,
-    { cache: 'no-cache' },
-    'Failed to sponsor media via pub/sub'
+  logServerSideError(
+    'error',
+    `Failed to update payment after ${maxRetries} attempts`,
+    globalLogFields
   )
 }
