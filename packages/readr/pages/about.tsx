@@ -68,14 +68,14 @@ const wording: Record<Language, languageWording> = {
 
 const Page = styled.div`
   background: #000928;
-  box-shadow: inset 8px 0px 0px #ebf02c;
+  box-shadow: inset 8px 0px 0px #eee500;
   max-width: 100vw;
   min-width: 100vw;
   font-family: 'Noto Sans TC';
   overflow: hidden;
   ${({ theme }) => `
     ${theme.breakpoint.md} {
-      box-shadow: inset 20px 0px 0px #ebf02c;
+      box-shadow: inset 20px 0px 0px #eee500;
     }
   `}
 `
