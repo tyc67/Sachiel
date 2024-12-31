@@ -30,7 +30,7 @@ export default function HeaderLogo({
       aria-label="首頁"
       onClick={clickHander}
     >
-      <Image src="/readr-logo.png" alt="Readr logo" fill />
+      <Image src="/icons/readr-logo.svg" alt="Readr logo" fill />
     </Link>
   )
 }
