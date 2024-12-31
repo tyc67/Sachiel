@@ -7,7 +7,7 @@ import type { ReactElement } from 'react'
 import styled, { css } from 'styled-components'
 
 import { getGqlClient } from '~/apollo-client'
-import LayoutWithLogoOnly from '~/components/layout/layout-with-logo-only'
+import LayoutGeneral from '~/components/layout/layout-general'
 import ArticleListCard from '~/components/shared/article-list-card'
 import { SITE_TITLE } from '~/constants/constant'
 import type { Post } from '~/graphql/fragments/post'
@@ -325,7 +325,7 @@ Error.getInitialProps = async (
 }
 
 Error.getLayout = function getLayout(page: ReactElement): ReactElement {
-  return <LayoutWithLogoOnly>{page}</LayoutWithLogoOnly>
+  return <LayoutGeneral>{page}</LayoutGeneral>
 }
 
 export default Error
