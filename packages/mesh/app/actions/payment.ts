@@ -8,18 +8,21 @@ import { SECOND } from '@/constants/time-unit'
 import { fetchRestfulPost } from '@/utils/fetch-restful'
 import fetchStatic from '@/utils/fetch-static'
 import { getLogTraceObjectFromHeaders, logServerSideError } from '@/utils/log'
+import { sleep } from '@/utils/sleep'
 
 export async function getMeshPointContract() {
   return await fetchStatic<{ abi: Abi }>(STATIC_FILE_ENDPOINTS.contract)
 }
 
+type PaymentActionType =
+  | 'unlock_story_single'
+  | 'unlock_story_media'
+  | 'unlock_all'
+  | 'sponsor_media'
+  | 'exchange_media'
+
 export type CreatePaymentProps = {
-  action:
-    | 'unlock_story_single'
-    | 'unlock_story_media'
-    | 'unlock_all'
-    | 'sponsor_media'
-    | 'exchange_media'
+  action: PaymentActionType
   memberId: string
   policyId?: string
   storyId?: string
@@ -37,12 +40,7 @@ export async function createPayment(paymentPayload: CreatePaymentProps) {
 }
 
 export type UpdatePaymentProps = {
-  action:
-    | 'unlock_story_single'
-    | 'unlock_story_media'
-    | 'unlock_all'
-    | 'sponsor_media'
-    | 'exchange_media'
+  action: PaymentActionType
   memberId: string
   objective: 'transaction' | 'sponsorship' | 'exchange'
   targetId: string
@@ -67,10 +65,7 @@ export async function updatePayment(paymentPayload: UpdatePaymentProps) {
     }
 
     attempt += 1
-
-    if (attempt < maxRetries) {
-      await new Promise((resolve) => setTimeout(resolve, SECOND))
-    }
+    sleep(SECOND)
   }
 
   logServerSideError(
