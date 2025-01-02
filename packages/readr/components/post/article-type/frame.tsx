@@ -73,7 +73,7 @@ const Header = styled.header`
   top: 0;
   left: 0;
   z-index: ${({ theme }) => theme.zIndex.headerDesktop};
-  padding: 12px 16px;
+  padding: 12px 16px 12px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,10 +88,10 @@ const Header = styled.header`
     height: 40px;
   }
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 20px 24px;
+    padding: 20px 24px 20px 16px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    padding: 20px 32px;
+    padding: 20px 32px 20px 16px;
   }
 `
 
