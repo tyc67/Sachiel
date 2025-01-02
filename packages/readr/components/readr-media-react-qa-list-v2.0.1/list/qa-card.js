@@ -33,8 +33,7 @@ const Question = styled.div`
   display: flex;
   justify-content: space-between;
   line-height: 150%;
-  color: #000928;
-  opacity: 0.87;
+  color: #212944;
   &:hover {
     cursor: pointer;
   }
