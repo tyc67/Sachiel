@@ -70,12 +70,21 @@ export default function SendTransaction({
   const handleUserOperationSuccess = async (
     paymentPayload: UpdatePaymentProps
   ) => {
-    if (!auth.currentUser) return
-    const idToken = await auth.currentUser.getIdToken()
-    await updatePayment(paymentPayload)
-    await getAccessToken(idToken)
-    onSuccess()
-    setIsPaymentProcessing(false)
+    try {
+      if (!auth.currentUser) throw new Error('User is not authenticated')
+      const idToken = await auth.currentUser.getIdToken()
+      const updatePaymentResponse = await updatePayment(paymentPayload)
+      if (!updatePaymentResponse)
+        throw new Error('Failed to get payment status')
+      const accessTokenResponse = await getAccessToken(idToken)
+      if (!accessTokenResponse)
+        throw new Error('Failed to refresh access token after user operation')
+      onSuccess()
+      setIsPaymentProcessing(false)
+    } catch (error) {
+      console.error('Transaction failed:', error)
+      addToast({ status: 'fail', text: TOAST_MESSAGE.payFailedUnowknown })
+    }
   }
 
   // provide the useSendUserOperation with a client to send a UO
@@ -122,7 +131,9 @@ export default function SendTransaction({
       if (!auth.currentUser) throw new Error('User is not authenticated')
 
       const idToken = await auth.currentUser.getIdToken()
-      await getAccessToken(idToken)
+      const accessTokenResponse = await getAccessToken(idToken)
+      if (!accessTokenResponse)
+        throw new Error('Failed to refresh access token')
       const createPaymentResponse = await createPayment(createPaymentPayload)
       if (!createPaymentResponse?.id) {
         throw new Error('Failed to get payment id')

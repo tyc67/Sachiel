@@ -57,7 +57,7 @@ export async function updatePayment(paymentPayload: UpdatePaymentProps) {
       RESTFUL_ENDPOINTS.paymentAuth,
       paymentPayload,
       { cache: 'no-cache' },
-      'Failed to update payment'
+      `Failed to update payment with ${JSON.stringify(paymentPayload)}`
     )
 
     if (paymentAuthResponse === 'success') {
@@ -70,7 +70,8 @@ export async function updatePayment(paymentPayload: UpdatePaymentProps) {
 
   logServerSideError(
     'error',
-    `Failed to update payment after ${maxRetries} attempts`,
+    `Failed to update payment ${paymentPayload.targetId} after ${maxRetries} attempts`,
     globalLogFields
   )
+  return null
 }
