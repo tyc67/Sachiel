@@ -9,11 +9,11 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { type Hex, encodeFunctionData } from 'viem'
 
 import { getAccessToken } from '@/app/actions/auth'
-import { getMeshPointContract } from '@/app/actions/payment'
 import {
   type CreatePaymentProps,
   type UpdatePaymentProps,
   createPayment,
+  getMeshPointContract,
   updatePayment,
 } from '@/app/actions/payment'
 import { ALCHEMY_ADDRESS } from '@/constants/config'

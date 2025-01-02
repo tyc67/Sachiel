@@ -65,7 +65,7 @@ export async function updatePayment(paymentPayload: UpdatePaymentProps) {
     }
 
     attempt += 1
-    sleep(SECOND)
+    await sleep(SECOND)
   }
 
   logServerSideError(
