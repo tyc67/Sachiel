@@ -17,6 +17,7 @@ import { useToast } from '@/context/toast'
 import { useUser } from '@/context/user'
 import useUserPayload from '@/hooks/use-user-payload'
 import { logSponsor } from '@/utils/event-logs'
+import { debounce } from '@/utils/performance'
 
 import SponsorInput from './sponsor-input'
 import { type SponsorshipPoints } from './sponsor-option'
@@ -64,6 +65,16 @@ export default function SponsorshipInfo({
     setAmount(value ?? 0)
   }
 
+  const handleChangeAmount = debounce((value: number) => {
+    if (balance === undefined) return
+    if (value <= balance) {
+      setAmount(value)
+    } else {
+      setAmount(0)
+      addToast({ status: 'fail', text: TOAST_MESSAGE.payFailedInsufficient })
+    }
+  }, 500)
+
   const handleSponsorSuccess = () => {
     setIsSponsored(true)
     logSponsor(userPayload, publisher.title ?? '')
@@ -95,10 +106,7 @@ export default function SponsorshipInfo({
           </div>
         </div>
       ) : isInputMode ? (
-        <SponsorInput
-          balance={balance}
-          onChangeAmount={(value: number) => setAmount(value)}
-        />
+        <SponsorInput balance={balance} onChangeAmount={handleChangeAmount} />
       ) : (
         <SponsorOption
           publisherTitle={publisher.title ?? ''}
