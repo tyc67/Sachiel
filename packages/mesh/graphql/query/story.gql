@@ -175,12 +175,9 @@ query GetStoryPickers($storyId: ID, $picksTake: Int, $picksSkip: Int) {
     id
     picks: pick(
       where: { kind: { equals: "read" }, is_active: { equals: true } }
-      orderBy:  {
-         createdAt: desc
-      }
+      orderBy: { createdAt: desc }
       take: $picksTake
       skip: $picksSkip
-  
     ) {
       id
       createdAt
@@ -191,6 +188,14 @@ query GetStoryPickers($storyId: ID, $picksTake: Int, $picksSkip: Int) {
         avatar
         customId
       }
+    }
+  }
+}
+
+query GetStoryCommentCount($id: ID) {
+  story(where: { id: $id }) {
+    comment(where: { is_active: { equals: true } }) {
+      id
     }
   }
 }

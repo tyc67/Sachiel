@@ -32,7 +32,8 @@ export default function StoryCard({
           </NextLink>
           <div className="caption-1 pt-2 sm:pt-1">
             <StoryMeta
-              commentCount={0}
+              showCommentCount={false}
+              storyId={story.id}
               publishDate={story.published_date}
               paywall={story.isMember}
               fullScreenAd={story.full_screen_ad}

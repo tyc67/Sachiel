@@ -59,7 +59,7 @@ function StoryCard({ story }: Story) {
 
       <div className="caption-1">
         <StoryMeta
-          commentCount={story.commentCount}
+          storyId={story.id}
           publishDate={story.published_date}
           paywall={story.paywall}
           fullScreenAd={story.full_screen_ad}

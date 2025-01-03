@@ -48,7 +48,7 @@ const StoryCard = ({
           </h3>
           <div className="caption-1">
             <StoryMeta
-              commentCount={story.commentCount}
+              storyId={story.id}
               publishDate={story.published_date}
               paywall={story.paywall}
               fullScreenAd={story.full_screen_ad}

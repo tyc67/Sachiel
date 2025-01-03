@@ -74,7 +74,7 @@ export default function FeaturedCard({
 
           <div className="caption-1 lg:footnote mb-4 sm:mb-3 lg:mb-[19px] xl:mb-10">
             <StoryMeta
-              commentCount={story.commentCount}
+              storyId={story.id}
               publishDate={story.published_date}
               paywall={story.paywall}
               fullScreenAd={story.full_screen_ad}

@@ -87,7 +87,7 @@ export default function MostPickedStoryCard({
               </div>
               <div className="footnote mt-2">
                 <StoryMeta
-                  commentCount={story.commentCount ?? 0}
+                  storyId={story.id}
                   publishDate={story.published_date}
                   paywall={story.paywall ?? false}
                   fullScreenAd={story.full_screen_ad ?? ''}

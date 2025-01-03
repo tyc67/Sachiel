@@ -81,7 +81,7 @@ export default function Feed({
         </Link>
         <div className="footnote mb-4">
           <StoryMeta
-            commentCount={story.commentCount}
+            storyId={story.id}
             publishDate={story.published_date}
             paywall={story.isMember}
             fullScreenAd={story.full_screen_ad}

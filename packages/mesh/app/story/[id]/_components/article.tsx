@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Button from '@/components/button'
@@ -10,6 +11,7 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { useComment } from '@/context/comment'
+import { useCommentCount } from '@/context/comment-count'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
@@ -92,9 +94,28 @@ export default function Article({
 
   const publishDateInFormat = displayTime(story?.published_date)
   // TODO: handle login user's following situation like feed.tsx did
-  // const displayPicks = story?.picks
 
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
+  const { interactedComments, updateCommentsCount } = useCommentCount()
+  const [displayCommentsCount, setDisplayCommentsCount] = useState(
+    comment.commentsCount
+  )
+
+  useEffect(() => {
+    // update comment count if user pick + comment
+    if (!story) return
+    if (interactedComments.includes(story.id)) {
+      setDisplayCommentsCount((prev) => prev + 1)
+      updateCommentsCount(story.id, 'decrement')
+    }
+  }, [interactedComments, story, updateCommentsCount])
+
+  useEffect(() => {
+    // update comment count if user comment in comment blocks
+    setDisplayCommentsCount(
+      Math.max(comment.commentsCount, displayCommentsCount)
+    )
+  }, [comment.commentsCount, displayCommentsCount])
 
   return (
     <div>
@@ -132,7 +153,7 @@ export default function Article({
                 maxCount={4}
                 pickCount={displayPicksCount}
                 showCommentCount={true}
-                commentCount={comment.commentsCount ?? 0}
+                commentCount={displayCommentsCount}
                 objectiveId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
