@@ -77,6 +77,7 @@ export default function CollectionCard({
             </div>
             <div className="footnote mt-3">
               <CollectionMeta
+                collectionId={collection.id}
                 commentCount={collection.commentsCount ?? 0}
                 updateAt={collection.updatedAt}
               />
