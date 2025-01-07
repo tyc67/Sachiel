@@ -35,6 +35,7 @@ export default function MainCard({ story }: Props) {
           />
         </div>
       </NextLink>
+
       <div className="lg:flex lg:flex-col lg:justify-between">
         <div>
           <div className="mb-1 flex justify-between">
@@ -70,7 +71,7 @@ export default function MainCard({ story }: Props) {
 
           <div className="footnote">
             <StoryMeta
-              storyId={story.id}
+              commentCount={story.commentCount}
               publishDate={story.published_date}
               paywall={story.paywall}
               fullScreenAd={story.full_screen_ad}

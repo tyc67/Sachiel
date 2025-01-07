@@ -4,7 +4,6 @@ import { RESTFUL_ENDPOINTS } from '@/constants/config'
 import {
   GetPublisherPolicyDocument,
   GetStoriesDocument,
-  GetStoryCommentCountDocument,
   GetStoryDocument,
   GetStoryPickersDocument,
   GetStorySourceDocument,
@@ -131,15 +130,4 @@ export async function getStoryPickers(
     'Failed to getStoryPickers'
   )
   return getStoryPickersResponse?.story
-}
-
-export async function getStoryCommentCount(id: string) {
-  const globalLogFields = getLogTraceObjectFromHeaders()
-  const getStoryPickersResponse = await queryGraphQL(
-    GetStoryCommentCountDocument,
-    { id },
-    globalLogFields,
-    'Failed to getStoryCommentCount'
-  )
-  return getStoryPickersResponse?.story?.comment?.length
 }

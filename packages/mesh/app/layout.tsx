@@ -13,7 +13,6 @@ import {
   SITE_TITLE,
   SITE_URL,
 } from '@/constants/config'
-import { CommentCountProvider } from '@/context/comment-count'
 import { PickModalProvider } from '@/context/pick-modal'
 import { PickersModalProvider } from '@/context/pickers-modal'
 import { ToastProvider } from '@/context/toast'
@@ -59,16 +58,14 @@ export default async function RootLayout({
       <body>
         <UserProvider user={user}>
           <ToastProvider>
-            <CommentCountProvider>
-              <PickModalProvider>
-                <PickersModalProvider>
-                  <RootLayoutWrapper>
-                    <UserBehaviorLogger />
-                    {children}
-                  </RootLayoutWrapper>
-                </PickersModalProvider>
-              </PickModalProvider>
-            </CommentCountProvider>
+            <PickModalProvider>
+              <PickersModalProvider>
+                <RootLayoutWrapper>
+                  <UserBehaviorLogger />
+                  {children}
+                </RootLayoutWrapper>
+              </PickersModalProvider>
+            </PickModalProvider>
           </ToastProvider>
         </UserProvider>
       </body>

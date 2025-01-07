@@ -60,7 +60,7 @@ export default forwardRef(function StoryCard<
           </p>
           <div className="caption-1">
             <StoryMeta
-              storyId={story.id}
+              commentCount={story.commentCount}
               publishDate={story.published_date}
               paywall={story.paywall}
               fullScreenAd={story.full_screen_ad}

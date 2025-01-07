@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react'
 
-import { useCommentCount } from '@/context/comment-count'
 import { usePickModal } from '@/context/pick-modal'
 import { useUser } from '@/context/user'
 import usePicker from '@/hooks/use-picker'
@@ -32,7 +31,6 @@ const AddPickModal = () => {
   const { isModalOpen, objectId, closePickModal, pickObjective } =
     usePickModal()
   const { addPick, addPickAndComment } = usePicker()
-  const { updateCommentsCount } = useCommentCount()
   const mobileTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const desktopTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
@@ -67,7 +65,6 @@ const AddPickModal = () => {
   const handleAddPick = () => {
     if (value) {
       addPickAndComment(objectId, pickObjective, value)
-      updateCommentsCount(objectId, 'increment')
     } else {
       addPick(objectId, pickObjective)
     }

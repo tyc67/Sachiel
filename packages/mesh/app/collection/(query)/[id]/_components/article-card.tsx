@@ -75,7 +75,7 @@ const ArticleCard = ({ story, isLast, avatar = '' }: ArticleCardProps) => {
             </p>
             <span className=" *:caption-1 *:text-primary-500">
               <StoryMeta
-                storyId={story?.id ?? ''}
+                commentCount={story?.commentsCount || 0}
                 publishDate={story?.published_date || ''}
                 paywall={story?.paywall || false}
                 fullScreenAd={story?.full_screen_ad || ''}
