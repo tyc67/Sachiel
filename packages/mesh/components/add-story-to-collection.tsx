@@ -125,7 +125,10 @@ export default function AddStoryToCollection({
         {addedCollections.map((collection, i) => (
           <React.Fragment key={i}>
             「
-            <Link href={`/collection/${collection.id}`}>
+            <Link
+              href={`/collection/${collection.id}`}
+              className="hover-or-active:underline"
+            >
               <span className="text-primary-700">{collection.title ?? ''}</span>
             </Link>
             」{i !== addedCollections.length - 1 ? '、' : ''}
@@ -158,10 +161,19 @@ export default function AddStoryToCollection({
           </div>
           <div className="list-title text-primary-800">加入集錦</div>
           <div
-            className="pointer-events-none flex size-11 items-center justify-center sm:pointer-events-auto sm:cursor-pointer"
+            className="group pointer-events-none relative flex size-11 items-center justify-center sm:pointer-events-auto sm:cursor-pointer"
             onClick={onClose}
           >
-            <Icon className="hidden sm:block" iconName="icon-close" size="l" />
+            <Icon
+              className="absolute hidden opacity-100 group-hover:opacity-0 sm:block"
+              iconName="icon-close"
+              size="l"
+            />
+            <Icon
+              className="absolute size-full opacity-0 group-hover:opacity-100"
+              iconName="icon-close-with-background-gray"
+              size="l"
+            />
           </div>
         </div>
         {/* collection list */}
@@ -174,7 +186,7 @@ export default function AddStoryToCollection({
               {collections.map((collection) => (
                 <div
                   key={collection.id}
-                  className="cursor-pointer p-5 pb-0"
+                  className="group cursor-pointer p-5 pb-0"
                   onClick={debounce(
                     addStoryToCollection.bind(null, collection)
                   )}
@@ -189,7 +201,7 @@ export default function AddStoryToCollection({
                       />
                     </div>
                     <div className="flex items-center">
-                      <div className="subtitle-1 line-clamp-2 text-primary-700">
+                      <div className="subtitle-1 line-clamp-2 text-primary-700 group-hover:underline">
                         {collection.title ?? ''}
                       </div>
                     </div>
