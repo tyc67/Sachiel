@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Button from '@/components/button'
@@ -11,8 +11,8 @@ import StoryPickButton from '@/components/story-card/story-pick-button'
 import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { useComment } from '@/context/comment'
-import { usePickModal } from '@/context/pick-modal'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useDisplayCommentCount } from '@/hooks/use-display-commentcount'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
 
@@ -96,30 +96,14 @@ export default function Article({
   // TODO: handle login user's following situation like feed.tsx did
 
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
-  const { interactCommentStack, setInteractCommentStack } = usePickModal()
-  const [displayCommentCount, setDisplayCommentCount] = useState(
-    comment.commentsCount
-  )
-
-  useEffect(() => {
-    if (!story) return
-    if (
-      interactCommentStack.length > 0 &&
-      interactCommentStack.includes(story?.id)
-    ) {
-      setDisplayCommentCount((prev) => prev + 1)
-      setInteractCommentStack((prev) => prev.filter((id) => id !== story.id))
-    }
-  }, [
-    interactCommentStack,
-    interactCommentStack.length,
-    setInteractCommentStack,
-    story,
-  ])
-
+  const { displayCommentCount, setDisplayCommentCount } =
+    useDisplayCommentCount({
+      objectiveId: story?.id || '',
+      initialCount: comment.commentsCount,
+    })
   useEffect(() => {
     setDisplayCommentCount(Math.max(comment.commentsCount, displayCommentCount))
-  }, [comment.commentsCount, displayCommentCount])
+  }, [comment.commentsCount, displayCommentCount, setDisplayCommentCount])
 
   return (
     <div>

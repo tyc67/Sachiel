@@ -33,7 +33,7 @@ const AddPickModal = () => {
     objectId,
     closePickModal,
     pickObjective,
-    interactCommentStack,
+    setInteractCommentStack,
   } = usePickModal()
   const { addPick, addPickAndComment } = usePicker()
   const mobileTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -70,7 +70,7 @@ const AddPickModal = () => {
   const handleAddPick = () => {
     if (value) {
       addPickAndComment(objectId, pickObjective, value)
-      interactCommentStack.push(objectId)
+      setInteractCommentStack((prev) => [...prev, objectId])
     } else {
       addPick(objectId, pickObjective)
     }

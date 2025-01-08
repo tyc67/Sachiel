@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-
-import { usePickModal } from '@/context/pick-modal'
+import { useDisplayCommentCount } from '@/hooks/use-display-commentcount'
 
 export default function CommentCount({
   objectiveId,
@@ -9,25 +7,10 @@ export default function CommentCount({
   objectiveId: string
   initialCommentCounts: number
 }) {
-  const { interactCommentStack, setInteractCommentStack } = usePickModal()
-  const [displayCommentCount, setDisplayCommentCount] =
-    useState(initialCommentCounts)
-
-  useEffect(() => {
-    if (
-      objectiveId &&
-      interactCommentStack.length > 0 &&
-      interactCommentStack.includes(objectiveId)
-    ) {
-      setDisplayCommentCount((prev) => prev + 1)
-      setInteractCommentStack((prev) => prev.filter((id) => id !== objectiveId))
-    }
-  }, [
-    interactCommentStack,
-    interactCommentStack.length,
-    setInteractCommentStack,
+  const { displayCommentCount } = useDisplayCommentCount({
     objectiveId,
-  ])
+    initialCount: initialCommentCounts,
+  })
 
   return <div className="pl-0.5">{displayCommentCount}</div>
 }
