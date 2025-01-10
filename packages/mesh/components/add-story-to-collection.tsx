@@ -177,7 +177,7 @@ export default function AddStoryToCollection({
           </div>
         </div>
         {/* collection list */}
-        <div className="flex grow flex-col overflow-auto">
+        <div className="flex grow flex-col overflow-auto px-5">
           {isLoading ? (
             <Spinner />
           ) : (
@@ -186,12 +186,12 @@ export default function AddStoryToCollection({
               {collections.map((collection) => (
                 <div
                   key={collection.id}
-                  className="group cursor-pointer p-5 pb-0"
+                  className="group cursor-pointer border-b py-5 last:border-0"
                   onClick={debounce(
                     addStoryToCollection.bind(null, collection)
                   )}
                 >
-                  <div className="flex gap-3 border-b pb-5">
+                  <div className="flex gap-3">
                     <div className="relative aspect-[2/1] w-24 shrink-0">
                       <ImageWithFallback
                         src={collection.heroImage?.resized?.original ?? ''}
@@ -212,7 +212,7 @@ export default function AddStoryToCollection({
           )}
         </div>
         {/* main action */}
-        <div className="px-5 py-3 sm:py-5">
+        <div className="border-t px-5 py-3 sm:py-5">
           <Button
             size="lg"
             text="建立新集錦"
