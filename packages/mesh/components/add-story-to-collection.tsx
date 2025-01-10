@@ -212,7 +212,7 @@ export default function AddStoryToCollection({
           )}
         </div>
         {/* main action */}
-        <div className="px-5 py-3">
+        <div className="px-5 py-3 sm:py-5">
           <Button
             size="lg"
             text="建立新集錦"
