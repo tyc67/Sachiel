@@ -158,7 +158,10 @@ export default function Article({
             </div>
           </div>
           {story?.summary && (
-            <div className="body-2 mt-6 border-y px-6 py-5 text-primary-700">
+            <div
+              className="body-2 mt-6 border-y px-6 py-5 text-primary-700"
+              itemProp="articleBody"
+            >
               {story?.summary}
             </div>
           )}
