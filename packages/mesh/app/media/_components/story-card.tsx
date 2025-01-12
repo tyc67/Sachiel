@@ -39,9 +39,11 @@ export default forwardRef(function StoryCard(
   {
     story,
     className = '',
+    storyPickGtmClassName = '',
   }: {
     story: Story
     className?: string
+    storyPickGtmClassName?: string
   },
   ref
 ) {
@@ -116,7 +118,10 @@ export default forwardRef(function StoryCard(
           pickCount={displayPicksCount}
           objectiveId={story.id}
         />
-        <StoryPickButton storyId={story.id} />
+        <StoryPickButton
+          storyId={story.id}
+          gtmClassName={storyPickGtmClassName}
+        />
       </div>
     </article>
   )
