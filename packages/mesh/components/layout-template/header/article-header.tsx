@@ -45,7 +45,10 @@ export default function ArticleHeader({ showNav }: { showNav: () => void }) {
             >
               <Icon size="l" iconName="icon-hamburger-menu" />
             </button>
-            <Link href={LOGO_ICONS.nonMobile.href}>
+            <Link
+              href={LOGO_ICONS.nonMobile.href}
+              className="GTM-header_click_mesh_logo"
+            >
               <Icon
                 size={LOGO_ICONS.nonMobile.size}
                 iconName={LOGO_ICONS.nonMobile.icon}
