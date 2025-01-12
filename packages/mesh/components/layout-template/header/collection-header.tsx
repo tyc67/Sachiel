@@ -39,7 +39,7 @@ export default function CollectionHeader() {
         </div>
         {/* right side block */}
         <div className="flex">
-          <HeaderIconWrapper className="sm:hidden">
+          <HeaderIconWrapper className="GTM-header_click_search_bar sm:hidden">
             {/* TODO: replace with correct path */}
             <Link href="/">
               <Icon size="2xl" iconName="icon-search" />
