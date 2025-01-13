@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 import ImageWithFallback from '@/app/_components/image-with-fallback'
 import Button from '@/components/button'
@@ -11,6 +12,7 @@ import StoryMoreActionButton from '@/components/story-more-action-button'
 import { ImageCategory } from '@/constants/fallback-src'
 import { useComment } from '@/context/comment'
 import { type GetStoryQuery } from '@/graphql/__generated__/graphql'
+import { useDisplayCommentCount } from '@/hooks/use-display-commentcount'
 import { useDisplayPicks } from '@/hooks/use-display-picks'
 import { displayTime } from '@/utils/story-display'
 
@@ -92,9 +94,16 @@ export default function Article({
 
   const publishDateInFormat = displayTime(story?.published_date)
   // TODO: handle login user's following situation like feed.tsx did
-  // const displayPicks = story?.picks
 
   const { displayPicks, displayPicksCount } = useDisplayPicks(story)
+  const { displayCommentCount, setDisplayCommentCount } =
+    useDisplayCommentCount({
+      objectiveId: story?.id || '',
+      initialCount: comment.commentsCount,
+    })
+  useEffect(() => {
+    setDisplayCommentCount(Math.max(comment.commentsCount, displayCommentCount))
+  }, [comment.commentsCount, displayCommentCount, setDisplayCommentCount])
 
   return (
     <div>
@@ -132,7 +141,7 @@ export default function Article({
                 maxCount={4}
                 pickCount={displayPicksCount}
                 showCommentCount={true}
-                commentCount={comment.commentsCount ?? 0}
+                commentCount={displayCommentCount}
                 objectiveId={story?.id ?? ''}
               />
               {/* TODO: update the states and actions according to the user state */}
@@ -152,7 +161,10 @@ export default function Article({
             </div>
           </div>
           {story?.summary && (
-            <div className="body-2 mt-6 border-y px-6 py-5 text-primary-700">
+            <div
+              className="body-2 mt-6 border-y px-6 py-5 text-primary-700"
+              itemProp="articleBody"
+            >
               {story?.summary}
             </div>
           )}
