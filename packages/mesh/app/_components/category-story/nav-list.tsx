@@ -1,8 +1,8 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import type { MouseEventHandler } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { fetchCategoryStory } from '@/app/actions/get-homepage'
 import Button from '@/components/button'
@@ -13,7 +13,6 @@ import useInView from '@/hooks/use-in-view'
 import useUserPayload from '@/hooks/use-user-payload'
 import type { CategoryStory } from '@/types/homepage'
 import { logCategoryClick } from '@/utils/event-logs'
-import { replaceSearchParams, setSearchParams } from '@/utils/search-params'
 
 import StorySection from './story-section'
 
@@ -40,18 +39,32 @@ type Props = {
 
 export default function NavList({ categories, initialStories }: Props) {
   const [data, setData] = useState<CategoryStory[] | null>(initialStories)
+  const router = useRouter()
   const userPayload = useUserPayload()
   const searchParams = useSearchParams()
   const activeCategorySlug = searchParams.get(categorySearchParamName)
-  const activeCategory = categories?.find(
-    (category) => category.slug === activeCategorySlug
+  const activeCategory = useMemo(
+    () => categories?.find((category) => category.slug === activeCategorySlug),
+    [activeCategorySlug, categories]
   )
 
+  const updateCategorySearchParams = (categorySlug: string) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set(categorySearchParamName, categorySlug ?? '')
+    router.push(`?${newSearchParams.toString()}`, { scroll: false })
+  }
+
   useEffect(() => {
-    if (!activeCategorySlug) {
-      replaceSearchParams(categorySearchParamName, categories[0].slug ?? '')
+    const replaceCategorySearchParams = (categorySlug: string) => {
+      const newSearchParams = new URLSearchParams(searchParams)
+      newSearchParams.set(categorySearchParamName, categorySlug ?? '')
+      router.replace(`?${newSearchParams.toString()}`, { scroll: false })
     }
-  }, [activeCategorySlug, categories])
+
+    if (!activeCategorySlug) {
+      replaceCategorySearchParams(categories[0].slug ?? '')
+    }
+  }, [activeCategorySlug, categories, router, searchParams])
 
   useEffect(() => {
     const fetchCategoryData = async (categorySlug: string) => {
@@ -100,10 +113,7 @@ export default function NavList({ categories, initialStories }: Props) {
                   }}
                   onClick={() => {
                     logCategoryClick(userPayload, category?.title ?? '')
-                    setSearchParams(
-                      categorySearchParamName,
-                      category.slug ?? ''
-                    )
+                    updateCategorySearchParams(category.slug ?? '')
                   }}
                 />
               </div>
