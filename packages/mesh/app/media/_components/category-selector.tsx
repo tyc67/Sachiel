@@ -1,4 +1,3 @@
-import { useRouter, useSearchParams } from 'next/navigation'
 import type { MouseEventHandler } from 'react'
 import { useRef, useState } from 'react'
 
@@ -18,6 +17,7 @@ import {
   undoDeleteCategroies,
 } from '@/utils/edit-category'
 import { logCategoryClick } from '@/utils/event-logs'
+import { setSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'
 import CategoryEditor from './category-editor'
@@ -49,8 +49,6 @@ export default function CategorySelector({
   const displayCategories = user.followingCategories
   const { addToast } = useToast()
   const userPayoload = useUserPayload()
-  const router = useRouter()
-  const searchParams = useSearchParams()
 
   const [showCategoryEditor, setShowCategoryEditor] = useState(false)
   const { memberId } = user
@@ -64,12 +62,6 @@ export default function CategorySelector({
   const showNavigatePrevious =
     isLeadingRefInView !== null && !isLeadingRefInView
   const showNavigateNext = isEndingRefInView !== null && !isEndingRefInView
-
-  const updateCategorySearchParams = (categorySlug: string) => {
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set(categorySearchParamName, categorySlug ?? '')
-    router.push(`?${newSearchParams.toString()}`)
-  }
 
   const onEditCategoriesFinish = async (newCategories: Category[]) => {
     const addedCategoryIds = getAddedCategoryIds(
@@ -112,7 +104,7 @@ export default function CategorySelector({
       (category) => category.slug === currentCategory?.slug
     )
     if (isCurrentCategoryDeleted) {
-      updateCategorySearchParams(finalCategories[0].slug ?? '')
+      setSearchParams(categorySearchParamName, finalCategories[0].slug ?? '')
     }
 
     setUser((user) => ({
@@ -148,7 +140,10 @@ export default function CategorySelector({
                   }}
                   onClick={() => {
                     logCategoryClick(userPayoload, category?.title ?? '')
-                    updateCategorySearchParams(category.slug ?? '')
+                    setSearchParams(
+                      categorySearchParamName,
+                      category.slug ?? ''
+                    )
                   }}
                 />
               </div>
