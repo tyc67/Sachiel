@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useMemo } from 'react'
 
@@ -12,6 +12,7 @@ import getMostSponsorPublishersAndStories from '@/app/actions/get-most-sponsor-p
 import { categorySearchParamName } from '@/constants/search-param-names'
 import { useUser } from '@/context/user'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
+import { replaceSearchParams } from '@/utils/search-params'
 
 import type { Category } from '../page'
 import CategorySelector from './category-selector'
@@ -26,7 +27,6 @@ export type LatestStoriesInfo = {
   stories: Story[]
   totalCount: number
   shouldLoadmore: boolean
-  initialized: boolean
 }
 type PageData = {
   [key: string]: {
@@ -50,7 +50,6 @@ const getInitialPageData = (allCategories: Category[]) => {
           stories: [],
           totalCount: 0,
           shouldLoadmore: true,
-          initialized: false,
         },
         publishersAndStories: [],
       }
@@ -65,20 +64,14 @@ export default function MediaStories({
   allCategories: Category[]
 }) {
   const { user } = useUser()
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [pageDataInCategories, setPageDataInCategories] = useState<PageData>(
     getInitialPageData(allCategories)
   )
   const searchParams = useSearchParams()
   const currentCategorySlug = searchParams.get(categorySearchParamName)
-
-  const currentCategory = useMemo(
-    () =>
-      user.followingCategories.find(
-        (category) => category.slug === currentCategorySlug
-      ),
-    [currentCategorySlug, user.followingCategories]
+  const currentCategory = user.followingCategories.find(
+    (category) => category.slug === currentCategorySlug
   )
 
   const followingPublisherIds = useMemo(
@@ -115,7 +108,6 @@ export default function MediaStories({
       totalCount: latestStoriesResponse.num_stories ?? 0,
       // only stop infinite scroll when response return empty array
       shouldLoadmore: latestStoriesResponse.stories.length !== 0 ? true : false,
-      initialized: true,
     }
 
     const currentPageData = pageDataInCategories[currentCategory?.slug ?? '']
@@ -136,16 +128,13 @@ export default function MediaStories({
   ])
 
   useEffect(() => {
-    const replaceCategorySearchParams = (categorySlug: string) => {
-      const newSearchParams = new URLSearchParams(searchParams)
-      newSearchParams.set(categorySearchParamName, categorySlug ?? '')
-      router.replace(`?${newSearchParams.toString()}`)
-    }
-
     if (!currentCategorySlug) {
-      replaceCategorySearchParams(user.followingCategories[0].slug ?? '')
+      replaceSearchParams(
+        categorySearchParamName,
+        user.followingCategories[0].slug ?? ''
+      )
     }
-  }, [currentCategorySlug, router, searchParams, user.followingCategories])
+  }, [currentCategorySlug, user.followingCategories])
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -166,7 +155,6 @@ export default function MediaStories({
           stories: latestStoriesResponse?.stories ?? [],
           totalCount: latestStoriesResponse?.num_stories ?? 0,
           shouldLoadmore: true,
-          initialized: true,
         }
 
         const publishersAndStories =
@@ -195,15 +183,20 @@ export default function MediaStories({
       }
     }
 
-    if (!latestStoriesInfo.initialized && currentCategory) {
+    if (!mostPickedStory && currentCategory) {
       setIsLoading(true)
       fetchPageData()
     }
   }, [
     currentCategory,
+    currentCategory?.slug,
     getLatestStoriesfetchBody,
-    latestStoriesInfo.initialized,
+    mostPickedStory,
   ])
+
+  useEffect(() => {
+    setPageDataInCategories(getInitialPageData(allCategories))
+  }, [allCategories, user.followingPublishers])
 
   let contentJsx: JSX.Element
 
