@@ -7,8 +7,7 @@ import {
 import queryGraphQL from '@/utils/fetch-graphql'
 import { getLogTraceObjectFromHeaders } from '@/utils/log'
 
-type AllPublisherData = Awaited<ReturnType<typeof getAllPublishers>>
-export type PublisherData = AllPublisherData extends Array<infer U> ? U : never
+export type AllPublisherData = Awaited<ReturnType<typeof getAllPublishers>>
 
 export async function getAllPublishers() {
   const globalLogFields = getLogTraceObjectFromHeaders()
@@ -18,9 +17,18 @@ export async function getAllPublishers() {
     globalLogFields,
     'Failed to get all publishers'
   )
-  return data?.publishers ?? []
+
+  const transformedData =
+    data?.publishers?.map((data) => ({
+      ...data,
+      createdAt: new Date(data.createdAt).getTime(),
+      isHidden: false,
+    })) ?? []
+
+  return transformedData
 }
 
+export type PublisherWalletData = Awaited<ReturnType<typeof getPublisherWallet>>
 export async function getPublisherWallet(publisherId: string) {
   const globalLogFields = getLogTraceObjectFromHeaders()
   const data = await queryGraphQL(
@@ -29,5 +37,10 @@ export async function getPublisherWallet(publisherId: string) {
     globalLogFields,
     'Failed to get publisher admin wallet'
   )
-  return data?.publisher
+
+  if (!data?.publisher?.admin?.wallet) {
+    return null
+  }
+
+  return data.publisher
 }

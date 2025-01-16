@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { type AllPublisherData } from '@/app/actions/publisher'
 import type { MostSponsorPublisher } from '@/utils/data-schema'
 
 import DesktopInfiniteStories from './desktop-infinite-stories'
@@ -7,17 +8,20 @@ import HeroStoryCard from './hero-story-card'
 import type { LatestStoriesInfo, Story } from './media-stories'
 import MostPickedStoryCard from './most-picked-story-card'
 import PublisherCard from './publisher-card'
+import PublisherSuggestion from './publisher-suggestion'
 import StoryCard from './story-card'
 
 export default function DesktopStories({
   mostPickedStory,
   publishersAndStories,
   latestStoriesInfo,
+  allPublishers,
   loadMoreLatestStories,
 }: {
   mostPickedStory: Story | null | undefined
   publishersAndStories: MostSponsorPublisher[]
   latestStoriesInfo: LatestStoriesInfo
+  allPublishers: AllPublisherData
   loadMoreLatestStories: () => void
 }) {
   const { stories } = latestStoriesInfo
@@ -28,6 +32,9 @@ export default function DesktopStories({
       stories.slice(firstSectionCount),
     ]
   }, [stories])
+  const publisherSuggestion = allPublishers
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(0, 5)
 
   return (
     <div className="hidden lg:block">
@@ -64,6 +71,7 @@ export default function DesktopStories({
           />
         </section>
         <aside className="flex flex-col gap-3">
+          <PublisherSuggestion publisherSuggestion={publisherSuggestion} />
           {publishersAndStories.map((publisherAndStories) => (
             <PublisherCard
               key={publisherAndStories.publisher.id}
